@@ -1,33 +1,39 @@
-# Dependencies
-node_modules/
-
-# Environment variables/secrets
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.DS_Store
 .env
 .env.*
-!.env.example
-
-# Prisma / local db
+.env.example
+.phpactor.json
+.phpunit.result.cache
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+.DS_Store
+Thumbs.db
 *.db
 *.db-journal
 *.sqlite3
 *.sqlite
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
-
-# Build / coverage output
-dist/
-build/
-coverage/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Temporary files
 *.tmp
 *.temp
+phpcs.xml
