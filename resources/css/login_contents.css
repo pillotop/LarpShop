@@ -1,0 +1,20 @@
+
+
+.larp_shop_vertical {
+    visibility: hidden;
+}
+
+.larp_shop_horizontal {
+    visibility: visible;
+}
+
+@media (min-width: 768px) {
+    .larp_shop_vertical {
+        visibility: visible;
+    }
+    .larp_shop_horizontal {
+        visibility: hidden;
+    }
+}
+
+@media (min-)

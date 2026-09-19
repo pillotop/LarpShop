@@ -1,0 +1,154 @@
+:root {
+    --sm: 576px;
+    --md: 768px;
+    --lg: 992px;
+    --xl: 1200px;
+    --xxl: 1400px;
+
+    --bg-primary: #ffffff99;
+    --color-primary-50: #EFF9FE;
+    --color-primary-100: #D1F0FC;
+    --color-primary-200: #AAE4FA;
+    --color-primary-300: #02C8F5;
+    --color-primary-400: #17B0D8;
+    --color-primary-500: #1E9ABB;
+    --color-primary-600: #2186A2;
+    --color-primary-700: #227087;
+    --color-primary-800: #215B6E;
+    --color-primary-900: #1F4C5A;
+    --color-primary-950: #182E35;
+    --color-secondary-50: #FFF6EA;
+    --color-secondary-100: #FFE6C0;
+    --color-secondary-200: #FFD18C;
+    --color-secondary-300: #F5A802;
+    --color-secondary-400: #D3910D;
+    --color-secondary-500: #B87F12;
+    --color-secondary-600: #A06F14;
+    --color-secondary-700: #855C15;
+    --color-secondary-800: #6E4D14;
+    --color-secondary-900: #5B4013;
+    --color-secondary-950: #362710;
+    --color-tertiary-50: #FFF5F4;
+    --color-tertiary-100: #FFE1E2;
+    --color-tertiary-200: #FFC9CA;
+    --color-tertiary-300: #FFA3A7;
+    --color-tertiary-400: #FF6375;
+    --color-tertiary-500: #F5024F;
+    --color-tertiary-600: #DF0F48;
+    --color-tertiary-700: #BA183E;
+    --color-tertiary-800: #971B34;
+    --color-tertiary-900: #7C1B2C;
+    --color-tertiary-950: #49171C;
+    --color-complementary-50: #FFF5F2;
+    --color-complementary-100: #FFE3D8;
+    --color-complementary-200: #FFCCBA;
+    --color-complementary-300: #FFA688;
+    --color-complementary-400: #FF6941;
+    --color-complementary-500: #F53003;
+    --color-complementary-600: #D92E07;
+    --color-complementary-700: #B52B0B;
+    --color-complementary-800: #95270D;
+    --color-complementary-900: #7A230E;
+    --color-complementary-950: #49190B;
+    --color-background-50: #cfcfd4;
+    --color-background-100: #A1A1AB;
+    --color-background-200: #747584;
+    --color-background-300: #4B4C5E;
+    --color-background-400: #24273B;
+    --color-background-500: #1E2130;
+    --color-background-500: #191A26;
+    --color-background-600: #13141B;
+    --color-background-700: #0B0B11;
+
+    --font-primary: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* tier 3 reuse */
+
+.border-thin {
+    border-width: 2px;
+    border-color: lightgray;
+}
+
+.border-start-dashed {
+    border-left-style: dashed;
+}
+
+.border-end-dashed {
+    border-right-style: dashed;
+}
+
+.border-top-dashed {
+    border-top-style: dashed;
+}
+
+.border-bottom-dashed {
+    border-bottom-style: dashed;
+}
+
+/* tier 2 reuse (little reuse) */
+
+.primary-text {
+    font-family: var(--font-primary);
+    color: var(--color-primary-300);
+}
+
+.primary-container {
+    background-color: var(--bg-primary);
+    backdrop-filter: blur(8px);
+}
+
+
+
+.hover-button {
+    background-color: transparent;
+}
+
+.hover-button:hover {
+    background-color: var(--color-primary-200);
+    transition:
+        background-color 0.2s ease;
+}
+
+
+/* tier 1 reuse (no reuse) */
+
+.grid-mesh {
+    height: 208;
+    width: 296;
+}
+
+.top-nav-ul {
+    visibility: hidden;
+}
+
+.larp-shop-vertical {
+    visibility: hidden;
+    height: 100%;
+    max-width: 90%;
+
+    @keyframes duration {
+    }
+}
+
+.larp-shop-horizontal {
+    visibility: visible;
+    max-width: 45%;
+    max-height: 30%;
+}
+
+@media (min-width: 1400px) {
+    .larp-shop-vertical {
+        visibility: visible;
+    }
+    .larp-shop-horizontal {
+        visibility: hidden;
+    }
+}
+
+@media (min-width: 992px) {
+    .top-nav-ul {
+        visibility: visible;
+    }
+}
