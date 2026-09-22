@@ -5,6 +5,8 @@
     --xl: 1200px;
     --xxl: 1400px;
 
+    --spacing: .25rem;
+
     --bg-primary: #ffffff99;
     --color-primary-50: #EFF9FE;
     --color-primary-100: #D1F0FC;
@@ -33,7 +35,7 @@
     --color-tertiary-200: #FFC9CA;
     --color-tertiary-300: #FFA3A7;
     --color-tertiary-400: #FF6375;
-    --color-tertiary-500: #F5024F;
+    --color-tertiary-500: #f5024f;
     --color-tertiary-600: #DF0F48;
     --color-tertiary-700: #BA183E;
     --color-tertiary-800: #971B34;
@@ -60,11 +62,13 @@
     --color-background-600: #13141B;
     --color-background-700: #0B0B11;
 
-    --font-primary: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/* tier 3 reuse */
+body {
+    font-family: inherit;
+}
 
 .border-thin {
     border-width: 2px;
@@ -87,8 +91,6 @@
     border-bottom-style: dashed;
 }
 
-/* tier 2 reuse (little reuse) */
-
 .primary-text {
     font-family: var(--font-primary);
     color: var(--color-primary-300);
@@ -98,8 +100,6 @@
     background-color: var(--bg-primary);
     backdrop-filter: blur(8px);
 }
-
-
 
 .hover-button {
     background-color: transparent;
@@ -111,8 +111,116 @@
         background-color 0.2s ease;
 }
 
+.button-primary {
+    background-color: var(--color-primary-300);
+    color: white;
+    border-radius: 16px;
+    border-style: none;
+    padding: 8px;
+}
 
-/* tier 1 reuse (no reuse) */
+.button-primary:hover {
+    background-color: var(--color-primary-400);
+}
+
+.button-primary-outlined {
+    background-color: white;
+    color: var(--color-primary-300);
+    border-radius: 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-primary-300);
+    padding: 8px;
+}
+
+.subcategory-banner {
+    display: block;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.subcategory-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(0 0 0 / 50%)
+    );
+}
+
+.subcategory-button {
+    border-style: none;
+    background-color: transparent;
+    padding: 8px;
+}
+
+.subcategory-button:hover {
+    background-color: var(--color-background-50);
+}
+
+#dropdown-portal {
+    position: relative;
+    z-index: 1000;
+}
+
+.dropdown-menu {
+    min-width: 12rem;
+    padding: 0.5rem;
+    display: block;
+
+    backdrop-filter: blur(8px);
+    background: #ffffff44;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f2f2f2;
+}
+
+.breadcrumbContainer {
+    background-color: rgb(245, 245, 245);
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid #dfdfdf;
+}
+@media (min-width: 992px) {
+    .breadcrumbContainer {
+        display: block;
+    }
+}
+.breadcrumbContainer .breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+.breadcrumbContainer .breadcrumb .breadcrumb-item > a,
+.breadcrumbContainer .breadcrumb .breadcrumb-item > strong {
+    color: #707070;
+    font-size: 0.75rem;
+}
+
+[data-carousel-scroller] {
+    scrollbar-width: none;
+}
+
+[data-carousel-scroller]::-webkit-scrollbar {
+    display: none;
+}
 
 .grid-mesh {
     height: 208;
@@ -124,31 +232,53 @@
 }
 
 .larp-shop-vertical {
-    visibility: hidden;
     height: 100%;
     max-width: 90%;
-
-    @keyframes duration {
-    }
 }
 
 .larp-shop-horizontal {
-    visibility: visible;
     max-width: 45%;
     max-height: 30%;
 }
 
 @media (min-width: 1400px) {
-    .larp-shop-vertical {
-        visibility: visible;
-    }
-    .larp-shop-horizontal {
-        visibility: hidden;
-    }
 }
 
 @media (min-width: 992px) {
     .top-nav-ul {
         visibility: visible;
     }
+}
+
+.profileImageFrame {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profileImage {
+    width: 64px;
+    height: 64px;
+}
+
+.sellerCard {
+    display: flex;
+    align-items: center;
+}
+
+.sellerCardInfo {
+    display: block;
+    margin-left: 16px;
+}
+
+.priceModifiers {
+    display: inline-flex;
+    background-color: #f5024f;
+    color: white;
+    padding: 2px 8px 2px 8px;
+}
+
+.priceModified {
+    padding: 4px;
+    text-decoration: underline;
+    color: var(--color-background-200);
 }
