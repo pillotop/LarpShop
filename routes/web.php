@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ProductImageController;
 use App\View\HomeController;
 use App\View\ProductController;
+use App\View\ProductSearchController;
 use App\View\CategoryController;
 use App\Models\Product;
 use App\Models\Category;
@@ -27,10 +28,8 @@ Route::get('/', [HomeController::class, 'index'])
 //     return view('homepage_o');
 // });
 
-Route::get('/products', function () {
-    $products = Product::with('category', 'images')->get();
-    return view('products.pages.index', ['products' => $products]);
-})->name('products.index');
+Route::get('/products', [ProductSearchController::class, 'index'])
+    ->name('products.index');
 
 
 Route::get('/categoriess/{slug}', [CategoryController::class, 'show'])

@@ -70,4 +70,20 @@ class ProductCatalogQuery
             ->whereKeyNot($productId)
             ->get();
     }
+    public function searchProducts(?string $keyword = null): Collection
+{
+    $query = Product::query()
+        ->with(['category', 'images'])
+        ->orderByDesc('created_at')
+        ->orderByDesc('product_id');
+
+    if ($keyword !== null && $keyword !== '') {
+        $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'like', '%' . $keyword . '%')
+              ->orWhere('description', 'like', '%' . $keyword . '%');
+        });
+    }
+
+    return $query->limit(100)->get();
+}
 }

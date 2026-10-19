@@ -1,5 +1,42 @@
 <h1>Products</h1>
+<section style="margin: 20px 0;">
+    <form action="{{ route('products.index') }}" method="GET">
+        <label for="product-search">Tìm kiếm sản phẩm</label>
 
+        <input
+            type="search"
+            id="product-search"
+            name="q"
+            value="{{ $keyword ?? '' }}"
+            placeholder="Nhập tên hoặc từ khóa..."
+            maxlength="100"
+            style="padding: 10px; width: 300px;"
+        >
+
+        <button type="submit">Tìm kiếm</button>
+
+        <a href="{{ route('products.index') }}">
+            Xóa bộ lọc
+        </a>
+    </form>
+
+    @error('q')
+        <p style="color: red;">{{ $message }}</p>
+    @enderror
+
+    @if (!empty($keyword))
+        <p>
+            Kết quả tìm kiếm cho:
+            <strong>{{ $keyword }}</strong>
+        </p>
+    @endif
+
+    <p>Tìm thấy {{ $products->count() }} sản phẩm.</p>
+</section>
+
+@if ($products->isEmpty())
+    <p>Không tìm thấy sản phẩm phù hợp.</p>
+@endif
 @foreach ($products as $product)
     <article>
         <h2>{{ $product->name }}</h2>
