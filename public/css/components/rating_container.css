@@ -1,0 +1,9 @@
+.rating-container {
+    display: inline-flex;
+    position: relative;
+    white-space: nowrap;
+}
+.ratinc-container .bi {
+    /* Ensures consistent spacing between stars */
+    margin-right: 2px;
+}

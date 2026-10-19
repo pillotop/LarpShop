@@ -1,0 +1,31 @@
+#dropdown-portal {
+    position: relative;
+    z-index: 1000;
+}
+
+.dropdown-menu {
+    min-width: 12rem;
+    padding: 0.5rem;
+    display: block;
+
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.dropdown-menu.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: inherit;
+    text-decoration: none;
+}

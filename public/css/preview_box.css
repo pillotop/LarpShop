@@ -1,0 +1,15 @@
+
+.preview-box {
+    transform: none;
+    position: relative;
+}
+
+@media (min-width: 992px) {
+    .preview-box {
+        position: absolute;
+    }
+
+    .preview-box .image {
+        transform: translateX(20%);
+    }
+}

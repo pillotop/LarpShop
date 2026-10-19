@@ -1,0 +1,39 @@
+.category-banner {
+    color: white;
+    isolation: isolate;
+    text-decoration: none;
+}
+
+.category-banner img {
+    transition: transform 250ms ease;
+}
+
+.category-banner__overlay {
+    background: linear-gradient(
+        transparent,
+        rgb(0 0 0 / 70%)
+    );
+    transform: translateY(0.5rem);
+    opacity: 0;
+    transition:
+        opacity 200ms ease,
+        transform 200ms ease;
+}
+
+.category-banner:hover img,
+.category-banner:focus-visible img {
+    transform: scale(1.05);
+}
+
+.category-banner:hover .category-banner__overlay,
+.category-banner:focus-visible .category-banner__overlay {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-banner img,
+    .category-banner__overlay {
+        transition: none;
+    }
+}

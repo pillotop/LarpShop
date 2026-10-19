@@ -1,0 +1,19 @@
+.two-arrow-scroller .arrow-btn {
+    border: none;
+}
+
+.two-arrow-scroller #arrow-left {
+    background: linear-gradient(
+        to left,
+        transparent,
+        var(--arrow-left-bg-gradient, white)
+    );
+}
+
+.two-arrow-scroller #arrow-right {
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--arrow-left-bg-gradient, white)
+    );
+}

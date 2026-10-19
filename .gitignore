@@ -37,3 +37,5 @@ Thumbs.db
 *.tmp
 *.temp
 phpcs.xml
+stylelint.config.mjs
+.bladeformatterrc.json

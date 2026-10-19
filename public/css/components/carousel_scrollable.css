@@ -1,0 +1,8 @@
+.carousel-scrollable .carousel-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-scrollable .carousel-scroller {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

@@ -1,0 +1,37 @@
+.broad-select {
+    width: 100%;
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.broad-select .selector {
+
+}
+
+.broad-select .selector .selector-category-list {
+    list-style: none;
+    max-height: 462.4px;
+}
+
+.broad-select .selector .selector-product-list {
+    list-style: none;
+}
+
+.broad-select .selector .selector-category-list .selector-item {
+    border: none;
+    background-color: transparent;
+    flex: 0 0 clamp(12rem, 30vw, 18rem);
+    transition: transform 250ms ease;
+}
+
+.broad-select .selector .selector-category-list .selector-item:hover,
+.broad-select .selector .selector-category-list .selector-item:focus-visible {
+    transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .broad-select .selector .selector-category-list .selector-item {
+        transition: none;
+    }
+}

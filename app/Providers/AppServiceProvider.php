@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
+use App\View\Composers\ProductCapabilityComposer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Facades\View::composer([
+            'homepage',
+            'products.pages.show',
+        ], ProductCapabilityComposer::class);
     }
 }

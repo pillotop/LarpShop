@@ -87,7 +87,10 @@ class DropdownPortal {
             .firstElementChild;
 
         menu.addEventListener("mouseenter", () => {
-            if (this.timeout) clearTimeout(this.timeout);
+            if (this.timeout != null) {
+                clearTimeout(this.timeout);
+                this.timeout = null;
+            }
         });
         menu.addEventListener("mouseleave", () => {
             this.timeout = setTimeout(() => this.close(), 300);
@@ -101,22 +104,32 @@ class DropdownPortal {
         trigger.setAttribute("aria-expanded", "true");
 
         this.positionMenu(trigger, menu);
+
+        requestAnimationFrame(() => {
+            menu.classList.add("visible");
+        });
     }
 
     close() {
-        if (!this.activeTrigger) {
+        if (!this.activeMenu) {
             return;
         }
 
-        this.activeTrigger.setAttribute(
-            "aria-expanded",
-            "false"
-        );
+        const menu = this.activeMenu;
+        const trigger = this.activeTrigger;
 
-        this.activeMenu?.remove();
+        trigger.setAttribute("aria-expanded", "false");
 
-        this.activeTrigger = null;
+        menu.classList.remove("visible");
+
+        menu.addEventListener("transitionend", () => {
+            if (menu.isConnected) {
+                menu.remove();
+            }
+        }, { once: true });
+
         this.activeMenu = null;
+        this.activeTrigger = null;
     }
 
     positionMenu(trigger, menu) {
@@ -126,6 +139,38 @@ class DropdownPortal {
         menu.style.top = `${triggerRect.bottom}px`;
         menu.style.left = `${triggerRect.left}px`;
     }
+}
+
+if (Snap != null) {
+    const dropdownArrows = document.querySelectorAll(".dropdown-arrow");
+    dropdownArrows.forEach((arrow) => {
+        let pe = arrow.parentElement;
+        while (pe) {
+            if (pe.tagName === "BUTTON")
+                break;
+            pe = pe.parentElement;
+        }
+        if (pe == null) return;
+
+        const arrowPath = arrow.querySelector(".dropdown-arrow-path");
+        const snapArrow = Snap(arrowPath);
+
+        const closedPath = "M5.75 8.75 L10 13 L14.25 8.75";
+        const openPath = "M5.75 13 L10 8.75 L14.25 13";
+        let isOpen = false;
+
+        pe.addEventListener("click", () => {
+            isOpen = !isOpen;
+            if (isOpen) {
+                snapArrow.animate({d: closedPath}, 150);
+            }
+            else {
+                snapArrow.animate({d: openPath}, 150);
+            }
+        });
+        pe.addEventListener("mouseenter", () => snapArrow.animate({d: openPath}, 150));
+        pe.addEventListener("mouseleave", () => snapArrow.animate({d: closedPath}, 150));
+    });
 }
 
 new DropdownPortal();
