@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
         Facades\View::composer([
             'homepage',
             'products.pages.show',
+            'categories.pages.show',
         ], ProductCapabilityComposer::class);
     }
 }

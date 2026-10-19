@@ -1,31 +1,23 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services\Cart;
 
-use App\Models\Cart;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use App\Queries\Cart\CartQuery;
 
-class CartRepository
+class CartRetrievalService
 {
-    public function __construct()
-    {
-    }
+    public function __construct(
+        private CartQuery $cartQuery
+    ) {}
 
-    public function request(): array
+    public function getCartData(): array
     {
-        $userId = Auth::id();
-        $sessionId = Session::id();
-
-        $cart = Cart::with(['items.itemable.images'])
-            ->firstOrCreate($userId
-                ? ['user_id' => $userId]
-                : ['session_id' => $sessionId]);
+        $cart = $this->cartQuery->getCurrentCart();
 
         $items = $cart->items->map(function ($cartItem) {
             $product = $cartItem->itemable;
 
-            if (!$product) {
+            if (! $product) {
                 return null;
             }
 

@@ -24,6 +24,7 @@
             product-cart-bs-target="#side-panel"
             product-cart-bs-toggle="offcanvas"
             :product-categories="$productCategories"
+            :cart="$cart"
         />
         <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
             <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
