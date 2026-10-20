@@ -1,89 +1,234 @@
-<h1>Products</h1>
-<section style="margin: 20px 0;">
-    <form action="{{ route('products.index') }}" method="GET">
-        <label for="product-search">Tìm kiếm sản phẩm</label>
+@extends('layouts.app')
 
-        <input
-            type="search"
-            id="product-search"
-            name="q"
-            value="{{ $keyword ?? '' }}"
-            placeholder="Nhập tên hoặc từ khóa..."
-            maxlength="100"
-            style="padding: 10px; width: 300px;"
-        >
+@section('title', 'Search Products - LarpShop')
 
-        <button type="submit">Tìm kiếm</button>
+@section('content')
+<div class="bg-light min-vh-100">
 
-        <a href="{{ route('products.index') }}">
-            Xóa bộ lọc
-        </a>
-    </form>
+    <!-- Page header -->
+    <header class="bg-white border-bottom shadow-sm">
+        <div class="container py-3 d-flex justify-content-between align-items-center">
+            <a href="{{ route('home') }}"
+               class="text-decoration-none fs-3 fw-bold text-dark">
+                Larp<span class="text-primary">Shop</span>
+            </a>
 
-    @error('q')
-        <p style="color: red;">{{ $message }}</p>
-    @enderror
+            <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-house"></i> Home
+            </a>
+        </div>
+    </header>
 
-    @if (!empty($keyword))
-        <p>
-            Kết quả tìm kiếm cho:
-            <strong>{{ $keyword }}</strong>
-        </p>
-    @endif
+    <main class="container py-5">
 
-    <p>Tìm thấy {{ $products->count() }} sản phẩm.</p>
-</section>
+        <!-- Page title -->
+        <div class="mb-4">
+            <h1 class="fw-bold">Explore Products</h1>
+            <p class="text-secondary">
+                Discover products that match your needs.
+            </p>
+        </div>
 
-@if ($products->isEmpty())
-    <p>Không tìm thấy sản phẩm phù hợp.</p>
-@endif
-@foreach ($products as $product)
-    <article>
-        <h2>{{ $product->name }}</h2>
-        <p>{{ $product->description }}</p>
-        <p>Price: {{ number_format($product->price, 2) }}</p>
-        <p>Category: {{ $product->category->name }}</p>
-    </article>
+        <!-- Product search form -->
+        <form action="{{ route('products.index') }}"
+              method="GET"
+              class="card border-0 shadow-sm mb-4">
 
-    <h3>Upload an image</h3>
-    <form
-        action="{{ route('products.images.store', $product) }}"
-        method="POST"
-        enctype="multipart/form-data"
-    >
-        @csrf
+            <div class="card-body p-4">
+                <label for="product-search" class="form-label fw-semibold">
+                    Search Products
+                </label>
 
-        <label for="image-{{ $product->product_id }}">
-            Image file
-        </label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
 
-        <input
-            id="image-{{ $product->product_id }}"
-            type="file"
-            name="image"
-            accept="image/*"
-            required
-        >
+                    <input
+                        id="product-search"
+                        type="search"
+                        name="q"
+                        class="form-control"
+                        placeholder="Search by name or keyword..."
+                        value="{{ old('q', $keyword ?? '') }}"
+                        maxlength="100"
+                    >
 
-        <label for="alt-{{ $product->product_id }}">
-            Alternativetext
-        </label>
+                    <button type="submit" class="btn btn-primary px-4">
+                        Search
+                    </button>
+                </div>
 
-        <input
-            id="alt-{{ $product->product_id }}"
-            type="text"
-            name="alt_text"
-            maxlength="255"
-        >
+                @error('q')
+                    <p class="text-danger mt-2 mb-0">
+                        {{ $message }}
+                    </p>
+                @enderror
 
-        <button type="submit">Upload</button>
-    </form>
+                @if (!empty($keyword))
+                    <a href="{{ route('products.index') }}"
+                       class="d-inline-block mt-3 text-decoration-none">
+                        <i class="bi bi-x-circle"></i> Clear Search
+                    </a>
+                @endif
+            </div>
+        </form>
 
-    @foreach ($product->images as $image)
-        <img
-            src="{{ asset("storage/" . $image->path) }}"
-            alt="{{ $image->alt_text ?? $product->name }}"
-            style="max-width: 200px; height: auto;"
-        >
-    @endforeach
-@endforeach
+        <!-- Search results summary -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+            <div>
+                <h2 class="h5 fw-bold mb-1">
+                    @if (!empty($keyword))
+                        Search Results
+                    @else
+                        All Products
+                    @endif
+                </h2>
+
+                @if (!empty($keyword))
+                    <p class="text-secondary mb-0">
+                        Results for: <strong>{{ $keyword }}</strong>
+                    </p>
+                @endif
+            </div>
+
+            <span class="badge bg-primary-subtle text-primary fs-6">
+                {{ $products->count() }}
+                {{ $products->count() === 1 ? 'product found' : 'products found' }}
+            </span>
+        </div>
+
+        <!-- No results -->
+        @if ($products->isEmpty())
+            <div class="card border-0 shadow-sm text-center p-5">
+                <i class="bi bi-search display-3 text-secondary"></i>
+
+                <h3 class="h4 mt-3">No products found</h3>
+
+                <p class="text-secondary">
+                    Try searching with a different keyword or browse all products.
+                </p>
+
+                <div>
+                    <a href="{{ route('products.index') }}"
+                       class="btn btn-primary">
+                        Browse All Products
+                    </a>
+                </div>
+            </div>
+        @else
+
+            <!-- Product grid -->
+            <div class="row g-4">
+                @foreach ($products as $product)
+                    @php
+                        $firstImage = $product->images->first();
+                        $imagePath = $firstImage?->path;
+
+                        // Support both external URLs and locally stored images.
+                        $imageUrl = $imagePath
+                            ? (
+                                \Illuminate\Support\Str::startsWith(
+                                    $imagePath,
+                                    ['http://', 'https://']
+                                )
+                                    ? $imagePath
+                                    : asset('storage/' . ltrim($imagePath, '/'))
+                            )
+                            : null;
+                    @endphp
+
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <article class="card h-100 border-0 shadow-sm overflow-hidden">
+
+                            <!-- Product image and information -->
+                            <a href="{{ route('products.show', [
+                                'product' => $product->product_id,
+                                'slug' => $product->slug,
+                            ]) }}"
+                               class="text-decoration-none text-dark">
+
+                                <div class="bg-white d-flex align-items-center justify-content-center"
+                                     style="height: 220px;">
+
+                                    @if ($imageUrl)
+                                        <img
+                                            src="{{ $imageUrl }}"
+                                            alt="{{ $firstImage->alt_text ?? $product->name }}"
+                                            class="w-100 h-100"
+                                            style="object-fit: contain;"
+                                            loading="lazy"
+                                            onerror="this.style.display='none';this.nextElementSibling.classList.remove('d-none');"
+                                        >
+
+                                        <div class="d-none text-center text-secondary">
+                                            <i class="bi bi-image fs-1"></i>
+                                            <p class="small">Image unavailable</p>
+                                        </div>
+                                    @else
+                                        <div class="text-center text-secondary">
+                                            <i class="bi bi-image fs-1"></i>
+                                            <p class="small">No image available</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="card-body">
+                                    <!-- Category -->
+                                    <span class="badge bg-light text-secondary border mb-2">
+                                        {{ $product->category?->name ?? 'Uncategorized' }}
+                                    </span>
+
+                                    <!-- Product name -->
+                                    <h3 class="h6 fw-bold mb-2">
+                                        {{ $product->name }}
+                                    </h3>
+
+                                    <!-- Description -->
+                                    <p class="text-secondary small mb-3"
+                                       style="min-height: 42px;">
+                                        {{ \Illuminate\Support\Str::limit($product->description, 75) }}
+                                    </p>
+
+                                    <!-- Price -->
+                                    <div class="fw-bold fs-5 text-primary mb-2">
+                                        ${{ number_format($product->price, 2) }}
+                                    </div>
+
+                                    <!-- Stock availability -->
+                                    <div class="small text-secondary">
+                                        @if ($product->stock > 0)
+                                            <span class="text-success">
+                                                <i class="bi bi-check-circle"></i>
+                                                In Stock
+                                            </span>
+                                        @else
+                                            <span class="text-danger">
+                                                <i class="bi bi-x-circle"></i>
+                                                Out of Stock
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- Product details button -->
+                            <div class="card-footer bg-white border-0 pb-3">
+                                <a href="{{ route('products.show', [
+                                    'product' => $product->product_id,
+                                    'slug' => $product->slug,
+                                ]) }}"
+                                   class="btn btn-outline-primary w-100">
+                                    View Details
+                                </a>
+                            </div>
+
+                        </article>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+    </main>
+</div>
+@endsection
