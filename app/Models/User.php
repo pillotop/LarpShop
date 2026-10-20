@@ -23,4 +23,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function vendor(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Vendor::class, 'user_id', 'user_id');
+    }
 }

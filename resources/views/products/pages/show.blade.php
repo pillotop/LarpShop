@@ -143,6 +143,14 @@
                                     @endif
                                 </div>
                                 <x-rating-container average-rating="{{ $product->average_rating }}" total-reviews="{{ $product->total_reviews }}" />
+                                @if ($product->vendor)
+                                    <div class="mt-2 mb-3">
+                                        <span class="text-muted small">Sold by:</span>
+                                        <a href="{{ route('vendors.show', ['vendor' => $product->vendor->vendor_id]) }}" class="text-primary text-decoration-none fw-semibold">
+                                            <i class="bi bi-shop me-1"></i>{{ $product->vendor->store_name }}
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                             <div id="product-variants" class="mb-4 border-bottom">
                                 feature not yet implemented

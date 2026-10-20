@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\VendorStorefrontController;
 use App\View\HomeController;
 use App\View\ProductController;
 use App\View\CategoryController;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Vendor;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -47,6 +49,14 @@ Breadcrumbs::for('category', function (BreadcrumbTrail $trail, Category $categor
 
     $trail->push($category->name, route('categories.show', [ 'slug' => $category->slug ]));
 });
+
+Breadcrumbs::for('vendor', function (BreadcrumbTrail $trail, Vendor $vendor) {
+    $trail->parent('home');
+    $trail->push($vendor->store_name, route('vendors.show', ['vendor' => $vendor->vendor_id]));
+});
+
+Route::get('/vendors/{vendor}', [VendorStorefrontController::class, 'show'])
+    ->name('vendors.show');
 
 Route::get('/vendor/products/create', function () {
     return view('vendor.pages.create_product');
