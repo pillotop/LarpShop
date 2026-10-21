@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use App\Http\Controllers\VendorRegistrationController;
 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
@@ -59,6 +60,13 @@ Route::post('/vendor/products', function (Request $request) {
 
     return view('vendor.success', compact('productName', 'productPrice', 'categoryId'));
 })->name('vendor.product.store');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/vendor/register', [VendorRegistrationController::class, 'create'])
+        ->name('vendor.register');
+    Route::post('/vendor/register', [VendorRegistrationController::class, 'store'])
+        ->name('vendor.register.store');
+});
 
 Route::post('/products/{product}/images', [ProductImageController::class, 'store'])
     ->name('products.images.store');

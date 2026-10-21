@@ -82,6 +82,11 @@
                     </button>
                 </a>
             @endguest
+            @auth
+                <a href="{{ route('vendor.register') }}" class="btn btn-outline-dark rounded-pill px-3 py-1 fw-semibold text-decoration-none">
+                    <i class="bi bi-shop me-1"></i> Vendor
+                </a>
+            @endauth
         </div>
     </div>
 </nav>

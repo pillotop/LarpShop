@@ -17,6 +17,16 @@ class User extends Authenticatable
 
     protected $primaryKey = 'user_id';
 
+    public function vendor(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Vendor::class, 'user_id', 'user_id');
+    }
+
+    public function isVendor(): bool
+    {
+        return $this->vendor()->where('status', 'approved')->exists() || $this->role === 'vendor';
+    }
+
     protected function casts(): array
     {
         return [
