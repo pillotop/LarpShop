@@ -11,3 +11,4 @@ npm-debug.log
 phpcs.xml
 stylelint.config.mjs
 .bladeformatterrc.json
+vendor/
