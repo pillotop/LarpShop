@@ -3,6 +3,7 @@
 namespace App\View;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Queries\Products\ProductCatalogQuery;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,7 @@ class ProductSearchController extends Controller
 {
     public function __construct(
         private ProductCatalogQuery $productCatalogQuery
-    ) {
-    }
+    ) {}
 
     public function index(Request $request)
     {
@@ -27,6 +27,7 @@ class ProductSearchController extends Controller
         return view('products.pages.index', [
             'products' => $products,
             'keyword' => $keyword,
+            'productCategories' => Category::query()->get(),
         ]);
     }
 }

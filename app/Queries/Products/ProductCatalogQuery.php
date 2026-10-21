@@ -2,8 +2,8 @@
 
 namespace App\Queries\Products;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductCatalogQuery
@@ -12,7 +12,7 @@ class ProductCatalogQuery
     {
         $category = Category::with('children')->find($categoryId);
 
-        if (!$category) {
+        if (! $category) {
             return [$categoryId];
         }
 
@@ -70,20 +70,23 @@ class ProductCatalogQuery
             ->whereKeyNot($productId)
             ->get();
     }
+
     public function searchProducts(?string $keyword = null): Collection
-{
-    $query = Product::query()
-        ->with(['category', 'images'])
-        ->orderByDesc('created_at')
-        ->orderByDesc('product_id');
+    {
+        $query = Product::query()
+            ->with(['category', 'images'])
+            ->withAvg('reviews as average_rating', 'rating')
+            ->withCount('reviews as total_reviews')
+            ->orderByDesc('created_at')
+            ->orderByDesc('product_id');
 
-    if ($keyword !== null && $keyword !== '') {
-        $query->where(function ($q) use ($keyword) {
-            $q->where('name', 'like', '%' . $keyword . '%')
-              ->orWhere('description', 'like', '%' . $keyword . '%');
-        });
+        if ($keyword !== null && $keyword !== '') {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%'.$keyword.'%')
+                    ->orWhere('description', 'like', '%'.$keyword.'%');
+            });
+        }
+
+        return $query->limit(100)->get();
     }
-
-    return $query->limit(100)->get();
-}
 }

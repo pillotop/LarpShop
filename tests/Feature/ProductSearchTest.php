@@ -16,8 +16,8 @@ class ProductSearchTest extends TestCase
         int $stock = 10
     ): int {
         $userId = DB::table('users')->insertGetId([
-            'username' => 'vendor_' . uniqid(),
-            'email' => uniqid() . '@example.test',
+            'username' => 'vendor_'.uniqid(),
+            'email' => uniqid().'@example.test',
             'password' => bcrypt('TestPassword123!'),
             'role' => 'vendor',
             'created_at' => now(),
@@ -34,7 +34,7 @@ class ProductSearchTest extends TestCase
 
         $categoryId = DB::table('categories')->insertGetId([
             'name' => 'Electronics',
-            'slug' => 'electronics-' . uniqid(),
+            'slug' => 'electronics-'.uniqid(),
             'created_at' => now(),
             'updated_at' => now(),
         ], 'category_id');
@@ -43,7 +43,7 @@ class ProductSearchTest extends TestCase
             'category_id' => $categoryId,
             'vendor_id' => $vendorId,
             'name' => $name,
-            'slug' => 'test-product-' . uniqid(),
+            'slug' => 'test-product-'.uniqid(),
             'description' => $description,
             'price' => 99.99,
             'stock' => $stock,
@@ -108,7 +108,7 @@ class ProductSearchTest extends TestCase
 
     public function test_long_keyword_is_rejected(): void
     {
-        $response = $this->get('/products?q=' . str_repeat('a', 101));
+        $response = $this->get('/products?q='.str_repeat('a', 101));
 
         $response->assertSessionHasErrors('q');
     }
@@ -117,7 +117,7 @@ class ProductSearchTest extends TestCase
     {
         $keyword = '<script>alert(1)</script>';
 
-        $response = $this->get('/products?q=' . urlencode($keyword));
+        $response = $this->get('/products?q='.urlencode($keyword));
 
         $response->assertOk();
         $response->assertDontSee($keyword, false);
@@ -141,5 +141,42 @@ class ProductSearchTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Clear Search');
+    }
+
+    public function test_whitespace_only_keyword_shows_full_catalog(): void
+    {
+        $this->createProduct('Desk Lamp');
+
+        $response = $this->get('/products?q='.urlencode('   '));
+
+        $response->assertOk();
+        $response->assertSee('Desk Lamp');
+        $response->assertDontSee('Clear Search');
+    }
+
+    public function test_search_is_case_insensitive(): void
+    {
+        $this->createProduct('Mechanical Keyboard');
+
+        $response = $this->get('/products?q=KEYBOARD');
+
+        $response->assertOk();
+        $response->assertSee('Mechanical Keyboard');
+    }
+
+    public function test_keyword_stays_in_search_input(): void
+    {
+        $response = $this->get('/products?q=lamp');
+
+        $response->assertOk();
+        $response->assertSee('name="q"', false);
+        $response->assertSee('value="lamp"', false);
+    }
+
+    public function test_array_keyword_is_rejected(): void
+    {
+        $response = $this->get('/products?q[]=lamp');
+
+        $response->assertSessionHasErrors('q');
     }
 }

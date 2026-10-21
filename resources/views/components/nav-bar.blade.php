@@ -13,7 +13,12 @@
             </a>
         </div>
         <div id="search-bar" class="col-7">
-            <form class="d-flex rounded-4 h-100">
+            <form
+                action="{{ route('products.index') }}"
+                method="GET"
+                class="d-flex rounded-4 h-100"
+                role="search"
+            >
                 <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="cateogry selection" data-dropdown-trigger="categories">
                     <span>Categories</span>
                     <svg class="dropdown-arrow icon-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
@@ -28,7 +33,15 @@
                     </template>
                 </button>
                 <div class="d-flex align-items-center position-relative w-100">
-                    <input type="text" name="search" placeholder="Larp everything" class="position-relative border ps-3 z-0 w-100 h-100">
+                    <input
+                        type="search"
+                        name="q"
+                        value="{{ request()->query('q', '') }}"
+                        placeholder="Search products..."
+                        aria-label="Search products"
+                        maxlength="100"
+                        class="position-relative border ps-3 z-0 w-100 h-100"
+                    >
                     <button type="submit" class="border-0 rounded-circle position-absolute z-1 end-0 me-2 py-1 px-2">
                         <svg class="icon-16">
                             <use href="/images/icons.svg#search-magnifier"></use>
