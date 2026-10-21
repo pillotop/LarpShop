@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,8 +25,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function vendor(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function vendors(): HasMany
     {
-        return $this->hasOne(Vendor::class, 'user_id', 'user_id');
+        return $this->hasMany(Vendor::class, 'user_id', 'user_id');
     }
 }
