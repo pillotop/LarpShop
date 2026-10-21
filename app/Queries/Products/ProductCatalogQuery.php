@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductCatalogQuery
 {
+    public const SORT_OPTIONS = [
+        'newest' => 'Newest Arrivals',
+        'price_asc' => 'Price: Low to High',
+        'price_desc' => 'Price: High to Low',
+        'name_asc' => 'Name: A to Z',
+        'name_desc' => 'Name: Z to A',
+        'rating_desc' => 'Highest Rated',
+    ];
+
     private function getAllCategoryIds(int $categoryId): array
     {
         $category = Category::with('children')->find($categoryId);
@@ -71,14 +80,12 @@ class ProductCatalogQuery
             ->get();
     }
 
-    public function searchProducts(?string $keyword = null): Collection
+    public function searchProducts(?string $keyword = null, array $filters = []): Collection
     {
         $query = Product::query()
             ->with(['category', 'images'])
             ->withAvg('reviews as average_rating', 'rating')
-            ->withCount('reviews as total_reviews')
-            ->orderByDesc('created_at')
-            ->orderByDesc('product_id');
+            ->withCount('reviews as total_reviews');
 
         if ($keyword !== null && $keyword !== '') {
             $query->where(function ($q) use ($keyword) {
@@ -86,6 +93,44 @@ class ProductCatalogQuery
                     ->orWhere('description', 'like', '%'.$keyword.'%');
             });
         }
+
+        $categoryFilter = isset($filters['category']) ? trim((string) $filters['category']) : '';
+        if ($categoryFilter !== '') {
+            $category = Category::query()
+                ->where('slug', $categoryFilter)
+                ->when(ctype_digit($categoryFilter), fn ($q) => $q->orWhere('category_id', (int) $categoryFilter))
+                ->first();
+
+            if ($category) {
+                $categoryIds = $this->getAllCategoryIds($category->category_id);
+                $query->whereIn('category_id', $categoryIds);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        if (isset($filters['min_price']) && $filters['min_price'] !== '' && is_numeric($filters['min_price'])) {
+            $query->where('price', '>=', (float) $filters['min_price']);
+        }
+
+        if (isset($filters['max_price']) && $filters['max_price'] !== '' && is_numeric($filters['max_price'])) {
+            $query->where('price', '<=', (float) $filters['max_price']);
+        }
+
+        if (! empty($filters['in_stock'])) {
+            $query->where('stock', '>', 0);
+        }
+
+        $sort = $filters['sort'] ?? 'newest';
+
+        match ($sort) {
+            'price_asc' => $query->orderBy('price', 'asc')->orderBy('product_id', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc')->orderByDesc('product_id'),
+            'name_asc' => $query->orderBy('name', 'asc')->orderBy('product_id', 'asc'),
+            'name_desc' => $query->orderBy('name', 'desc')->orderByDesc('product_id'),
+            'rating_desc' => $query->orderByDesc('average_rating')->orderByDesc('total_reviews')->orderByDesc('product_id'),
+            default => $query->orderByDesc('created_at')->orderByDesc('product_id'),
+        };
 
         return $query->limit(100)->get();
     }
