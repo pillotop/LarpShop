@@ -155,11 +155,60 @@ class ProfileTest extends TestCase
 
         $customer->refresh();
 
-        $this->assertSame('vendor', $customer->role);
+        $this->assertSame('customer', $customer->role);
         $this->assertNotNull($customer->vendor);
         $this->assertSame('Elven Woodwork Workshop', $customer->vendor->store_name);
         $this->assertSame('Bow staves and custom quivers.', $customer->vendor->description);
-        $this->assertSame('active', $customer->vendor->status);
+        $this->assertSame('pending', $customer->vendor->status);
+    }
+
+    public function test_customer_vendor_registration_validates_store_name(): void
+    {
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($customer)->post('/profile/vendor/register', [
+            'store_name' => '',
+            'description' => 'Some description',
+        ]);
+
+        $response->assertSessionHasErrors('store_name');
+    }
+
+    public function test_customer_vendor_registration_requires_unique_store_name(): void
+    {
+        $existingVendorUser = User::factory()->vendor()->create();
+        Vendor::create([
+            'user_id' => $existingVendorUser->user_id,
+            'store_name' => 'Existing Unique Armory',
+            'status' => 'active',
+        ]);
+
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($customer)->post('/profile/vendor/register', [
+            'store_name' => 'Existing Unique Armory',
+            'description' => 'Trying to use the same name',
+        ]);
+
+        $response->assertSessionHasErrors('store_name');
+    }
+
+    public function test_user_cannot_register_vendor_twice(): void
+    {
+        $user = User::factory()->vendor()->create();
+        Vendor::create([
+            'user_id' => $user->user_id,
+            'store_name' => 'First Store',
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($user)->post('/profile/vendor/register', [
+            'store_name' => 'Second Store Attempt',
+        ]);
+
+        $response
+            ->assertRedirect(route('profile'))
+            ->assertSessionHas('warning');
     }
 
     public function test_user_can_update_password(): void

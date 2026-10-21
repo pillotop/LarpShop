@@ -38,6 +38,11 @@ class User extends Authenticatable
 
     public function isVendor(): bool
     {
-        return $this->role === 'vendor' || $this->vendor()->exists();
+        return $this->role === 'vendor' || $this->vendor()->whereIn('status', ['active', 'approved'])->exists();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

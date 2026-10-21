@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use App\Http\Requests\VendorRegistrationRequest;
 
 class ProfileController extends Controller
 {
@@ -133,45 +134,52 @@ class ProfileController extends Controller
     /**
      * Register a new vendor store for a customer.
      */
-    public function registerVendor(Request $request): RedirectResponse
+    public function registerVendor(VendorRegistrationRequest $request): RedirectResponse
     {
         $user = $request->user();
 
         if ($user->vendor) {
-            return redirect()->route('profile')
-                ->with('warning', 'Bạn đã có gian hàng trên hệ thống.');
-        }
+            if ($user->vendor->status === 'pending') {
+                return redirect()->route('profile')
+                    ->with('warning', 'Đơn đăng ký mở gian hàng của bạn đang được xét duyệt.');
+            }
 
-        $validated = $request->validate([
-            'store_name' => ['required', 'string', 'min:2', 'max:100'],
-            'description' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'store_name.required' => 'Tên cửa hàng không được để trống.',
-            'store_name.min' => 'Tên cửa hàng phải có ít nhất 2 ký tự.',
-            'store_name.max' => 'Tên cửa hàng không được vượt quá 100 ký tự.',
-            'description.max' => 'Mô tả cửa hàng không được vượt quá 1000 ký tự.',
-        ]);
+            if (in_array($user->vendor->status, ['active', 'approved'])) {
+                return redirect()->route('profile')
+                    ->with('warning', 'Bạn đã là người bán trên hệ thống.');
+            }
+
+            // Nếu đơn trước đó bị từ chối, cho phép cập nhật và nộp lại
+            if ($user->vendor->status === 'rejected') {
+                $user->vendor->update([
+                    'store_name' => $request->validated('store_name'),
+                    'description' => $request->validated('description'),
+                    'status' => 'pending',
+                ]);
+
+                return redirect()->route('profile')
+                    ->with('status', 'vendor-registered')
+                    ->with('success', 'Đơn đăng ký của bạn đã được cập nhật lại và đang chờ quản trị viên xét duyệt!');
+            }
+        }
 
         $vendor = Vendor::create([
             'user_id' => $user->user_id,
-            'store_name' => $validated['store_name'],
-            'description' => $validated['description'] ?? null,
-            'status' => 'active',
+            'store_name' => $request->validated('store_name'),
+            'description' => $request->validated('description'),
+            'status' => 'pending',
         ]);
-
-        $user->role = 'vendor';
-        $user->save();
 
         if ($request->expectsJson()) {
             return response()->json([
-                'message' => 'Đăng ký gian hàng thành công!',
+                'message' => 'Đăng ký gian hàng thành công, đang chờ xét duyệt!',
                 'vendor' => $vendor,
             ], 201);
         }
 
         return redirect()->route('profile')
             ->with('status', 'vendor-registered')
-            ->with('success', 'Chúc mừng bạn đã mở gian hàng thành công!');
+            ->with('success', 'Đơn đăng ký mở gian hàng đã được gửi thành công và đang chờ quản trị viên xét duyệt!');
     }
 
     /**

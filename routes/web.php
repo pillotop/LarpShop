@@ -13,6 +13,8 @@ use App\Models\Category;
 use App\Models\Vendor;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminVendorController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -20,6 +22,19 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/vendor', [ProfileController::class, 'updateVendor'])->name('profile.vendor.update');
     Route::post('/profile/vendor/register', [ProfileController::class, 'registerVendor'])->name('profile.vendor.register');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+});
+
+// Admin Routes (UC-38, UC-40)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
+
+    // UC-40: Vendor Management and Approval
+    Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
+    Route::post('/vendors/{vendor}/approve', [AdminVendorController::class, 'approve'])->name('vendors.approve');
+    Route::post('/vendors/{vendor}/reject', [AdminVendorController::class, 'reject'])->name('vendors.reject');
+    Route::post('/vendors/{vendor}/suspend', [AdminVendorController::class, 'suspend'])->name('vendors.suspend');
+    Route::post('/vendors/{vendor}/reinstate', [AdminVendorController::class, 'reinstate'])->name('vendors.reinstate');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {

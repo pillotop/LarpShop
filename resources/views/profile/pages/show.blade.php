@@ -75,6 +75,27 @@
     <script src="/js/components/dropdown.js"></script>
     <script src="/js/components/persistent_header.js"></script>
     <script src="/js/components/side_panel.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hash = window.location.hash;
+            if (hash) {
+                const triggerEl = document.querySelector(`[data-bs-target="${hash}"]`);
+                if (triggerEl) {
+                    bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+                }
+            } else if (@json($errors->has('store_name') || $errors->has('description') || session('status') === 'vendor-registered' || session('status') === 'vendor-updated')) {
+                const vendorTab = document.getElementById('tab-vendor-info');
+                if (vendorTab) {
+                    bootstrap.Tab.getOrCreateInstance(vendorTab).show();
+                }
+            } else if (@json($errors->has('current_password') || $errors->has('password') || session('status') === 'password-updated')) {
+                const secTab = document.getElementById('tab-security');
+                if (secTab) {
+                    bootstrap.Tab.getOrCreateInstance(secTab).show();
+                }
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -482,8 +503,70 @@
                                     </div>
                                 </form>
                             </div>
+                        @elseif ($vendor && $vendor->status === 'pending')
+                            {{-- Vendor Application Pending Approval --}}
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                                <div class="card-header bg-warning-subtle text-warning-emphasis p-4 border-0">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-clock-history fs-4 text-warning-emphasis"></i>
+                                            <h2 class="h5 fw-bold mb-0">Đơn đăng ký gian hàng đang chờ xét duyệt</h2>
+                                        </div>
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold shadow-sm">
+                                            <i class="bi bi-hourglass-split me-1"></i> Chờ duyệt (Pending)
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-4 p-md-5">
+                                    <div class="alert alert-light border border-warning-subtle rounded-3 p-3 mb-4 d-flex align-items-center gap-3">
+                                        <i class="bi bi-info-circle-fill fs-3 text-warning"></i>
+                                        <div class="small text-muted">
+                                            Đơn đăng ký mở gian hàng của bạn đã được ghi nhận trên hệ thống LarpShop và đang trong hàng đợi chờ Quản trị viên (Admin) xét duyệt.
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <div class="p-3 rounded-3 bg-light border">
+                                                <div class="text-muted small fw-semibold">TÊN GIAN HÀNG ĐĂNG KÝ</div>
+                                                <div class="fs-5 fw-bold text-dark mt-1">{{ $vendor->store_name }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="p-3 rounded-3 bg-light border">
+                                                <div class="text-muted small fw-semibold">THỜI GIAN GỬI ĐƠN</div>
+                                                <div class="fs-5 fw-bold text-dark mt-1">{{ $vendor->created_at ? $vendor->created_at->format('d/m/Y H:i') : 'Mới đây' }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="p-3 rounded-3 bg-light border">
+                                                <div class="text-muted small fw-semibold">MÔ TẢ GIAN HÀNG</div>
+                                                <div class="text-secondary mt-1">{{ $vendor->description ?: 'Chưa có mô tả chi tiết.' }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-3 border-top">
+                                        <span class="text-muted small">
+                                            <i class="bi bi-shield-check text-success me-1"></i> Hệ thống sẽ tự động cập nhật ngay khi Quản trị viên phê duyệt.
+                                        </span>
+                                        <a href="{{ route('home') }}" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
+                                            <i class="bi bi-house me-1"></i> Quay về trang chủ
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         @else
-                            {{-- Not a vendor yet: Become a vendor callout --}}
+                            {{-- Not a vendor yet or Rejected: Show Application Form --}}
+                            @if ($vendor && $vendor->status === 'rejected')
+                                <div class="alert alert-danger alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                                    <i class="bi bi-x-circle-fill fs-4 text-danger"></i>
+                                    <div>
+                                        <strong>Đơn đăng ký trước đó chưa được duyệt:</strong> Bạn có thể điều chỉnh lại tên hoặc mô tả gian hàng phù hợp hơn và gửi lại đơn xét duyệt bên dưới.
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
                                 <div class="row align-items-center g-4">
                                     <div class="col-12 col-md-7">
@@ -523,7 +606,7 @@
                                                         class="form-control rounded-3 @error('store_name') is-invalid @enderror"
                                                         id="reg_store_name"
                                                         name="store_name"
-                                                        value="{{ old('store_name') }}"
+                                                        value="{{ old('store_name', $vendor?->store_name) }}"
                                                         placeholder="VD: Tiệm Đạo Cụ Hiệp Sĩ"
                                                         required
                                                         minlength="2"
@@ -543,15 +626,15 @@
                                                         rows="3"
                                                         placeholder="Chuyên sản xuất đao kiếm mút, giáp da thủ công..."
                                                         maxlength="1000"
-                                                    >{{ old('description') }}</textarea>
+                                                    >{{ old('description', $vendor?->description) }}</textarea>
                                                     @error('description')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
 
                                                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
-                                                    <i class="bi bi-rocket-takeoff"></i>
-                                                    <span>Khởi tạo gian hàng ngay</span>
+                                                    <i class="bi bi-send-fill"></i>
+                                                    <span>Gửi đơn đăng ký xét duyệt</span>
                                                 </button>
                                             </form>
                                         </div>
