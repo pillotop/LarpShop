@@ -3,16 +3,15 @@
 namespace App\View;
 
 use App\Http\Controllers\Controller;
-use Illuminate\View\View;
 use App\Models\Category;
 use App\Services\Products\ProductRetrievalService;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     public function __construct(
         private ProductRetrievalService $product_retrieval_service,
-    ) {
-    }
+    ) {}
 
     public function index(): View
     {
@@ -22,6 +21,7 @@ class CategoryController extends Controller
     public function show(string $slug): View
     {
         $category = Category::query()
+            ->with('children')
             ->where('slug', $slug)
             ->firstOrFail();
 

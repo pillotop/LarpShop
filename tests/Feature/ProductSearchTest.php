@@ -58,6 +58,7 @@ class ProductSearchTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Explore Products');
+        $response->assertSee('id="dropdown-portal"', false);
     }
 
     public function test_search_finds_matching_product_name(): void

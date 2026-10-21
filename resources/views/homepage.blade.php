@@ -207,8 +207,8 @@
                     </header>
 
                     <div style="text-align: end;">
-                        <a href="/categories">
-                            View all
+                        <a href="{{ route('products.index') }}" class="text-decoration-none fw-semibold">
+                            Browse all products <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
 
@@ -217,9 +217,9 @@
                             <ul id="two-arrow-scrollable" class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-scroll m-0">
                                 @foreach ($productCategories as $category)
                                     <li>
-                                        <button class="border-0 rounded-pill p-2 text-nowrap" type="button">
-                                            {{ $category['name'] }}
-                                        </button>
+                                        <a href="{{ route('categories.show', ['slug' => $category->slug ?? $category['slug'] ?? '']) }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 text-nowrap text-decoration-none">
+                                            {{ $category->name ?? $category['name'] }}
+                                        </a>
                                     </li>
                                 @endforeach
                             </ul>

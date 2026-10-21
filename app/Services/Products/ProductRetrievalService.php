@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductRetrievalService
 {
-    public function __construct(private ProductCatalogQuery $productCatalogQuery)
-    {
-    }
+    public function __construct(private ProductCatalogQuery $productCatalogQuery) {}
 
     public function getProducts(
         ?int $categoryId = null,
@@ -29,8 +27,15 @@ class ProductRetrievalService
         return $this->productCatalogQuery->getProductDetails($productId);
     }
 
-    public function getSimilarProducts(int $productId): ?Collection
-    {
-        return $this->productCatalogQuery->getSimilarProducts($productId);
+    public function getSimilarProducts(
+        int $productId,
+        ?int $categoryId = null,
+        int $limit = 6,
+    ): Collection {
+        return $this->productCatalogQuery->getSimilarProducts(
+            productId: $productId,
+            categoryId: $categoryId,
+            limit: $limit,
+        );
     }
 }

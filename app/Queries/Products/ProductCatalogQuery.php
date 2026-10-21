@@ -63,21 +63,28 @@ class ProductCatalogQuery
     public function getProductDetails(int $productId): ?Product
     {
         return Product::query()
-            ->with(['images', 'vendor', 'reviews'])
+            ->with(['images', 'vendor', 'reviews', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
             ->where('product_id', $productId)
             ->first();
     }
 
-    public function getSimilarProducts(int $productId): ?Collection
+    public function getSimilarProducts(int $productId, ?int $categoryId = null, int $limit = 6): Collection
     {
-        return Product::query()
-            ->with(['images', 'vendor', 'reviews'])
+        $query = Product::query()
+            ->with(['images', 'vendor', 'reviews', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
             ->whereKeyNot($productId)
-            ->get();
+            ->where('stock', '>', 0);
+
+        if ($categoryId !== null) {
+            $categoryIds = $this->getAllCategoryIds($categoryId);
+            $query->whereIn('category_id', $categoryIds);
+        }
+
+        return $query->limit($limit)->get();
     }
 
     public function searchProducts(?string $keyword = null, array $filters = []): Collection
