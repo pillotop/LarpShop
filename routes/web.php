@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorStorefrontController;
 use App\View\HomeController;
 use App\View\ProductController;
@@ -13,14 +14,21 @@ use App\Models\Vendor;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
-//
-// Route::middleware('auth')->view('profile', 'profile')->name('profile');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/vendor', [ProfileController::class, 'updateVendor'])->name('profile.vendor.update');
+    Route::post('/profile/vendor/register', [ProfileController::class, 'registerVendor'])->name('profile.vendor.register');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+});
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
     $trail->push('Home', route('home'));
+});
+
+Breadcrumbs::for('profile', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Hồ sơ tài khoản', route('profile'));
 });
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
