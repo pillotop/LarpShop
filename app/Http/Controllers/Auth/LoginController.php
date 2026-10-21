@@ -10,7 +10,7 @@ class LoginController extends Controller
 {
     public function create()
     {
-        return view('login');
+        return view('auth.pages.login');
     }
 
     public function store(Request $request)

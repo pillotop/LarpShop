@@ -52,6 +52,11 @@
                     required
                 >
                 <div id="password-error" class="d-block invalid-feedback"></div>
+                <div class="mt-2 text-end">
+                    <a href="{{ route('password.request') }}">
+                        Forgot your password?
+                    </a>
+                </div>
             </div>
         </fieldset>
 
@@ -102,7 +107,7 @@
                     autocomplete="new-password"
                     required
                 >
-                <div id="confirm-password-error" class="d-block invalid-feedback"></div>
+                <div id="password-confirmation-error" class="d-block invalid-feedback"></div>
             </div>
         </fieldset>
 

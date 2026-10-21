@@ -89,10 +89,10 @@ class LoginForm {
                 let matchedError = false;
                 for (const [key, input] of Object.entries(this.fields)) {
                     const messages = error.errors[key];
-                    console.log(messages);
 
                     if (!messages?.length) continue;
 
+                    console.log(messages);
                     const k = `#${key.replaceAll('_', '-')}-error`;
                     console.log(`key name is ${key}`);
                     console.log(`looked for ${k}`);

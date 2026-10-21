@@ -1,4 +1,5 @@
 services:
+
   app:
     build:
       context: .
@@ -15,9 +16,24 @@ services:
       DB_DATABASE: larpshop
       DB_USERNAME: larpshop
       DB_PASSWORD: ${DB_PASSWORD}
+
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: "1025"
+      MAIL_SCHEME: "null"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+      - mailpit
+#      db:
+#        condition: service_healthy
+
+  mailpit:
+      image: axllent/mailpit:latest
+      ports:
+        - "127.0.0.1:8025:8025"
+      expose:
+        - "1025"
+      restart: unless-stopped
 
   db:
     image: mysql:8.4
