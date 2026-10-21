@@ -4,7 +4,12 @@
 
 @php
     $firstImage = $product->images->first();
-    $imagePath = asset($firstImage->path);
+    $storedPath = $firstImage?->path;
+    $imagePath = $storedPath
+        ? (\Illuminate\Support\Str::startsWith($storedPath, ['http://', 'https://'])
+            ? $storedPath
+            : asset('storage/' . ltrim($storedPath, '/')))
+        : asset('images/product-placeholder.jpg');
     $imageAlt = $firstImage?->alt_text ?? $product->name;
 
     $priceParts = explode('.', number_format($product->price ?? 0, 2));

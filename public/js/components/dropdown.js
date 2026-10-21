@@ -1,6 +1,11 @@
 class DropdownPortal {
     constructor() {
         this.portal = document.querySelector("#dropdown-portal");
+        if (!this.portal) {
+            this.portal = document.createElement("div");
+            this.portal.id = "dropdown-portal";
+            document.body.appendChild(this.portal);
+        }
         this.initializedTriggers = new WeakSet();
 
         this.activeTrigger = null;

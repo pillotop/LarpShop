@@ -74,7 +74,7 @@
                         <ul id="subcategory-list" class="d-flex flex-column gap-2" style="list-style: none;">
                             @foreach ($category->children as $childCategory)
                                 <li>
-                                    <a href="{{ $childCategory->slug }}">
+                                    <a href="{{ route('categories.show', ['slug' => $childCategory->slug]) }}">
                                         <button class="subcategory-button w-100" type="button" data-subcategory-container-anchor-id="{{ $loop->index }}">
                                             {{ $childCategory->name }}
                                         </button>
@@ -84,7 +84,7 @@
                                                     <img
                                                         class="object-fit-cover"
                                                         {{-- src="{{ asset('images/' . $childCategory->images) }}" --}}
-                                                        alt="{{ $childCategory->name }}"
+                                                        alt="{{ $childCategory->name }}" />
                                                 </div>
                                             </div>
                                         </template>
@@ -99,9 +99,9 @@
             @endif
         </section>
         <section class="container">
-            @if ($products)
+            @if ($products->isNotEmpty())
                 <div class="d-flex justify-content-end border border-4 border-top-0 border-start-0 border-end-0 my-3" style="border-color: var(--color-tertiary-500) !important;">
-                    <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);"> Products of the same type <h2>
+                    <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);"> Products of the same type </h2>
                 </div>
                 <x-two-arrow-scroller>
                     <ul class="d-flex gap-4 overflow-scroll list-unstyled">
@@ -113,9 +113,11 @@
                     </ul>
                 </x-two-arrow-scroller>
             @else
-                <div class="d-flex flex-column justify-content-center text-center" style="height: 400px;">
-                    <h2>Oops, looks like theres no products of this category 🥹</h2>
-                    <span class="small">it aint my problem anyway</span>
+                <div class="d-flex flex-column justify-content-center align-items-center text-center py-5" style="min-height: 350px;">
+                    <i class="bi bi-box-seam display-4 text-secondary mb-3"></i>
+                    <h3 class="h4 fw-bold text-dark">No products found in this category</h3>
+                    <p class="text-muted">Check back later or explore other categories.</p>
+                    <a href="{{ route('home') }}" class="btn btn-outline-primary mt-2">Back to Home</a>
                 </div>
             @endif
         </section>

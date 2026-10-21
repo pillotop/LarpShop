@@ -29,6 +29,7 @@
             :product-categories="$productCategories"
             :cart="$cart"
         />
+        <div id="dropdown-portal"></div>
     </header>
 
     <main class="container py-5">

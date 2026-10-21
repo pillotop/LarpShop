@@ -85,32 +85,50 @@
                 <div class="col-12 col-lg-10 mt-4">
                     <div class="row">
                         <div class="d-block col-12 col-lg-6 h-100">
-                            <div class="carousel slide position-relative">
-                                <div class="carousel-inner">
-                                    @foreach ($product->images as $image)
+                            <div class="carousel slide position-relative" id="previewCarousel">
+                                <div class="carousel-inner rounded overflow-hidden">
+                                    @forelse ($product->images as $image)
+                                        @php
+                                            $imgSrc = \Illuminate\Support\Str::startsWith($image->path, ['http://', 'https://'])
+                                                ? $image->path
+                                                : asset('storage/' . ltrim($image->path, '/'));
+                                        @endphp
                                         <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                            <img src="{{ $image->path }}" alt="{{ $product->name }}" class="d-block w-100">
+                                            <img src="{{ $imgSrc }}" alt="{{ $image->alt_text ?? $product->name }}" class="d-block w-100 object-fit-cover" style="max-height: 480px;">
                                         </div>
-                                    @endforeach
+                                    @empty
+                                        <div class="carousel-item active">
+                                            <img src="{{ asset('images/product-placeholder.jpg') }}" alt="{{ $product->name }}" class="d-block w-100 object-fit-cover" style="max-height: 480px;">
+                                        </div>
+                                    @endforelse
                                 </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#previewCarousel" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#previewCarousel" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
+                                @if ($product->images->count() > 1)
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#previewCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#previewCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                @endif
                             </div>
-                            <div class="carousel-scrollable">
-                                <ul class="d-flex flex-nowrap gap-3 overflow-scroll list-unstyled carousel-scroller">
-                                    @foreach ($product->images as $image)
-                                        <li>
-                                            <img src="{{ $image->path }}" alt="{{ $product->name }}" class="" style="max-height: 144px">
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                            @if ($product->images->count() > 1)
+                                <div class="carousel-scrollable mt-3">
+                                    <ul class="d-flex flex-nowrap gap-3 overflow-scroll list-unstyled carousel-scroller p-0">
+                                        @foreach ($product->images as $image)
+                                            @php
+                                                $imgSrc = \Illuminate\Support\Str::startsWith($image->path, ['http://', 'https://'])
+                                                    ? $image->path
+                                                    : asset('storage/' . ltrim($image->path, '/'));
+                                            @endphp
+                                            <li>
+                                                <img src="{{ $imgSrc }}" alt="{{ $image->alt_text ?? $product->name }}" class="rounded border" style="max-height: 80px; width: 80px; object-fit: cover;">
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="my-5">
                                 <article class="prose prose-invert max-w-2xl mx-auto">
                                     <h2 class="h3 mb-4">{{ $product->name }}</h2>
@@ -130,7 +148,17 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6" data-bs-spy="scroll" data-bs-target="#product" daba-bs-smooth-scroll="true">
-                            <div id="product-header" class="mb-4 border-bottom">
+                            <div id="product-header" class="mb-4 border-bottom pb-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-shop me-1"></i>{{ $product->vendor?->store_name ?? 'LarpShop Partner' }}
+                                    </span>
+                                    @if ($product->category)
+                                        <a href="{{ route('categories.show', ['slug' => $product->category->slug]) }}" class="badge bg-light text-dark text-decoration-none border">
+                                            {{ $product->category->name }}
+                                        </a>
+                                    @endif
+                                </div>
                                 <h1 class="h3 mb-3">{{ $product->name }}</h1>
                                 <p class="text-secondary mb-4">{{ $product->description }}</p>
 
@@ -196,22 +224,25 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#seller-options" aria-expanded="false">
-                                    More seller options
+                                    Seller information
                                 </button>
                             </h2>
                             <div id="seller-options" class="accordion-collapse collapse" data-bs-parent="#aside">
-                                <div class="accordion-body">...</div>
+                                <div class="accordion-body">
+                                    <p class="mb-1 fw-bold">{{ $product->vendor?->store_name ?? 'LarpShop Partner' }}</p>
+                                    <p class="small text-muted mb-0">Status: {{ ucfirst($product->vendor?->status ?? 'active') }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section>
-            <header class="container">
-                <span class="h4">Similar products</span>
+        <section class="container my-5">
+            <h2 class="h4 fw-bold mb-3">Similar products</h2>
+            @if ($similarProducts->isNotEmpty())
                 <x-two-arrow-scroller>
-                    <ul id="two-arrow-scrollable" class="d-flex flex-nowrap gap-3 list-unstyled overflow-scroll m-0">
+                    <ul id="two-arrow-scrollable" class="d-flex flex-nowrap gap-3 list-unstyled overflow-scroll m-0 py-2">
                         @foreach ($similarProducts as $similarProduct)
                             <li>
                                 <x-product-card-b :product="$similarProduct"/>
@@ -219,7 +250,11 @@
                         @endforeach
                     </ul>
                 </x-two-arrow-scroller>
-            </header>
+            @else
+                <div class="p-4 rounded bg-light text-center text-muted">
+                    <p class="mb-0">No similar products found in this category.</p>
+                </div>
+            @endif
         </section>
     </main>
     <x-side-panel/>

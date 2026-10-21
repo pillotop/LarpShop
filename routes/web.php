@@ -1,16 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\ProductImageController;
-use App\View\HomeController;
-use App\View\ProductController;
-use App\View\ProductSearchController;
-use App\View\CategoryController;
-use App\Models\Product;
 use App\Models\Category;
+use App\View\CategoryController;
+use App\View\HomeController;
+use App\View\ProductSearchController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
@@ -31,12 +29,8 @@ Route::get('/', [HomeController::class, 'index'])
 Route::get('/products', [ProductSearchController::class, 'index'])
     ->name('products.index');
 
-
-Route::get('/categoriess/{slug}', [CategoryController::class, 'show'])
+Route::get('/categories/{slug}', [CategoryController::class, 'show'])
     ->name('categories.show');
-Route::get('/categories/{slug}', function (string $slug) {
-    return view('categories.pages.category', ['category' => $slug]);
-})->name('categories.show');
 Breadcrumbs::for('category', function (BreadcrumbTrail $trail, Category $category) {
     if ($category->parent) {
         $trail->parent('category', $category->parent);
@@ -44,7 +38,7 @@ Breadcrumbs::for('category', function (BreadcrumbTrail $trail, Category $categor
         $trail->parent('home');
     }
 
-    $trail->push($category->name, route('categories.show', [ 'slug' => $category->slug ]));
+    $trail->push($category->name, route('categories.show', ['slug' => $category->slug]));
 });
 
 Route::get('/vendor/products/create', function () {
@@ -66,5 +60,5 @@ Route::get('/supports', function () {
     return view('misc.pages.supports');
 });
 
-require __DIR__ . '/products.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/products.php';
+require __DIR__.'/auth.php';
