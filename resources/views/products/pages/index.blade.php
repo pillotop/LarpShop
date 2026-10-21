@@ -87,105 +87,29 @@
             </div>
         @endif
 
-        <section aria-label="Product filters and sorting" class="bg-white rounded-4 shadow-sm p-4 mb-4">
-            <form method="GET" action="{{ route('products.index') }}" class="row g-3 align-items-end">
-                @if ($keyword !== '')
-                    <input type="hidden" name="q" value="{{ $keyword }}">
+        <div class="mb-4">
+            <button
+                type="button"
+                class="btn btn-outline-dark side-panel-trigger"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#side-panel"
+                data-side-panel-target="#filter-panel-template"
+            >
+                <i class="bi bi-funnel"></i> Filter &amp; Sort
+                @if ($hasActiveFilters)
+                    <span class="badge bg-primary ms-1">Active</span>
                 @endif
-
-                <div class="col-12 col-md-3">
-                    <label for="filter-category" class="form-label small fw-semibold text-secondary mb-1">
-                        Category
-                    </label>
-                    <select id="filter-category" name="category" class="form-select form-select-sm">
-                        <option value="">All Categories</option>
-                        @foreach ($productCategories as $categoryOption)
-                            <option
-                                value="{{ $categoryOption->slug }}"
-                                @selected($filters['category'] === $categoryOption->slug || $filters['category'] === (string) $categoryOption->category_id)
-                            >
-                                {{ $categoryOption->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-6 col-md-2">
-                    <label for="filter-min-price" class="form-label small fw-semibold text-secondary mb-1">
-                        Min Price ($)
-                    </label>
-                    <input
-                        id="filter-min-price"
-                        type="number"
-                        name="min_price"
-                        min="0"
-                        step="0.01"
-                        placeholder="0.00"
-                        value="{{ $filters['min_price'] ?? '' }}"
-                        class="form-control form-control-sm"
-                    >
-                </div>
-
-                <div class="col-6 col-md-2">
-                    <label for="filter-max-price" class="form-label small fw-semibold text-secondary mb-1">
-                        Max Price ($)
-                    </label>
-                    <input
-                        id="filter-max-price"
-                        type="number"
-                        name="max_price"
-                        min="0"
-                        step="0.01"
-                        placeholder="Any"
-                        value="{{ $filters['max_price'] ?? '' }}"
-                        class="form-control form-control-sm"
-                    >
-                </div>
-
-                <div class="col-12 col-md-3">
-                    <label for="filter-sort" class="form-label small fw-semibold text-secondary mb-1">
-                        Sort By
-                    </label>
-                    <select id="filter-sort" name="sort" class="form-select form-select-sm">
-                        @foreach ($sortOptions as $sortKey => $sortLabel)
-                            <option value="{{ $sortKey }}" @selected(($filters['sort'] ?? 'newest') === $sortKey)>
-                                {{ $sortLabel }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-12 col-md-2 d-flex flex-column justify-content-end">
-                    <div class="form-check mb-2">
-                        <input
-                            id="filter-in-stock"
-                            type="checkbox"
-                            name="in_stock"
-                            value="1"
-                            class="form-check-input"
-                            @checked(!empty($filters['in_stock']))
-                        >
-                        <label for="filter-in-stock" class="form-check-label small">
-                            In Stock Only
-                        </label>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary btn-sm w-100">
-                            Apply Filters
-                        </button>
-                        @if ($hasActiveFilters)
-                            <a
-                                href="{{ route('products.index', $keyword !== '' ? ['q' => $keyword] : []) }}"
-                                class="btn btn-outline-secondary btn-sm"
-                            >
-                                Reset
-                            </a>
-                        @endif
-                    </div>
-                </div>
-            </form>
-        </section>
+                <template id="filter-panel-template">
+                    <x-products.filter-panel
+                        :categories="$productCategories"
+                        :filters="$filters"
+                        :sort-options="$sortOptions"
+                        :keyword="$keyword"
+                        :has-active-filters="$hasActiveFilters"
+                    />
+                </template>
+            </button>
+        </div>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h5 mb-0">
@@ -231,5 +155,6 @@
         @endif
 
     </main>
+        <x-side-panel alignment="end"/>
 </div>
 @endsection
