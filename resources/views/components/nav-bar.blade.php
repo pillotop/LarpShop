@@ -95,6 +95,71 @@
                     </button>
                 </a>
             @endguest
+            @auth
+                <div class="dropdown">
+                    <button class="border-0 rounded-pill px-3 py-2 d-flex align-items-center gap-2 bg-light shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle fs-5 text-primary"></i>
+                        <span class="fw-semibold text-truncate" style="max-width: 120px;">{{ Auth::user()->username }}</span>
+                        <svg class="icon-16" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M5.75 8.75 L10 13 L14.25 8.75"></path>
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 mt-1" style="min-width: 220px;">
+                        <li class="px-3 py-2 border-bottom mb-1">
+                            <div class="fw-bold text-dark">{{ Auth::user()->username }}</div>
+                            <small class="text-muted d-block text-truncate">{{ Auth::user()->email }}</small>
+                            @if (Auth::user()->isAdmin())
+                                <span class="badge bg-danger rounded-pill mt-1">
+                                    <i class="bi bi-shield-lock-fill me-1"></i> Quản trị viên (Admin)
+                                </span>
+                            @else
+                                <span class="badge {{ Auth::user()->isVendor() ? 'bg-warning text-dark' : 'bg-primary text-white' }} rounded-pill mt-1">
+                                    {{ Auth::user()->isVendor() ? 'Người bán (Vendor)' : 'Khách hàng (Customer)' }}
+                                </span>
+                            @endif
+                        </li>
+                        @if (Auth::user()->isAdmin())
+                            <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2 text-danger fw-semibold" href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Bảng điều khiển Admin</span>
+                                </a>
+                            </li>
+                        @endif
+                        <li>
+                            <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}">
+                                <i class="bi bi-person-gear"></i>
+                                <span>Hồ sơ tài khoản</span>
+                            </a>
+                        </li>
+                        @if (Auth::user()->isVendor() && Auth::user()->vendor)
+                            <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendors.show', Auth::user()->vendor->vendor_id) }}">
+                                    <i class="bi bi-shop"></i>
+                                    <span>Gian hàng của tôi</span>
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2 text-primary" href="{{ route('profile') }}#pane-vendor">
+                                    <i class="bi bi-shop-window"></i>
+                                    <span>Đăng ký Người bán</span>
+                                </a>
+                            </li>
+                        @endif
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="post" class="m-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item rounded-2 py-2 text-danger d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Đăng xuất</span>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            @endauth
         </div>
     </div>
 </nav>
