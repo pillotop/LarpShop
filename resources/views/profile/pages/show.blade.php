@@ -8,67 +8,7 @@
     <link rel="stylesheet" href="/css/company_footer.css">
     <link rel="stylesheet" href="/css/components/dropdown.css">
     <link rel="stylesheet" href="/css/components/persistent_header.css">
-    <style>
-        .profile-hero {
-            background: linear-gradient(135deg, #1E2130 0%, #17B0D8 100%);
-            border-radius: 1.25rem;
-            color: #ffffff;
-            position: relative;
-            overflow: hidden;
-        }
-        .profile-hero::before {
-            content: "";
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 50%;
-        }
-        .avatar-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #ffffff;
-            color: #17B0D8;
-            font-size: 2.25rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-        .profile-nav-tabs .nav-link {
-            color: #495057;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1.25rem;
-            transition: all 0.2s ease-in-out;
-        }
-        .profile-nav-tabs .nav-link:hover {
-            color: #17B0D8;
-            background: #EFF9FE;
-        }
-        .profile-nav-tabs .nav-link.active {
-            color: #ffffff;
-            background-color: #17B0D8;
-            box-shadow: 0 4px 12px rgba(23, 176, 216, 0.3);
-        }
-        .stat-card {
-            background: #ffffff;
-            border: 1px solid #e9ecef;
-            border-radius: 1rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-        }
-        .form-floating > label {
-            color: #6c757d;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/profile.css">
 @endsection
 
 @section('tail')
@@ -160,50 +100,7 @@
         @endif
 
         {{-- Profile Hero Card --}}
-        <section class="profile-hero p-4 p-md-5 mb-4 shadow">
-            <div class="row align-items-center g-4">
-                <div class="col-auto">
-                    <div class="avatar-circle">
-                        {{ strtoupper(substr($user->username, 0, 1)) }}
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                        <h1 class="h2 fw-bold mb-0">{{ $user->username }}</h1>
-                        @if ($isVendor)
-                            <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold">
-                                <i class="bi bi-patch-check-fill me-1"></i> Người bán (Vendor)
-                            </span>
-                        @else
-                            <span class="badge bg-light text-primary px-3 py-1 rounded-pill fw-semibold">
-                                <i class="bi bi-person-fill me-1"></i> Khách hàng (Customer)
-                            </span>
-                        @endif
-                    </div>
-                    <div class="d-flex flex-wrap gap-3 text-white-50 mt-2 small">
-                        <div>
-                            <i class="bi bi-envelope me-1 text-white"></i> {{ $user->email }}
-                        </div>
-                        @if ($user->phone_number)
-                            <div>
-                                <i class="bi bi-telephone me-1 text-white"></i> {{ $user->phone_number }}
-                            </div>
-                        @endif
-                        <div>
-                            <i class="bi bi-calendar-event me-1 text-white"></i> Thành viên từ: {{ $user->created_at ? $user->created_at->format('d/m/Y') : 'Mới tham gia' }}
-                        </div>
-                    </div>
-                </div>
-                @if ($isVendor && $vendor && in_array($vendor->status, ['active', 'approved']))
-                    <div class="col-12 col-md-auto">
-                        <a href="{{ route('vendors.show', $vendor->vendor_id) }}" class="btn btn-light rounded-pill px-4 py-2 fw-semibold text-primary shadow-sm d-inline-flex align-items-center gap-2">
-                            <i class="bi bi-shop"></i>
-                            <span>Xem gian hàng công khai</span>
-                        </a>
-                    </div>
-                @endif
-            </div>
-        </section>
+        <x-profile.hero-card :user="$user" :is-vendor="$isVendor" :vendor="$vendor" />
 
         {{-- Navigation Tabs --}}
         <div class="row g-4">
@@ -305,9 +202,19 @@
                                     <h2 class="h5 fw-bold mb-1 text-dark">Cập nhật thông tin cá nhân</h2>
                                     <p class="text-muted small mb-0">Quản lý tên hiển thị, địa chỉ email và số điện thoại liên lạc của bạn.</p>
                                 </div>
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2">
-                                    <i class="bi bi-person"></i> Khách hàng
-                                </span>
+                                @if ($user->role === 'admin')
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2">
+                                        <i class="bi bi-shield-lock-fill me-1"></i> Quản trị viên
+                                    </span>
+                                @elseif ($isVendor)
+                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2">
+                                        <i class="bi bi-patch-check-fill me-1"></i> Người bán
+                                    </span>
+                                @else
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2">
+                                        <i class="bi bi-person me-1"></i> Khách hàng
+                                    </span>
+                                @endif
                             </div>
 
                             <form action="{{ route('profile.update') }}" method="POST">
@@ -381,7 +288,7 @@
                                         <input
                                             type="text"
                                             class="form-control rounded-3 bg-light"
-                                            value="{{ $user->role === 'vendor' ? 'Người bán (Vendor)' : 'Khách hàng (Customer)' }}"
+                                            value="{{ $user->role === 'admin' ? 'Quản trị viên (Admin)' : ($user->role === 'vendor' ? 'Người bán (Vendor)' : 'Khách hàng (Customer)') }}"
                                             disabled
                                         >
                                         <div class="form-text small">Vai trò được quản lý tự động bởi hệ thống LarpShop.</div>
