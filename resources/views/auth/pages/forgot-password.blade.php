@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title')
+@section('title', 'Forgot Password')
 
 @section('head')
     <link rel="stylesheet" href="/css/app.css">

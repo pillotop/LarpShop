@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title')
+@section('title', 'Reset Password')
 
 @section('head')
     <link rel="stylesheet" href="/css/app.css">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-12 col-lg-7 mx-auto h-100 d-flex align-items-center justify-content-center" style="background-color: var(--color-primary-200)">
                     <div style="max-width: 480px;">
-                        <x-auth.reset-password-form token=" {{ $token }} "/>
+                        <x-auth.reset-password-form :token="$token" :email="$email"/>
                     </div>
                 </div>
             </div>
