@@ -1,16 +1,16 @@
 <?php
 
+use App\Http\Controllers\AccountVendorController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\ProductImageController;
-use App\Models\Product;
-use App\Models\Vendor;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VendorStorefrontController;
 use App\Models\Category;
+use App\Models\Vendor;
 use App\View\CategoryController;
 use App\View\HomeController;
 use App\View\ProductSearchController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VendorStorefrontController;
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminVendorController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Http\Request;
@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/vendor', [ProfileController::class, 'updateVendor'])->name('profile.vendor.update');
-    Route::post('/profile/vendor/register', [ProfileController::class, 'registerVendor'])->name('profile.vendor.register');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::put('/account/vendors/{vendor}', [AccountVendorController::class, 'update'])->whereNumber('vendor')->name('profile.vendor.update');
+    Route::post('/account/vendors', [AccountVendorController::class, 'store'])->name('profile.vendor.register');
+    Route::post('/account/vendors/{vendor}/resubmit', [AccountVendorController::class, 'resubmit'])->whereNumber('vendor')->name('profile.vendor.resubmit');
 });
 
 // Admin Routes (UC-38, UC-40)

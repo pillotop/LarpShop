@@ -2,44 +2,42 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class VendorRegistrationRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    protected function prepareForValidation(): void
     {
-        return auth()->check();
+        $this->merge(['vendor_form' => (string) ($this->route('vendor') ?? 'new')]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->expectsJson()) {
+            parent::failedValidation($validator);
+        }
+
+        // Flash the prepared form identifier, not only the original HTTP input.
+        $response = redirect()->to($this->getRedirectUrl())
+            ->withInput($this->only(['store_name', 'description', 'vendor_form']))
+            ->withErrors($validator, $this->errorBag);
+
+        throw new ValidationException($validator, $response, $this->errorBag);
+    }
+
+    public function authorize(): bool
+    {
+        return $this->user() !== null;
+    }
+
     public function rules(): array
     {
         return [
-            'store_name' => ['required', 'string', 'min:2', 'max:100', 'unique:vendors,store_name'],
+            'store_name' => ['required', 'string', 'min:2', 'max:100', Rule::unique('vendors', 'store_name')],
             'description' => ['nullable', 'string', 'max:1000'],
-        ];
-    }
-
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'store_name.required' => 'Tên cửa hàng không được để trống.',
-            'store_name.min' => 'Tên cửa hàng phải có ít nhất :min ký tự.',
-            'store_name.max' => 'Tên cửa hàng không được vượt quá :max ký tự.',
-            'store_name.unique' => 'Tên cửa hàng này đã tồn tại, vui lòng chọn tên khác.',
-            'description.max' => 'Mô tả cửa hàng không được vượt quá :max ký tự.',
         ];
     }
 }

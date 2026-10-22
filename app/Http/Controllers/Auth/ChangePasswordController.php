@@ -5,22 +5,26 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
 {
-    // TODO: invalidate other session, like the vendor account or something idk
-    public function update(ChangePasswordRequest $request): JsonResponse
+    public function update(ChangePasswordRequest $request): RedirectResponse|JsonResponse
     {
-        $validated = $request->validated();
-
-        $request->user()->forceFill([
-            'password' => Hash::make($validated['password'])
-        ])->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password changed successfully',
+        $request->user()->update([
+            'password' => Hash::make($request->validated('password')),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Password changed successfully.',
+            ]);
+        }
+
+        return redirect()->route('profile')
+            ->with('status', 'password-updated')
+            ->with('success', 'Password changed successfully.');
     }
 }

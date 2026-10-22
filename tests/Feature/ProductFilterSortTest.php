@@ -21,7 +21,7 @@ class ProductFilterSortTest extends TestCase
         ], 'category_id');
     }
 
-    private function createVendorUser(string $role = 'vendor'): int
+    private function createVendorUser(string $role = 'customer'): int
     {
         return DB::table('users')->insertGetId([
             'username' => 'user_'.uniqid(),

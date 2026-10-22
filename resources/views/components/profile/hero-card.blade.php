@@ -1,7 +1,6 @@
 @props([
     'user',
-    'isVendor' => false,
-    'vendor' => null,
+    'vendors',
 ])
 
 <section class="profile-hero p-4 p-md-5 mb-4 shadow">
@@ -14,17 +13,13 @@
         <div class="col">
             <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
                 <h1 class="h2 fw-bold mb-0">{{ $user->username }}</h1>
-                @if ($user->role === 'admin')
+                @if ($user->isAdmin())
                     <span class="badge bg-danger text-white px-3 py-1 rounded-pill fw-semibold shadow-sm">
-                        <i class="bi bi-shield-lock-fill me-1"></i> Quản trị viên (Admin)
-                    </span>
-                @elseif ($isVendor)
-                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold">
-                        <i class="bi bi-patch-check-fill me-1"></i> Người bán (Vendor)
+                        <i class="bi bi-shield-lock-fill me-1"></i> Administrator
                     </span>
                 @else
                     <span class="badge bg-light text-primary px-3 py-1 rounded-pill fw-semibold">
-                        <i class="bi bi-person-fill me-1"></i> Khách hàng (Customer)
+                        <i class="bi bi-person-fill me-1"></i> Customer
                     </span>
                 @endif
             </div>
@@ -38,22 +33,22 @@
                     </div>
                 @endif
                 <div>
-                    <i class="bi bi-calendar-event me-1 text-white"></i> Thành viên từ: {{ $user->created_at ? $user->created_at->format('d/m/Y') : 'Mới tham gia' }}
+                    <i class="bi bi-calendar-event me-1 text-white"></i> Member since: {{ $user->created_at ? $user->created_at->format('d/m/Y') : 'Recently joined' }}
                 </div>
             </div>
         </div>
-        @if ($user->role === 'admin')
+        @if ($user->isAdmin())
             <div class="col-12 col-md-auto">
                 <a href="{{ route('admin.dashboard') }}" class="btn btn-light rounded-pill px-4 py-2 fw-semibold text-danger shadow-sm d-inline-flex align-items-center gap-2">
                     <i class="bi bi-speedometer2"></i>
-                    <span>Trang Quản trị hệ thống</span>
+                    <span>Admin dashboard</span>
                 </a>
             </div>
-        @elseif ($isVendor && $vendor && in_array($vendor->status, ['active', 'approved']))
+        @elseif ($vendors->isNotEmpty())
             <div class="col-12 col-md-auto">
-                <a href="{{ route('vendors.show', $vendor->vendor_id) }}" class="btn btn-light rounded-pill px-4 py-2 fw-semibold text-primary shadow-sm d-inline-flex align-items-center gap-2">
+                <a href="{{ route('profile') }}#pane-vendor" class="btn btn-light rounded-pill px-4 py-2 fw-semibold text-primary shadow-sm d-inline-flex align-items-center gap-2">
                     <i class="bi bi-shop"></i>
-                    <span>Xem gian hàng công khai</span>
+                    <span>Manage stores</span>
                 </a>
             </div>
         @endif
