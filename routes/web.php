@@ -1,16 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\ProductImageController;
-use App\Models\Product;
-use App\Models\Vendor;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\VendorStorefrontController;
 use App\Models\Category;
+use App\Models\Vendor;
 use App\View\CategoryController;
 use App\View\HomeController;
 use App\View\ProductSearchController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VendorStorefrontController;
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminVendorController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Http\Request;
@@ -72,6 +72,31 @@ Breadcrumbs::for('vendor', function (BreadcrumbTrail $trail, Vendor $vendor) {
     $trail->push($vendor->store_name, route('vendors.show', ['vendor' => $vendor->vendor_id]));
 });
 
+Breadcrumbs::for('about', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('About Us', route('about'));
+});
+
+Breadcrumbs::for('contact', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Contact Us', route('contact'));
+});
+
+Breadcrumbs::for('investors', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Investors', route('investors'));
+});
+
+Breadcrumbs::for('blog', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Blog', route('blog'));
+});
+
+Breadcrumbs::for('press', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Press & Media', route('press'));
+});
+
 Route::get('/vendors/{vendor}', [VendorStorefrontController::class, 'show'])
     ->name('vendors.show');
 
@@ -93,6 +118,14 @@ Route::post('/products/{product}/images', [ProductImageController::class, 'store
 Route::get('/supports', function () {
     return view('misc.pages.supports');
 });
+
+// Company Info Static Pages
+Route::get('/about', [StaticPageController::class, 'about'])->name('about');
+Route::get('/contact', [StaticPageController::class, 'contact'])->name('contact');
+Route::post('/contact', [StaticPageController::class, 'submitContact'])->name('contact.submit');
+Route::get('/investors', [StaticPageController::class, 'investors'])->name('investors');
+Route::get('/blog', [StaticPageController::class, 'blog'])->name('blog');
+Route::get('/press', [StaticPageController::class, 'press'])->name('press');
 
 require __DIR__.'/products.php';
 require __DIR__.'/auth.php';
