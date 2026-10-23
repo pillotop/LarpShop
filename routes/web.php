@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminProductModerationController;
+use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminReviewModerationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVendorController;
@@ -66,6 +67,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // UC-43: Review Moderation
     Route::get('/reviews', [AdminReviewModerationController::class, 'index'])->name('reviews.index');
     Route::delete('/reviews/{review}', [AdminReviewModerationController::class, 'destroy'])->whereNumber('review')->name('reviews.destroy');
+
+    // Platform Analytics Reports (UC-45)
+    Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
