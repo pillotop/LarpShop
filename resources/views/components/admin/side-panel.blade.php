@@ -33,6 +33,24 @@
                 @endif
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <i class="bi bi-diagram-3 fs-5"></i>
+                <span>Categories</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <i class="bi bi-people fs-5"></i>
+                <span>Users &amp; Roles</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                <i class="bi bi-receipt fs-5"></i>
+                <span>Orders &amp; Disputes</span>
+            </a>
+        </li>
         <li class="nav-item mt-3">
             <small class="text-uppercase text-secondary fw-bold px-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">Lối tắt sàn</small>
         </li>
