@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\AccountVendorController;
+use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVendorController;
+use App\Http\Controllers\CustomerServicePageController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaticPageController;
@@ -36,6 +40,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/vendors/{vendor}/reject', [AdminVendorController::class, 'reject'])->name('vendors.reject');
     Route::post('/vendors/{vendor}/suspend', [AdminVendorController::class, 'suspend'])->name('vendors.suspend');
     Route::post('/vendors/{vendor}/reinstate', [AdminVendorController::class, 'reinstate'])->name('vendors.reinstate');
+
+    // UC-41: Category Management
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->whereNumber('category')->name('categories.update');
+    Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->whereNumber('category')->name('categories.destroy');
+
+    // UC-39: User Management and Role Assignment
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->whereNumber('user')->name('users.update-role');
+
+    // UC-44: Order and Dispute Investigation
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->whereNumber('order')->name('orders.show');
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->whereNumber('order')->name('orders.update-status');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
@@ -152,7 +171,7 @@ Breadcrumbs::for('recalls', function (BreadcrumbTrail $trail) {
     $trail->push('Product Recalls', route('recalls'));
 });
 
-Route::get('/help', [App\Http\Controllers\CustomerServicePageController::class, 'help'])->name('help');
-Route::get('/privacy', [App\Http\Controllers\CustomerServicePageController::class, 'privacy'])->name('privacy');
-Route::get('/community', [App\Http\Controllers\CustomerServicePageController::class, 'community'])->name('community');
-Route::get('/recalls', [App\Http\Controllers\CustomerServicePageController::class, 'recalls'])->name('recalls');
+Route::get('/help', [CustomerServicePageController::class, 'help'])->name('help');
+Route::get('/privacy', [CustomerServicePageController::class, 'privacy'])->name('privacy');
+Route::get('/community', [CustomerServicePageController::class, 'community'])->name('community');
+Route::get('/recalls', [CustomerServicePageController::class, 'recalls'])->name('recalls');

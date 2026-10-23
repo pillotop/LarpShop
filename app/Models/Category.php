@@ -10,6 +10,13 @@ class Category extends Model
 {
     protected $primaryKey = 'category_id';
 
+    protected $fillable = [
+        'parent_id',
+        'name',
+        'slug',
+        'description',
+    ];
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id', 'category_id');
@@ -18,5 +25,10 @@ class Category extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id', 'category_id');
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'category_id', 'category_id');
     }
 }

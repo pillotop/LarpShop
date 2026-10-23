@@ -26,7 +26,7 @@ class ProductSearchTest extends TestCase
 
         $vendorId = DB::table('vendors')->insertGetId([
             'user_id' => $userId,
-            'store_name' => 'Test Store',
+            'store_name' => 'Test Store '.uniqid(),
             'status' => 'approved',
             'created_at' => now(),
             'updated_at' => now(),

@@ -13,15 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        $users = [
             [
                 'username' => 'admin',
                 'email' => 'admin@admin.com',
                 'password' => Hash::make('password123'),
                 'phone_number' => null,
                 'role' => 'admin',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'volttech',
@@ -29,8 +27,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '+15550101',
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'audiopulse',
@@ -38,8 +34,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '+15550102',
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'cybergear',
@@ -47,8 +41,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '+15550103',
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'nextgen',
@@ -56,8 +48,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '+15550104',
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'smarthome',
@@ -65,8 +55,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '+15550105',
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'demo_customer',
@@ -74,8 +62,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => null,
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'username' => 'demo_vendor',
@@ -83,17 +69,24 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'phone_number' => '0900000000',
                 'role' => 'customer',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'username' => 'admin',
+                'username' => 'imadmin',
                 'email' => 'imadmin@mail.com',
                 'password' => Hash::make('cj*djX8P@A'),
+                'phone_number' => null,
                 'role' => 'admin',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($users as $user) {
+            DB::table('users')->updateOrInsert(
+                ['username' => $user['username']],
+                array_merge($user, [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])
+            );
+        }
     }
 }
