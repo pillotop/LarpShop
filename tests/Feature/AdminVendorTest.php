@@ -85,8 +85,8 @@ class AdminVendorTest extends TestCase
         $customer->refresh();
 
         $this->assertSame('approved', $vendor->status);
-        $this->assertSame('vendor', $customer->role);
-        $this->assertTrue($customer->isVendor());
+        $this->assertSame('customer', $customer->role);
+        $this->assertTrue($customer->hasVendors());
     }
 
     public function test_admin_can_reject_pending_vendor(): void
@@ -111,14 +111,14 @@ class AdminVendorTest extends TestCase
 
         $this->assertSame('rejected', $vendor->status);
         $this->assertSame('customer', $customer->role);
-        $this->assertFalse($customer->isVendor());
+        $this->assertTrue($customer->hasVendors());
     }
 
     public function test_admin_can_suspend_active_vendor(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        $vendorUser = User::factory()->vendor()->create();
+        $vendorUser = User::factory()->create();
         $vendor = Vendor::create([
             'user_id' => $vendorUser->user_id,
             'store_name' => 'Misbehaving Armory',
@@ -132,5 +132,21 @@ class AdminVendorTest extends TestCase
             ->assertSessionHas('warning');
 
         $this->assertSame('suspended', $vendor->refresh()->status);
+    }
+
+    public function test_moderation_changes_only_the_selected_store_and_preserves_account_roles(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        foreach (['customer', 'admin'] as $role) {
+            $owner = User::factory()->create(['role' => $role]);
+            $first = $owner->vendors()->create(['store_name' => $role.' First', 'status' => 'pending']);
+            $second = $owner->vendors()->create(['store_name' => $role.' Second', 'status' => 'active']);
+            foreach (['approve' => 'approved', 'reject' => 'rejected', 'reinstate' => 'approved', 'suspend' => 'suspended'] as $action => $status) {
+                $this->actingAs($admin)->post('/admin/vendors/'.$first->vendor_id.'/'.$action)->assertRedirect();
+                $this->assertSame($status, $first->refresh()->status);
+                $this->assertSame('active', $second->refresh()->status);
+                $this->assertSame($role, $owner->refresh()->role);
+            }
+        }
     }
 }

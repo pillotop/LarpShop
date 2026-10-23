@@ -31,7 +31,7 @@ class CategoryBrowseTest extends TestCase
             'username' => 'vendor_'.uniqid(),
             'email' => uniqid().'@example.test',
             'password' => bcrypt('password123'),
-            'role' => 'vendor',
+            'role' => 'customer',
             'created_at' => now(),
             'updated_at' => now(),
         ], 'user_id');

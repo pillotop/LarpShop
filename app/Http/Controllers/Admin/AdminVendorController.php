@@ -48,12 +48,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'approved';
         $vendor->save();
 
-        if ($vendor->user) {
-            $vendor->user->role = 'vendor';
-            $vendor->user->save();
-        }
-
-        return back()->with('success', "Đã phê duyệt thành công gian hàng '{$vendor->store_name}'. Tài khoản người dùng đã được nâng cấp lên Người bán (Vendor).");
+        return back()->with('success', "Store '{$vendor->store_name}' has been approved.");
     }
 
     /**
@@ -64,12 +59,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'rejected';
         $vendor->save();
 
-        if ($vendor->user && $vendor->user->role === 'vendor') {
-            $vendor->user->role = 'customer';
-            $vendor->user->save();
-        }
-
-        return back()->with('warning', "Đã từ chối đơn đăng ký gian hàng '{$vendor->store_name}'.");
+        return back()->with('warning', "Application for '{$vendor->store_name}' has been rejected.");
     }
 
     /**
@@ -80,7 +70,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'suspended';
         $vendor->save();
 
-        return back()->with('warning', "Gian hàng '{$vendor->store_name}' đã được chuyển sang trạng thái tạm khóa.");
+        return back()->with('warning', "Store '{$vendor->store_name}' has been suspended.");
     }
 
     /**
@@ -91,11 +81,6 @@ class AdminVendorController extends Controller
         $vendor->status = 'approved';
         $vendor->save();
 
-        if ($vendor->user) {
-            $vendor->user->role = 'vendor';
-            $vendor->user->save();
-        }
-
-        return back()->with('success', "Gian hàng '{$vendor->store_name}' đã được mở khóa và kích hoạt lại thành công.");
+        return back()->with('success', "Store '{$vendor->store_name}' has been reinstated.");
     }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email', 100)->unique();
             $table->string('password', 255);
             $table->string('phone_number', 15)->nullable();
-            $table->string('role', 20)->default('customer');
+            $table->enum('role', ['customer', 'admin'])->default('customer');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('id')->primary();
 
             $table->foreignId('user_id')
-                  ->nullable()
-                  ->constrained('users', 'user_id');
+                ->nullable()
+                ->constrained('users', 'user_id');
 
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();

@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id('vendor_id');
 
             $table->foreignId('user_id')
-                  ->unique()
-                  ->constrained('users', 'user_id')
-                  ->restrictOnDelete();
+                ->constrained('users', 'user_id')
+                ->restrictOnDelete();
 
-            $table->string('store_name', 100);
+            $table->string('store_name', 100)->unique();
             $table->text('description')->nullable();
             $table->string('status', 20)->default('pending');
             $table->timestamps();

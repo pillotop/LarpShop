@@ -33,14 +33,4 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
-
-    /**
-     * Indicate that the user has vendor role.
-     */
-    public function vendor(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'vendor',
-        ]);
-    }
 }

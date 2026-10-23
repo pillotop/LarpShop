@@ -16,7 +16,7 @@ class ProductDetailTest extends TestCase
             'username' => 'vendor_'.uniqid(),
             'email' => uniqid().'@vendor.test',
             'password' => bcrypt('password123'),
-            'role' => 'vendor',
+            'role' => 'customer',
             'created_at' => now(),
             'updated_at' => now(),
         ], 'user_id');
