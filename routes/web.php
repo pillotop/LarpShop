@@ -4,6 +4,8 @@ use App\Http\Controllers\AccountVendorController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminProductModerationController;
+use App\Http\Controllers\Admin\AdminReviewModerationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\CustomerServicePageController;
@@ -55,6 +57,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->whereNumber('order')->name('orders.show');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->whereNumber('order')->name('orders.update-status');
+
+    // UC-42: Product Moderation
+    Route::get('/products/moderation', [AdminProductModerationController::class, 'index'])->name('products.moderation.index');
+    Route::patch('/products/{product}/approve', [AdminProductModerationController::class, 'approve'])->whereNumber('product')->name('products.moderation.approve');
+    Route::patch('/products/{product}/reject', [AdminProductModerationController::class, 'reject'])->whereNumber('product')->name('products.moderation.reject');
+
+    // UC-43: Review Moderation
+    Route::get('/reviews', [AdminReviewModerationController::class, 'index'])->name('reviews.index');
+    Route::delete('/reviews/{review}', [AdminReviewModerationController::class, 'destroy'])->whereNumber('review')->name('reviews.destroy');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
