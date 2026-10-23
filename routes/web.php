@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\AccountVendorController;
-use App\Http\Controllers\CustomerServicePageController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\VendorStorefrontController;
 use App\Models\Category;
 use App\Models\Vendor;
