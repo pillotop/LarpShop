@@ -129,3 +129,29 @@ Route::get('/press', [StaticPageController::class, 'press'])->name('press');
 
 require __DIR__.'/products.php';
 require __DIR__.'/auth.php';
+
+// Customer Service Static Pages
+Breadcrumbs::for('help', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Help Centre', route('help'));
+});
+
+Breadcrumbs::for('privacy', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Privacy Policy', route('privacy'));
+});
+
+Breadcrumbs::for('community', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Community Forum', route('community'));
+});
+
+Breadcrumbs::for('recalls', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Product Recalls', route('recalls'));
+});
+
+Route::get('/help', [App\Http\Controllers\CustomerServicePageController::class, 'help'])->name('help');
+Route::get('/privacy', [App\Http\Controllers\CustomerServicePageController::class, 'privacy'])->name('privacy');
+Route::get('/community', [App\Http\Controllers\CustomerServicePageController::class, 'community'])->name('community');
+Route::get('/recalls', [App\Http\Controllers\CustomerServicePageController::class, 'recalls'])->name('recalls');
