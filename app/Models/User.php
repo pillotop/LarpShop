@@ -30,6 +30,11 @@ class User extends Authenticatable
         return $this->hasMany(Vendor::class, 'user_id', 'user_id');
     }
 
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id', 'user_id');
+    }
+
     public function hasVendors(): bool
     {
         return $this->vendors()->exists();

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductReview;
@@ -90,20 +91,24 @@ class DatabaseSeeder extends Seeder
         $createdCategories = [];
 
         foreach ($categoryStructure as $groupKey => $data) {
-            $parentCat = Category::create([
-                'name' => $data['parent']['name'],
-                'slug' => $data['parent']['slug'],
-                'description' => $data['parent']['description'],
-                'parent_id' => null,
-            ]);
+            $parentCat = Category::updateOrCreate(
+                ['slug' => $data['parent']['slug']],
+                [
+                    'name' => $data['parent']['name'],
+                    'description' => $data['parent']['description'],
+                    'parent_id' => null,
+                ]
+            );
 
             foreach ($data['children'] as $child) {
-                $createdCategories[$child['slug']] = Category::create([
-                    'name' => $child['name'],
-                    'slug' => $child['slug'],
-                    'description' => $child['description'],
-                    'parent_id' => $parentCat->category_id,
-                ]);
+                $createdCategories[$child['slug']] = Category::updateOrCreate(
+                    ['slug' => $child['slug']],
+                    [
+                        'name' => $child['name'],
+                        'description' => $child['description'],
+                        'parent_id' => $parentCat->category_id,
+                    ]
+                );
             }
         }
 
@@ -111,12 +116,15 @@ class DatabaseSeeder extends Seeder
         // 2. USERS & VENDORS
         // ==========================================
 
-        User::create([
-            'username' => 'admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password123'),
-            'role' => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['username' => 'admin'],
+            [
+                'email' => 'admin@admin.com',
+                'password' => Hash::make('password123'),
+                'phone_number' => null,
+                'role' => 'admin',
+            ]
+        );
 
         $customersData = [
             ['username' => 'johndoe', 'email' => 'john@example.com', 'phone_number' => '+15551111', 'role' => 'customer'],
@@ -126,13 +134,15 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($customersData as $cData) {
-            User::create([
-                'username' => $cData['username'],
-                'email' => $cData['email'],
-                'password' => Hash::make('password123'),
-                'phone_number' => $cData['phone_number'],
-                'role' => $cData['role'],
-            ]);
+            User::updateOrCreate(
+                ['username' => $cData['username']],
+                [
+                    'email' => $cData['email'],
+                    'password' => Hash::make('password123'),
+                    'phone_number' => $cData['phone_number'],
+                    'role' => $cData['role'],
+                ]
+            );
         }
 
         $vendorsData = [
@@ -148,28 +158,34 @@ class DatabaseSeeder extends Seeder
         $createdVendors = [];
         $allReviewUsers = User::all();
         foreach ($vendorsData as $data) {
-            $user = User::create([
-                'username' => $data['username'],
-                'email' => $data['email'],
-                'password' => Hash::make('password123'),
-                'role' => 'customer',
-            ]);
+            $user = User::updateOrCreate(
+                ['username' => $data['username']],
+                [
+                    'email' => $data['email'],
+                    'password' => Hash::make('password123'),
+                    'role' => 'customer',
+                ]
+            );
 
-            $createdVendors[$data['username']] = Vendor::create([
-                'user_id' => $user->user_id,
-                'store_name' => $data['store_name'],
-                'description' => $data['description'],
-                'status' => $data['status'],
-            ]);
+            $createdVendors[$data['username']] = Vendor::updateOrCreate(
+                ['store_name' => $data['store_name']],
+                [
+                    'user_id' => $user->user_id,
+                    'description' => $data['description'],
+                    'status' => $data['status'],
+                ]
+            );
         }
 
         // A second store demonstrates that store ownership is independent of account role.
-        Vendor::create([
-            'user_id' => $createdVendors['volttech']->user_id,
-            'store_name' => 'VoltTech Workshop',
-            'description' => 'A second store awaiting approval for the same owner.',
-            'status' => 'pending',
-        ]);
+        Vendor::updateOrCreate(
+            ['store_name' => 'VoltTech Workshop'],
+            [
+                'user_id' => $createdVendors['volttech']->user_id,
+                'description' => 'A second store awaiting approval for the same owner.',
+                'status' => 'pending',
+            ]
+        );
 
         // ==========================================
         // 3. PRODUCTS, IMAGES & REVIEWS
@@ -355,25 +371,31 @@ class DatabaseSeeder extends Seeder
             $vendor = $createdVendors[$pData['vendor']];
             $category = $createdCategories[$pData['category']];
 
-            $product = Product::create([
-                'category_id' => $category->category_id,
-                'vendor_id' => $vendor->vendor_id,
-                'name' => $pData['name'],
-                'slug' => Str::slug($pData['name']),
-                'description' => $pData['description'],
-                'price' => $pData['price'],
-                'stock' => $pData['stock'],
-            ]);
+            $product = Product::updateOrCreate(
+                ['slug' => Str::slug($pData['name'])],
+                [
+                    'category_id' => $category->category_id,
+                    'vendor_id' => $vendor->vendor_id,
+                    'name' => $pData['name'],
+                    'description' => $pData['description'],
+                    'price' => $pData['price'],
+                    'stock' => $pData['stock'],
+                ]
+            );
 
             // Seed Product Images
             if (! empty($pData['images'])) {
                 foreach ($pData['images'] as $index => $imageData) {
-                    ProductImage::create([
-                        'product_id' => $product->product_id,
-                        'path' => $imageData['path'],
-                        'alt_text' => $imageData['alt_text'] ?? $product->name,
-                        'sort_order' => $index,
-                    ]);
+                    ProductImage::updateOrCreate(
+                        [
+                            'product_id' => $product->product_id,
+                            'sort_order' => $index,
+                        ],
+                        [
+                            'path' => $imageData['path'],
+                            'alt_text' => $imageData['alt_text'] ?? $product->name,
+                        ]
+                    );
                 }
             }
 
@@ -383,13 +405,62 @@ class DatabaseSeeder extends Seeder
                     // Pick a random user from our created users list to leave the review
                     $randomUser = $allReviewUsers->random();
 
-                    ProductReview::create([
-                        'product_id' => $product->product_id,
-                        'user_id' => $randomUser->user_id,
-                        'rating' => $reviewData['rating'],
-                        'comment' => $reviewData['comment'],
-                    ]);
+                    ProductReview::updateOrCreate(
+                        [
+                            'product_id' => $product->product_id,
+                            'comment' => $reviewData['comment'],
+                        ],
+                        [
+                            'user_id' => $randomUser->user_id,
+                            'rating' => $reviewData['rating'],
+                        ]
+                    );
                 }
+            }
+        }
+
+        // ==========================================
+        // 4. SAMPLE ORDERS (UC-44 Investigation)
+        // ==========================================
+        if (Order::count() === 0) {
+            $john = User::where('username', 'johndoe')->first();
+            $jane = User::where('username', 'janestewart')->first();
+            $seededProducts = Product::orderBy('product_id')->take(3)->get();
+
+            if ($john && $seededProducts->count() >= 2) {
+                $first = $seededProducts[0];
+                $second = $seededProducts[1];
+                $total = ($first->price * 1) + ($second->price * 2);
+
+                $order1 = Order::create([
+                    'user_id' => $john->user_id,
+                    'total_amount' => $total,
+                    'status' => 'disputed',
+                ]);
+                $order1->details()->create([
+                    'product_id' => $first->product_id,
+                    'quantity' => 1,
+                    'unit_price' => $first->price,
+                ]);
+                $order1->details()->create([
+                    'product_id' => $second->product_id,
+                    'quantity' => 2,
+                    'unit_price' => $second->price,
+                ]);
+            }
+
+            if ($jane && $seededProducts->count() >= 3) {
+                $third = $seededProducts[2];
+                $order2 = Order::create([
+                    'user_id' => $jane->user_id,
+                    'total_amount' => $third->price,
+                    'status' => 'delivered',
+                ]);
+                $order2->details()->create([
+                    'product_id' => $third->product_id,
+                    'quantity' => 1,
+                    'unit_price' => $third->price,
+                ]);
             }
         }
     }
