@@ -5,16 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Queries\Categories\CategoryQuery;
+use App\Services\Categories\CategoryManagementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AdminCategoryController extends Controller
 {
-    public function __construct(private CategoryQuery $categories) {}
+    public function __construct(
+        private CategoryQuery $categories,
+        private CategoryManagementService $categoryService
+    ) {}
 
     /**
      * UC-41: List categories with search and root/sub filtering.
@@ -42,12 +44,12 @@ class AdminCategoryController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $data = $this->validatedData($request);
+        $validated = $this->validateInput($request);
 
-        Category::create($data);
+        $category = $this->categoryService->create($validated);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', "Category '{$data['name']}' has been created.");
+            ->with('success', "Category '{$category->name}' has been created.");
     }
 
     /**
@@ -55,9 +57,9 @@ class AdminCategoryController extends Controller
      */
     public function update(Request $request, Category $category): RedirectResponse
     {
-        $data = $this->validatedData($request, $category);
+        $validated = $this->validateInput($request);
 
-        $category->update($data);
+        $this->categoryService->update($category, $validated);
 
         return redirect()->route('admin.categories.index')
             ->with('success', "Category '{$category->name}' has been updated.");
@@ -68,71 +70,28 @@ class AdminCategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        if ($category->children()->exists()) {
-            return back()->with('warning', "Category '{$category->name}' cannot be deleted because it has subcategories.");
-        }
+        $warning = $this->categoryService->delete($category);
 
-        if ($category->products()->exists()) {
-            return back()->with('warning', "Category '{$category->name}' cannot be deleted because it still contains products.");
+        if ($warning !== null) {
+            return back()->with('warning', $warning);
         }
-
-        $category->delete();
 
         return redirect()->route('admin.categories.index')
             ->with('success', "Category '{$category->name}' has been deleted.");
     }
 
     /**
-     * Validate input, normalize the slug, and guard against circular hierarchies.
+     * Validate incoming request payload before passing to the service.
      *
-     * @return array{name: string, slug: string, parent_id: int|null, description: string|null}
+     * @return array{name: string, slug?: string|null, parent_id?: int|null, description?: string|null}
      */
-    private function validatedData(Request $request, ?Category $category = null): array
+    private function validateInput(Request $request): array
     {
-        $validated = $request->validate([
+        return $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'slug' => ['nullable', 'string', 'max:100'],
             'parent_id' => ['nullable', 'integer', Rule::exists('categories', 'category_id')],
             'description' => ['nullable', 'string', 'max:2000'],
         ]);
-
-        $slug = Str::slug($validated['slug'] ?? '') ?: Str::slug($validated['name']);
-
-        if ($slug === '') {
-            throw ValidationException::withMessages([
-                'slug' => 'A valid slug could not be generated. Please provide one.',
-            ]);
-        }
-
-        $slugTaken = Category::query()
-            ->where('slug', $slug)
-            ->when($category, fn ($q) => $q->whereKeyNot($category->category_id))
-            ->exists();
-
-        if ($slugTaken) {
-            throw ValidationException::withMessages([
-                'slug' => 'This slug is already used by another category.',
-            ]);
-        }
-
-        $parentId = isset($validated['parent_id']) ? (int) $validated['parent_id'] : null;
-
-        if ($category !== null && $parentId !== null) {
-            $circular = $parentId === $category->category_id
-                || in_array($parentId, $this->categories->descendantIds($category->category_id), true);
-
-            if ($circular) {
-                throw ValidationException::withMessages([
-                    'parent_id' => 'A category cannot be moved under itself or one of its descendants.',
-                ]);
-            }
-        }
-
-        return [
-            'name' => $validated['name'],
-            'slug' => $slug,
-            'parent_id' => $parentId,
-            'description' => $validated['description'] ?? null,
-        ];
     }
 }
