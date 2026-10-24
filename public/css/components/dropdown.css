@@ -3,7 +3,7 @@
     z-index: 1000;
 }
 
-.dropdown-menu {
+.category-dropdown-menu {
     min-width: 12rem;
     padding: 0.5rem;
     display: block;
@@ -18,12 +18,12 @@
     transition: opacity 150ms ease, transform 150ms ease;
 }
 
-.dropdown-menu.visible {
+.category-dropdown-menu.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-.dropdown-menu a {
+.category-dropdown-menu a {
     display: block;
     padding: 0.5rem 0.75rem;
     color: inherit;

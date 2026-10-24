@@ -2,108 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\Cart\CartMutationService;
+use App\Services\Cart\CartRetrievalService;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Cart;
-use App\Models\CartItem;
-use App\Models\Product;
+use Illuminate\View\View;
 
 class CartController extends Controller
 {
-    public function index(): JsonResponse
+    public function __construct(
+        private CartRetrievalService $cartRetrievalService,
+        private CartMutationService $cartMutationService,
+    ) {}
+
+    public function index(): View
     {
-        $userId = Auth::id();
-        $sessionId = Session::id();
+        return view('cart.pages.index');
+    }
 
-        $cart = Cart::with(['items.itemable.images'])
-            ->firstOrCreate($userId
-                ? ['user_id' => $userId]
-                : ['session_id' => $sessionId]);
-
-        $items = $cart->items->map(function ($cartItem) {
-            $product = $cartItem->itemable;
-
-            if (!$product) {
-                return null;
-            }
-
-            return [
-                'cart_item_id' => $cartItem->cart_item_id,
-                'quantity' => $cartItem->quantity,
-                'product' => [
-                    'product_id' => $product->product_id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'stock' => $product->stock,
-                    'image' => $product->images->first()?->path,
-                ],
-                'subtotal' => $cartItem->quantity * $product->price,
-            ];
-        })->filter()->values();
+    public function show(): JsonResponse
+    {
+        $products = $this
+            ->cartRetrievalService
+            ->getCartData();
 
         return response()->json([
             'success' => true,
-            'cart' => [
-                'total_count' => $cart->items->sum('quantity'),
-                'items' => $items,
-            ],
+            'cart' => $products,
+            'cart_html' => view('components.cart', ['products' => $products['products']])->render(),
+            'cart_page_html' => view('cart.partials.content', ['cart' => $products])->render(),
         ]);
     }
 
-    public function store(Request $request): JsonResponse
-    {
+    public function add(
+        Request $request,
+    ): JsonResponse {
+        return $this->writeQuantity($request, add: true);
+    }
+
+    public function store(
+        Request $request,
+    ): JsonResponse {
+        return $this->writeQuantity($request, add: false);
+    }
+
+    private function writeQuantity(
+        Request $request,
+        bool $add,
+    ): JsonResponse {
         $validated = $request->validate([
-            'product_id' => ['required', Rule::exists('products', 'product_id')],
-            'quantity' => ['required', 'integer', 'min:0'],
+            'product_id' => ['required', 'integer', Rule::exists('products', 'product_id')],
+            'quantity' => ['required', 'integer', $add ? 'min:1' : 'min:0', 'max:2147483647'],
         ]);
 
-        $product = Product::findOrFail($validated['product_id']);
-        $quantity = (int) $validated['quantity'];
-
-        $userId = Auth::id();
-        $sessionId = Session::id();
-
-        $cart = Cart::firstOrCreate(
-            $userId ? ['user_id' => $userId] : ['session_id' => $sessionId]
-        );
-
-        $cartItem = CartItem::where('cart_id', $cart->cart_id)
-            ->where('itemable_type', Product::class)
-            ->where('itemable_id', $product->product_id)
-            ->first();
-
-        if ($quantity === 0) {
-            if ($cartItem) {
-                $cartItem->delete();
-            }
-        } else {
-            if ($product->stock < $quantity) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Requested quantity exceeds available stock.',
-                ], 422);
-            }
-
-            if ($cartItem) {
-                $cartItem->update(['quantity' => $quantity]);
-            } else {
-                CartItem::create([
-                    'cart_id' => $cart->cart_id,
-                    'itemable_type' => Product::class,
-                    'itemable_id' => $product->product_id,
-                    'quantity' => $quantity,
-                ]);
-            }
+        try {
+            $result = $this->cartMutationService->updateQuantity(
+                (int) $validated['product_id'],
+                (int) $validated['quantity'],
+                $add
+            );
+        } catch (LockTimeoutException) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Your cart is busy. Please try again.',
+            ], 409);
         }
+
+        $cart = $this->cartRetrievalService->getCartData();
 
         return response()->json([
             'success' => true,
             'message' => 'Cart updated.',
-            'quantity' => $cartItem?->cart->items()->sum('quantity') ?? $cart->items()->sum('quantity'),
+            'cart' => $cart,
+            'cart_html' => view('components.cart', ['products' => $cart['products']])->render(),
+            'cart_page_html' => view('cart.partials.content', ['cart' => $cart])->render(),
+            // Preserve the existing total-count field for current callers.
+            'quantity' => $result['total_count'],
+            ...$result,
         ]);
     }
 
+    public function sort(?string $sortBy, ?string $direction): JsonResponse
+    {
+        $data = $this->cartRetrievalService
+            ->getCartData($sortBy, $direction);
+
+        return response()->json([
+            'success' => true,
+            'products' => $data['products'],
+        ]);
+    }
 }

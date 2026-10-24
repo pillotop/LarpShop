@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/css/components/persistent_header.css">
     <link rel="stylesheet" href="/css/components/rating_container.css">
     <link rel="stylesheet" href="/css/components/two_arrow_scroller.css">
+    <link rel="stylesheet" href="/css/components/quantity_picker.css">
 @endsection
 
 @section('tail')

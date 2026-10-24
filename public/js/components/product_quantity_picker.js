@@ -2,84 +2,109 @@ class ProductQuantityPicker {
     constructor(element) {
         this.element = element;
 
-        this.cartStoreUrl = this.element.dataset.addToCartUrl;
-        this.cartUpdateUrl = this.element.dataset.cartUpdateUrl;
-        this.productId = this.element.dataset.productId;
+        this.addToCartUrl = element.dataset.addToCartUrl;
+        this.setCartUrl = element.dataset.setCartUrl;
 
-        this.csrfToken = document.querySelector("meta[name='csrf_token']").content;
+        this.productId = element.dataset.productId;
+        this.csrfToken = element.querySelector('input[name="_token"]').value;
 
-        this.addToCartButton = this.element.querySelector("#add-to-cart");
-        this.counter = this.element.querySelector("counter");
-        this.incrementButton = this.element.querySelector("increment");
-        this.decrementButton = this.element.querySelector("decrement");
+        this.addToCartButton = element.querySelector('#add-to-cart');
+        this.counter = element.querySelector('[data-quantity-counter], #counter, counter');
+        this.incrementButton = element.querySelector('[data-quantity-increment], #increment, increment');
+        this.decrementButton = element.querySelector('[data-quantity-decrement], #decrement, decrement');
+        this.feedback = element.querySelector('.cart-feedback')
+            ?? element.closest('[data-cart-item]')?.querySelector('.cart-feedback');
 
+        this.pending = false;
+        this.store = window.larpCart;
         this.#setupSignals();
     }
 
     #setupSignals() {
-        this.counter.addEventListener("change", () => {
-            this.#updateQuantity(this.counter.value);
+        this.unsubscribe = this.store?.subscribe(({ cart }) => {
+            const item = cart.products.find(item => String(item.product.product_id) === String(this.productId));
+            if (this.counter) this.counter.value = item?.quantity ?? 0;
         });
 
-        this.counter.addEventListener("keydown", () => {
-            this.#updateQuantity(this.counter.value);
+        this.addToCartButton?.addEventListener('click', () => {
+            this.#send(this.addToCartUrl, 1);
         });
 
-        this.addToCartButton.addEventListener("click", () => {
-            // this looks dangerous for some reason
-            this.#updateQuantity(1);
+        this.counter?.addEventListener('change', () => {
+            this.#send(this.setCartUrl, Number(this.counter.value));
         });
 
-        this.incrementButton.addEventListener("click", () => {
-            this.#incrementCount();
+        this.incrementButton?.addEventListener('click', () => {
+            this.#send(this.setCartUrl, Number(this.counter.value) + 1);
         });
 
-        this.decrementButton.addEventListener("click", () => {
-            this.#decrementCount();
+        this.decrementButton?.addEventListener('click', () => {
+            const quantity = Number(this.counter.value);
+            if (quantity <= 0) return;
+            if (quantity === 1) this.counter.value = 0;
+            this.#send(this.setCartUrl, quantity - 1);
         });
     }
 
-    #incrementCount() {
-        this.#updateQuantity(this.counter.value + 1);
-    }
+    async #send(url, quantity) {
+        if (this.pending || !url) return;
+        if (quantity === 0) {
+            this.#message('');
+            return;
+        }
+        if (!Number.isInteger(quantity) || quantity < 0) {
+            this.#message('Please enter a whole number of zero or more.', true);
+            return;
+        }
 
-    #decrementCount() {
-        this.#updateQuantity(this.counter.value - 1);
-    }
+        this.pending = true;
+        const controls = [this.addToCartButton, this.counter, this.incrementButton, this.decrementButton]
+            .filter(Boolean).map(control => [control, control.disabled]);
+        controls.forEach(([control]) => { control.disabled = true; });
+        this.element.setAttribute('aria-busy', 'true');
+        this.#message('Updating cart…');
 
-    async #updateQuantity(value) {
         try {
-            const result = await this.#postJson(this.cartUpdateUrl, "POST", {
-                product_id: this.productId,
-                quantity: value,
-            });
+            if (!this.store) throw new Error('Cart is unavailable. Please refresh the page.');
+            const result = url === this.addToCartUrl
+                ? await this.store.add(this.productId, quantity)
+                : await this.store.setQuantity(this.productId, quantity);
 
-            this.counter.value = result.quantity;
+            this.#message(`Cart updated. This product has ${result.item_quantity} item(s) in your cart.`);
         } catch (error) {
+            // Add is not idempotent: do not automatically retry an uncertain request.
+            this.#message(error instanceof TypeError
+                ? 'Could not confirm the cart update. Refresh the page to check your cart before trying again.'
+                : error.message, true);
+        } finally {
+            this.pending = false;
+            controls.forEach(([control, disabled]) => { control.disabled = disabled; });
+            this.element.removeAttribute('aria-busy');
         }
     }
 
-    async #postJson(url, method, data) {
-        const response = fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': this.csrfToken,
-            },
-            body: JSON.stringify(data),
-        });
-
-        const result = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-            throw new Error(
-                result.error ?? 'An error happened'
-            );
-        }
-
-        return result;
+    #message(message, isError = false) {
+        if (!this.feedback) return;
+        this.feedback.textContent = message;
+        this.feedback.classList.toggle('visually-hidden', !isError);
+        this.feedback.classList.toggle('text-danger', isError);
     }
 }
 
-document.querySelectorAll(".quantity_picker").forEach(element => new ProductQuantityPicker(element));
+// Cart markup is replaced after each server-confirmed update.
+const quantityPickers = new Map();
+function initializeQuantityPickers() {
+    for (const [element, picker] of quantityPickers) {
+        if (!element.isConnected) {
+            picker.unsubscribe?.();
+            quantityPickers.delete(element);
+        }
+    }
+    document.querySelectorAll('.quantity-picker').forEach(element => {
+        if (!quantityPickers.has(element)) {
+            quantityPickers.set(element, new ProductQuantityPicker(element));
+        }
+    });
+}
+initializeQuantityPickers();
+new MutationObserver(initializeQuantityPickers).observe(document.body, { childList: true, subtree: true });

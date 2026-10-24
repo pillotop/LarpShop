@@ -37,6 +37,7 @@ class SidePanel {
         for (const entry of this.triggers) {
             entry.trigger.addEventListener("click", () => {
                 if (entry.template) {
+                    this.element.dataset.activeSidePanel = entry.trigger.dataset.sidePanelTarget;
                     this.element.innerHTML = entry.template.innerHTML;
                 }
             });
