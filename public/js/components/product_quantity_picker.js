@@ -4,11 +4,12 @@ class ProductQuantityPicker {
 
         this.addToCartUrl = element.dataset.addToCartUrl;
         this.setCartUrl = element.dataset.setCartUrl;
+        this.selectsAddQuantity = element.dataset.quantityMode === 'add';
 
         this.productId = element.dataset.productId;
         this.csrfToken = element.querySelector('input[name="_token"]').value;
 
-        this.addToCartButton = element.querySelector('#add-to-cart');
+        this.addToCartButton = element.querySelector('[data-add-to-cart], #add-to-cart');
         this.counter = element.querySelector('[data-quantity-counter], #counter, counter');
         this.incrementButton = element.querySelector('[data-quantity-increment], #increment, increment');
         this.decrementButton = element.querySelector('[data-quantity-decrement], #decrement, decrement');
@@ -23,27 +24,36 @@ class ProductQuantityPicker {
     #setupSignals() {
         this.unsubscribe = this.store?.subscribe(({ cart }) => {
             const item = cart.products.find(item => String(item.product.product_id) === String(this.productId));
-            if (this.counter) this.counter.value = item?.quantity ?? 0;
+            if (this.counter && !this.selectsAddQuantity) this.counter.value = item?.quantity ?? 0;
         });
 
         this.addToCartButton?.addEventListener('click', () => {
-            this.#send(this.addToCartUrl, 1);
+            this.#send(this.addToCartUrl, this.selectsAddQuantity ? Number(this.counter.value) : 1);
         });
 
         this.counter?.addEventListener('change', () => {
-            this.#send(this.setCartUrl, Number(this.counter.value));
+            this.#setQuantity(Number(this.counter.value));
         });
 
         this.incrementButton?.addEventListener('click', () => {
-            this.#send(this.setCartUrl, Number(this.counter.value) + 1);
+            this.#setQuantity(Number(this.counter.value) + 1);
         });
 
         this.decrementButton?.addEventListener('click', () => {
             const quantity = Number(this.counter.value);
             if (quantity <= 0) return;
             if (quantity === 1) this.counter.value = 0;
-            this.#send(this.setCartUrl, quantity - 1);
+            this.#setQuantity(quantity - 1);
         });
+    }
+
+    #setQuantity(quantity) {
+        if (this.selectsAddQuantity) {
+            this.counter.value = quantity;
+            this.#message('');
+            return;
+        }
+        this.#send(this.setCartUrl, quantity);
     }
 
     async #send(url, quantity) {
