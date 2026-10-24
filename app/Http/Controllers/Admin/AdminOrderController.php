@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Queries\Orders\OrderQuery;
+use App\Services\Orders\OrderManagementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,6 +13,11 @@ use Illuminate\View\View;
 
 class AdminOrderController extends Controller
 {
+    public function __construct(
+        private OrderQuery $orders,
+        private OrderManagementService $orderService
+    ) {}
+
     /**
      * UC-44: List all orders with status filter and search by order ID, username, or email.
      */
@@ -24,38 +31,11 @@ class AdminOrderController extends Controller
         $keyword = trim((string) ($validated['q'] ?? ''));
         $status = $validated['status'] ?? 'all';
 
-        $query = Order::query()->with('user')->withCount('details')->latest('order_id');
-
-        if ($keyword !== '') {
-            $escaped = addcslashes(ltrim($keyword, '#'), '\\%_');
-            $query->where(function ($q) use ($escaped) {
-                $q->whereHas('user', function ($u) use ($escaped) {
-                    $u->where('username', 'like', "%{$escaped}%")
-                        ->orWhere('email', 'like', "%{$escaped}%");
-                });
-
-                if (ctype_digit($escaped)) {
-                    $q->orWhere('order_id', (int) $escaped);
-                }
-            });
-        }
-
-        if ($status !== 'all') {
-            $query->where('status', $status);
-        }
-
-        $counts = Order::query()
-            ->selectRaw('status, COUNT(*) as total')
-            ->groupBy('status')
-            ->pluck('total', 'status')
-            ->all();
-        $counts['all'] = array_sum($counts);
-
         return view('admin.orders.index', [
-            'orders' => $query->paginate(15)->withQueryString(),
+            'orders' => $this->orders->forAdmin($keyword, $status),
             'keyword' => $keyword,
             'status' => $status,
-            'counts' => $counts,
+            'counts' => $this->orders->statusCounts(),
             'statuses' => Order::STATUSES,
         ]);
     }
@@ -65,18 +45,14 @@ class AdminOrderController extends Controller
      */
     public function show(Order $order): View
     {
-        $order->load(['user', 'details.product.vendor.user']);
-
-        $computedTotal = $order->details->sum(fn ($d) => $d->quantity * $d->unit_price);
-        $totalMatches = abs((float) $order->total_amount - (float) $computedTotal) < 0.005;
-
-        $byVendor = $order->details->groupBy(fn ($d) => $d->product?->vendor_id);
+        $this->orders->loadInvestigationDetails($order);
+        $reconciliation = $this->orderService->reconcile($order);
 
         return view('admin.orders.show', [
             'order' => $order,
-            'computedTotal' => $computedTotal,
-            'totalMatches' => $totalMatches,
-            'byVendor' => $byVendor,
+            'computedTotal' => $reconciliation['computedTotal'],
+            'totalMatches' => $reconciliation['totalMatches'],
+            'byVendor' => $reconciliation['byVendor'],
             'statuses' => Order::STATUSES,
         ]);
     }
@@ -90,8 +66,7 @@ class AdminOrderController extends Controller
             'status' => ['required', 'string', Rule::in(Order::STATUSES)],
         ]);
 
-        $order->status = $validated['status'];
-        $order->save();
+        $this->orderService->updateStatus($order, $validated['status']);
 
         return back()->with('success', "Order #{$order->order_id} status updated to '{$order->status}'.");
     }

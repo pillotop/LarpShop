@@ -1,3 +1,8 @@
+@props([
+    'category' => null,
+    'parentOptions' => [],
+])
+
 <div class="mb-3">
     <label class="form-label fw-semibold">Name</label>
     <input type="text" name="name" maxlength="100" required class="form-control" value="{{ $category?->name }}">

@@ -1,11 +1,6 @@
 <?php
 
 use App\Http\Controllers\AccountVendorController;
-use App\Http\Controllers\Admin\AdminCategoryController;
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminOrderController;
-use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Admin\AdminVendorController;
 use App\Http\Controllers\CustomerServicePageController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
@@ -27,34 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/account/vendors/{vendor}', [AccountVendorController::class, 'update'])->whereNumber('vendor')->name('profile.vendor.update');
     Route::post('/account/vendors', [AccountVendorController::class, 'store'])->name('profile.vendor.register');
     Route::post('/account/vendors/{vendor}/resubmit', [AccountVendorController::class, 'resubmit'])->whereNumber('vendor')->name('profile.vendor.resubmit');
-});
-
-// Admin Routes (UC-38, UC-40)
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
-
-    // UC-40: Vendor Management and Approval
-    Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
-    Route::post('/vendors/{vendor}/approve', [AdminVendorController::class, 'approve'])->name('vendors.approve');
-    Route::post('/vendors/{vendor}/reject', [AdminVendorController::class, 'reject'])->name('vendors.reject');
-    Route::post('/vendors/{vendor}/suspend', [AdminVendorController::class, 'suspend'])->name('vendors.suspend');
-    Route::post('/vendors/{vendor}/reinstate', [AdminVendorController::class, 'reinstate'])->name('vendors.reinstate');
-
-    // UC-41: Category Management
-    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
-    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
-    Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->whereNumber('category')->name('categories.update');
-    Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->whereNumber('category')->name('categories.destroy');
-
-    // UC-39: User Management and Role Assignment
-    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->whereNumber('user')->name('users.update-role');
-
-    // UC-44: Order and Dispute Investigation
-    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->whereNumber('order')->name('orders.show');
-    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->whereNumber('order')->name('orders.update-status');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
@@ -149,6 +116,7 @@ Route::get('/press', [StaticPageController::class, 'press'])->name('press');
 
 require __DIR__.'/products.php';
 require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
 
 // Customer Service Static Pages
 Breadcrumbs::for('help', function (BreadcrumbTrail $trail) {
