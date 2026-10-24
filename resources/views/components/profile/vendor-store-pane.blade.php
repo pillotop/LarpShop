@@ -55,7 +55,11 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
                 <h2 class="h5 fw-bold mb-0">Store profile</h2>
                 @if ($approved)
-                    <a href="{{ route('vendors.show', $vendorId) }}" class="btn btn-outline-primary btn-sm rounded-pill">View storefront</a>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{{ route('vendor.store.settings') }}" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="bi bi-gear me-1"></i>Cấu hình gian hàng</a>
+                        <a href="{{ route('vendor.categories.index') }}" class="btn btn-outline-info btn-sm rounded-pill"><i class="bi bi-tags me-1"></i>Quản lý danh mục</a>
+                        <a href="{{ route('vendors.show', $vendorId) }}" class="btn btn-outline-primary btn-sm rounded-pill" target="_blank">View storefront</a>
+                    </div>
                 @endif
             </div>
             <form action="{{ route('profile.vendor.update', ['vendor' => $vendorId]) }}" method="POST">

@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
             'vendor.pages.storefront',
             'profile.pages.show',
             'profile',
+            'vendor.*',
             'static.*',
         ], ProductCapabilityComposer::class);
     }

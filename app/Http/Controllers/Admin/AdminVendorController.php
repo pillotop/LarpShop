@@ -83,4 +83,24 @@ class AdminVendorController extends Controller
 
         return back()->with('success', "Store '{$vendor->store_name}' has been reinstated.");
     }
+
+    /**
+     * UC-29: Administrator edit/configure vendor store.
+     */
+    public function edit(Vendor $vendor): View
+    {
+        $vendor->load('user', 'products');
+        return view('admin.vendors.edit', compact('vendor'));
+    }
+
+    /**
+     * UC-29: Administrator update vendor store configuration.
+     */
+    public function update(\App\Http\Requests\Admin\AdminUpdateVendorRequest $request, Vendor $vendor): RedirectResponse
+    {
+        $vendor->update($request->validated());
+
+        return redirect()->route('admin.vendors.index')
+            ->with('success', "Vendor store '{$vendor->store_name}' configuration updated successfully.");
+    }
 }

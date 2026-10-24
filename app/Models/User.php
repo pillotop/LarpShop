@@ -35,6 +35,16 @@ class User extends Authenticatable
         return $this->vendors()->exists();
     }
 
+    public function isVendor(): bool
+    {
+        return $this->vendors()->active()->exists();
+    }
+
+    public function activeVendor(): ?Vendor
+    {
+        return $this->vendors()->active()->first();
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
