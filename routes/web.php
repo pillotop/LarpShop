@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountVendorController;
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminVendorController;
+use App\Http\Controllers\CustomerServicePageController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaticPageController;
@@ -23,19 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/account/vendors/{vendor}', [AccountVendorController::class, 'update'])->whereNumber('vendor')->name('profile.vendor.update');
     Route::post('/account/vendors', [AccountVendorController::class, 'store'])->name('profile.vendor.register');
     Route::post('/account/vendors/{vendor}/resubmit', [AccountVendorController::class, 'resubmit'])->whereNumber('vendor')->name('profile.vendor.resubmit');
-});
-
-// Admin Routes (UC-38, UC-40)
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
-
-    // UC-40: Vendor Management and Approval
-    Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
-    Route::post('/vendors/{vendor}/approve', [AdminVendorController::class, 'approve'])->name('vendors.approve');
-    Route::post('/vendors/{vendor}/reject', [AdminVendorController::class, 'reject'])->name('vendors.reject');
-    Route::post('/vendors/{vendor}/suspend', [AdminVendorController::class, 'suspend'])->name('vendors.suspend');
-    Route::post('/vendors/{vendor}/reinstate', [AdminVendorController::class, 'reinstate'])->name('vendors.reinstate');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
@@ -130,6 +116,7 @@ Route::get('/press', [StaticPageController::class, 'press'])->name('press');
 
 require __DIR__.'/products.php';
 require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
 
 // Customer Service Static Pages
 Breadcrumbs::for('help', function (BreadcrumbTrail $trail) {
@@ -152,7 +139,7 @@ Breadcrumbs::for('recalls', function (BreadcrumbTrail $trail) {
     $trail->push('Product Recalls', route('recalls'));
 });
 
-Route::get('/help', [App\Http\Controllers\CustomerServicePageController::class, 'help'])->name('help');
-Route::get('/privacy', [App\Http\Controllers\CustomerServicePageController::class, 'privacy'])->name('privacy');
-Route::get('/community', [App\Http\Controllers\CustomerServicePageController::class, 'community'])->name('community');
-Route::get('/recalls', [App\Http\Controllers\CustomerServicePageController::class, 'recalls'])->name('recalls');
+Route::get('/help', [CustomerServicePageController::class, 'help'])->name('help');
+Route::get('/privacy', [CustomerServicePageController::class, 'privacy'])->name('privacy');
+Route::get('/community', [CustomerServicePageController::class, 'community'])->name('community');
+Route::get('/recalls', [CustomerServicePageController::class, 'recalls'])->name('recalls');

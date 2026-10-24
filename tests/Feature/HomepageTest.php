@@ -38,7 +38,7 @@ class HomepageTest extends TestCase
 
         $vendorId = DB::table('vendors')->insertGetId([
             'user_id' => $userId,
-            'store_name' => 'Larp Store',
+            'store_name' => 'Larp Store '.uniqid(),
             'status' => 'approved',
             'created_at' => now(),
             'updated_at' => now(),
