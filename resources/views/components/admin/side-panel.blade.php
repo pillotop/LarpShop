@@ -4,6 +4,7 @@
 
 @php
     $pendingBadgeCount = $pendingBadgeCount ?? \App\Models\Vendor::where('status', 'pending')->count();
+    $pendingProductCount = \App\Models\Product::where('status', 'pending')->count();
 @endphp
 
 <aside class="admin-sidebar d-flex flex-column flex-shrink-0 p-3">
@@ -31,6 +32,45 @@
                 @if ($pendingBadgeCount > 0)
                     <span class="badge bg-warning text-dark rounded-pill ms-auto fw-bold">{{ $pendingBadgeCount }}</span>
                 @endif
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <i class="bi bi-diagram-3 fs-5"></i>
+                <span>Categories</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <i class="bi bi-people fs-5"></i>
+                <span>Users &amp; Roles</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                <i class="bi bi-receipt fs-5"></i>
+                <span>Orders &amp; Disputes</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.products.moderation.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                <i class="bi bi-box-seam fs-5"></i>
+                <span>Product Moderation</span>
+                @if ($pendingProductCount > 0)
+                    <span class="badge bg-warning text-dark rounded-pill ms-auto fw-bold">{{ $pendingProductCount }}</span>
+                @endif
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.reviews.index') }}" class="nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                <i class="bi bi-chat-square-quote fs-5"></i>
+                <span>Review Moderation</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.reports.index') }}" class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                <i class="bi bi-graph-up-arrow fs-5"></i>
+                <span>Platform Reports</span>
             </a>
         </li>
         <li class="nav-item mt-3">

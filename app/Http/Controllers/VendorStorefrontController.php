@@ -19,18 +19,19 @@ class VendorStorefrontController extends Controller
             ->firstOrFail();
 
         // Ensure store is active or approved for public storefront view
-        if (!in_array($vendorModel->status, ['active', 'approved'])) {
+        if (! in_array($vendorModel->status, ['active', 'approved'])) {
             abort(404, 'Store is currently unavailable.');
         }
 
         $query = $vendorModel->products()
+            ->approved()
             ->with(['images', 'category', 'reviews'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews');
 
         // Optional search within vendor store
         if ($search = $request->input('q')) {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
         // Optional filter by category within vendor store

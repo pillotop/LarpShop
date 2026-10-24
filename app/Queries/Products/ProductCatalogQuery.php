@@ -39,7 +39,7 @@ class ProductCatalogQuery
         int $limit = 12,
         bool $inStockOnly = true,
     ): Collection {
-        $query = Product::query()->with(['images', 'vendor', 'reviews']);
+        $query = Product::query()->approved()->with(['images', 'vendor', 'reviews']);
 
         if ($categoryId) {
             // Recursively get the category ID and all its descendant IDs
@@ -63,6 +63,7 @@ class ProductCatalogQuery
     public function getProductDetails(int $productId): ?Product
     {
         return Product::query()
+            ->approved()
             ->with(['images', 'vendor', 'reviews', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
@@ -73,6 +74,7 @@ class ProductCatalogQuery
     public function getSimilarProducts(int $productId, ?int $categoryId = null, int $limit = 6): Collection
     {
         $query = Product::query()
+            ->approved()
             ->with(['images', 'vendor', 'reviews', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
@@ -90,6 +92,7 @@ class ProductCatalogQuery
     public function searchProducts(?string $keyword = null, array $filters = []): Collection
     {
         $query = Product::query()
+            ->approved()
             ->with(['category', 'images'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews');
