@@ -111,6 +111,13 @@ class DatabaseSeeder extends Seeder
         // 2. USERS & VENDORS
         // ==========================================
 
+        User::create([
+            'username' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('password123'),
+            'role' => 'admin',
+        ]);
+
         $customersData = [
             ['username' => 'johndoe', 'email' => 'john@example.com', 'phone_number' => '+15551111', 'role' => 'customer'],
             ['username' => 'janestewart', 'email' => 'jane@example.com', 'phone_number' => '+15552222', 'role' => 'customer'],

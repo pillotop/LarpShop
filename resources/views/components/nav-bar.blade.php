@@ -126,6 +126,20 @@
                                 <span>My stores</span>
                             </a>
                         </li>
+                        @if (Auth::user()->isVendor())
+                            <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2 text-primary fw-semibold" href="{{ route('vendor.products.index') }}">
+                                    <i class="bi bi-box-seam"></i>
+                                    <span>Sản phẩm của tôi</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.categories.index') }}">
+                                    <i class="bi bi-tags"></i>
+                                    <span>Danh mục của tôi</span>
+                                </a>
+                            </li>
+                        @endif
                         <li><hr class="dropdown-divider my-1"></li>
                         <li>
                             <form action="{{ route('logout') }}" method="post" class="m-0">

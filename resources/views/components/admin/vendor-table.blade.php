@@ -80,6 +80,11 @@
                         </td>
                         <td class="text-end">
                             <div class="d-inline-flex gap-2 align-items-center">
+                                {{-- UC-29: Administrator Configure Vendor Store --}}
+                                <a href="{{ route('admin.vendors.edit', $vendor->vendor_id) }}" class="btn btn-sm btn-outline-dark rounded-pill px-2" title="Cấu hình gian hàng (UC-29)">
+                                    <i class="bi bi-gear"></i>
+                                </a>
+
                                 @if ($vendor->status === 'pending')
                                     {{-- UC-40: Approve Pending Vendor --}}
                                     <form action="{{ route('admin.vendors.approve', $vendor->vendor_id) }}" method="POST" class="m-0">

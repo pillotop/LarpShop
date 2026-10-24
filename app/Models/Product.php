@@ -11,6 +11,16 @@ class Product extends Model
 {
     protected $primaryKey = 'product_id';
 
+    protected $fillable = [
+        'vendor_id',
+        'category_id',
+        'name',
+        'slug',
+        'description',
+        'price',
+        'stock',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'category_id');

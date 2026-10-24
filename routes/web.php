@@ -30,8 +30,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index']);
 
-    // UC-40: Vendor Management and Approval
+    // UC-40 & UC-29: Vendor Management and Store Configuration
     Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
+    Route::get('/vendors/{vendor}/edit', [AdminVendorController::class, 'edit'])->name('vendors.edit');
+    Route::put('/vendors/{vendor}', [AdminVendorController::class, 'update'])->name('vendors.update');
     Route::post('/vendors/{vendor}/approve', [AdminVendorController::class, 'approve'])->name('vendors.approve');
     Route::post('/vendors/{vendor}/reject', [AdminVendorController::class, 'reject'])->name('vendors.reject');
     Route::post('/vendors/{vendor}/suspend', [AdminVendorController::class, 'suspend'])->name('vendors.suspend');
@@ -130,6 +132,7 @@ Route::get('/press', [StaticPageController::class, 'press'])->name('press');
 
 require __DIR__.'/products.php';
 require __DIR__.'/auth.php';
+require __DIR__.'/vendor.php';
 
 // Customer Service Static Pages
 Breadcrumbs::for('help', function (BreadcrumbTrail $trail) {
