@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ class Payment extends Model
     protected $fillable = [
         'order_id',
         'provider',
+        'method',
         'provider_reference',
         'amount',
         'currency',
@@ -26,6 +28,7 @@ class Payment extends Model
         return [
             'amount' => 'decimal:2',
             'status' => PaymentStatus::class,
+            'method' => PaymentMethod::class,
             'completed_at' => 'datetime',
         ];
     }

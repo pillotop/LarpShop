@@ -2,10 +2,13 @@
 
 namespace App\Services\Orders;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Queries\Address\AddressQuery;
 use App\Queries\Cart\CartQuery;
+use App\Services\Inventory\InventoryReservationService;
 use App\Support\Carts\CartLock;
 use App\Support\Money\MoneyCalculator;
 use Illuminate\Support\Facades\DB;
@@ -14,30 +17,32 @@ use Illuminate\Validation\ValidationException;
 class OrderCreationService
 {
     public function __construct(
+        private InventoryReservationService $inventory,
+        private AddressQuery $addresses,
         private CartQuery $carts,
         private CartLock $cartLock,
         private MoneyCalculator $money,
     ) {}
 
-    public function create(User $user): Order
+    public function create(User $user, int $addressId): Order
     {
         $owner = ['user_id' => $user->user_id];
 
         return $this->cartLock->forOwner(
             $owner,
             fn () => DB::transaction(
-                fn () => $this->createLocked($user),
+                fn () => $this->createLocked($user, $addressId),
                 attempts: 3,
             )
         );
     }
 
-    private function createLocked(User $user): Order
+    private function createLocked(User $user, int $addressId): Order
     {
         // Lock the cart belonging to this user.
         $cart = $this->carts->getForCheckout($user);
 
-        if (!$cart) {
+        if (! $cart) {
             throw ValidationException::withMessages([
                 'cart' => 'Your cart is empty',
             ]);
@@ -45,9 +50,9 @@ class OrderCreationService
 
         // Lock its items so checkout works with a stable cart.
         $items = $cart->items()
-                     ->orderBy('cart_item_id')
-                     ->lockForUpdate()
-                     ->get();
+            ->orderBy('cart_item_id')
+            ->lockForUpdate()
+            ->get();
 
         if ($items->isEmpty()) {
             throw ValidationException::withMessages([
@@ -55,7 +60,7 @@ class OrderCreationService
             ]);
         }
 
-        $productType = (new Product())->getMorphClass();
+        $productType = (new Product)->getMorphClass();
 
         // Only products are purchasable for now.
         foreach ($items as $item) {
@@ -89,8 +94,6 @@ class OrderCreationService
             ]);
         }
 
-
-
         $total = $this->money->zero();
 
         // Validate everything before making changes.
@@ -113,10 +116,21 @@ class OrderCreationService
         }
 
         // All checks passed: create an order snapshot.
+
+        $address = $this
+            ->addresses
+            ->getForCheckout($user, $addressId);
+
         $order = Order::create([
             'user_id' => $user->user_id,
             'total_amount' => $this->money->format($total),
-            'status' => 'pending',
+            'status' => OrderStatus::Pending,
+            'expires_at' => now()->addMinutes(30),
+        ]);
+
+        $order->addresses()->create([
+            'type' => 'shipping',
+            ...$address->snapshot(),
         ]);
 
         foreach ($items as $item) {
@@ -128,11 +142,12 @@ class OrderCreationService
                 'unit_price' => $product->price,
             ]);
 
-            $product->decrement('stock', $item->quantity);
+            $this->inventory->reserve($product, $item->quantity);
         }
 
         // The order now owns its own snapshots of the cart items.
         $cart->items()->delete();
+
         return $order;
     }
 }

@@ -97,3 +97,6 @@ Route::get('/supports', function () {
 require __DIR__.'/products.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/checkout.php';
+require __DIR__.'/payments.php';
+require __DIR__.'/addresses.php';
+require __DIR__.'/orders.php';
