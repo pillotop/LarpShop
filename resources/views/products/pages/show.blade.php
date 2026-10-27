@@ -190,8 +190,27 @@
                                     </div>
                                 @endif
                             </div>
-                            <div id="product-variants" class="mb-4 border-bottom">
-                                feature not yet implemented
+                            <div id="product-variants" class="mb-4 border-bottom pb-3">
+                                <h2 class="h6 fw-bold mb-2">Available Variants</h2>
+                                @if ($product->relationLoaded('variants') ? $product->variants->where('is_active', true)->isNotEmpty() : $product->variants()->active()->exists())
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach (($product->relationLoaded('variants') ? $product->variants->where('is_active', true) : $product->variants()->active()->get()) as $variant)
+                                            <div class="border rounded-3 p-2 px-3 bg-light d-flex align-items-center gap-2">
+                                                <div>
+                                                    <div class="fw-semibold small">{{ $variant->name }}</div>
+                                                    <div class="text-success small fw-bold">${{ number_format($variant->price, 2) }}</div>
+                                                </div>
+                                                @if ($variant->stock <= 0)
+                                                    <span class="badge bg-danger small ms-1">Out of Stock</span>
+                                                @else
+                                                    <span class="badge bg-secondary-subtle text-dark small ms-1">{{ $variant->stock }} left</span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="text-muted small mb-0">Standard edition — base product configuration.</p>
+                                @endif
                             </div>
                             <div id="shipping-options" class="mb-4 border-bottom">
                                 <form>

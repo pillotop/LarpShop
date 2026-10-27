@@ -133,6 +133,12 @@
                                     <span>Danh mục của tôi</span>
                                 </a>
                             </li>
+                            <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.reports.index') }}">
+                                    <i class="bi bi-graph-up"></i>
+                                    <span>Báo cáo doanh thu</span>
+                                </a>
+                            </li>
                         @endif
                         <li><hr class="dropdown-divider my-1"></li>
                         <li>

@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Vendor\VendorCategoryController;
+use App\Http\Controllers\Vendor\VendorProductController;
 use App\Http\Controllers\Vendor\VendorProductImageController;
+use App\Http\Controllers\Vendor\VendorProductVariantController;
+use App\Http\Controllers\Vendor\VendorReportController;
 use App\Http\Controllers\Vendor\VendorStoreController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,11 +22,20 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     Route::patch('/categories/{category}/toggle-status', [VendorCategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
 
     // Vendor Product Management List
-    Route::get('/products', [\App\Http\Controllers\Vendor\VendorProductController::class, 'index'])->name('products.index');
+    Route::get('/products', [VendorProductController::class, 'index'])->name('products.index');
 
     // UC-32: Vendor Product Image Management
     Route::get('/products/{product}/images', [VendorProductImageController::class, 'index'])->name('products.images.index');
     Route::post('/products/{product}/images', [VendorProductImageController::class, 'store'])->name('products.images.store');
     Route::delete('/products/{product}/images/{image}', [VendorProductImageController::class, 'destroy'])->name('products.images.destroy');
     Route::patch('/products/{product}/images/{image}/primary', [VendorProductImageController::class, 'setPrimary'])->name('products.images.primary');
+
+    // UC-36: Vendor Sales & Inventory Reports
+    Route::get('/reports', [VendorReportController::class, 'index'])->name('reports.index');
+
+    // UC-37: Vendor Product Variants Management
+    Route::get('/products/{product}/variants', [VendorProductVariantController::class, 'index'])->name('products.variants.index');
+    Route::post('/products/{product}/variants', [VendorProductVariantController::class, 'store'])->name('products.variants.store');
+    Route::put('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'update'])->name('products.variants.update');
+    Route::delete('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'destroy'])->name('products.variants.destroy');
 });

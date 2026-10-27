@@ -33,6 +33,7 @@ class Product extends Model
         'price',
         'stock',
     ];
+
     /**
      * UC-42: Only products approved by an admin are visible to the public.
      */
@@ -64,5 +65,10 @@ class Product extends Model
     public function cartItems(): MorphMany
     {
         return $this->morphMany(CartItem::class, 'itemable');
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id', 'product_id');
     }
 }
