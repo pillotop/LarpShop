@@ -26,7 +26,9 @@
             const trigger = Array.from(document.querySelectorAll('#profileTabs [data-bs-target], #vendorTabs [data-bs-target]'))
                 .find(button => button.dataset.bsTarget === hash);
 
-            if (trigger) {
+            if (@json($errors->billing->any())) {
+                showTab('tab-billing');
+            } else if (trigger) {
                 if (trigger.closest('#vendorTabs')) showTab('tab-vendor-info');
                 showTab(trigger.id);
             } else if (@json($errors->has('store_name') || $errors->has('description') || in_array(session('status'), ['vendor-registered', 'vendor-updated']))) {
@@ -130,6 +132,13 @@
                                 'icon' => 'bi-shield-lock',
                                 'label' => 'Change password',
                             ],
+                            [
+                                'id' => 'tab-billing',
+                                'target_id' => '#pane-billing',
+                                'aria_controls' => 'pane-billing',
+                                'icon' => 'bi-geo-alt',
+                                'label' => 'Billing & addresses',
+                            ],
                         ]"
                     />
 
@@ -155,6 +164,9 @@
 
                     {{-- Tab 3: Security & Password Update --}}
                     <x-profile.security-tab />
+
+                    {{-- Tab 4: Billing section --}}
+                    <x-profile.billing-tab :addresses="$addresses" />
                 </div>
             </div>
         </div>

@@ -8,6 +8,8 @@ enum PaymentStatus: string
     case Processing = 'processing';
     case Succeeded = 'succeeded';
     case Failed = 'failed';
-    case Cancelld = 'cancelled';
+    case Cancelled = 'cancelled';
     case Refunded = 'refunded';
+    case RefundRequired = 'refund_required';
+    case Delayed = 'delayed';
 }

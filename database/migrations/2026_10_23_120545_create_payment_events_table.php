@@ -25,7 +25,7 @@ return new class extends Migration
             $table->json('metadata')->nullable();
             $table->timestamps();
 
-            $table->unique('payment_id', 'provider_event_id');
+            $table->unique(['payment_id', 'provider_event_id']);
         });
     }
 

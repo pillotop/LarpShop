@@ -1,0 +1,57 @@
+.payment-method-container {
+    border: none;
+}
+
+.payment-method-container .method-headers {
+    background-color: var(--color-background-50);
+}
+
+.payment-method-container .payment-method-tab {
+    border-color: black;
+    background-color: white;
+}
+
+.payment-method-container li .active {
+    border-color: black;
+}
+
+.payment-method-container .payment-method-tab {
+    color: var(--bs-secondary-color);
+    transition: background-color 180ms ease, color 180ms ease;
+}
+
+.payment-method-container .payment-method-tab.active {
+    background-color: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+}
+
+.payment-method-container .payment-method-tab:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: -3px;
+}
+
+.payment-method-container .payment-method-panel:not([hidden]) {
+    animation: payment-panel-enter 200ms ease-out;
+}
+
+@keyframes payment-panel-enter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .payment-method-container .payment-method-tab {
+        transition: none;
+    }
+
+    .payment-method-container .payment-method-panel:not([hidden]) {
+        animation: none;
+    }
+}
