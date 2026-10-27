@@ -2,20 +2,27 @@
 
 namespace App\Services\Orders;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 
 class OrderManagementService
 {
-    /**
-     * UC-44: Update the order status (e.g. mark disputed, refunded, cancelled).
-     */
-    public function updateStatus(Order $order, string $status): Order
-    {
-        $order->status = $status;
-        $order->save();
+    public function __construct(private OrderLifecycleService $lifecycle) {}
 
-        return $order;
+    /**
+     * Administration uses the same transitions and inventory rules as checkout.
+     */
+    public function updateStatus(Order $order, OrderStatus $status): Order
+    {
+        if ($status !== OrderStatus::Cancelled) {
+            throw ValidationException::withMessages([
+                'status' => 'Only eligible order cancellation is available here. Payment status is managed by the payment flow.',
+            ]);
+        }
+
+        return $this->lifecycle->cancel($order);
     }
 
     /**

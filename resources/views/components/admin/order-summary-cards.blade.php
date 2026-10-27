@@ -2,7 +2,7 @@
     'order',
     'computedTotal',
     'totalMatches',
-    'statuses' => [],
+    'canCancel' => false,
 ])
 
 <div class="row g-4 mb-4">
@@ -30,16 +30,38 @@
     <div class="col-12 col-lg-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
             <h2 class="h6 fw-bold mb-3">Status</h2>
-            <form method="POST" action="{{ route('admin.orders.update-status', $order->order_id) }}" class="d-flex gap-2">
-                @csrf
-                @method('PATCH')
-                <select name="status" class="form-select">
-                    @foreach ($statuses as $statusOption)
-                        <option value="{{ $statusOption }}" @selected($order->status === $statusOption)>{{ ucfirst($statusOption) }}</option>
-                    @endforeach
-                </select>
-                <button type="submit" class="btn btn-primary">Update</button>
-            </form>
+            <p>Order: {{ ucfirst($order->status->value) }}</p>
+            @forelse ($order->payments as $payment)
+                <p class="small mb-2">
+                    Payment #{{ $payment->getKey() }} ({{ $payment->provider }}): {{ ucfirst(str_replace('_', ' ', $payment->status->value)) }}
+                </p>
+            @empty
+                <p class="small text-muted">No payment attempts recorded.</p>
+            @endforelse
+
+            @if ($canCancel)
+                <form
+                    method="POST"
+                    action="{{ route('admin.orders.update-status', $order->order_id) }}"
+                >
+                    @csrf
+                    @method('PATCH')
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="cancelled"
+                    >
+                    <button
+                        type="submit"
+                        class="btn btn-outline-danger"
+                    >
+                        Cancel order
+                    </button>
+                </form>
+            @else
+                <p class="small text-muted">This order cannot be cancelled.</p>
+            @endif
+            <p class="small text-muted mt-3 mb-0">Delivery tracking is not available yet.</p>
         </div>
     </div>
 </div>

@@ -128,6 +128,8 @@
 @endsection
 
 @section('tail')
+    <script src="/js/components/side_panel.js"></script>
+    <script src="/js/components/product_quantity_picker.js"></script>
     <script src="/js/components/two_arrow_scroller.js"></script>
     <script src="/js/components/subcategory_container.js"></script>
     <script src="/js/components/carousel_scrollable.js"></script>

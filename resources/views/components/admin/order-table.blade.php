@@ -32,7 +32,11 @@
                         <td class="text-center">{{ $order->details_count }}</td>
                         <td class="text-end">{{ number_format((float) $order->total_amount, 2) }}</td>
                         <td>
-                            <span class="badge rounded-pill {{ $order->status === 'disputed' ? 'bg-danger' : ($order->status === 'delivered' ? 'bg-success' : 'bg-secondary') }}">{{ ucfirst($order->status) }}</span>
+                            <span
+                                class="badge rounded-pill {{ $order->status === \App\Enums\OrderStatus::Cancelled ? 'bg-danger' : ($order->status === \App\Enums\OrderStatus::Paid ? 'bg-success' : 'bg-secondary') }}"
+                            >
+                                {{ ucfirst($order->status->value) }}
+                            </span>
                         </td>
                         <td class="small text-muted">{{ $order->created_at?->format('d/m/Y H:i') }}</td>
                         <td class="text-end">

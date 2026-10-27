@@ -2,32 +2,22 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable([
+    'user_id',
+    'total_amount',
+    'status',
+    'expires_at',
+    'stock_released_at',
+])]
 class Order extends Model
 {
-    /**
-     * Allowlisted order statuses (UC-44 admin investigation).
-     */
-    public const STATUSES = [
-        'pending',
-        'processing',
-        'shipped',
-        'delivered',
-        'cancelled',
-        'disputed',
-        'refunded',
-    ];
-
     protected $primaryKey = 'order_id';
-
-    protected $fillable = [
-        'user_id',
-        'total_amount',
-        'status',
-    ];
 
     public function user(): BelongsTo
     {
@@ -37,5 +27,25 @@ class Order extends Model
     public function details(): HasMany
     {
         return $this->hasMany(OrderDetail::class, 'order_id', 'order_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'order_id', 'order_id');
+    }
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(OrderAddress::class, 'order_id', 'order_id');
+    }
+
+    public function casts(): array
+    {
+        return [
+            'total_amount' => 'decimal:2',
+            'status' => OrderStatus::class,
+            'expires_at' => 'datetime',
+            'stock_released_at' => 'datetime',
+        ];
     }
 }

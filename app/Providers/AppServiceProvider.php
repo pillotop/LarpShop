@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\Payment\PaymentGateway;
+use App\Services\Payments\FakePaymentGateway;
 use App\View\Composers\ProductCapabilityComposer;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +15,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
     }
 
     /**
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
             'profile',
             'vendor.*',
             'static.*',
+            'cart.pages.index',
         ], ProductCapabilityComposer::class);
     }
 }

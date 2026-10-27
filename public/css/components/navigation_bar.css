@@ -1,3 +1,11 @@
 .navigation-bar {
     background-color: lightgray;
 }
+
+.navigation-bar #product-cart {
+    background-color: transparent;
+}
+
+.navigation-bar #product-cart:hover {
+    background-color: var(--color-background-100);
+}

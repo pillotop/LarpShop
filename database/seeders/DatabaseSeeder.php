@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -435,7 +438,8 @@ class DatabaseSeeder extends Seeder
                 $order1 = Order::create([
                     'user_id' => $john->user_id,
                     'total_amount' => $total,
-                    'status' => 'disputed',
+                    'status' => OrderStatus::Pending,
+                    'expires_at' => now()->addMinutes(30),
                 ]);
                 $order1->details()->create([
                     'product_id' => $first->product_id,
@@ -447,6 +451,8 @@ class DatabaseSeeder extends Seeder
                     'quantity' => 2,
                     'unit_price' => $second->price,
                 ]);
+                $first->decrement('stock', 1);
+                $second->decrement('stock', 2);
             }
 
             if ($jane && $seededProducts->count() >= 3) {
@@ -454,12 +460,20 @@ class DatabaseSeeder extends Seeder
                 $order2 = Order::create([
                     'user_id' => $jane->user_id,
                     'total_amount' => $third->price,
-                    'status' => 'delivered',
+                    'status' => OrderStatus::Paid,
                 ]);
                 $order2->details()->create([
                     'product_id' => $third->product_id,
                     'quantity' => 1,
                     'unit_price' => $third->price,
+                ]);
+                $order2->payments()->create([
+                    'provider' => 'fake',
+                    'method' => PaymentMethod::Card,
+                    'amount' => $order2->total_amount,
+                    'currency' => config('payments.currency', 'USD'),
+                    'status' => PaymentStatus::Succeeded,
+                    'completed_at' => now(),
                 ]);
             }
         }

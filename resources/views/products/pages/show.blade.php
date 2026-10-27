@@ -18,6 +18,7 @@
 @endsection
 
 @section('tail')
+    <script src="/js/components/product_quantity_picker.js"></script>
     <script src="/js/components/dropdown.js"></script>
     <script src="/js/components/persistent_header.js"></script>
     <script src="/js/components/carousel_scrollable.js"></script>
@@ -135,13 +136,22 @@
                                     <p>{{ $product->description }}</p>
 
                                     @if ($product->stock > 0)
-                                        <div class="d-flex flex-column gap-3">
+                                        <div class="quantity-picker d-flex flex-column gap-3"
+                                             data-quantity-mode="add"
+                                             data-add-to-cart-url="{{ route('cart.add') }}"
+                                             data-product-id="{{ $product->product_id }}">
+                                            @csrf
+                                            <label for="product-purchase-quantity" class="form-label mb-0">Quantity</label>
+                                            <div class="input-group" style="max-width: 10rem;">
+                                                <button type="button" data-quantity-decrement class="btn btn-light fw-semibold" aria-label="Decrease quantity">−</button>
+                                                <input id="product-purchase-quantity" data-quantity-counter type="number" min="0" step="1" value="1" class="form-control text-center">
+                                                <button type="button" data-quantity-increment class="btn btn-light fw-semibold" aria-label="Increase quantity">+</button>
+                                            </div>
                                             <a href="#" class="w-100">
                                                 <button type="button" class="w-100 button-primary">Larp it now</button>
                                             </a>
-                                            <a href="#" class="w-100">
-                                                <button type="button" class="w-100 button-primary">Add to Cart</button>
-                                            </a>
+                                            <button type="button" data-add-to-cart class="w-100 button-primary">Add to Cart</button>
+                                            <span class="cart-feedback visually-hidden" role="status" aria-live="polite"></span>
                                         </div>
                                     @endif
                                 </article>

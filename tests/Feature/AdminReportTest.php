@@ -34,7 +34,7 @@ class AdminReportTest extends TestCase
         ], 'product_id');
     }
 
-    private function makeOrder(int $productId, int $qty, float $unitPrice, string $status, $createdAt = null): void
+    private function makeOrder(int $productId, int $qty, float $unitPrice, string $status, $createdAt = null, ?string $paymentStatus = 'succeeded'): int
     {
         $buyer = User::factory()->create();
         $orderId = DB::table('orders')->insertGetId([
@@ -45,6 +45,15 @@ class AdminReportTest extends TestCase
             'order_id' => $orderId, 'product_id' => $productId, 'quantity' => $qty,
             'unit_price' => $unitPrice, 'created_at' => now(), 'updated_at' => now(),
         ]);
+        if ($status === 'paid' && $paymentStatus !== null) {
+            DB::table('payments')->insert([
+                'order_id' => $orderId, 'provider' => 'fake', 'method' => 'card',
+                'amount' => $qty * $unitPrice, 'currency' => 'USD', 'status' => $paymentStatus,
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+        }
+
+        return $orderId;
     }
 
     public function test_non_admins_cannot_access_reports(): void
@@ -67,9 +76,9 @@ class AdminReportTest extends TestCase
     public function test_revenue_ignores_cancelled_and_refunded_orders(): void
     {
         $product = $this->makeProduct('Iron Sword', 'Forge Store');
-        $this->makeOrder($product, 2, 50, 'delivered');
+        $this->makeOrder($product, 2, 50, 'paid');
         $this->makeOrder($product, 1, 999, 'cancelled');
-        $this->makeOrder($product, 1, 888, 'refunded');
+        $this->makeOrder($product, 1, 888, 'paid', paymentStatus: 'refunded');
 
         $response = $this->actingAs($this->admin())->get('/admin/reports?range=all')->assertOk();
 
@@ -78,11 +87,29 @@ class AdminReportTest extends TestCase
         $this->assertSame(100.0, (float) $response->viewData('metrics')['average_order_value']);
     }
 
+    public function test_revenue_requires_payment_evidence_and_does_not_duplicate_order_lines(): void
+    {
+        $product = $this->makeProduct('Verified Sword', 'Verified Store');
+        $this->makeOrder($product, 1, 999, 'paid', paymentStatus: null);
+        $id = $this->makeOrder($product, 2, 25, 'paid');
+        DB::table('payments')->insert([
+            'order_id' => $id, 'provider' => 'fake', 'method' => 'card',
+            'amount' => 50, 'currency' => 'USD', 'status' => 'succeeded',
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->admin())->get('/admin/reports?range=all')->assertOk();
+        $this->assertSame(50.0, $response->viewData('metrics')['gross_revenue']);
+        $this->assertSame(50.0, (float) $response->viewData('topProducts')->first()->revenue);
+        $this->assertSame(2, (int) $response->viewData('topProducts')->first()->units_sold);
+        $response->assertDontSee('Delivered / Disputed');
+    }
+
     public function test_time_range_filter_excludes_old_orders(): void
     {
         $product = $this->makeProduct('Iron Sword', 'Forge Store');
-        $this->makeOrder($product, 1, 40, 'delivered');
-        $this->makeOrder($product, 1, 500, 'delivered', now()->subDays(60));
+        $this->makeOrder($product, 1, 40, 'paid');
+        $this->makeOrder($product, 1, 500, 'paid', now()->subDays(60));
 
         $recent = $this->actingAs($this->admin())->get('/admin/reports?range=7_days');
         $this->assertSame(40.0, $recent->viewData('metrics')['gross_revenue']);
@@ -102,8 +129,8 @@ class AdminReportTest extends TestCase
     {
         $cheap = $this->makeProduct('Cheap Cape', 'Small Shop');
         $big = $this->makeProduct('Dragon Armor', 'Big Shop');
-        $this->makeOrder($cheap, 1, 10, 'delivered');
-        $this->makeOrder($big, 3, 100, 'shipped');
+        $this->makeOrder($cheap, 1, 10, 'paid');
+        $this->makeOrder($big, 3, 100, 'paid');
 
         $response = $this->actingAs($this->admin())->get('/admin/reports?range=all')->assertOk();
 
@@ -119,13 +146,13 @@ class AdminReportTest extends TestCase
     public function test_status_distribution_percentages(): void
     {
         $product = $this->makeProduct('Iron Sword', 'Forge Store');
-        $this->makeOrder($product, 1, 10, 'delivered');
-        $this->makeOrder($product, 1, 10, 'disputed');
+        $this->makeOrder($product, 1, 10, 'paid');
+        $this->makeOrder($product, 1, 10, 'expired');
 
         $dist = $this->actingAs($this->admin())->get('/admin/reports?range=all')->viewData('statusDistribution');
 
-        $this->assertSame(1, $dist['delivered']['count']);
-        $this->assertSame(50.0, (float) $dist['disputed']['percent']);
+        $this->assertSame(1, $dist['paid']['count']);
+        $this->assertSame(50.0, (float) $dist['expired']['percent']);
     }
 
     public function test_category_distribution_counts_only_approved_products(): void

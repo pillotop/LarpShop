@@ -16,6 +16,7 @@
 @endsection
 
 @section('tail')
+    <script src="/js/components/product_quantity_picker.js"></script>
     <script src="/js/components/dropdown.js"></script>
     <script src="/js/components/persistent_header.js"></script>
     <script src="/js/components/side_panel.js"></script>

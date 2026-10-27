@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Queries\Orders\OrderQuery;
@@ -25,7 +26,7 @@ class AdminOrderController extends Controller
     {
         $validated = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
-            'status' => ['nullable', Rule::in(['all', ...Order::STATUSES])],
+            'status' => ['nullable', Rule::in(['all', ...OrderStatus::values()])],
         ]);
 
         $keyword = trim((string) ($validated['q'] ?? ''));
@@ -36,7 +37,7 @@ class AdminOrderController extends Controller
             'keyword' => $keyword,
             'status' => $status,
             'counts' => $this->orders->statusCounts(),
-            'statuses' => Order::STATUSES,
+            'statuses' => OrderStatus::values(),
         ]);
     }
 
@@ -53,21 +54,21 @@ class AdminOrderController extends Controller
             'computedTotal' => $reconciliation['computedTotal'],
             'totalMatches' => $reconciliation['totalMatches'],
             'byVendor' => $reconciliation['byVendor'],
-            'statuses' => Order::STATUSES,
+            'canCancel' => $order->status === OrderStatus::Pending,
         ]);
     }
 
     /**
-     * UC-44: Update the order status (e.g. mark disputed, refunded, cancelled).
+     * UC-44: Cancel an eligible order through the inventory-aware lifecycle.
      */
     public function updateStatus(Request $request, Order $order): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', 'string', Rule::in(Order::STATUSES)],
+            'status' => ['required', 'string', Rule::in([OrderStatus::Cancelled->value])],
         ]);
 
-        $this->orderService->updateStatus($order, $validated['status']);
+        $order = $this->orderService->updateStatus($order, OrderStatus::from($validated['status']));
 
-        return back()->with('success', "Order #{$order->order_id} status updated to '{$order->status}'.");
+        return back()->with('success', "Order #{$order->order_id} status updated to '{$order->status->value}'.");
     }
 }

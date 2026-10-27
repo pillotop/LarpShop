@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Order;
@@ -25,11 +27,6 @@ class AdminReportController extends Controller
     ];
 
     /**
-     * Order statuses that count toward platform revenue.
-     */
-    public const REVENUE_STATUSES = ['processing', 'shipped', 'delivered'];
-
-    /**
      * UC-45: Display the platform overview analytics report.
      */
     public function index(Request $request): View
@@ -44,7 +41,7 @@ class AdminReportController extends Controller
         $orders = fn () => Order::query()
             ->when($since, fn ($q) => $q->where('orders.created_at', '>=', $since));
 
-        $revenueOrders = $orders()->whereIn('status', self::REVENUE_STATUSES);
+        $revenueOrders = $orders()->whereHas('payments', fn ($query) => $query->where('status', PaymentStatus::Succeeded->value));
         $grossRevenue = (float) (clone $revenueOrders)->sum('total_amount');
         $revenueOrderCount = (clone $revenueOrders)->count();
         $totalOrders = $orders()->count();
@@ -59,16 +56,16 @@ class AdminReportController extends Controller
             'gross_revenue' => $grossRevenue,
             'total_orders' => $totalOrders,
             'average_order_value' => $revenueOrderCount > 0 ? $grossRevenue / $revenueOrderCount : 0,
-            'delivered_rate' => $totalOrders > 0 ? round((($statusCounts['delivered'] ?? 0) / $totalOrders) * 100, 1) : 0,
+            'paid_rate' => $totalOrders > 0 ? round((($statusCounts[OrderStatus::Paid->value] ?? 0) / $totalOrders) * 100, 1) : 0,
             'problem_rate' => $totalOrders > 0
-                ? round(((($statusCounts['disputed'] ?? 0) + ($statusCounts['cancelled'] ?? 0)) / $totalOrders) * 100, 1)
+                ? round(((($statusCounts[OrderStatus::Expired->value] ?? 0) + ($statusCounts[OrderStatus::Cancelled->value] ?? 0)) / $totalOrders) * 100, 1)
                 : 0,
             'active_vendors' => Vendor::whereIn('status', ['active', 'approved'])->count(),
             'approved_products' => Product::approved()->count(),
         ];
 
         $statusDistribution = [];
-        foreach (Order::STATUSES as $status) {
+        foreach (OrderStatus::values() as $status) {
             $count = (int) ($statusCounts[$status] ?? 0);
             $statusDistribution[$status] = [
                 'count' => $count,
@@ -79,7 +76,11 @@ class AdminReportController extends Controller
         $lineBase = fn () => DB::table('order_details')
             ->join('orders', 'orders.order_id', '=', 'order_details.order_id')
             ->join('products', 'products.product_id', '=', 'order_details.product_id')
-            ->whereIn('orders.status', self::REVENUE_STATUSES)
+            ->whereExists(function ($query) {
+                $query->selectRaw('1')->from('payments')
+                    ->whereColumn('payments.order_id', 'orders.order_id')
+                    ->where('payments.status', PaymentStatus::Succeeded->value);
+            })
             ->when($since, fn ($q) => $q->where('orders.created_at', '>=', $since));
 
         $topProducts = $lineBase()

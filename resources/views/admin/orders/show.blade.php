@@ -14,7 +14,7 @@
         :order="$order"
         :computed-total="$computedTotal"
         :total-matches="$totalMatches"
-        :statuses="$statuses"
+        :can-cancel="$canCancel"
     />
 
     {{-- Vendor Breakdown and Line Items (UC-44) --}}

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -58,21 +59,21 @@ class AdminOrderTest extends TestCase
         $this->actingAs($customer)->get('/admin/orders')->assertForbidden();
         $this->actingAs($customer)->get("/admin/orders/{$order->order_id}")->assertForbidden();
         $this->actingAs($customer)->patch("/admin/orders/{$order->order_id}/status", ['status' => 'refunded'])->assertForbidden();
-        $this->assertSame('pending', $order->refresh()->status);
+        $this->assertSame('pending', $order->refresh()->status->value);
     }
 
     public function test_admin_can_list_filter_and_search_orders(): void
     {
         $alice = User::factory()->create(['username' => 'alice_buyer']);
         $bob = User::factory()->create(['username' => 'bob_buyer']);
-        $aliceOrder = $this->makeOrder($alice, 'disputed');
-        $bobOrder = $this->makeOrder($bob, 'delivered');
+        $aliceOrder = $this->makeOrder($alice, 'pending');
+        $bobOrder = $this->makeOrder($bob, 'paid');
         $admin = $this->admin();
 
         $this->actingAs($admin)->get('/admin/orders')
-            ->assertOk()->assertSee('alice_buyer')->assertSee('bob_buyer');
+            ->assertOk()->assertSee('alice_buyer')->assertSee('bob_buyer')->assertSee('Paid')->assertSee('Expired');
 
-        $this->actingAs($admin)->get('/admin/orders?status=disputed')
+        $this->actingAs($admin)->get('/admin/orders?status=pending')
             ->assertOk()->assertSee('alice_buyer')->assertDontSee('bob_buyer');
 
         $this->actingAs($admin)->get('/admin/orders?q=bob_buyer')
@@ -113,25 +114,49 @@ class AdminOrderTest extends TestCase
         $this->actingAs($this->admin())->get('/admin/orders/99999')->assertNotFound();
     }
 
-    public function test_admin_can_update_order_status(): void
+    public function test_admin_cancellation_releases_inventory_exactly_once(): void
     {
         $order = $this->makeOrder(User::factory()->create());
+        $before = $order->details()->with('product')->get()->mapWithKeys(
+            fn ($detail) => [$detail->product_id => $detail->product->stock]
+        );
+        $admin = $this->admin();
 
-        $this->actingAs($this->admin())->patch("/admin/orders/{$order->order_id}/status", ['status' => 'disputed'])
-            ->assertSessionHas('success');
+        for ($attempt = 0; $attempt < 2; $attempt++) {
+            $this->actingAs($admin)->patch("/admin/orders/{$order->order_id}/status", ['status' => 'cancelled'])
+                ->assertSessionHas('success');
+        }
 
-        $this->assertSame('disputed', $order->refresh()->status);
+        $this->assertSame(OrderStatus::Cancelled, $order->refresh()->status);
+        $this->assertNotNull($order->stock_released_at);
+        foreach ($order->details()->with('product')->get() as $detail) {
+            $this->assertSame($before[$detail->product_id] + $detail->quantity, $detail->product->stock);
+        }
+    }
+
+    public function test_admin_cannot_cancel_paid_orders_or_mark_orders_paid(): void
+    {
+        $paid = $this->makeOrder(User::factory()->create(), 'paid');
+        $before = $paid->details()->with('product')->get()->pluck('product.stock')->all();
+        $this->actingAs($this->admin())->patch("/admin/orders/{$paid->order_id}/status", ['status' => 'cancelled'])
+            ->assertSessionHasErrors('order');
+        $this->assertSame(OrderStatus::Paid, $paid->fresh()->status);
+        $this->assertSame($before, $paid->details()->with('product')->get()->pluck('product.stock')->all());
+        $pending = $this->makeOrder(User::factory()->create());
+        $this->patch("/admin/orders/{$pending->order_id}/status", ['status' => 'paid'])->assertSessionHasErrors('status');
+        $this->assertSame(OrderStatus::Pending, $pending->fresh()->status);
+        $this->assertDatabaseCount('payments', 0);
     }
 
     public function test_order_status_must_be_in_allowlist(): void
     {
         $order = $this->makeOrder(User::factory()->create());
 
-        foreach (['hacked', '', 'PENDING '] as $bad) {
+        foreach (['hacked', '', 'PENDING ', 'pending', 'paid', 'expired', 'processing', 'shipped', 'delivered', 'disputed', 'refunded'] as $bad) {
             $this->actingAs($this->admin())->patch("/admin/orders/{$order->order_id}/status", ['status' => $bad])
                 ->assertSessionHasErrors('status');
         }
 
-        $this->assertSame('pending', $order->refresh()->status);
+        $this->assertSame('pending', $order->refresh()->status->value);
     }
 }

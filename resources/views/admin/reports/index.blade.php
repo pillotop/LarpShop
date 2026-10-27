@@ -6,12 +6,9 @@
 @php
     $statusColors = [
         'pending' => 'secondary',
-        'processing' => 'info',
-        'shipped' => 'primary',
-        'delivered' => 'success',
+        'paid' => 'success',
         'cancelled' => 'dark',
-        'disputed' => 'danger',
-        'refunded' => 'warning',
+        'expired' => 'warning',
     ];
 @endphp
 
@@ -21,7 +18,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
                 <h1 class="h5 fw-bold text-dark mb-1"><i class="bi bi-graph-up-arrow text-primary me-2"></i>Platform Overview</h1>
-                <p class="text-muted small mb-0">Revenue counts orders in processing, shipped, or delivered status.</p>
+                <p class="text-muted small mb-0">Revenue counts orders with a verified successful payment. Delivery tracking is not available yet.</p>
             </div>
             <form method="GET" action="{{ route('admin.reports.index') }}" class="d-flex gap-2">
                 <select name="range" class="form-select" onchange="this.form.submit()">
@@ -55,9 +52,9 @@
         </div>
         <div class="col-12 col-sm-6 col-xl-4">
             <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-                <div class="text-muted small">Delivered / Disputed+Cancelled</div>
+                <div class="text-muted small">Paid / Cancelled+Expired</div>
                 <div class="fs-4 fw-bold">
-                    <span class="text-success">{{ $metrics['delivered_rate'] }}%</span>
+                    <span class="text-success">{{ $metrics['paid_rate'] }}%</span>
                     <span class="text-muted">/</span>
                     <span class="text-danger">{{ $metrics['problem_rate'] }}%</span>
                 </div>

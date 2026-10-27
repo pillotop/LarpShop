@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductRetrievalService
 {
-    public function __construct(private ProductCatalogQuery $productCatalogQuery) {}
+    public function __construct(private ProductCatalogQuery $productCatalogQuery)
+    {}
 
     public function getProducts(
         ?int $categoryId = null,

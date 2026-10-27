@@ -34,9 +34,21 @@
     <div class="z-2 position-relative my-2">
         <div class="d-flex gap-2 align-items-center">
             @if (($product->stock ?? 0) > 0)
-                <button class="btn btn-sm btn-primary d-flex align-items-center justify-content-center shadow px-2" type="button">
-                    Add to cart
-                </button>
+                <div
+                    class="quantity-picker"
+                    data-add-to-cart-url="{{ route('cart.add') }}"
+                    data-set-cart-url="{{ route('cart.store') }}"
+                    data-product-id="{{ $product->product_id }}"
+                >
+                    @csrf
+                    <button
+                        id="add-to-cart"
+                        class="btn btn-sm btn-primary d-flex align-items-center justify-content-center shadow px-2"
+                        type="button"
+                    >
+                        Add to cart
+                    </button>
+                </div>
             @else
                 <span class="badge bg-danger d-flex align-items-center justify-content-center px-2 py-1">
                     Out of Stock

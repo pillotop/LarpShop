@@ -23,7 +23,6 @@ Route::post('/auth/check-email', function (Request $request) {
     ]);
 })->middleware('throttle:10,1')->name('auth.check-email');
 
-//TODO: apply throttle on the routes that dont have it
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])
         ->name('login');

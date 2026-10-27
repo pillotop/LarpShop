@@ -1,7 +1,9 @@
 .persistent-header {
     width: 100%;
+    overflow-anchor: none;
 }
 
 .persistent-header .persistent-header-content {
     width: 100%;
+    overflow-anchor: none;
 }

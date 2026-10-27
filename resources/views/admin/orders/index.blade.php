@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Order Investigation (UC-44)')
-@section('page_title', 'Orders & Disputes')
+@section('page_title', 'Orders')
 
 @section('content')
 <div class="container-fluid p-0">

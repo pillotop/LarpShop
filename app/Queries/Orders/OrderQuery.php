@@ -58,6 +58,6 @@ class OrderQuery
      */
     public function loadInvestigationDetails(Order $order): Order
     {
-        return $order->loadMissing(['user', 'details.product.vendor.user']);
+        return $order->loadMissing(['user', 'details.product.vendor.user', 'payments']);
     }
 }
