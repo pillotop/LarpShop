@@ -2,7 +2,9 @@
 
 use App\Enums\OrderStatus;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Services\Orders\OrderLifecycleService;
+use App\Services\Payments\PaymentService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -31,3 +33,21 @@ Artisan::command('orders:expire', function (OrderLifecycleService $lifecycle) {
 })->purpose('Expire unpaid orders and release reserved inventory');
 
 Schedule::command('orders:expire')->everyMinute()->withoutOverlapping();
+
+Artisan::command('payments:reconcile', function (PaymentService $payments) {
+    Payment::query()
+        ->whereIn('status', ['pending', 'processing'])
+        ->whereNotNull('provider_reference')
+        ->chunkById(100, function ($batch) use ($payments) {
+            foreach ($batch as $payment) {
+                try {
+                    // Verify only: reconciliation must never initiate a new capture.
+                    $payments->verify($payment);
+                } catch (Throwable $exception) {
+                    $this->warn("Could not reconcile payment #{$payment->getKey()}: ".class_basename($exception));
+                }
+            }
+        }, 'payment_id');
+})->purpose('Reconcile pending payments with their providers');
+
+Schedule::command('payments:reconcile')->everyFiveMinutes()->withoutOverlapping();

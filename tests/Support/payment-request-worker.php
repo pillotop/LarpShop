@@ -1,7 +1,7 @@
 <?php
 
 use App\Data\Payments\PaymentSession;
-use App\Models\Order;
+use App\Data\Payments\PaymentRequest;
 use App\Services\Payments\FakePaymentGateway;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Http\Request;
@@ -15,15 +15,23 @@ $app->make(Kernel::class)->bootstrap();
 $input = json_decode(trim(fgets(STDIN)), true, flags: JSON_THROW_ON_ERROR);
 config(['database.default' => 'mysql', 'database.connections.mysql' => $input['connection']]);
 DB::purge('mysql');
+config([
+    'cache.default' => 'database',
+    'cache.stores.database.connection' => 'mysql',
+    'cache.stores.database.lock_connection' => 'mysql',
+    'cache.stores.database.table' => 'cache',
+    'cache.stores.database.lock_table' => 'cache_locks',
+    'cache.prefix' => 'payment-concurrency-testing-',
+]);
 $app->bind(FakePaymentGateway::class, function () {
     return new class extends FakePaymentGateway
     {
-        public function createPayment(Order $order): PaymentSession
+        public function createPayment(PaymentRequest $request): PaymentSession
         {
-            // Keep the first transaction open while the other request contends for it.
+            // Keep the initiation lock held while the other request contends for it.
             usleep(300000);
 
-            return parent::createPayment($order);
+            return parent::createPayment($request);
         }
     };
 });

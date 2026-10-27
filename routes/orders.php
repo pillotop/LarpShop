@@ -12,9 +12,8 @@ Route::middleware('auth')
         Route::post('/{order}/cancel', [OrderController::class, 'cancel'])
             ->name('cancel');
 
-        Route::get('/{order}', [OrderController::class, 'show'])
-            ->name('show');
-
         Route::get('/index', [OrderHistoryController::class, 'index'])
             ->name('index');
+
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
     });

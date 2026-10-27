@@ -17,6 +17,7 @@ class Payment extends Model
         'provider',
         'method',
         'provider_reference',
+        'checkout_url',
         'amount',
         'currency',
         'status',

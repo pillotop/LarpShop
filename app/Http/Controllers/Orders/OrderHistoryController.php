@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class OrderHistoryController extends Controller
 {
-    public function index(Request $request): JsonResponse | RedirectResponse
+    public function index(Request $request): JsonResponse|View
     {
         $orders = $request
             ->user()
@@ -23,11 +23,9 @@ class OrderHistoryController extends Controller
             ->paginate(10);
 
         if ($request->expectsJson()) {
-            return response()->json([
-
-            ]);
+            return response()->json($orders);
         }
 
-        return redirect()->route('profile');
+        return view('orders.pages.index', compact('orders'));
     }
 }

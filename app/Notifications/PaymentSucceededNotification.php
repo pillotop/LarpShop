@@ -42,7 +42,7 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
             ->line("Order #{$this->payment->order_id}")
             ->line("Amount: {$this->payment->amount} {$this->payment->currency}")
             ->line("Payment method: {$this->payment->method?->value}")
-            ->line('Your simulated payment was successful.')
+            ->line('Your payment was successful.')
             ->action(
                 'View order history',
                 route('orders.index')

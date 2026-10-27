@@ -8,17 +8,18 @@ use App\Data\Payments\PaymentSession;
 use App\Enums\PaymentStatus;
 use App\Enums\FakePaymentOutcome;
 use App\Models\FakePaymentSession;
-use App\Models\Order;
-use Illuminate\Support\Str;
+use App\Data\Payments\PaymentRequest;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class FakePaymentGateway implements PaymentGateway
 {
-    public function createPayment(Order $order): PaymentSession
+    public function createPayment(PaymentRequest $request): PaymentSession
     {
-        $session = FakePaymentSession::create([
-            'reference' => (string) Str::uuid(),
+        $session = FakePaymentSession::firstOrCreate([
+            'reference' => Uuid::uuid5(Uuid::NAMESPACE_URL, $request->requestId)->toString(),
+        ], [
             'status' => 'pending',
         ]);
 

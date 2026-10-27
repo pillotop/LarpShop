@@ -1,10 +1,15 @@
-@props(['order', 'canPay' => false])
+@props(['order', 'canCreatePayment' => false])
 
 <form
-    action="{{ route('test.payments.pay', $order) }}"
+    action="{{ route('payments.store', $order) }}"
     method="POST"
 >
     @csrf
+    <input
+        type="hidden"
+        name="payment_option"
+        value="fake_card"
+    >
     <div
         class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3"
     >
@@ -38,11 +43,11 @@
         <p
             class="mb-0"
         >
-            This demonstration marks your order as paid using a simulated payment. Review the order total and shipping address before continuing.
+            Create a demo session, then choose a simulated outcome. Review the order total and shipping address before continuing.
         </p>
     </div>
 
-    @if ($canPay)
+    @if ($canCreatePayment)
         <div
             class="form-check mb-3"
         >
@@ -66,7 +71,7 @@
             type="submit"
             class="btn btn-primary w-100 py-3 fw-semibold"
         >
-            Pay ${{ number_format((float) $order->total_amount, 2) }} — demo
+            Create demo payment — ${{ number_format((float) $order->total_amount, 2) }}
         </button>
     @else
         <p

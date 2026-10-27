@@ -49,7 +49,7 @@ class PaymentFlowTest extends TestCase
     {
         $order = $this->order();
         $payment = $this->payment($order);
-        $this->postJson(route('test.payments.store', $order))->assertUnprocessable()->assertJsonValidationErrors('payment');
+        $this->postJson(route('test.payments.store', $order))->assertCreated()->assertJsonPath('payment_id', $payment->getKey());
         $this->assertDatabaseCount('payments', 1);
         $this->assertDatabaseCount('fake_payment_sessions', 1);
         $this->assertSame(1, $payment->events()->count());

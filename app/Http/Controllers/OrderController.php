@@ -7,14 +7,20 @@ use App\Services\Orders\OrderLifecycleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class OrderController extends Controller
 {
     public function show(
         Request $request,
         Order $order,
-    ): JsonResponse {
+    ): JsonResponse|View {
         $order = $request->user()->orders()->findOrFail($order->getKey());
+
+        $order->load(['details.product', 'addresses', 'payments']);
+        if (! $request->expectsJson()) {
+            return view('orders.pages.show', compact('order'));
+        }
 
         return response()->json([
             'order_id' => $order->order_id,

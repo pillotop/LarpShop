@@ -12,7 +12,6 @@ use App\Services\Payments\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -31,30 +30,21 @@ class FakePaymentController extends Controller
             'method' => ['sometimes', 'required', 'string', Rule::enum(PaymentMethod::class)],
         ]);
 
-        $result = DB::transaction(function () use ($order, $payments, $gateway, $validated) {
+        if (! $order->addresses()->where('type', 'shipping')->exists()) {
+            throw ValidationException::withMessages([
+                'address_id' => 'A shipping address is required.',
+            ]);
+        }
 
-            $order = Order::query()
-                ->whereKey($order
-                ->getKey())
-                ->lockForUpdate()
-                ->firstOrFail();
+        $payment = $payments->createForOrder(
+            $order,
+            provider: 'fake',
+            method: PaymentMethod::from($validated['method'] ?? PaymentMethod::Card->value),
+        );
 
-            if (! $order->addresses()->where('type', 'shipping')->exists()) {
-                throw ValidationException::withMessages([
-                    'address_id' => 'A shipping address is required.',
-                ]);
-            }
+        $gateway->simulate($payment->provider_reference, FakePaymentOutcome::Succeeded);
 
-            $payment = $payments->createForOrder(
-                $order,
-                provider: 'fake',
-                method: PaymentMethod::from($validated['method'] ?? PaymentMethod::Card->value),
-            );
-
-            $gateway->simulate($payment->provider_reference, FakePaymentOutcome::Succeeded);
-
-            return $payments->verify($payment);
-        }, attempts: 3);
+        $result = $payments->verify($payment);
 
         return redirect()->route('checkout.show', $order)->with('success', $result->status === 'succeeded'
             ? 'Demo payment completed. No money was charged.'
@@ -65,7 +55,7 @@ class FakePaymentController extends Controller
         Request $request,
         Order $order,
         PaymentService $payments,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         abort_unless(
             (int) $order->user_id === (int) $request->user()->user_id,
             404,
@@ -89,7 +79,7 @@ class FakePaymentController extends Controller
         Payment $payment,
         FakePaymentGateway $gateway,
         PaymentService $payments,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $this->assertOwner($request, $payment);
 
         $data = $request->validate([
@@ -103,23 +93,27 @@ class FakePaymentController extends Controller
 
         $result = $payments->verify($payment);
 
-        return response()->json([
-            'status' => $result->status,
-        ]);
+        if (! $request->expectsJson()) {
+            return redirect()->route('checkout.show', $payment->order_id)->with('success', 'Simulated payment status: '.$result->status);
+        }
+
+        return response()->json(['status' => $result->status]);
     }
 
     public function verify(
         Request $request,
         Payment $payment,
         PaymentService $payments,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $this->assertOwner($request, $payment);
 
         $result = $payments->verify($payment);
 
-        return response()->json([
-            'status' => $result->status,
-        ]);
+        if (! $request->expectsJson()) {
+            return redirect()->route('checkout.show', $payment->order_id)->with('success', 'Simulated payment status: '.$result->status);
+        }
+
+        return response()->json(['status' => $result->status]);
     }
 
     private function assertOwner(
@@ -127,7 +121,7 @@ class FakePaymentController extends Controller
         Payment $payment,
     ): void {
         abort_unless(
-            (int) $payment->order->user_id === (int) $request->user()->user_id,
+            (int) $payment->order->user_id === (int) $request->user()->user_id && $payment->provider === 'fake',
             404,
         );
     }

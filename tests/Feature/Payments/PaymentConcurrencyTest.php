@@ -67,17 +67,21 @@ class PaymentConcurrencyTest extends TestCase
             }
 
             $statuses = [];
+            $paymentIds = [];
 
             foreach ($workers as [, $pipes]) {
                 $line = fgets($pipes[1]);
                 $this->assertIsString($line, 'Payment worker timed out.');
                 $result = json_decode($line, true, flags: JSON_THROW_ON_ERROR);
                 $statuses[] = $result['status'];
+                $paymentIds[] = $result['body']['payment_id'] ?? null;
             }
 
             sort($statuses);
 
-            $this->assertSame([201, 422], $statuses);
+            $this->assertSame([201, 201], $statuses);
+            $this->assertNotNull($paymentIds[0]);
+            $this->assertSame($paymentIds[0], $paymentIds[1]);
             $this->assertDatabaseCount('payments', 1);
             $this->assertDatabaseCount('fake_payment_sessions', 1);
             $this->assertDatabaseCount('payment_events', 1);

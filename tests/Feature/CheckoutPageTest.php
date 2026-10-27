@@ -80,6 +80,33 @@ class CheckoutPageTest extends TestCase
         $this->putJson(route('checkout.address.update', $expired), ['address_id' => $expiredAddress->getKey()])->assertUnprocessable();
     }
 
+    public function test_checkout_shows_creation_resume_and_processing_states(): void
+    {
+        [, $order] = $this->checkout();
+        $this->get(route('checkout.show', $order))->assertOk()
+            ->assertSee('id="checkout-terms"', false)
+            ->assertDontSee('Continue payment');
+
+        $payment = $order->payments()->create([
+            'provider' => 'paypal', 'method' => 'ewallet',
+            'amount' => '49.95', 'currency' => 'USD', 'status' => 'pending',
+            'checkout_url' => 'https://example.test/approve',
+        ]);
+        $this->get(route('checkout.show', $order))->assertOk()
+            ->assertSee('href="https://example.test/approve"', false)
+            ->assertDontSee('id="checkout-terms"', false);
+
+        $payment->update(['status' => 'processing']);
+        $this->get(route('checkout.show', $order))->assertOk()
+            ->assertSee('Your payment is being processed.')
+            ->assertDontSee('Continue payment');
+
+        $payment->update(['status' => 'pending', 'checkout_url' => null]);
+        $this->get(route('checkout.show', $order))->assertOk()
+            ->assertSee('No continuation link is available.')
+            ->assertDontSee('id="checkout-terms"', false);
+    }
+
     public function test_demo_pay_rejects_invalid_provider_and_method_values(): void
     {
         [, $order] = $this->checkout();

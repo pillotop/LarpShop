@@ -38,14 +38,25 @@ class CheckoutController extends Controller
                 PaymentStatus::Processing->value,
                 PaymentStatus::Succeeded->value,
                 PaymentStatus::RefundRequired->value,
-            ])->exists();
+            ])
+            ->latest('payment_id')
+            ->first();
+
+        $hasShippingAddress = $order->addresses
+            ->contains('type', 'shipping');
 
         return view('checkout.pages.show', [
             'order' => $order,
             'user' => $request->user(),
             'addresses' => $addresses->forUser($request->user()),
-            'canChangeAddress' => $payable && ! $activePayment,
-            'canPay' => $payable && ! $activePayment && $order->addresses->contains('type', 'shipping'),
+            'activePayment' => $activePayment,
+            'canChangeAddress' => $payable && $activePayment === null,
+            'canCreatePayment' => $payable
+                && $activePayment === null
+                && $hasShippingAddress,
+            'canResumePayment' => $payable
+                && $activePayment?->status === PaymentStatus::Pending
+                && $activePayment->checkout_url !== null,
         ]);
     }
 

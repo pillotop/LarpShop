@@ -90,7 +90,12 @@
                         <x-checkout.address-section :order="$order" :addresses="$addresses" :can-change-address="$canChangeAddress"/>
                     </div>
                     <div class="p-4">
-                        <x-checkout.payment-section :order="$order" :can-pay="$canPay"/>
+                        <x-checkout.payment-section
+                            :order="$order"
+                            :active-payment="$activePayment"
+                            :can-create-payment="$canCreatePayment"
+                            :can-resume-payment="$canResumePayment"
+                        />
                     </div>
                 </div>
                 <div class="d-none d-lg-block col-5">
