@@ -19,7 +19,7 @@ class VendorCategoryController extends Controller
     ) {}
 
     /**
-     * List all categories for the vendor with status and ownership flags.
+     * List all platform categories for the vendor with status and hierarchy.
      */
     public function index(Request $request): View
     {
@@ -35,7 +35,7 @@ class VendorCategoryController extends Controller
     }
 
     /**
-     * UC-30: Display create category form.
+     * Display create category form.
      */
     public function create(Request $request): View
     {
@@ -51,7 +51,7 @@ class VendorCategoryController extends Controller
     }
 
     /**
-     * UC-30: Store a newly created category for the vendor.
+     * Store a newly created category proposed by a vendor.
      */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
@@ -61,19 +61,19 @@ class VendorCategoryController extends Controller
         $category = $this->categoryService->createForVendor($vendor, $request->validated());
 
         return redirect()->route('vendor.categories.index')
-            ->with('success', "Danh mục '{$category->name}' đã được tạo thành công.");
+            ->with('success', "Category '{$category->name}' has been created successfully.");
     }
 
     /**
-     * UC-31: Display edit category form.
+     * Display edit category form (restricted to administrators for shared platform categories).
      */
     public function edit(Request $request, Category $category): View
     {
         /** @var Vendor $vendor */
         $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
-        if (! $category->isOwnedBy($vendor) && ! $request->user()->isAdmin()) {
-            abort(403, 'Bạn không có quyền chỉnh sửa danh mục này.');
+        if (! $request->user()->isAdmin()) {
+            abort(403, 'Only administrators can edit shared platform categories.');
         }
 
         $parents = $this->categoryService->getEligibleParentCategories($category->category_id);
@@ -86,7 +86,7 @@ class VendorCategoryController extends Controller
     }
 
     /**
-     * UC-31: Update an existing category.
+     * Update an existing shared category (restricted to administrators).
      */
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
@@ -96,26 +96,26 @@ class VendorCategoryController extends Controller
         $this->categoryService->updateForVendor($vendor, $category, $request->validated());
 
         return redirect()->route('vendor.categories.index')
-            ->with('success', "Danh mục '{$category->name}' đã được cập nhật thành công.");
+            ->with('success', "Category '{$category->name}' has been updated successfully.");
     }
 
     /**
-     * UC-31: Toggle active / disabled status of a category.
+     * Toggle active/disabled status of a shared category (restricted to administrators).
      */
     public function toggleStatus(Request $request, Category $category): RedirectResponse
     {
         /** @var Vendor $vendor */
         $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
-        if (! $category->isOwnedBy($vendor) && ! $request->user()->isAdmin()) {
-            abort(403, 'Bạn không có quyền vô hiệu hóa hoặc kích hoạt danh mục này.');
+        if (! $request->user()->isAdmin()) {
+            abort(403, 'Only administrators can enable or disable shared platform categories.');
         }
 
         $this->categoryService->toggleActiveForVendor($vendor, $category);
 
-        $statusText = $category->is_active ? 'kích hoạt' : 'vô hiệu hóa';
+        $statusText = $category->is_active ? 'activated' : 'disabled';
 
         return redirect()->route('vendor.categories.index')
-            ->with('success', "Danh mục '{$category->name}' đã được {$statusText} thành công.");
+            ->with('success', "Category '{$category->name}' has been {$statusText} successfully.");
     }
 }

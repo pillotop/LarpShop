@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chỉnh sửa danh mục (UC-31) | ' . $category->name)
+@section('title', 'Edit Category | ' . $category->name)
 
 @section('head')
     <link rel="stylesheet" href="/css/app.css">
@@ -36,13 +36,11 @@
     </header>
 
     <main class="container my-4">
-        {{-- Breadcrumbs Navigation --}}
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('profile') }}">Hồ sơ</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.categories.index') }}">Danh mục</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa: {{ $category->name }}</li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.categories.index') }}">Categories</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit: {{ $category->name }}</li>
             </ol>
         </nav>
 
@@ -50,22 +48,21 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom pb-3 mb-4">
                 <div>
                     <h3 class="fw-bold text-dark mb-1">
-                        <i class="bi bi-pencil-square text-primary me-2"></i>Chỉnh sửa danh mục (UC-31)
+                        <i class="bi bi-pencil-square text-primary me-2"></i>Edit Category
                     </h3>
-                    <p class="text-muted small mb-0">Cập nhật thông tin danh mục <strong>{{ $category->name }}</strong>.</p>
+                    <p class="text-muted small mb-0">Update details for <strong>{{ $category->name }}</strong>.</p>
                 </div>
                 <div>
-                    {{-- Toggle active status button --}}
-                    <form action="{{ route('vendor.categories.toggle-status', $category->category_id) }}" method="POST" class="m-0" onsubmit="return confirm('Bạn có chắc muốn thay đổi trạng thái danh mục này không?');">
+                    <form action="{{ route('vendor.categories.toggle-status', $category->category_id) }}" method="POST" class="m-0">
                         @csrf
                         @method('PATCH')
                         @if ($category->is_active)
                             <button type="submit" class="btn btn-outline-danger rounded-pill px-3">
-                                <i class="bi bi-slash-circle me-1"></i>Vô hiệu hóa danh mục (UC-31)
+                                <i class="bi bi-slash-circle me-1"></i>Disable Category
                             </button>
                         @else
                             <button type="submit" class="btn btn-outline-success rounded-pill px-3">
-                                <i class="bi bi-check-circle me-1"></i>Kích hoạt lại danh mục (UC-31)
+                                <i class="bi bi-check-circle me-1"></i>Enable Category
                             </button>
                         @endif
                     </form>
@@ -77,7 +74,7 @@
                 :parent-categories="$parentCategories"
                 :action="route('vendor.categories.update', $category->category_id)"
                 method="PUT"
-                submit-label="Cập nhật danh mục"
+                submit-label="Update Category"
             />
         </div>
     </main>

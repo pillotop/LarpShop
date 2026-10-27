@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Vendor;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -34,7 +35,7 @@ class ProductImageManagementService
 
             $image = new ProductImage([
                 'path' => $path,
-                'alt_text' => $altText ?? $product->name,
+                'alt_text' => $altText ?: $product->name,
                 'sort_order' => $currentMaxSort,
             ]);
 
@@ -54,11 +55,10 @@ class ProductImageManagementService
 
         if ((int) $image->product_id !== (int) $product->product_id) {
             throw ValidationException::withMessages([
-                'image' => 'Hình ảnh không thuộc về sản phẩm này.',
+                'image' => 'The selected image does not belong to this product.',
             ]);
         }
 
-        // Delete physical file if exists
         if ($image->path && Storage::disk('public')->exists($image->path)) {
             Storage::disk('public')->delete($image->path);
         }
@@ -75,17 +75,18 @@ class ProductImageManagementService
 
         if ((int) $image->product_id !== (int) $product->product_id) {
             throw ValidationException::withMessages([
-                'image' => 'Hình ảnh không thuộc về sản phẩm này.',
+                'image' => 'The selected image does not belong to this product.',
             ]);
         }
 
-        // Shift all other images down
-        $product->images()
-            ->where('product_image_id', '!=', $image->product_image_id)
-            ->increment('sort_order', 1);
+        DB::transaction(function () use ($product, $image) {
+            $product->images()
+                ->where('product_image_id', '!=', $image->product_image_id)
+                ->increment('sort_order', 1);
 
-        $image->sort_order = 1;
-        $image->save();
+            $image->sort_order = 1;
+            $image->save();
+        });
     }
 
     /**
@@ -94,7 +95,7 @@ class ProductImageManagementService
     public function authorizeProductOwnership(Vendor $vendor, Product $product): void
     {
         if ((int) $product->vendor_id !== (int) $vendor->vendor_id && ! $vendor->user?->isAdmin()) {
-            abort(403, 'Bạn không có quyền quản lý hình ảnh của sản phẩm này.');
+            abort(403, 'You do not have permission to manage images for this product.');
         }
     }
 }

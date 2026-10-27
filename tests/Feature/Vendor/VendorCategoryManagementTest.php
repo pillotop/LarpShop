@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class VendorCategoryManagementTest extends TestCase
@@ -19,9 +20,9 @@ class VendorCategoryManagementTest extends TestCase
         $this->withoutMiddleware(PreventRequestForgery::class);
     }
 
-    private function createActiveVendor(): array
+    private function createActiveVendor(string $role = 'customer'): array
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => $role]);
         $vendor = Vendor::create([
             'user_id' => $user->user_id,
             'store_name' => 'Mythic Gear '.uniqid(),
@@ -32,14 +33,19 @@ class VendorCategoryManagementTest extends TestCase
         return [$user, $vendor];
     }
 
+    public function test_categories_table_does_not_contain_vendor_id_column(): void
+    {
+        $this->assertFalse(Schema::hasColumn('categories', 'vendor_id'));
+        $this->assertTrue(Schema::hasColumn('categories', 'is_active'));
+    }
+
     public function test_vendor_can_view_category_list(): void
     {
-        [$user, $vendor] = $this->createActiveVendor();
+        [$user] = $this->createActiveVendor();
 
-        $category = Category::create([
+        Category::create([
             'name' => 'Leather Armor',
             'slug' => 'leather-armor',
-            'vendor_id' => $vendor->vendor_id,
             'is_active' => true,
         ]);
 
@@ -51,7 +57,7 @@ class VendorCategoryManagementTest extends TestCase
 
     public function test_vendor_can_create_new_category(): void
     {
-        [$user, $vendor] = $this->createActiveVendor();
+        [$user] = $this->createActiveVendor();
 
         $response = $this->actingAs($user)->post(route('vendor.categories.store'), [
             'name' => 'Foam Swords',
@@ -65,74 +71,64 @@ class VendorCategoryManagementTest extends TestCase
         $this->assertDatabaseHas('categories', [
             'name' => 'Foam Swords',
             'slug' => 'foam-swords',
-            'vendor_id' => $vendor->vendor_id,
             'is_active' => 1,
         ]);
     }
 
-    public function test_vendor_can_update_own_category(): void
+    public function test_non_admin_vendor_cannot_edit_or_toggle_shared_categories(): void
     {
-        [$user, $vendor] = $this->createActiveVendor();
+        [$user] = $this->createActiveVendor('customer');
 
         $category = Category::create([
-            'name' => 'Old Shields',
-            'slug' => 'old-shields',
-            'vendor_id' => $vendor->vendor_id,
+            'name' => 'Shared Shields',
+            'slug' => 'shared-shields',
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($user)->put(route('vendor.categories.update', $category->category_id), [
-            'name' => 'Viking Round Shields',
-            'description' => 'Reinforced wooden shields',
+        $this->actingAs($user)
+            ->get(route('vendor.categories.edit', $category->category_id))
+            ->assertForbidden();
+
+        $this->actingAs($user)
+            ->put(route('vendor.categories.update', $category->category_id), [
+                'name' => 'Tampered Category',
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($user)
+            ->patch(route('vendor.categories.toggle-status', $category->category_id))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('categories', [
+            'category_id' => $category->category_id,
+            'name' => 'Shared Shields',
+            'is_active' => 1,
         ]);
-
-        $response->assertRedirect(route('vendor.categories.index'));
-        $response->assertSessionHas('success');
-
-        $category->refresh();
-        $this->assertSame('Viking Round Shields', $category->name);
-        $this->assertSame('Reinforced wooden shields', $category->description);
     }
 
-    public function test_vendor_cannot_update_other_vendor_category(): void
+    public function test_admin_with_active_store_can_update_and_toggle_category(): void
     {
-        [$user1, $vendor1] = $this->createActiveVendor();
-        [$user2, $vendor2] = $this->createActiveVendor();
-
-        $category = Category::create([
-            'name' => 'Vendor 2 Category',
-            'slug' => 'vendor-2-cat',
-            'vendor_id' => $vendor2->vendor_id,
-            'is_active' => true,
-        ]);
-
-        $response = $this->actingAs($user1)->put(route('vendor.categories.update', $category->category_id), [
-            'name' => 'Hacked Category',
-        ]);
-
-        $response->assertForbidden();
-        $this->assertDatabaseMissing('categories', ['name' => 'Hacked Category']);
-    }
-
-    public function test_vendor_can_toggle_category_active_status(): void
-    {
-        [$user, $vendor] = $this->createActiveVendor();
+        [$admin] = $this->createActiveVendor('admin');
 
         $category = Category::create([
             'name' => 'Seasonal Capes',
             'slug' => 'seasonal-capes',
-            'vendor_id' => $vendor->vendor_id,
             'is_active' => true,
         ]);
 
-        // Toggle to inactive (disable)
-        $response1 = $this->actingAs($user)->patch(route('vendor.categories.toggle-status', $category->category_id));
-        $response1->assertRedirect(route('vendor.categories.index'));
-        $this->assertFalse($category->fresh()->is_active);
+        $this->actingAs($admin)
+            ->put(route('vendor.categories.update', $category->category_id), [
+                'name' => 'Royal Cloaks',
+                'description' => 'Updated by admin',
+            ])
+            ->assertRedirect(route('vendor.categories.index'));
 
-        // Toggle to active (re-enable)
-        $response2 = $this->actingAs($user)->patch(route('vendor.categories.toggle-status', $category->category_id));
-        $response2->assertRedirect(route('vendor.categories.index'));
-        $this->assertTrue($category->fresh()->is_active);
+        $this->assertSame('Royal Cloaks', $category->fresh()->name);
+
+        $this->actingAs($admin)
+            ->patch(route('vendor.categories.toggle-status', $category->category_id))
+            ->assertRedirect(route('vendor.categories.index'));
+
+        $this->assertFalse($category->fresh()->is_active);
     }
 }

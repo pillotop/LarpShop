@@ -11,7 +11,6 @@ use App\View\HomeController;
 use App\View\ProductSearchController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -84,18 +83,6 @@ Breadcrumbs::for('press', function (BreadcrumbTrail $trail) {
 
 Route::get('/vendors/{vendor}', [VendorStorefrontController::class, 'show'])
     ->name('vendors.show');
-
-Route::get('/vendor/products/create', function () {
-    return view('vendor.pages.create_product');
-})->name('vendor.product.create');
-
-Route::post('/vendor/products', function (Request $request) {
-    $productName = $request->input('name');
-    $productPrice = $request->input('price');
-    $categoryId = $request->input('category_id');
-
-    return view('vendor.success', compact('productName', 'productPrice', 'categoryId'));
-})->name('vendor.product.store');
 
 Route::post('/products/{product}/images', [ProductImageController::class, 'store'])
     ->name('products.images.store');
