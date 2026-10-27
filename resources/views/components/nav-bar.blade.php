@@ -128,6 +128,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.orders.index') }}">
+                                    <i class="bi bi-truck"></i>
+                                    <span>Store Orders</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.categories.index') }}">
                                     <i class="bi bi-tags"></i>
                                     <span>Danh mục của tôi</span>
