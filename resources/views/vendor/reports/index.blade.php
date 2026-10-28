@@ -17,6 +17,12 @@
 @endsection
 
 @section('content')
+    <section class="top-banner">
+        <svg class="logo-larpshop-horizontal">
+            <use href="/images/logo.svg#larpshop-horizontal"></use>
+        </svg>
+    </section>
+
     <header class="container sticky-top" style="background-color: #ffffff99;">
         <link rel="stylesheet" href="/css/top_header.css">
         <link rel="stylesheet" href="/css/components/navigation_bar.css">
@@ -225,4 +231,8 @@
             </div>
         </div>
     </main>
+
+    <footer class="mt-5">
+        <x-company-footer />
+    </footer>
 @endsection

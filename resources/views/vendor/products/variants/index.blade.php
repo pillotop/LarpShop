@@ -17,6 +17,12 @@
 @endsection
 
 @section('content')
+    <section class="top-banner">
+        <svg class="logo-larpshop-horizontal">
+            <use href="/images/logo.svg#larpshop-horizontal"></use>
+        </svg>
+    </section>
+
     <header class="container sticky-top" style="background-color: #ffffff99;">
         <link rel="stylesheet" href="/css/top_header.css">
         <link rel="stylesheet" href="/css/components/navigation_bar.css">
@@ -111,6 +117,7 @@
                         </div>
                         <div class="col-12 col-md-1 d-flex flex-column justify-content-end">
                             <div class="form-check form-switch mb-2">
+                                <input type="hidden" name="is_active" value="0">
                                 <input class="form-check-input" type="checkbox" role="switch" name="is_active" value="1" id="isActiveSwitch" checked>
                                 <label class="form-check-label small" for="isActiveSwitch">Active</label>
                             </div>
@@ -207,6 +214,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-check form-switch">
+                                                    <input type="hidden" name="is_active" value="0">
                                                     <input class="form-check-input" type="checkbox" role="switch" name="is_active" value="1" id="editActiveSwitch{{ $variant->variant_id }}" @checked($variant->is_active)>
                                                     <label class="form-check-label small" for="editActiveSwitch{{ $variant->variant_id }}">Active / Visible</label>
                                                 </div>
@@ -236,4 +244,8 @@
             </div>
         </div>
     </main>
+
+    <footer class="mt-5">
+        <x-company-footer />
+    </footer>
 @endsection

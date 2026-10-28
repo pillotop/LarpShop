@@ -136,7 +136,7 @@
                             <li>
                                 <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.reports.index') }}">
                                     <i class="bi bi-graph-up"></i>
-                                    <span>Báo cáo doanh thu</span>
+                                    <span>Store Reports</span>
                                 </a>
                             </li>
                         @endif

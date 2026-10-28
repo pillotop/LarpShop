@@ -34,8 +34,8 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     Route::get('/reports', [VendorReportController::class, 'index'])->name('reports.index');
 
     // UC-37: Vendor Product Variants Management
-    Route::get('/products/{product}/variants', [VendorProductVariantController::class, 'index'])->name('products.variants.index');
-    Route::post('/products/{product}/variants', [VendorProductVariantController::class, 'store'])->name('products.variants.store');
-    Route::put('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'update'])->name('products.variants.update');
-    Route::delete('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'destroy'])->name('products.variants.destroy');
+    Route::get('/products/{product}/variants', [VendorProductVariantController::class, 'index'])->whereNumber('product')->name('products.variants.index');
+    Route::post('/products/{product}/variants', [VendorProductVariantController::class, 'store'])->whereNumber('product')->name('products.variants.store');
+    Route::put('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'update'])->whereNumber(['product', 'variant'])->name('products.variants.update');
+    Route::delete('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'destroy'])->whereNumber(['product', 'variant'])->name('products.variants.destroy');
 });

@@ -15,10 +15,14 @@ use Illuminate\View\View;
 
 class VendorProductVariantController extends Controller
 {
+    public function __construct(
+        private VendorProductVariantService $variants,
+    ) {}
+
     public function index(Request $request, Product $product): View
     {
         /** @var Vendor $vendor */
-        $vendor = $request->attributes->get('active_vendor');
+        $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
         if ((int) $product->vendor_id !== (int) $vendor->vendor_id) {
             abort(403, 'Unauthorized access to this product.');
@@ -33,15 +37,12 @@ class VendorProductVariantController extends Controller
         ]);
     }
 
-    public function store(
-        StoreProductVariantRequest $request,
-        Product $product,
-        VendorProductVariantService $service
-    ): RedirectResponse {
+    public function store(StoreProductVariantRequest $request, Product $product): RedirectResponse
+    {
         /** @var Vendor $vendor */
-        $vendor = $request->attributes->get('active_vendor');
+        $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
-        $service->createVariant($vendor, $product, $request->validated());
+        $this->variants->createVariant($vendor, $product, $request->validated());
 
         return redirect()->route('vendor.products.variants.index', $product)
             ->with('success', 'Product variant added successfully.');
@@ -51,12 +52,11 @@ class VendorProductVariantController extends Controller
         UpdateProductVariantRequest $request,
         Product $product,
         ProductVariant $variant,
-        VendorProductVariantService $service
     ): RedirectResponse {
         /** @var Vendor $vendor */
-        $vendor = $request->attributes->get('active_vendor');
+        $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
-        $service->updateVariant($vendor, $product, $variant, $request->validated());
+        $this->variants->updateVariant($vendor, $product, $variant, $request->validated());
 
         return redirect()->route('vendor.products.variants.index', $product)
             ->with('success', 'Product variant updated successfully.');
@@ -66,12 +66,11 @@ class VendorProductVariantController extends Controller
         Request $request,
         Product $product,
         ProductVariant $variant,
-        VendorProductVariantService $service
     ): RedirectResponse {
         /** @var Vendor $vendor */
-        $vendor = $request->attributes->get('active_vendor');
+        $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
-        $service->deleteVariant($vendor, $product, $variant);
+        $this->variants->deleteVariant($vendor, $product, $variant);
 
         return redirect()->route('vendor.products.variants.index', $product)
             ->with('success', 'Product variant removed successfully.');

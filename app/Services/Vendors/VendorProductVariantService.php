@@ -13,14 +13,15 @@ class VendorProductVariantService
     /**
      * Create a new variant for a product owned by the given vendor.
      *
-     * @param  array{name: string, sku?: ?string, price: float|numeric-string, stock: int, is_active?: bool}  $data
+     * @param  array{name: string, sku?: ?string, price: float|numeric-string, stock: int, is_active?: bool|int|string}  $data
      *
      * @throws AuthorizationException
      */
     public function createVariant(Vendor $vendor, Product $product, array $data): ProductVariant
     {
         return DB::transaction(function () use ($vendor, $product, $data) {
-            $lockedProduct = Product::where('product_id', $product->product_id)
+            $lockedProduct = Product::query()
+                ->whereKey($product->getKey())
                 ->lockForUpdate()
                 ->firstOrFail();
 
@@ -28,13 +29,15 @@ class VendorProductVariantService
                 throw new AuthorizationException('You are not authorized to add variants to this product.');
             }
 
+            $sku = isset($data['sku']) ? trim((string) $data['sku']) : null;
+
             return ProductVariant::create([
                 'product_id' => $lockedProduct->product_id,
-                'name' => $data['name'],
-                'sku' => $data['sku'] ?? null,
+                'name' => trim($data['name']),
+                'sku' => $sku !== '' ? $sku : null,
                 'price' => $data['price'],
-                'stock' => $data['stock'],
-                'is_active' => $data['is_active'] ?? true,
+                'stock' => (int) $data['stock'],
+                'is_active' => array_key_exists('is_active', $data) ? (bool) $data['is_active'] : true,
             ]);
         }, attempts: 3);
     }
@@ -42,14 +45,15 @@ class VendorProductVariantService
     /**
      * Update an existing product variant.
      *
-     * @param  array{name?: string, sku?: ?string, price?: float|numeric-string, stock?: int, is_active?: bool}  $data
+     * @param  array{name?: string, sku?: ?string, price?: float|numeric-string, stock?: int, is_active?: bool|int|string}  $data
      *
      * @throws AuthorizationException
      */
     public function updateVariant(Vendor $vendor, Product $product, ProductVariant $variant, array $data): ProductVariant
     {
         return DB::transaction(function () use ($vendor, $product, $variant, $data) {
-            $lockedProduct = Product::where('product_id', $product->product_id)
+            $lockedProduct = Product::query()
+                ->whereKey($product->getKey())
                 ->lockForUpdate()
                 ->firstOrFail();
 
@@ -57,18 +61,38 @@ class VendorProductVariantService
                 throw new AuthorizationException('You are not authorized to update variants for this product.');
             }
 
-            $lockedVariant = ProductVariant::where('variant_id', $variant->variant_id)
+            $lockedVariant = ProductVariant::query()
+                ->whereKey($variant->getKey())
                 ->where('product_id', $lockedProduct->product_id)
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            $lockedVariant->update(array_filter([
-                'name' => $data['name'] ?? null,
-                'sku' => array_key_exists('sku', $data) ? $data['sku'] : $lockedVariant->sku,
-                'price' => $data['price'] ?? null,
-                'stock' => array_key_exists('stock', $data) ? $data['stock'] : null,
-                'is_active' => array_key_exists('is_active', $data) ? (bool) $data['is_active'] : null,
-            ], fn ($val) => $val !== null));
+            $updates = [];
+
+            if (array_key_exists('name', $data) && $data['name'] !== null) {
+                $updates['name'] = trim((string) $data['name']);
+            }
+
+            if (array_key_exists('sku', $data)) {
+                $sku = $data['sku'] !== null ? trim((string) $data['sku']) : '';
+                $updates['sku'] = $sku !== '' ? $sku : null;
+            }
+
+            if (array_key_exists('price', $data) && $data['price'] !== null) {
+                $updates['price'] = $data['price'];
+            }
+
+            if (array_key_exists('stock', $data) && $data['stock'] !== null) {
+                $updates['stock'] = (int) $data['stock'];
+            }
+
+            if (array_key_exists('is_active', $data) && $data['is_active'] !== null) {
+                $updates['is_active'] = (bool) $data['is_active'];
+            }
+
+            if ($updates !== []) {
+                $lockedVariant->update($updates);
+            }
 
             return $lockedVariant->fresh();
         }, attempts: 3);
@@ -82,7 +106,8 @@ class VendorProductVariantService
     public function deleteVariant(Vendor $vendor, Product $product, ProductVariant $variant): bool
     {
         return DB::transaction(function () use ($vendor, $product, $variant) {
-            $lockedProduct = Product::where('product_id', $product->product_id)
+            $lockedProduct = Product::query()
+                ->whereKey($product->getKey())
                 ->lockForUpdate()
                 ->firstOrFail();
 
@@ -90,7 +115,8 @@ class VendorProductVariantService
                 throw new AuthorizationException('You are not authorized to delete variants from this product.');
             }
 
-            $lockedVariant = ProductVariant::where('variant_id', $variant->variant_id)
+            $lockedVariant = ProductVariant::query()
+                ->whereKey($variant->getKey())
                 ->where('product_id', $lockedProduct->product_id)
                 ->lockForUpdate()
                 ->firstOrFail();

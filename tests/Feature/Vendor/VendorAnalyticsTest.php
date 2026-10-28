@@ -3,6 +3,7 @@
 namespace Tests\Feature\Vendor;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Category;
 use App\Models\Order;
@@ -11,7 +12,9 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Vendor;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class VendorAnalyticsTest extends TestCase
@@ -27,6 +30,7 @@ class VendorAnalyticsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->withoutMiddleware(PreventRequestForgery::class);
 
         $this->vendorOwner = User::factory()->create([
             'role' => 'customer',
@@ -67,13 +71,12 @@ class VendorAnalyticsTest extends TestCase
 
         $response->assertOk();
         $response->assertViewIs('vendor.reports.index');
-        $response->assertSee('Sales &amp; Inventory Overview', false);
+        $response->assertSee('Sales & Inventory Overview');
         $response->assertSee('TechGear Vendor');
     }
 
     public function test_analytics_accurately_calculates_revenue_and_isolates_other_vendors(): void
     {
-        // Product for this vendor
         $myProduct = Product::create([
             'vendor_id' => $this->vendor->vendor_id,
             'category_id' => $this->category->category_id,
@@ -85,7 +88,6 @@ class VendorAnalyticsTest extends TestCase
             'status' => Product::STATUS_APPROVED,
         ]);
 
-        // Other vendor & product
         $otherOwner = User::factory()->create(['role' => 'customer']);
         $otherVendor = Vendor::create([
             'user_id' => $otherOwner->user_id,
@@ -113,9 +115,11 @@ class VendorAnalyticsTest extends TestCase
         ]);
         Payment::create([
             'order_id' => $paidOrder->order_id,
-            'method' => 'stripe',
-            'status' => PaymentStatus::Succeeded->value,
+            'provider' => 'fake',
+            'method' => PaymentMethod::Card,
+            'status' => PaymentStatus::Succeeded,
             'amount' => 300.00,
+            'currency' => 'USD',
         ]);
         OrderDetail::create([
             'order_id' => $paidOrder->order_id,
@@ -147,15 +151,69 @@ class VendorAnalyticsTest extends TestCase
             ->get(route('vendor.reports.index', ['range' => '30_days']));
 
         $response->assertOk();
-        // Gross revenue should be $200.00 (NOT $300 and NOT $400)
         $response->assertSee('$200.00');
-        // Total orders for this vendor: 1 paid order
+        $response->assertDontSee('Rival Mouse');
         $response->assertViewHas('metrics', function (array $metrics) {
             return $metrics['gross_revenue'] == 200.00
                 && $metrics['units_sold'] == 2
                 && $metrics['total_orders'] == 1
                 && $metrics['total_products'] == 1;
         });
+    }
+
+    public function test_analytics_time_range_filter_excludes_older_orders(): void
+    {
+        $myProduct = Product::create([
+            'vendor_id' => $this->vendor->vendor_id,
+            'category_id' => $this->category->category_id,
+            'name' => 'Vintage Shield',
+            'slug' => 'vintage-shield',
+            'price' => 80.00,
+            'stock' => 10,
+            'status' => Product::STATUS_APPROVED,
+        ]);
+
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $oldOrderId = DB::table('orders')->insertGetId([
+            'user_id' => $customer->user_id,
+            'total_amount' => 80.00,
+            'status' => OrderStatus::Paid->value,
+            'created_at' => now()->subDays(15),
+            'updated_at' => now()->subDays(15),
+        ], 'order_id');
+
+        DB::table('order_details')->insert([
+            'order_id' => $oldOrderId,
+            'product_id' => $myProduct->product_id,
+            'quantity' => 1,
+            'unit_price' => 80.00,
+            'created_at' => now()->subDays(15),
+            'updated_at' => now()->subDays(15),
+        ]);
+
+        DB::table('payments')->insert([
+            'order_id' => $oldOrderId,
+            'provider' => 'fake',
+            'method' => PaymentMethod::Card->value,
+            'amount' => 80.00,
+            'currency' => 'USD',
+            'status' => PaymentStatus::Succeeded->value,
+            'created_at' => now()->subDays(15),
+            'updated_at' => now()->subDays(15),
+        ]);
+
+        // 7_days should NOT include 15-day-old order
+        $response7d = $this->actingAs($this->vendorOwner)
+            ->get(route('vendor.reports.index', ['range' => '7_days']))
+            ->assertOk();
+        $this->assertSame(0.0, (float) $response7d->viewData('metrics')['gross_revenue']);
+
+        // 30_days SHOULD include 15-day-old order
+        $response30d = $this->actingAs($this->vendorOwner)
+            ->get(route('vendor.reports.index', ['range' => '30_days']))
+            ->assertOk();
+        $this->assertSame(80.0, (float) $response30d->viewData('metrics')['gross_revenue']);
     }
 
     public function test_analytics_reports_low_stock_and_out_of_stock_alerts(): void

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
 use App\Models\Vendor;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -25,6 +26,7 @@ class VendorProductVariantTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->withoutMiddleware(PreventRequestForgery::class);
 
         $this->vendorOwner = User::factory()->create([
             'role' => 'customer',
@@ -143,11 +145,12 @@ class VendorProductVariantTest extends TestCase
         $response->assertSessionHasErrors(['name', 'price', 'stock']);
     }
 
-    public function test_vendor_can_update_product_variant(): void
+    public function test_vendor_can_update_and_deactivate_product_variant(): void
     {
         $variant = ProductVariant::create([
             'product_id' => $this->product->product_id,
             'name' => 'Old Variant Name',
+            'sku' => 'OLD-SKU-01',
             'price' => 100.00,
             'stock' => 4,
             'is_active' => true,
@@ -156,10 +159,10 @@ class VendorProductVariantTest extends TestCase
         $response = $this->actingAs($this->vendorOwner)
             ->put(route('vendor.products.variants.update', [$this->product, $variant]), [
                 'name' => 'Updated Variant Name',
-                'sku' => 'UPD-SKU-99',
+                'sku' => '',
                 'price' => 115.50,
                 'stock' => 12,
-                'is_active' => 1,
+                'is_active' => 0,
             ]);
 
         $response->assertRedirect(route('vendor.products.variants.index', $this->product));
@@ -167,9 +170,10 @@ class VendorProductVariantTest extends TestCase
         $this->assertDatabaseHas('product_variants', [
             'variant_id' => $variant->variant_id,
             'name' => 'Updated Variant Name',
-            'sku' => 'UPD-SKU-99',
+            'sku' => null,
             'price' => 115.50,
             'stock' => 12,
+            'is_active' => false,
         ]);
     }
 
@@ -192,7 +196,7 @@ class VendorProductVariantTest extends TestCase
         ]);
     }
 
-    public function test_product_detail_page_renders_active_variants_for_customers(): void
+    public function test_product_detail_page_renders_only_active_variants_for_customers(): void
     {
         ProductVariant::create([
             'product_id' => $this->product->product_id,
@@ -202,11 +206,20 @@ class VendorProductVariantTest extends TestCase
             'is_active' => true,
         ]);
 
+        ProductVariant::create([
+            'product_id' => $this->product->product_id,
+            'name' => 'Hidden Prototype Gold',
+            'price' => 199.00,
+            'stock' => 2,
+            'is_active' => false,
+        ]);
+
         $response = $this->get(route('products.show', [$this->product->product_id, $this->product->slug]));
 
         $response->assertOk();
         $response->assertSee('Stealth Matte Black');
         $response->assertSee('$125.00');
         $response->assertSee('3 left');
+        $response->assertDontSee('Hidden Prototype Gold');
     }
 }
