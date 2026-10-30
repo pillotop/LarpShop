@@ -18,6 +18,7 @@
 @endsection
 
 @section('tail')
+    <script src="/js/components/product_reviews.js"></script>
     <script src="/js/components/product_quantity_picker.js"></script>
     <script src="/js/components/dropdown.js"></script>
     <script src="/js/components/persistent_header.js"></script>
@@ -256,6 +257,12 @@
                 </div>
             </div>
         </section>
+        <x-products.reviews-section
+            :product="$product"
+            :reviews="$reviews"
+            :can-review="$canReview"
+        />
+
         <section class="container my-5">
             <h2 class="h4 fw-bold mb-3">Similar products</h2>
             @if ($similarProducts->isNotEmpty())

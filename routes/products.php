@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductReviewController;
 use App\Models\Product;
 use App\View\ProductController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -17,6 +18,10 @@ Route::get('cart', [CartController::class, 'show'])
 
 Route::get('cart/detail', [CartController::class, 'index'])
     ->name('cart.index');
+
+Route::get('/products/{product}/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
+Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])
+    ->middleware('auth')->name('reviews.store');
 
 Route::get('/products/{product}/{slug?}', [ProductController::class, 'show'])
     ->name('products.show');

@@ -64,7 +64,7 @@ class ProductCatalogQuery
     {
         return Product::query()
             ->approved()
-            ->with(['images', 'vendor', 'reviews', 'category'])
+            ->with(['images', 'vendor', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
             ->where('product_id', $productId)
@@ -75,7 +75,7 @@ class ProductCatalogQuery
     {
         $query = Product::query()
             ->approved()
-            ->with(['images', 'vendor', 'reviews', 'category'])
+            ->with(['images', 'vendor', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
             ->whereKeyNot($productId)

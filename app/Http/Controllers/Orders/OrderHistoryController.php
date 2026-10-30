@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
+use App\Queries\Reviews\ProductReviewQuery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class OrderHistoryController extends Controller
 {
-    public function index(Request $request): JsonResponse|View
+    public function index(Request $request, ProductReviewQuery $reviews): JsonResponse|View
     {
         $orders = $request
             ->user()
@@ -26,6 +27,9 @@ class OrderHistoryController extends Controller
             return response()->json($orders);
         }
 
-        return view('orders.pages.index', compact('orders'));
+        $productIds = $orders->getCollection()->flatMap->details->pluck('product_id')->unique()->all();
+        $reviewableProductIds = $reviews->eligibleProductIds($request->user(), $productIds);
+
+        return view('orders.pages.index', compact('orders', 'reviewableProductIds'));
     }
 }
