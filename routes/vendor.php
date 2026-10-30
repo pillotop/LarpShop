@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Vendor\VendorCategoryController;
+use App\Http\Controllers\Vendor\VendorOrderController;
 use App\Http\Controllers\Vendor\VendorProductController;
 use App\Http\Controllers\Vendor\VendorProductImageController;
 use App\Http\Controllers\Vendor\VendorStoreController;
@@ -34,4 +35,9 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     Route::post('/products/{product}/images', [VendorProductImageController::class, 'store'])->name('products.images.store');
     Route::delete('/products/{product}/images/{image}', [VendorProductImageController::class, 'destroy'])->name('products.images.destroy');
     Route::patch('/products/{product}/images/{image}/primary', [VendorProductImageController::class, 'setPrimary'])->name('products.images.primary');
+
+    // UC-34 & UC-35: Vendor Order Viewing & Fulfillment Status Management
+    Route::get('/orders', [VendorOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [VendorOrderController::class, 'show'])->whereNumber('order')->name('orders.show');
+    Route::patch('/orders/{order}/fulfillment', [VendorOrderController::class, 'updateFulfillment'])->whereNumber('order')->name('orders.fulfillment.update');
 });
