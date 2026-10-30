@@ -170,6 +170,7 @@
                                     @endif
                                 </div>
                                 <h1 class="h3 mb-3">{{ $product->name }}</h1>
+                                <x-wishlist.button :product="$product" />
                                 <p class="text-secondary mb-4">{{ $product->description }}</p>
 
                                 <div class="d-flex align-items-baseline gap-2">

@@ -26,7 +26,9 @@
             const trigger = Array.from(document.querySelectorAll('#profileTabs [data-bs-target], #vendorTabs [data-bs-target]'))
                 .find(button => button.dataset.bsTarget === hash);
 
-            if (@json($errors->billing->any())) {
+            if (@json(session('status') === 'wishlist-updated')) {
+                showTab('tab-wishlist');
+            } else if (@json($errors->billing->any())) {
                 showTab('tab-billing');
             } else if (trigger) {
                 if (trigger.closest('#vendorTabs')) showTab('tab-vendor-info');
@@ -133,6 +135,13 @@
                                 'label' => 'Change password',
                             ],
                             [
+                                'id' => 'tab-wishlist',
+                                'target_id' => '#pane-wishlist',
+                                'aria_controls' => 'pane-wishlist',
+                                'icon' => 'bi-heart',
+                                'label' => 'Wishlist',
+                            ],
+                            [
                                 'id' => 'tab-billing',
                                 'target_id' => '#pane-billing',
                                 'aria_controls' => 'pane-billing',
@@ -167,6 +176,8 @@
 
                     {{-- Tab 4: Billing section --}}
                     <x-profile.billing-tab :addresses="$addresses" />
+
+                    <x-profile.wishlist-tab :products="$wishlistProducts" />
                 </div>
             </div>
         </div>
