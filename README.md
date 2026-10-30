@@ -1,286 +1,242 @@
 # LarpShop
 
-LarpShop is an educational e-commerce web application built with Laravel and PHP. The project focuses on learning modern web development, application architecture, database interaction, and security-conscious design.
+LarpShop is a multi-category, multi-vendor e-commerce application built as a university Web Programming project. It uses Laravel for the backend, server-rendered Blade views, and reusable Bootstrap and vanilla JavaScript components.
 
-## Tech Stack
+## Tech stack
 
-* **Backend:** PHP 8.4, Laravel 13
-* **Database:** MySQL (development), SQLite (in-memory for tests)
-* **ORM:** Laravel Eloquent
-* **Frontend:** Blade, HTML, CSS, JavaScript
-* **UI:** Bootstrap 5 — included via CDN (`<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">`) or npm (`import 'bootstrap/dist/css/bootstrap.min.css'`)
-* **Testing:** PHPUnit / Pest
-* **Development:** Docker
-* **Deployment:** Render
+| Area | Technology |
+| --- | --- |
+| Backend | PHP 8.3+, Laravel 13; Docker uses PHP 8.4 CLI |
+| Database | MySQL; Docker Compose uses MySQL 8.4 |
+| Frontend | Blade, Bootstrap 5.3, Bootstrap Icons, vanilla JavaScript |
+| Asset pipeline | Node.js, npm, Vite 8, Laravel Vite plugin |
+| Tests | PHPUnit 12, isolated MySQL database `larpshop_testing` |
+| Development services | Docker Compose, Mailpit |
 
-The project intentionally avoids a CSS build step for the base UI — Bootstrap 5 is included via CDN, keeping the frontend pipeline simple and Node.js-free in accordance with the course requirements.
+Bootstrap and Bootstrap Icons are installed through npm. Vite bundles and minifies project CSS and JavaScript for production. Snap.svg and Google Fonts still use their existing CDN URLs.
 
-## Architecture
+## Application features
 
-LarpShop is organized into four conceptual layers. Understanding these boundaries helps avoid crossing them incorrectly — Laravel's own conventions handle much of the wiring.
+The application includes product browsing, category navigation, keyword search, filtering, sorting, product details, and vendor storefronts. Customer flows include account profiles and addresses, a shared cart, checkout, inventory reservation, fake and PayPal payment flows, order history and details, and cancellation of eligible orders.
+
+Customers can save products to a wishlist in their profile. Customers with a paid order can review each purchased product once, using a shared review form available on product detail pages and in order history. Product reviews support incremental loading.
+
+Vendor and admin areas provide store, product, category, and moderation tools. Delivery tracking and customer return/refund requests are still future work; payment status and order lifecycle status are separate concepts.
+
+## Architecture and source layout
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│  Presentation Layer                                         │
-│  Routes → Controllers → Form Requests → Blade Views        │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Application Layer                                          │
-│  Services / Use Cases · Authorization · Transactions       │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Domain & Query Logic                                       │
-│  Product Rules · Catalog Queries · Pricing · Inventory     │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Infrastructure & Persistence                               │
-│  Eloquent Models · MySQL/SQLite · Filesystem · Sessions    │
-└─────────────────────────────────────────────────────────────┘
+Routes → Controllers → Form Requests
+                    → Queries / Services → Eloquent Models
+                    → Blade views and components
 ```
 
-### Layer Responsibilities
+Controllers coordinate HTTP requests. Form Requests validate input, queries centralize database reads, and services handle workflows and transactions. Catalog page controllers live in `app/View`; action controllers and other HTTP controllers live in `app/Http/Controllers`.
 
-| Layer | Purpose | Key Files |
-|-------|---------|-----------|
-| **Presentation** | HTTP coordination, validation, rendering | `routes/web.php`, `app/Http/Controllers/`, `app/Http/Requests/`, `resources/views/` |
-| **Application** | Business orchestration, authorization, transactions | `app/Services/`, `app/Policies/`, `app/Actions/` |
-| **Domain/Query** | Complex reads, business rules | `app/Queries/`, model-level logic in `app/Models/` |
-| **Infrastructure** | Persistence, external services | `app/Models/`, `database/migrations/`, `database/seeders/` |
-
-**Key principle:** Laravel already provides conventions for HTTP handling, models, validation, views, and persistence. Don't create new folders that Laravel already has opinions about. Cross-layer boundaries by following existing patterns: `routes → controllers → form requests → views` or `controllers → services → models`.
-
-## Project Structure (Target Layout)
-
-When the codebase matures, this is the directory organization to strive for:
-
-```
+```text
 app/
+├── Contracts/           # Provider interfaces
+├── Data/                # Data transfer objects
+├── Enums/               # Order, payment, and other state values
 ├── Http/
 │   ├── Controllers/
-│   ├── Requests/
-│   └── Middleware/
+│   ├── Middleware/
+│   └── Requests/
 ├── Models/
-│   ├── User.php
-│   ├── Vendor.php
-│   ├── Product.php
-│   ├── ProductImage.php
-│   ├── Category.php
-│   ├── Order.php
-│   ├── OrderDetail.php
-│   └── Review.php
-├── Policies/
-│   ├── ProductPolicy.php
-│   ├── OrderPolicy.php
-│   └── ReviewPolicy.php
-├── Actions/
-│   ├── Products/
-│   ├── Orders/
-│   └── Reviews/
 ├── Queries/
-│   └── Products/
 ├── Services/
-│   ├── Products/
-│   └── Payments/
-└── View/
-    └── Components/
-database/
-├── factories/
-├── migrations/
-├── seeders/
-└── seed-data/
+└── View/                # Catalog page controllers and view composers
 resources/
-├── css/
-├── js/
-└── views/
-    ├── layouts/
-    ├── components/
-    └── pages/
-routes/
-├── web.php
-└── console.php
-tests/
-├── Feature/
-└── Unit/
-tools/
-└── catalog-importer/
+├── css/                 # Source styles, including component styles
+├── js/                  # Shared initialization and component modules
+└── views/               # Blade layouts, pages, partials, and components
+routes/                  # Web routes split by feature; scheduled commands
+public/
+├── build/               # Generated Vite output (not committed)
+└── images/              # Static images and SVG assets
+database/                # Migrations, factories, and seeders
+tests/                   # Feature and unit tests
+docs/                    # Architecture and workflow notes
 ```
 
-## Frontend
+Models commonly use custom primary keys, such as `user_id`, `product_id`, `vendor_id`, `order_id`, and `review_id`. Verify the model's key before writing relationships, queries, or route bindings.
 
-The frontend uses Blade layouts and Bootstrap 5 components for responsive structure and UI elements.
-
-Bootstrap 5 is included via CDN for the base framework, keeping the build pipeline Node.js-free:
-
-```html
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-```
-
-Bootstrap provides the base responsive layout and UI components — typography, forms, buttons, navigation, modals, grids, and more. Custom project-specific styling may be added as a separate stylesheet if needed.
-
-JavaScript is used for interactive components such as:
-
-* Dropdown menus
-* Shared dropdown portals
-* Carousels
-* Client-side UI state
-* Interactive SVG graphics
-
-The application uses semantic HTML elements such as `main`, `aside`, `header`, and `section` where appropriate.
-
-Many Bootstrap components require only markup and data attributes — no JavaScript initialization is needed. For example, a collapse menu or modal can be triggered purely through `data-bs-toggle` attributes.
-
-For components that do require JavaScript, Bootstrap 5's bundled JS (or vanilla JS) can be used without jQuery dependency.
-
-## Database
-
-LarpShop uses **MySQL** for development (`DB_CONNECTION=mysql` in `.env`) and **in-memory SQLite** for tests (configured in `phpunit.xml`).
-
-Eloquent provides the application's ORM layer. All models use custom primary keys:
-
-| Model | PK Column |
-|-------|-----------|
-| `Product` | `product_id` |
-| `Category` | `category_id` |
-| `Vendor` | `vendor_id` |
-| `ProductImage` | `product_image_id` |
-| `Order` | `order_id` |
-| `OrderDetail` | `order_detail_id` |
-| `User` | `user_id` |
-
-When querying, always verify the PK column name. In Eloquent relationships, explicit foreign key specification may be needed where Laravel's conventions don't match the schema.
-
-## Running Locally
+## Running locally
 
 ### Prerequisites
 
-- PHP 8.4+
-- Composer
-- MySQL 8.0+ (or MariaDB 10.6+)
-- Node.js 18+ (for Vite asset compilation, optional)
+- PHP 8.3+ with the extensions required by Composer, including `pdo_mysql`.
+- Composer 2.
+- MySQL (the Docker environment uses MySQL 8.4).
+- Node.js supported by Vite 8; Node 22.13.1 has been verified with this project.
+- npm.
 
-### Setup
+### Initial setup
 
-```sh
-# 1. Install PHP dependencies
+From the project root:
+
+```bash
+# Create local configuration if it does not already exist.
+test -f .env || cp .env.example .env
 composer install
-
-# 2. Configure environment (.env already exists with MySQL settings)
-#    Update DB_DATABASE, DB_USERNAME, DB_PASSWORD if needed
 php artisan key:generate
-
-# 3. Run migrations
-php artisan migrate --force
-
-# 4. (Optional) Seed the database
-php artisan db:seed
-
-# 5. Compile frontend assets (optional, only for custom JS/CSS)
-npm install
-npm run build
-
-# 6. Start the development server
-php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-Visit `http://localhost:8000`
+Configure a development database and its credentials in `.env`:
 
-### Running Tests
-
-```sh
-# All tests
-php artisan test
-
-# Or directly with Pest
-vendor/bin/pest
-
-# With coverage
-php artisan test --coverage
-```
-
-Note: Tests use in-memory SQLite (`phpunit.xml` configures `DB_DATABASE=:memory:` and `BCRYPT_ROUNDS=4`). Auth tests require `SESSION_DRIVER=database` in `.env`.
-
-## Docker
-
-### Development with Docker Compose
-
-```sh
-# Start MySQL + App containers
-docker compose up -d
-
-# Run migrations inside the app container
-docker compose exec app php artisan migrate --force
-
-# View logs
-docker compose logs -f app
-```
-
-The `compose.yaml` starts:
-- **app** — Laravel application (PHP-FPM + Nginx)
-- **mysql** — MySQL 8.0 database
-
-### Environment
-
-Docker uses the same `.env` file. Ensure these are set:
-
-```env
+```dotenv
+APP_URL=http://localhost:8000
 DB_CONNECTION=mysql
-DB_HOST=mysql
+DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=larpshop
 DB_USERNAME=larpshop
-DB_PASSWORD=your-secure-password
+DB_PASSWORD=your-local-password
 ```
 
-### Building the Image
+Create the database and grant the configured account access before running migrations. Keep local credentials in `.env`.
 
-```sh
-docker build -t larpshop .
+```bash
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+npm ci
+npm run build
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-## Deployment (Render)
+Seeding is optional and supplies sample data. Uploaded product images use Laravel's public storage disk and the `public/storage` symlink.
 
-The project is configured for deployment on Render. See `render.yaml` for the service configuration.
+Open [http://localhost:8000](http://localhost:8000).
 
-Required environment variables on Render:
-- `APP_KEY` — generate with `php artisan key:generate --show`
-- `DB_CONNECTION=mysql`
-- `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` — from Render MySQL addon
-- `SESSION_DRIVER=database`
-- `QUEUE_CONNECTION=database`
+### Frontend development
 
-## Goals
+Run Vite in another terminal while Laravel is running:
 
-The main goals of LarpShop are to:
+```bash
+npm run dev
+```
 
-* Practice ORM-based database development
-* Build reusable server-rendered UI components
-* Develop interactive frontend components with vanilla JavaScript
-* Apply security-conscious development practices
-* Understand the separation between server-side application logic and client-side behavior
-* Produce a deployable web application
+Blade's `@vite` directive loads assets from the development server while it is running. For a production-style local run, stop the Vite server and build the assets:
 
-## Useful Commands
+```bash
+npm run build
+```
 
-```sh
-# Code formatting
-vendor/bin/pint
+The build generates minified files with content hashes, icon fonts, and `public/build/manifest.json`. Rebuild whenever frontend source files change. Production serves these generated files without a running Node.js server.
 
-# Linting
-vendor/bin/phpcs
+Add styles under `resources/css` and scripts under `resources/js`. Load page-specific assets with grouped `@vite([...])` directives. The Vite configuration discovers CSS and JavaScript entries recursively. Shared layouts load the common entries, and page modules declare their initialization dependencies through imports.
 
-# Clear all caches
-php artisan optimize:clear
+See [Frontend assets](docs/FRONTEND_ASSETS.md) for loading conventions and migration details.
 
-# Rebuild autoload
-composer dump-autoload -o
+### Background processing
 
-# Run specific test suite
+When exercising queued notifications and scheduled order/payment maintenance, run these in separate terminals:
+
+```bash
+php artisan queue:work
+php artisan schedule:work
+```
+
+The scheduler expires unpaid orders every minute and reconciles pending payments every five minutes. Payment initiation and completion use shared cache locks; use a shared cache store such as the configured database store when multiple processes serve requests.
+
+## Testing
+
+Tests use **MySQL**, with `DB_CONNECTION=mysql` and `DB_DATABASE=larpshop_testing` forced by `phpunit.xml`. Host, port, username, and password come from the environment. Tests use array-backed sessions and cache, synchronous queues, and the array mailer unless a particular test overrides them.
+
+Before the first database test run:
+
+1. Create a separate database named `larpshop_testing`.
+2. Grant the account used by the tests permission to create and modify tables in that database.
+3. Build the frontend with `npm ci` and `npm run build` so rendered Blade views can resolve Vite entries.
+
+For example, create the database using a MySQL administrator account:
+
+```sql
+CREATE DATABASE IF NOT EXISTS larpshop_testing
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Grant privileges to the actual MySQL account and host configured for your environment. Creating the database alone does not grant the application user access.
+
+```bash
+php artisan config:clear
+php artisan test
+php artisan test --filter=ProductReviewTest
 php artisan test --testsuite=Feature
 php artisan test --testsuite=Unit
 ```
+
+Database tests can recreate tables in `larpshop_testing`; keep it separate from development and production databases. A passing focused suite does not imply that every test in the repository has been updated for every ongoing feature change.
+
+## Docker Compose
+
+The current Compose environment provides:
+
+| Service | Purpose | Access |
+| --- | --- | --- |
+| `app` | PHP 8.4 CLI running Laravel's development server | `http://localhost:8000` |
+| `db` | MySQL 8.4 with persistent `mysql_data` volume | Internal service hostname `db` |
+| `mailpit` | Local email capture | `http://localhost:8025` |
+
+Prepare `.env` and `APP_KEY` as described above. Set both `DB_PASSWORD` and `DB_ROOT_PASSWORD` in your local `.env`; Compose requires them. The application container receives `DB_HOST=db` and the development database settings from `compose.yaml`.
+
+The current Dockerfile does not install Node.js or build frontend assets. Build them on the host **before building the image**, so `public/build` is included:
+
+```bash
+npm ci
+npm run build
+docker compose up -d --build
+```
+
+Once MySQL is ready:
+
+```bash
+docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed
+docker compose exec app php artisan storage:link
+docker compose logs -f app
+```
+
+The Compose file does not publish MySQL to the host, so host-side PHP cannot connect to this database through `127.0.0.1:3306` without additional port configuration. Inside Compose, use `db:3306`.
+
+To run tests inside the application container, create and grant access to `larpshop_testing` in the container's MySQL service first, then run:
+
+```bash
+docker compose exec -T app php artisan test
+```
+
+The image copies source files and built assets at build time; it does not mount the working tree. Rebuild the image after source or asset changes. Preserve the development database volume; avoid destructive reset commands against it.
+
+## Deployment considerations
+
+Deploy the Laravel application with `public/build` generated by `npm ci && npm run build`. Configure the application key, database, mail, cache, queue, and payment provider settings through the deployment environment. Point the web server's document root at `public` and provide persistent writable storage for uploads.
+
+Run a queue worker for queued jobs and Laravel's scheduler for periodic maintenance. The included Dockerfile uses Laravel's development server; production hosting needs an appropriate serving configuration. There is currently no `render.yaml` deployment configuration in the repository.
+
+## Useful commands
+
+```bash
+# Format PHP code.
+vendor/bin/pint
+
+# Build frontend assets.
+npm run build
+
+# Clear Laravel caches.
+php artisan optimize:clear
+
+# Run scheduled maintenance manually.
+php artisan orders:expire
+php artisan payments:reconcile
+```
+
+## Project documentation
+
+- [Frontend assets](docs/FRONTEND_ASSETS.md) — Vite, npm, source locations, and build conventions.
+- [Order status model](docs/ORDER_STATUS_MODEL.md) — Order lifecycle and payment status responsibilities.
+- [Account and vendor refactor](docs/ACCOUNT_VENDOR_REFACTOR.md) — Account/store relationship changes.
+- [Project context](docs/PROJECT_CONTEXT.md) — Architecture background and catalog feature mappings.
+- [Authorized security review workflow](docs/PENTEST_WORKFLOW.md) — Local testing scope and review conventions.
+
+Some historical notes still describe the former SQLite test setup or CDN frontend. The current `phpunit.xml`, `package.json`, and `vite.config.js` define the active configuration.
