@@ -55,9 +55,10 @@
         @csrf
         <span class="cart-feedback visually-hidden" role="status" aria-live="polite"></span>
 
-        <button id="favorite" class="overlay-btn rounded-circle py-2 px-2" type="button">
-            <svg class="icon-24"> <use href="/images/icons.svg#heart"></use> </svg>
-        </button>
+        <x-wishlist.button
+                :product="$product"
+                :compact="true"
+            />
 
         <button id="add-to-cart" class="overlay-btn rounded-circle py-2 px-2" type="button">
             <svg class="icon-24"> <use href="/images/icons.svg#cart"></use> </svg>

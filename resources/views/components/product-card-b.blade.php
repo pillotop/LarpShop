@@ -54,6 +54,10 @@
                     Out of Stock
                 </span>
             @endif
+            <x-wishlist.button
+                :product="$product"
+                :compact="true"
+            />
             <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center shadow px-2" type="button">
                 Options
             </button>
