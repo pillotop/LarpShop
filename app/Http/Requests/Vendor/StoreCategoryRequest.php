@@ -20,14 +20,4 @@ class StoreCategoryRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:1000'],
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'Vui lòng nhập tên danh mục.',
-            'name.min' => 'Tên danh mục phải có ít nhất 2 ký tự.',
-            'name.max' => 'Tên danh mục không được vượt quá 100 ký tự.',
-            'parent_id.exists' => 'Danh mục cha đã chọn không tồn tại trong hệ thống.',
-        ];
-    }
 }

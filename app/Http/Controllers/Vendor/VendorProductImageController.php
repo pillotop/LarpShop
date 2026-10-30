@@ -51,7 +51,7 @@ class VendorProductImageController extends Controller
         $this->imageService->uploadImages($vendor, $product, $uploadedFiles, $altText);
 
         return redirect()->route('vendor.products.images.index', $product->product_id)
-            ->with('success', 'Đã tải lên '.count($uploadedFiles).' hình ảnh thành công.');
+            ->with('success', 'Uploaded '.count($uploadedFiles).' image(s) successfully.');
     }
 
     /**
@@ -65,7 +65,7 @@ class VendorProductImageController extends Controller
         $this->imageService->deleteImage($vendor, $product, $image);
 
         return redirect()->route('vendor.products.images.index', $product->product_id)
-            ->with('success', 'Đã xóa hình ảnh sản phẩm thành công.');
+            ->with('success', 'Product image deleted successfully.');
     }
 
     /**
@@ -79,6 +79,6 @@ class VendorProductImageController extends Controller
         $this->imageService->setPrimaryImage($vendor, $product, $image);
 
         return redirect()->route('vendor.products.images.index', $product->product_id)
-            ->with('success', 'Đã đặt hình ảnh làm ảnh đại diện chính của sản phẩm.');
+            ->with('success', 'Primary product image updated successfully.');
     }
 }

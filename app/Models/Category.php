@@ -13,7 +13,6 @@ class Category extends Model
 
     protected $fillable = [
         'parent_id',
-        'vendor_id',
         'name',
         'slug',
         'description',
@@ -37,11 +36,6 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id', 'category_id');
     }
 
-    public function vendor(): BelongsTo
-    {
-        return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
-    }
-
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'category_id');
@@ -50,19 +44,5 @@ class Category extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
-    }
-
-    public function scopeForVendor(Builder $query, int $vendorId): Builder
-    {
-        return $query->where('vendor_id', $vendorId);
-    }
-
-    public function isOwnedBy(?Vendor $vendor): bool
-    {
-        if (! $vendor) {
-            return false;
-        }
-
-        return (int) $this->vendor_id === (int) $vendor->vendor_id;
     }
 }

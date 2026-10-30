@@ -12,12 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->foreignId('vendor_id')
-                ->nullable()
-                ->after('parent_id')
-                ->constrained('vendors', 'vendor_id')
-                ->nullOnDelete();
-
             $table->boolean('is_active')
                 ->default(true)
                 ->after('description');
@@ -30,7 +24,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('vendor_id');
             $table->dropColumn('is_active');
         });
     }

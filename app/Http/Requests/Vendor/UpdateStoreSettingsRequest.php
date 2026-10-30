@@ -12,12 +12,12 @@ class UpdateStoreSettingsRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->user()?->isVendor() ?? false;
+        return $this->vendor() !== null;
     }
 
-    public function vendor(): Vendor
+    public function vendor(): ?Vendor
     {
-        return $this->activeVendor ??= $this->user()->activeVendor();
+        return $this->activeVendor ??= ($this->attributes->get('active_vendor') ?? $this->user()?->activeVendor());
     }
 
     public function rules(): array
@@ -30,19 +30,9 @@ class UpdateStoreSettingsRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:100',
-                Rule::unique('vendors', 'store_name')->ignore($vendor->vendor_id, 'vendor_id'),
+                Rule::unique('vendors', 'store_name')->ignore($vendor?->vendor_id, 'vendor_id'),
             ],
             'description' => ['nullable', 'string', 'max:2000'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'store_name.required' => 'Vui lòng nhập tên gian hàng.',
-            'store_name.min' => 'Tên gian hàng phải có ít nhất 2 ký tự.',
-            'store_name.max' => 'Tên gian hàng không được vượt quá 100 ký tự.',
-            'store_name.unique' => 'Tên gian hàng này đã được sử dụng bởi người bán khác.',
         ];
     }
 }

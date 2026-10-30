@@ -50,9 +50,23 @@ class User extends Authenticatable
         return $this->vendors()->active()->exists();
     }
 
-    public function activeVendor(): ?Vendor
+    public function activeVendors(): HasMany
     {
-        return $this->vendors()->active()->first();
+        return $this->vendors()->active()->orderBy('vendor_id');
+    }
+
+    public function activeVendor(?int $preferredVendorId = null): ?Vendor
+    {
+        $vendorId = $preferredVendorId ?? (session()->isStarted() ? session('active_vendor_id') : null);
+
+        if ($vendorId !== null) {
+            $selected = $this->vendors()->active()->whereKey((int) $vendorId)->first();
+            if ($selected) {
+                return $selected;
+            }
+        }
+
+        return $this->vendors()->active()->orderBy('vendor_id')->first();
     }
 
     public function isAdmin(): bool

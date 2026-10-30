@@ -11,28 +11,27 @@ use Illuminate\Validation\ValidationException;
 
 class CategoryManagementService
 {
-    // <<<<<<< HEAD
+    public function __construct(private CategoryQuery $categories) {}
+
     /**
-     * Get all categories with vendor-specific and active hierarchy.
+     * Get all platform categories with parent/child hierarchy for the vendor console.
      */
-    public function getCategoriesForVendor(Vendor $vendor): Collection
+    public function getCategoriesForVendor(?Vendor $vendor = null): Collection
     {
         return Category::with(['parent', 'children'])
-            ->where(function ($query) use ($vendor) {
-                $query->whereNull('vendor_id')
-                    ->orWhere('vendor_id', $vendor->vendor_id);
-            })
+            ->withCount('products')
+            ->orderBy('parent_id')
             ->orderBy('category_id')
             ->get();
     }
 
     /**
-     * Get list of parentable categories (must be active and not the given category).
+     * Get list of eligible parent categories (active root categories).
      */
     public function getEligibleParentCategories(?int $excludeCategoryId = null): Collection
     {
         $query = Category::where('is_active', true)
-            ->whereNull('parent_id'); // 1-level parent hierarchy standard
+            ->whereNull('parent_id');
 
         if ($excludeCategoryId) {
             $query->where('category_id', '!=', $excludeCategoryId);
@@ -42,13 +41,12 @@ class CategoryManagementService
     }
 
     /**
-     * UC-30: Create a new category for a vendor.
+     * Allow a vendor to propose/create a new category without owning global categories.
      */
     public function createForVendor(Vendor $vendor, array $data): Category
     {
         $slug = ! empty($data['slug']) ? Str::slug($data['slug']) : Str::slug($data['name']);
 
-        // Ensure unique slug
         $originalSlug = $slug;
         $counter = 1;
         while (Category::where('slug', $slug)->exists()) {
@@ -61,52 +59,26 @@ class CategoryManagementService
             'slug' => $slug,
             'description' => $data['description'] ?? null,
             'parent_id' => ! empty($data['parent_id']) ? (int) $data['parent_id'] : null,
-            'vendor_id' => $vendor->vendor_id,
             'is_active' => true,
         ]);
     }
 
     /**
-     * UC-31: Update an existing vendor-owned category.
+     * Update an existing shared category (restricted to administrators).
      */
     public function updateForVendor(Vendor $vendor, Category $category, array $data): Category
     {
-        $this->authorizeVendorOwnership($vendor, $category);
+        $this->authorizeSharedCategoryMutation($vendor);
 
-        $parentId = ! empty($data['parent_id']) ? (int) $data['parent_id'] : null;
-
-        if ($parentId === (int) $category->category_id) {
-            throw ValidationException::withMessages([
-                'parent_id' => 'Danh mục cha không thể là chính danh mục này.',
-            ]);
-        }
-
-        $slug = ! empty($data['slug']) ? Str::slug($data['slug']) : Str::slug($data['name']);
-
-        // Ensure unique slug (ignoring current category)
-        $originalSlug = $slug;
-        $counter = 1;
-        while (Category::where('slug', $slug)->where('category_id', '!=', $category->category_id)->exists()) {
-            $slug = "{$originalSlug}-{$counter}";
-            $counter++;
-        }
-
-        $category->update([
-            'name' => $data['name'],
-            'slug' => $slug,
-            'description' => $data['description'] ?? null,
-            'parent_id' => $parentId,
-        ]);
-
-        return $category;
+        return $this->update($category, $data);
     }
 
     /**
-     * UC-31: Toggle active / disabled status of a category.
+     * Toggle active/disabled status of a shared category (restricted to administrators).
      */
     public function toggleActiveForVendor(Vendor $vendor, Category $category): Category
     {
-        $this->authorizeVendorOwnership($vendor, $category);
+        $this->authorizeSharedCategoryMutation($vendor);
 
         $category->is_active = ! $category->is_active;
         $category->save();
@@ -115,24 +87,19 @@ class CategoryManagementService
     }
 
     /**
-     * Authorize that the vendor owns the category or is an administrator.
+     * Shared platform categories cannot be edited or disabled by non-admin vendors.
      */
-    private function authorizeVendorOwnership(Vendor $vendor, Category $category): void
+    private function authorizeSharedCategoryMutation(Vendor $vendor): void
     {
-        if ((int) $category->vendor_id !== (int) $vendor->vendor_id && ! $vendor->user?->isAdmin()) {
+        if (! $vendor->user?->isAdmin()) {
             throw ValidationException::withMessages([
-                'category' => 'Bạn không có quyền chỉnh sửa danh mục hệ thống hoặc của gian hàng khác.',
+                'category' => 'Only administrators can edit or disable shared platform categories.',
             ]);
         }
     }
 
-    // =======
-
-    public function __construct(private CategoryQuery $categories)
-    {}
-
     /**
-     * Create a category with normalized slug and circular hierarchy prevention.
+     * Create a category with normalized slug and circular hierarchy prevention (UC-41).
      *
      * @param  array{name: string, slug?: string|null, parent_id?: int|null, description?: string|null}  $data
      */
@@ -144,7 +111,7 @@ class CategoryManagementService
     }
 
     /**
-     * Update a category with normalized slug and circular hierarchy prevention.
+     * Update a category with normalized slug and circular hierarchy prevention (UC-41).
      *
      * @param  array{name: string, slug?: string|null, parent_id?: int|null, description?: string|null}  $data
      */
@@ -158,7 +125,7 @@ class CategoryManagementService
     }
 
     /**
-     * Delete a category only when it has no subcategories or products.
+     * Delete a category only when it has no subcategories or products (UC-41).
      * Returns a warning message string if deletion cannot proceed, or null on success.
      */
     public function delete(Category $category): ?string
@@ -222,6 +189,5 @@ class CategoryManagementService
             'parent_id' => $parentId,
             'description' => $data['description'] ?? null,
         ];
-        // >>>>>>> f17dd00 (refactor(admin): address PR #12 review comments with services, components, and route split)
     }
 }

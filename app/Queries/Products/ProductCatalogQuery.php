@@ -39,7 +39,7 @@ class ProductCatalogQuery
         int $limit = 12,
         bool $inStockOnly = true,
     ): Collection {
-        $query = Product::query()->approved()->with(['images', 'vendor', 'reviews']);
+        $query = Product::query()->approved()->active()->with(['images', 'vendor', 'reviews']);
 
         if ($categoryId) {
             // Recursively get the category ID and all its descendant IDs
@@ -64,6 +64,7 @@ class ProductCatalogQuery
     {
         return Product::query()
             ->approved()
+            ->active()
             ->with(['images', 'vendor', 'reviews', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
@@ -75,6 +76,7 @@ class ProductCatalogQuery
     {
         $query = Product::query()
             ->approved()
+            ->active()
             ->with(['images', 'vendor', 'reviews', 'category'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews')
@@ -93,6 +95,7 @@ class ProductCatalogQuery
     {
         $query = Product::query()
             ->approved()
+            ->active()
             ->with(['category', 'images'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews');

@@ -56,8 +56,9 @@
                 <h2 class="h5 fw-bold mb-0">Store profile</h2>
                 @if ($approved)
                     <div class="d-flex gap-2 flex-wrap">
-                        <a href="{{ route('vendor.store.settings') }}" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="bi bi-gear me-1"></i>Cấu hình gian hàng</a>
-                        <a href="{{ route('vendor.categories.index') }}" class="btn btn-outline-info btn-sm rounded-pill"><i class="bi bi-tags me-1"></i>Quản lý danh mục</a>
+                        <a href="{{ route('vendor.products.index', ['vendor_id' => $vendorId]) }}" class="btn btn-outline-success btn-sm rounded-pill"><i class="bi bi-box-seam me-1"></i>Products & Inventory</a>
+                        <a href="{{ route('vendor.store.settings', ['vendor_id' => $vendorId]) }}" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="bi bi-gear me-1"></i>Store settings</a>
+                        <a href="{{ route('vendor.categories.index', ['vendor_id' => $vendorId]) }}" class="btn btn-outline-info btn-sm rounded-pill"><i class="bi bi-tags me-1"></i>Categories</a>
                         <a href="{{ route('vendors.show', $vendorId) }}" class="btn btn-outline-primary btn-sm rounded-pill" target="_blank">View storefront</a>
                     </div>
                 @endif

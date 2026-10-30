@@ -25,6 +25,7 @@ class VendorStorefrontController extends Controller
 
         $query = $vendorModel->products()
             ->approved()
+            ->active()
             ->with(['images', 'category', 'reviews'])
             ->withAvg('reviews as average_rating', 'rating')
             ->withCount('reviews as total_reviews');

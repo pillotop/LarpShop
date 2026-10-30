@@ -32,13 +32,33 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'status',
+        'is_active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+            'stock' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
+
     /**
      * UC-42: Only products approved by an admin are visible to the public.
      */
     public function scopeApproved(Builder $query): Builder
     {
         return $query->where($query->getModel()->getTable().'.status', self::STATUS_APPROVED);
+    }
+
+    /**
+     * UC-31 & UC-33: Only products enabled (not hidden) by the vendor are visible in the catalog.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where($query->getModel()->getTable().'.is_active', true);
     }
 
     public function category(): BelongsTo
