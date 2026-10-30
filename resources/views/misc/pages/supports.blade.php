@@ -4,16 +4,19 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
-        <link rel="stylesheet" href="/css/icons.css">
-        <link rel="stylesheet" type="" href="/css/app.css">
-        <link rel="stylesheet" href="/css/components/dropdown.css">
-        <link rel="stylesheet" href="/css/components/persistent_header.css">
+        @vite([
+            'resources/css/icons.css',
+            'resources/css/app.css',
+            'resources/css/components/dropdown.css',
+            'resources/css/components/persistent_header.css',
+        ])
         <title> Supports </title>
-    </head>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
 
     <body>
         <header class="position-relative d-flex justify-content-center p-lg-4 p-2">
@@ -33,8 +36,10 @@
             </svg>
         </header>
         <header class="container sticky-top" style="background-color: #ffffff99;">
-            <link rel="stylesheet" href="/css/top_header.css">
-            <link rel="stylesheet" href="/css/navigation_bar.css">
+            @vite([
+                'resources/css/top_header.css',
+                'resources/css/components/navigation_bar.css',
+            ])
             <nav class="navigation-bar position-relative z-1 py-2" style="background-color: lightgray">
                 <div class="row gap-1 gap-lg-3">
                     <div class="col-1 d-flex align-items-center justify-content-center">
@@ -247,12 +252,14 @@
             </div>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+
         <script src="https://cdn.jsdelivr.net/npm/snapsvg@0.5.1/dist/snap.svg-min.min.js"></script>
-        <script src="/js/components/dropdown.js"></script>
-        <script src="/js/components/persistent_header.js"></script>
-        <script src="/js/app.js"></script>
+        @vite([
+            'resources/js/components/dropdown.js',
+            'resources/js/components/persistent_header.js',
+            'resources/js/app.js',
+        ])
     </body>
 
 </html>

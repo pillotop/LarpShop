@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Đăng sản phẩm mới - Larp Shop</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
     <body class="bg-light">
         <div class="container mt-5">
             <div class="card shadow-sm p-4">

@@ -3,12 +3,12 @@
 @section('title', 'Reset Password')
 
 @section('head')
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/company_footer.css">
+
+    @vite('resources/css/company_footer.css')
 @endsection
 
 @section('tail')
-    <script src="/js/components/auth_form.js"></script>
+    @vite('resources/js/components/auth_form.js')
 @endsection
 
 @section('content')

@@ -3,19 +3,20 @@
 @section('title', 'Details')
 
 @section('head')
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/icons.css">
-    <link rel="stylesheet" href="/css/profile.css">
-    <link rel="stylesheet" href="/css/top_header.css">
-    <link rel="stylesheet" href="/css/components/payment_method_container.css">
+
+    @vite([
+        'resources/css/icons.css',
+        'resources/css/profile.css',
+        'resources/css/top_header.css',
+        'resources/css/components/payment_method_container.css',
+    ])
 @endsection
 
 @section('tail')
-    <script
-        src="/js/components/payment_methods.js"
-        defer
-    ></script>
-    <script src="/js/components/side_panel.js"></script>
+    @vite([
+        'resources/js/components/payment_methods.js',
+        'resources/js/components/side_panel.js',
+    ])
 @endsection
 
 @section('content')

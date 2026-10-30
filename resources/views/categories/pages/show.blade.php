@@ -3,12 +3,14 @@
 @section('title', $category->name)
 
 @section('head')
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/icons.css">
-    <link rel="stylesheet" href="/css/company_footer.css">
-    <link rel="stylesheet" href="/css/components/dropdown.css">
-    <link rel="stylesheet" href="/css/components/persistent_header.css">
-    <link rel="stylesheet" href="/css/components/two_arrow_scroller.css">
+
+    @vite([
+        'resources/css/icons.css',
+        'resources/css/company_footer.css',
+        'resources/css/components/dropdown.css',
+        'resources/css/components/persistent_header.css',
+        'resources/css/components/two_arrow_scroller.css',
+    ])
 @endsection
 
 @section('content')
@@ -18,8 +20,10 @@
         </svg>
     </section>
     <header class="container sticky-top" style="background-color: #ffffff99;">
-        <link rel="stylesheet" href="/css/top_header.css">
-        <link rel="stylesheet" href="/css/components/navigation_bar.css">
+        @vite([
+            'resources/css/top_header.css',
+            'resources/css/components/navigation_bar.css',
+        ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
             product-cart-bs-toggle="offcanvas"
@@ -128,11 +132,13 @@
 @endsection
 
 @section('tail')
-    <script src="/js/components/side_panel.js"></script>
-    <script src="/js/components/product_quantity_picker.js"></script>
-    <script src="/js/components/two_arrow_scroller.js"></script>
-    <script src="/js/components/subcategory_container.js"></script>
-    <script src="/js/components/carousel_scrollable.js"></script>
-    <script src="/js/components/dropdown.js"></script>
-    <script src="/js/components/persistent_header.js"></script>
+    @vite([
+        'resources/js/components/side_panel.js',
+        'resources/js/components/product_quantity_picker.js',
+        'resources/js/components/two_arrow_scroller.js',
+        'resources/js/components/subcategory_container.js',
+        'resources/js/components/carousel_scrollable.js',
+        'resources/js/components/dropdown.js',
+        'resources/js/components/persistent_header.js',
+    ])
 @endsection

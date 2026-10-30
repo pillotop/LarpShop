@@ -3,24 +3,30 @@
 @section('title', 'Cart')
 
 @section('head')
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/icons.css">
-    <link rel="stylesheet" href="/css/company_footer.css">
-    <link rel="stylesheet" href="/css/components/dropdown.css">
-    <link rel="stylesheet" href="/css/components/persistent_header.css">
+
+    @vite([
+        'resources/css/icons.css',
+        'resources/css/company_footer.css',
+        'resources/css/components/dropdown.css',
+        'resources/css/components/persistent_header.css',
+    ])
 @endsection
 
 @section('tail')
-    <script src="/js/components/dropdown.js"></script>
-    <script src="/js/components/persistent_header.js"></script>
-    <script src="/js/components/side_panel.js"></script>
-    <script src="/js/components/product_quantity_picker.js"></script>
+    @vite([
+        'resources/js/components/dropdown.js',
+        'resources/js/components/persistent_header.js',
+        'resources/js/components/side_panel.js',
+        'resources/js/components/product_quantity_picker.js',
+    ])
 @endsection
 
 @section('content')
     <header class="container sticky-top" style="background-color: #ffffff99;">
-        <link rel="stylesheet" href="/css/top_header.css">
-        <link rel="stylesheet" href="/css/components/navigation_bar.css">
+        @vite([
+            'resources/css/top_header.css',
+            'resources/css/components/navigation_bar.css',
+        ])
         <x-nav-bar product-cart-bs-target="#side-panel" product-cart-bs-toggle="offcanvas" :product-categories="$productCategories" :cart="$cart" />
         <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
             <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">

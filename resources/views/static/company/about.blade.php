@@ -3,13 +3,15 @@
 @section('title', 'About Us | LarpShop')
 
 @section('head')
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/icons.css">
-    <link rel="stylesheet" href="/css/company_footer.css">
-    <link rel="stylesheet" href="/css/components/dropdown.css">
-    <link rel="stylesheet" href="/css/components/persistent_header.css">
-    <link rel="stylesheet" href="/css/top_header.css">
-    <link rel="stylesheet" href="/css/components/navigation_bar.css">
+
+    @vite([
+        'resources/css/icons.css',
+        'resources/css/company_footer.css',
+        'resources/css/components/dropdown.css',
+        'resources/css/components/persistent_header.css',
+        'resources/css/top_header.css',
+        'resources/css/components/navigation_bar.css',
+    ])
     <style>
         .hero-banner {
             background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 60%, #415a77 100%);
@@ -63,9 +65,11 @@
 @endsection
 
 @section('tail')
-    <script src="/js/components/dropdown.js"></script>
-    <script src="/js/components/persistent_header.js"></script>
-    <script src="/js/components/side_panel.js"></script>
+    @vite([
+        'resources/js/components/dropdown.js',
+        'resources/js/components/persistent_header.js',
+        'resources/js/components/side_panel.js',
+    ])
 @endsection
 
 @section('content')

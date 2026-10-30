@@ -3,11 +3,13 @@
 @section('title', 'Login & Register')
 
 @section('head')
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/icons.css">
-    <link rel="stylesheet" href="/css/components/login_form.css">
-    <link rel="stylesheet" href="/css/preview_box.css">
-    <link rel="stylesheet" href="/css/company_footer.css">
+
+    @vite([
+        'resources/css/icons.css',
+        'resources/css/components/login_form.css',
+        'resources/css/preview_box.css',
+        'resources/css/company_footer.css',
+    ])
 @endsection
 
 @section('content')
@@ -159,5 +161,5 @@
 @endsection
 
 @section('tail')
-    <script src="{{ asset('js/components/auth_form.js') }}"></script>
+    @vite('resources/js/components/auth_form.js')
 @endsection

@@ -1,12 +1,247 @@
-/*
- * Bootstrap 5 — included via CDN or npm
- * ---------------------------------------
- * 1. CDN (recommended for educational projects, no build step):
- *    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
- *
- * 2. npm (if you have a build step):
- *    npm install bootstrap@5.3.3
- *    import 'bootstrap/dist/css/bootstrap.min.css';
- *
- * Custom project styles may be added below.
- */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+:root {
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+
+    --spacing: .25rem;
+
+    --color-primary-50: #EFF9FE;
+    --color-primary-100: #D1F0FC;
+    --color-primary-200: #AAE4FA;
+    --color-primary-300: #02C8F5;
+    --color-primary-400: #17B0D8;
+    --color-primary-500: #1E9ABB;
+    --color-primary-600: #2186A2;
+    --color-primary-700: #227087;
+    --color-primary-800: #215B6E;
+    --color-primary-900: #1F4C5A;
+    --color-primary-950: #182E35;
+    --color-secondary-50: #FFF6EA;
+    --color-secondary-100: #FFE6C0;
+    --color-secondary-200: #FFD18C;
+    --color-secondary-300: #F5A802;
+    --color-secondary-400: #D3910D;
+    --color-secondary-500: #B87F12;
+    --color-secondary-600: #A06F14;
+    --color-secondary-700: #855C15;
+    --color-secondary-800: #6E4D14;
+    --color-secondary-900: #5B4013;
+    --color-secondary-950: #362710;
+    --color-tertiary-50: #FFF5F4;
+    --color-tertiary-100: #FFE1E2;
+    --color-tertiary-200: #FFC9CA;
+    --color-tertiary-300: #FFA3A7;
+    --color-tertiary-400: #FF6375;
+    --color-tertiary-500: #f5024f;
+    --color-tertiary-600: #DF0F48;
+    --color-tertiary-700: #BA183E;
+    --color-tertiary-800: #971B34;
+    --color-tertiary-900: #7C1B2C;
+    --color-tertiary-950: #49171C;
+    --color-complementary-50: #FFF5F2;
+    --color-complementary-100: #FFE3D8;
+    --color-complementary-200: #FFCCBA;
+    --color-complementary-300: #FFA688;
+    --color-complementary-400: #FF6941;
+    --color-complementary-500: #F53003;
+    --color-complementary-600: #D92E07;
+    --color-complementary-700: #B52B0B;
+    --color-complementary-800: #95270D;
+    --color-complementary-900: #7A230E;
+    --color-complementary-950: #49190B;
+    --color-background-50: #cfcfd4;
+    --color-background-100: #A1A1AB;
+    --color-background-200: #747584;
+    --color-background-300: #4B4C5E;
+    --color-background-400: #24273B;
+    --color-background-500: #1E2130;
+    --color-background-500: #191A26;
+    --color-background-600: #13141B;
+    --color-background-700: #0B0B11;
+
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+body {
+    font-family: inherit;
+}
+
+.blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: var(--bg-primary);
+}
+
+.border-thin {
+    border-width: 2px;
+    border-color: lightgray;
+}
+
+.border-start-dashed {
+    border-left-style: dashed;
+}
+
+.border-end-dashed {
+    border-right-style: dashed;
+}
+
+.border-top-dashed {
+    border-top-style: dashed;
+}
+
+.border-bottom-dashed {
+    border-bottom-style: dashed;
+}
+
+.primary-text {
+    font-family: var(--font-primary);
+    color: var(--color-primary-300);
+}
+
+
+.hover-button {
+    background-color: transparent;
+}
+
+.hover-button:hover {
+    background-color: var(--color-primary-200);
+    transition:
+        background-color 0.2s ease;
+}
+
+.button-primary {
+    background-color: var(--color-primary-300);
+    color: white;
+    border-radius: 16px;
+    border-style: none;
+    padding: 8px;
+}
+
+.button-primary:hover {
+    background-color: var(--color-primary-400);
+}
+
+.button-primary-outlined {
+    background-color: white;
+    color: var(--color-primary-300);
+    border-radius: 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-primary-300);
+    padding: 8px;
+}
+
+.subcategory-banner {
+    display: block;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.subcategory-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(0 0 0 / 50%)
+    );
+}
+
+.subcategory-button {
+    border-style: none;
+    background-color: transparent;
+    padding: 8px;
+}
+
+.subcategory-button:hover {
+    background-color: var(--color-background-50);
+}
+
+.breadcrumbContainer {
+    background-color: rgb(245, 245, 245);
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid #dfdfdf;
+}
+@media (min-width: 992px) {
+    .breadcrumbContainer {
+        display: block;
+    }
+}
+.breadcrumbContainer .breadcrumb {
+    background-color: transparent;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+.breadcrumbContainer .breadcrumb .breadcrumb-item > a,
+.breadcrumbContainer .breadcrumb .breadcrumb-item > strong {
+    color: #707070;
+    font-size: 0.75rem;
+}
+
+[data-carousel-scroller] {
+    scrollbar-width: none;
+}
+
+[data-carousel-scroller]::-webkit-scrollbar {
+    display: none;
+}
+
+.grid-mesh {
+    height: 208;
+    width: 296;
+}
+
+.larp-shop-vertical {
+    height: 100%;
+    max-width: 90%;
+}
+
+.larp-shop-horizontal {
+    max-width: 45%;
+    max-height: 30%;
+}
+
+.profileImageFrame {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profileImage {
+    width: 64px;
+    height: 64px;
+}
+
+.sellerCard {
+    display: flex;
+    align-items: center;
+}
+
+.sellerCardInfo {
+    display: block;
+    margin-left: 16px;
+}
+
+.priceModifiers {
+    display: inline-flex;
+    background-color: #f5024f;
+    color: white;
+    padding: 2px 8px 2px 8px;
+}
+
+.priceModified {
+    padding: 4px;
+    text-decoration: underline;
+    color: var(--color-background-200);
+}
