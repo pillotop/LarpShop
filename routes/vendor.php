@@ -4,6 +4,8 @@ use App\Http\Controllers\Vendor\VendorCategoryController;
 use App\Http\Controllers\Vendor\VendorOrderController;
 use App\Http\Controllers\Vendor\VendorProductController;
 use App\Http\Controllers\Vendor\VendorProductImageController;
+use App\Http\Controllers\Vendor\VendorProductVariantController;
+use App\Http\Controllers\Vendor\VendorReportController;
 use App\Http\Controllers\Vendor\VendorStoreController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +42,13 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     Route::get('/orders', [VendorOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [VendorOrderController::class, 'show'])->whereNumber('order')->name('orders.show');
     Route::patch('/orders/{order}/fulfillment', [VendorOrderController::class, 'updateFulfillment'])->whereNumber('order')->name('orders.fulfillment.update');
+
+    // UC-36: Vendor Sales & Inventory Reports
+    Route::get('/reports', [VendorReportController::class, 'index'])->name('reports.index');
+
+    // UC-37: Vendor Product Variants Management
+    Route::get('/products/{product}/variants', [VendorProductVariantController::class, 'index'])->whereNumber('product')->name('products.variants.index');
+    Route::post('/products/{product}/variants', [VendorProductVariantController::class, 'store'])->whereNumber('product')->name('products.variants.store');
+    Route::put('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'update'])->whereNumber(['product', 'variant'])->name('products.variants.update');
+    Route::delete('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'destroy'])->whereNumber(['product', 'variant'])->name('products.variants.destroy');
 });

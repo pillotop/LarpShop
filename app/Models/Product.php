@@ -85,4 +85,9 @@ class Product extends Model
     {
         return $this->morphMany(CartItem::class, 'itemable');
     }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id', 'product_id');
+    }
 }
