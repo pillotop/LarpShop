@@ -10,6 +10,12 @@ function entriesIn(directory, extension) {
 }
 
 export default defineConfig({
+    server: {
+        // Containers listen on all interfaces, but browsers connect through the host.
+        hmr: process.env.VITE_HMR_HOST
+            ? { host: process.env.VITE_HMR_HOST }
+            : undefined,
+    },
     plugins: [
         laravel({
             input: [

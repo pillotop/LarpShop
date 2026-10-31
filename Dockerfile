@@ -1,3 +1,14 @@
+FROM node:22-bookworm-slim AS frontend
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY vite.config.js ./
+COPY resources ./resources
+RUN npm run build
+
 FROM php:8.4-cli
 
 WORKDIR /var/www/html
@@ -23,6 +34,7 @@ RUN composer install \
     --no-scripts
 
 COPY . .
+COPY --from=frontend /app/public/build ./public/build
 
 # Create an empty .env placeholder so Laravel's phpdotenv safeLoad() does not
 # emit "Failed to open stream" PHP warnings during PHPUnit test runs.

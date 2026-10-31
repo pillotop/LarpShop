@@ -22,10 +22,10 @@ services:
       MAIL_PORT: "1025"
       MAIL_SCHEME: "null"
     depends_on:
-      - db
-      - mailpit
-#      db:
-#        condition: service_healthy
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
 
   mailpit:
       image: axllent/mailpit:latest

@@ -22,6 +22,28 @@ npm run build
 
 The build writes minified assets with content hashes, icon fonts, and a manifest to `public/build`. Deploy this directory together with the Laravel application. A running Node server is not required to serve the production build. Rebuild after changing CSS or JavaScript.
 
+## Docker
+
+The Dockerfile builds assets in a Node 22 stage and copies only `public/build` into the PHP runtime. Build and start the default stack without host-side npm commands:
+
+```bash
+docker compose -f compose.yaml up -d --build
+```
+
+Select the base file explicitly to avoid automatically applying a local `compose.override.yaml` that may hide image assets behind a source mount.
+
+For development with source mounts and hot reload:
+
+```bash
+docker compose -f compose.yaml -f compose.dev.yaml up -d --build
+```
+
+The separate Vite service installs npm dependencies in a named volume and serves port 5173 on localhost. PHP dependencies use another named volume. `VITE_HMR_HOST` defaults to `localhost`; set it alongside `APP_URL` when using another browser hostname. The app waits for Vite's health check in development and for MySQL in both modes.
+
+Only run one Vite server for a working tree, since `public/hot` is shared. Stop the development stack with the same Compose file pair. After an abnormal shutdown, remove a stale `public/hot` marker before serving a host-side production build.
+
+The default image excludes host-generated assets, local Vite markers, local environment files, uploaded storage links, and generated Laravel caches. The current image still uses Laravel's development HTTP server; production web serving is a separate deployment concern.
+
 ## Source and loading conventions
 
 - Keep CSS in `resources/css` and JavaScript in `resources/js`.
