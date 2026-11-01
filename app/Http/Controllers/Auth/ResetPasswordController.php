@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ class ResetPasswordController extends Controller
     {
         return view('auth.pages.reset-password', [
             'token' => $token,
-            'email' => request()->query('email', '')
+            'email' => request()->query('email', ''),
         ]);
     }
 
@@ -37,13 +37,13 @@ class ResetPasswordController extends Controller
 
         if ($status !== Password::PasswordReset) {
             return response()->json([
-                'message' => 'Unable to reset password',
-                'errors' => ['email' => ['The password reset link is invalid, expired, or cannot be used.']]
+                'message' => __('passwords.unable'),
+                'errors' => ['email' => [__('passwords.invalid_link')]],
             ], 401);
         }
 
         return response()->json([
-            'message' => 'Your password has been reset successfully.',
+            'message' => __('passwords.completed'),
             'redirect' => route('login'),
         ]);
     }

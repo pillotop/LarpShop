@@ -7,9 +7,9 @@
 
 @php
     $methods = [
-        'simulated' => ['label' => 'Simulated payment', 'component' => 'checkout.payment-methods.simulated'],
-        'card' => ['label' => 'Credit or Debit card', 'component' => 'checkout.payment-methods.card'],
-        'wallet' => ['label' => 'Digital wallet', 'component' => 'checkout.payment-methods.wallet'],
+        'simulated' => ['label' => __('checkout.payment.simulated'), 'component' => 'checkout.payment-methods.simulated'],
+        'card' => ['label' => __('checkout.payment.card'), 'component' => 'checkout.payment-methods.card'],
+        'wallet' => ['label' => __('checkout.payment.wallet'), 'component' => 'checkout.payment-methods.wallet'],
     ];
     if (! Route::has('test.payments.pay')) {
         unset($methods['simulated']);
@@ -18,7 +18,7 @@
 
 <section
     class="payment-method-container"
-    aria-label="Payment method"
+    aria-label="{{ __('checkout.payment.method') }}"
     data-payment-methods
 >
     @if ($canCreatePayment)
@@ -26,7 +26,7 @@
             id="method-headers"
             class="method-headers d-flex overflow-auto rounded-top-3 mb-4"
             role="tablist"
-            aria-label="Payment method"
+            aria-label="{{ __('checkout.payment.method') }}"
         >
             @foreach ($methods as $key => $method)
                 <button
@@ -60,30 +60,30 @@
             </div>
         @endforeach
     @elseif ($canResumePayment && $activePayment !== null)
-        <h2 class="h4 fw-bold mb-3">Continue payment</h2>
+        <h2 class="h4 fw-bold mb-3">{{ __('checkout.payment.continue') }}</h2>
 
         <p class="fg-3">
-            Your payment session is ready. Continue with your payment provider.
+            {{ __('checkout.payment.ready') }}
         </p>
 
         <a
             href="{{ $activePayment->checkout_url }}"
             class="btn btn-solid theme-primary w-100 py-3"
         >
-            Continue payment
+            {{ __('checkout.payment.continue') }}
         </a>
     @else
         @php
             $message = match (true) {
-                $activePayment?->status === \App\Enums\PaymentStatus::RefundRequired => 'Your payment requires refund review.',
-                $order->status === \App\Enums\OrderStatus::Paid => 'This order has been paid.',
-                $activePayment?->status === \App\Enums\PaymentStatus::Processing => 'Your payment is being processed.',
-                $activePayment?->status === \App\Enums\PaymentStatus::Pending => 'Your payment is pending. No continuation link is available.',
-                default => 'Payment is unavailable. The order may be closed or need a shipping address.',
+                $activePayment?->status === \App\Enums\PaymentStatus::RefundRequired => __('checkout.payment.refund_review'),
+                $order->status === \App\Enums\OrderStatus::Paid => __('checkout.payment.paid'),
+                $activePayment?->status === \App\Enums\PaymentStatus::Processing => __('checkout.payment.processing'),
+                $activePayment?->status === \App\Enums\PaymentStatus::Pending => __('checkout.payment.pending'),
+                default => __('checkout.payment.unavailable'),
             };
         @endphp
 
-        <h2 class="h4 fw-bold mb-3">Payment status</h2>
+        <h2 class="h4 fw-bold mb-3">{{ __('checkout.payment.status') }}</h2>
 
         <p
             class="fg-3"
@@ -99,6 +99,6 @@
         href="{{ route('orders.show', $order) }}"
         class="d-inline-block mt-3"
     >
-        View order details
+        {{ __('checkout.payment.view_order') }}
     </a>
 </section>

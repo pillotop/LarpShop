@@ -2,47 +2,47 @@
 
 namespace App\View\Components;
 
-use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
 
 class CompanyFooter extends Component
 {
     public array $sections = [
         [
-            'title' => 'Company Info',
+            'title' => 'footer.company',
             'links' => [
-                ['label' => 'About LarpShop', 'url' => '/about'],
-                ['label' => 'Contact Us', 'url' => '/contact'],
-                ['label' => 'Investors', 'url' => '/investors'],
-                ['label' => 'Blog', 'url' => '/blog'],
-                ['label' => 'Press', 'url' => '/press'],
+                ['label' => 'footer.about', 'url' => '/about'],
+                ['label' => 'footer.contact', 'url' => '/contact'],
+                ['label' => 'footer.investors', 'url' => '/investors'],
+                ['label' => 'footer.blog', 'url' => '/blog'],
+                ['label' => 'footer.press', 'url' => '/press'],
             ],
         ],
         [
-            'title' => 'Customer Service',
+            'title' => 'footer.customer_service',
             'links' => [
-                ['label' => 'Help Centre', 'url' => '/help'],
-                ['label' => 'Privacy Policy', 'url' => '/privacy'],
-                ['label' => 'Community Forum', 'url' => '/community'],
-                ['label' => 'Product Recalls', 'url' => '/recalls'],
+                ['label' => 'footer.help', 'url' => '/help'],
+                ['label' => 'footer.privacy', 'url' => '/privacy'],
+                ['label' => 'footer.community', 'url' => '/community'],
+                ['label' => 'footer.recalls', 'url' => '/recalls'],
             ],
         ],
         [
-            'title' => 'Career',
+            'title' => 'footer.career',
             'links' => [
-                ['label' => 'Become an Accomplice', 'url' => '/careers'],
-                ['label' => 'Sell on LarpShop', 'url' => '/sell'],
-                ['label' => 'Advertise Your Products', 'url' => '/advertise'],
-                ['label' => 'Larp Insurance', 'url' => '/insurance'],
+                ['label' => 'footer.accomplice', 'url' => '/careers'],
+                ['label' => 'footer.sell', 'url' => '/sell'],
+                ['label' => 'footer.advertise', 'url' => '/advertise'],
+                ['label' => 'footer.insurance', 'url' => '/insurance'],
             ],
         ],
     ];
 
     public array $legalLinks = [
-        ['label' => 'Terms of Service', 'url' => '/terms'],
-        ['label' => 'Legal', 'url' => '/legal'],
-        ['label' => 'Privacy Policy', 'url' => '/privacy'],
-        ['label' => 'Sitemap', 'url' => '/sitemap'],
+        ['label' => 'footer.terms', 'url' => '/terms'],
+        ['label' => 'footer.legal', 'url' => '/legal'],
+        ['label' => 'footer.privacy', 'url' => '/privacy'],
+        ['label' => 'footer.sitemap', 'url' => '/sitemap'],
     ];
 
     public function render(): View

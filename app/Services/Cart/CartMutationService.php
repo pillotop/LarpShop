@@ -45,7 +45,7 @@ class CartMutationService
     ): array {
         if ($quantity < 0) {
             throw ValidationException::withMessages([
-                'quantity' => 'Quantity cannot be negative.',
+                'quantity' => __('cart.errors.negative'),
             ]);
         }
 
@@ -70,7 +70,7 @@ class CartMutationService
             $nextQuantity > 2147483647
         ) {
             throw ValidationException::withMessages([
-                'quantity' => 'Requested quantity exceeds available stock',
+                'quantity' => __('cart.errors.stock'),
             ]);
         }
 

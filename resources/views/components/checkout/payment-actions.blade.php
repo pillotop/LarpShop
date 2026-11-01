@@ -12,7 +12,7 @@
                     type="submit"
                     class="btn btn-solid theme-primary"
                 >
-                    Retry payment setup
+                    {{ __('checkout.payment.retry') }}
                 </button>
             </form>
         @endif
@@ -22,22 +22,22 @@
             method="POST"
         >
             @csrf
-            <label for="fake-outcome">Simulated outcome</label>
+            <label for="fake-outcome">{{ __('checkout.payment.outcome') }}</label>
             <select
                 id="fake-outcome"
                 name="outcome"
                 class="form-control mb-3"
             >
-                <option value="succeeded">Succeeded</option>
-                <option value="failed">Failed</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="delayed">Delayed</option>
+                <option value="succeeded">{{ __('checkout.payment_status.succeeded') }}</option>
+                <option value="failed">{{ __('checkout.payment_status.failed') }}</option>
+                <option value="cancelled">{{ __('checkout.payment_status.cancelled') }}</option>
+                <option value="delayed">{{ __('checkout.payment_status.delayed') }}</option>
             </select>
             <button
                 type="submit"
                 class="btn btn-solid theme-primary"
             >
-                Simulate payment
+                {{ __('checkout.payment.simulate') }}
             </button>
         </form>
     @endif
@@ -52,7 +52,7 @@
                 type="submit"
                 class="btn btn-outline theme-primary"
             >
-                Check / complete payment
+                {{ __('checkout.payment.check') }}
             </button>
         </form>
     @endif

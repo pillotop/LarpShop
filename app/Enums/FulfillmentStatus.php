@@ -17,10 +17,10 @@ enum FulfillmentStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::Unfulfilled => 'Unfulfilled',
-            self::Processing => 'Processing',
-            self::Shipped => 'Shipped',
-            self::Delivered => 'Delivered',
+            self::Unfulfilled => __('management.fulfillment_labels.unfulfilled'),
+            self::Processing => __('management.fulfillment_labels.processing'),
+            self::Shipped => __('management.fulfillment_labels.shipped'),
+            self::Delivered => __('management.fulfillment_labels.delivered'),
         };
     }
 

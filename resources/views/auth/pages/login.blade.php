@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login & Register')
+@section('title', __('auth.page.title'))
 
 @section('head')
 
@@ -18,8 +18,16 @@
             <div class="container d-flex justify-content-between">
                 <div class="d-flex align-items-center">
                     <div>
-                        <a href="/">
-                            <img height="64" width="64" src="/images/larp_shop.png">
+                        <a
+                            href="{{ route('home') }}"
+                            aria-label="{{ __('common.home') }}"
+                        >
+                            <img
+                                height="64"
+                                width="64"
+                                src="/images/larp_shop.png"
+                                alt="LarpShop"
+                            >
                         </a>
                     </div>
                     <div>
@@ -27,7 +35,7 @@
                             <div class="d-flex align-items-center gap-4">
                                 <li>
                                     <button id="login-trigger-products" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
-                                        Products
+                                        {{ __('auth.page.products') }}
                                         <svg id="dropdown-arrow-products" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-products" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                                         </svg>
@@ -35,7 +43,7 @@
                                 </li>
                                 <li>
                                     <button id="login-trigger-pricing" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
-                                        Pricing
+                                        {{ __('auth.page.pricing') }}
                                         <svg id="dropdown-arrow-pricing" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-pricing" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                                         </svg>
@@ -43,7 +51,7 @@
                                 </li>
                                 <li>
                                     <button id="login-trigger-enterprise" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
-                                        Enterprise
+                                        {{ __('auth.page.enterprise') }}
                                         <svg id="dropdown-arrow-enterprise" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-enterprise" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                                         </svg>
@@ -51,7 +59,7 @@
                                 </li>
                                 <li>
                                     <button id="login-trigger-events" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
-                                        Events
+                                        {{ __('auth.page.events') }}
                                         <svg id="dropdown-arrow-events" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-events" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                                         </svg>
@@ -81,7 +89,7 @@
         </section>
         <section class="container z-0 border-start-dashed border-end-dashed border-thin overflow-hidden">
             <header>
-                <h1 class="my-4"> The next generation e-commerce platform </h1>
+                <h1 class="my-4"> {{ __('auth.page.tagline') }} </h1>
                 <svg class="larp-shop-horizontal 2xl:d-none d-block" width="509.89801" height="65.990982" viewBox="-2 -2 509.89798 65.990983" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
                     <g stroke-linecap="round" fill-rule="nonzero" fill="#02c8f5" stroke="#00000000" stroke-width="0.5" transform="translate(-7.2730062,-23.350003)">
                         <g>
@@ -124,7 +132,7 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <div class="position-absolute z-1 start-50 top-50">
-                                        <h1 class="fw-bold text-capitalize"> Everything larp-able </h1>
+                                        <h1 class="fw-bold text-capitalize"> {{ __('auth.page.everything') }} </h1>
                                     </div>
                                     <div class="image">
                                         <svg width="234.88513mm" height="173.25981mm" viewBox="0 0 234.88513 173.25981" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">

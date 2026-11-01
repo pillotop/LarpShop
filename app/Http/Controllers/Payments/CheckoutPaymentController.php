@@ -26,7 +26,7 @@ class CheckoutPaymentController extends Controller
             ->findOrFail($order->getKey());
 
         if (! $order->addresses()->where('type', 'shipping')->exists()) {
-            throw ValidationException::withMessages(['address_id' => 'A shipping address is required.']);
+            throw ValidationException::withMessages(['address_id' => __('checkout.address.required')]);
         }
 
         $option = config('payments.options.'.$request->validated('payment_option'));
@@ -56,7 +56,7 @@ class CheckoutPaymentController extends Controller
         $this->assertOwner($request, $payment);
 
         return redirect()->route('checkout.show', $payment->order_id)
-            ->with('success', 'You left the payment provider. Your order is still awaiting payment.');
+            ->with('success', __('checkout.payment.left_provider'));
     }
 
     public function complete(Request $request, Payment $payment, PaymentService $payments): JsonResponse|RedirectResponse
@@ -70,9 +70,9 @@ class CheckoutPaymentController extends Controller
 
         return redirect()->route('orders.show', $payment->order_id)
             ->with('status', match ($result->status) {
-                'succeeded' => 'Payment confirmed. Thank you for your order.',
-                'refund_required' => 'Payment received after the order closed. Refund review is required.',
-                default => 'Payment status: '.$result->status.'.',
+                'succeeded' => __('checkout.payment.confirmed'),
+                'refund_required' => __('checkout.payment.late'),
+                default => __('checkout.payment.status_message', ['status' => __('checkout.payment_status.'.$result->status)]),
             });
     }
 
@@ -105,7 +105,7 @@ class CheckoutPaymentController extends Controller
         } catch (ConnectionException|RequestException|LockTimeoutException $exception) {
             // Do not expose provider responses or credentials to the browser.
             throw ValidationException::withMessages([
-                'payment' => 'The payment provider could not complete this request. Check the payment status or retry shortly.',
+                'payment' => __('checkout.errors.provider'),
             ]);
         }
     }

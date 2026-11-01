@@ -1,3 +1,4 @@
+import { cartMessage } from './cart_messages.js';
 import '../app.js';
 
 class ProductQuantityPicker {
@@ -65,7 +66,7 @@ class ProductQuantityPicker {
             return;
         }
         if (!Number.isInteger(quantity) || quantity < 0) {
-            this.#message('Please enter a whole number of zero or more.', true);
+            this.#message(cartMessage('invalid_quantity'), true);
             return;
         }
 
@@ -74,19 +75,19 @@ class ProductQuantityPicker {
             .filter(Boolean).map(control => [control, control.disabled]);
         controls.forEach(([control]) => { control.disabled = true; });
         this.element.setAttribute('aria-busy', 'true');
-        this.#message('Updating cart…');
+        this.#message(cartMessage('updating'));
 
         try {
-            if (!this.store) throw new Error('Cart is unavailable. Please refresh the page.');
+            if (!this.store) throw new Error(cartMessage('unavailable'));
             const result = url === this.addToCartUrl
                 ? await this.store.add(this.productId, quantity)
                 : await this.store.setQuantity(this.productId, quantity);
 
-            this.#message(`Cart updated. This product has ${result.item_quantity} item(s) in your cart.`);
+            this.#message(cartMessage('updated', { count: result.quantity }));
         } catch (error) {
             // Add is not idempotent: do not automatically retry an uncertain request.
             this.#message(error instanceof TypeError
-                ? 'Could not confirm the cart update. Refresh the page to check your cart before trying again.'
+                ? cartMessage('uncertain')
                 : error.message, true);
         } finally {
             this.pending = false;

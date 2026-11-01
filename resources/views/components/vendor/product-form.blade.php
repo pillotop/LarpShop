@@ -3,7 +3,7 @@
     'categories' => [],
     'action',
     'method' => 'POST',
-    'submitLabel' => 'Save Product',
+    'submitLabel' => __('management.save_product'),
     'allowImageUpload' => false,
 ])
 
@@ -19,14 +19,14 @@
 
     <div class="row g-4">
         <div class="md:col-8">
-            <label for="name" class="form-label fw-semibold">Product Name <span class="fg-danger">*</span></label>
+            <label for="name" class="form-label fw-semibold">{{ __('management.product_name') }} <span class="fg-danger">*</span></label>
             <input
                 type="text"
                 class="form-control form-control-lg rounded-5 @error('name') is-invalid @enderror"
                 id="name"
                 name="name"
                 value="{{ old('name', $product?->name) }}"
-                placeholder="e.g., Hand-Forged Elven Longsword"
+                placeholder="{{ __('management.e_g_hand_forged_elven_longsword') }}"
                 maxlength="150"
                 required
             >
@@ -36,14 +36,14 @@
         </div>
 
         <div class="md:col-4">
-            <label for="category_id" class="form-label fw-semibold">Category <span class="fg-danger">*</span></label>
+            <label for="category_id" class="form-label fw-semibold">{{ __('management.category') }} <span class="fg-danger">*</span></label>
             <select
                 class="form-control form-control-lg rounded-5 @error('category_id') is-invalid @enderror"
                 id="category_id"
                 name="category_id"
                 required
             >
-                <option value="">-- Select a category --</option>
+                <option value="">{{ __('management.select_a_category') }}</option>
                 @foreach ($categories as $cat)
                     <option value="{{ $cat->category_id }}" @selected((int) old('category_id', $product?->category_id) === (int) $cat->category_id)>
                         {{ $cat->name }}
@@ -56,7 +56,7 @@
         </div>
 
         <div class="md:col-4">
-            <label for="price" class="form-label fw-semibold">Unit Price ($) <span class="fg-danger">*</span></label>
+            <label for="price" class="form-label fw-semibold">{{ __('management.unit_price_text') }} <span class="fg-danger">*</span></label>
             <input
                 type="number"
                 step="0.01"
@@ -75,7 +75,7 @@
         </div>
 
         <div class="md:col-4">
-            <label for="stock" class="form-label fw-semibold">Available Stock <span class="fg-danger">*</span></label>
+            <label for="stock" class="form-label fw-semibold">{{ __('management.available_stock') }} <span class="fg-danger">*</span></label>
             <input
                 type="number"
                 step="1"
@@ -90,18 +90,18 @@
             @error('stock')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-            <div class="form-text">Set to 0 to mark the product as out of stock.</div>
+            <div class="form-text">{{ __('management.set_to_0_to_mark_the_product_as_out_of_stock') }}</div>
         </div>
 
         <div class="md:col-4">
-            <label for="slug" class="form-label fw-semibold">Custom URL Slug (Optional)</label>
+            <label for="slug" class="form-label fw-semibold">{{ __('management.custom_url_slug_optional') }}</label>
             <input
                 type="text"
                 class="form-control form-control-lg rounded-5 @error('slug') is-invalid @enderror"
                 id="slug"
                 name="slug"
                 value="{{ old('slug', $product?->slug) }}"
-                placeholder="Auto-generated if left blank"
+                placeholder="{{ __('management.auto_generated_if_left_blank') }}"
                 maxlength="150"
             >
             @error('slug')
@@ -110,14 +110,14 @@
         </div>
 
         <div class="col-12">
-            <label for="description" class="form-label fw-semibold">Product Description</label>
+            <label for="description" class="form-label fw-semibold">{{ __('management.product_description') }}</label>
             <textarea
                 class="form-control rounded-5 @error('description') is-invalid @enderror"
                 id="description"
                 name="description"
                 rows="5"
                 maxlength="5000"
-                placeholder="Describe materials, dimensions, craftsmanship, and care instructions..."
+                placeholder="{{ __('management.describe_materials_dimensions_craftsmanship_and_care_instructions') }}"
             >{{ old('description', $product?->description) }}</textarea>
             @error('description')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -139,10 +139,10 @@
                     >
                     <div>
                         <label class="form-label fw-bold fg-body d-block" for="is_active">
-                            Visible in Public Catalog
+                            {{ __('management.visible_in_public_catalog') }}
                         </label>
                         <small class="fg-3">
-                            Turn off to hide this product from customers on the storefront and search pages without deleting it.
+                            {{ __('management.products_visibility_help') }}
                         </small>
                     </div>
                 </div>
@@ -153,10 +153,10 @@
             <div class="col-12">
                 <div class="card border rounded-9 p-4">
                     <h6 class="fw-bold fg-body mb-1">
-                        <i class="bi bi-images fg-primary me-1"></i>Initial Product Images (Optional)
+                        <i class="bi bi-images fg-primary me-1"></i>{{ __('management.initial_product_images_optional') }}
                     </h6>
                     <p class="fg-3 small mb-3">
-                        Upload JPG, PNG, WEBP, or GIF files (up to 5MB each). You can also manage images after creating the product.
+                        {{ __('management.image_copy.initial_upload_help') }}
                     </p>
                     <div class="row g-3">
                         <div class="md:col-8">
@@ -177,7 +177,7 @@
                                 class="form-control"
                                 name="alt_text"
                                 value="{{ old('alt_text') }}"
-                                placeholder="Image alt text (optional)"
+                                placeholder="{{ __('management.image_alt_text_optional') }}"
                                 maxlength="255"
                             >
                         </div>
@@ -188,7 +188,7 @@
 
         <div class="col-12 pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
             <a href="{{ route('vendor.products.index') }}" class="btn btn-solid theme-secondary rounded-pill px-4">
-                <i class="bi bi-arrow-left me-1"></i>Cancel & Back to Products
+                <i class="bi bi-arrow-left me-1"></i>{{ __('management.cancel_back_to_products') }}
             </a>
             <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4 py-2 fw-semibold">
                 <i class="bi bi-check2-circle me-1"></i>{{ $submitLabel }}

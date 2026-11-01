@@ -24,7 +24,7 @@ class InventoryReservationService
 
         if ($product->stock < $quantity) {
             throw ValidationException::withMessages([
-                'cart' => "Insufficient stock for {$product->name}.",
+                'cart' => __('checkout.errors.insufficient_stock', ['name' => $product->name]),
             ]);
         }
 

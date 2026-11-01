@@ -6,39 +6,39 @@
     $credentials = [
         [
             'prop' => 'username',
-            'display1' => 'Username',
-            'display2' => 'Username',
+            'display1' => __('profile.username'),
+            'display2' => __('profile.username'),
             'icon' => 'bi-at',
             'type' => 'text',
             'required' => true,
             'minlength' => 3,
             'maxlength' => 50,
-            'help' => 'Your username is used to sign in and identify you on LarpShop.',
+            'help' => __('profile.username_help'),
         ],
         [
             'prop' => 'email',
-            'display1' => 'Account email',
-            'display2' => 'Email address',
+            'display1' => __('profile.account_email'),
+            'display2' => __('profile.email'),
             'icon' => 'bi-envelope',
             'type' => 'email',
             'required' => true,
             'maxlength' => 100,
-            'help' => 'Used for order notifications and account security updates.',
+            'help' => __('profile.email_help'),
         ],
         [
             'prop' => 'phone_number',
-            'display1' => 'Phone number',
-            'display2' => 'Contact phone number',
+            'display1' => __('profile.phone'),
+            'display2' => __('profile.contact_phone'),
             'icon' => 'bi-telephone',
             'type' => 'text',
             'required' => false,
             'maxlength' => 15,
-            'placeholder' => 'Example: 0912345678',
-            'fallback' => 'Not provided',
-            'help' => 'Used for deliveries and customer support.',
+            'placeholder' => __('profile.phone_example'),
+            'fallback' => __('profile.not_provided'),
+            'help' => __('profile.phone_help'),
         ],
     ];
-    $roleLabel = $user->isAdmin() ? 'Administrator' : 'Customer';
+    $roleLabel = $user->isAdmin() ? __('profile.role.admin') : __('profile.role.customer');
 @endphp
 
 <div class="tab-pane fade show active" id="pane-customer" role="tabpanel" aria-labelledby="tab-customer-info">
@@ -60,8 +60,8 @@
     <div class="card border-0 shadow-sm rounded-9 p-4">
         <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
             <div>
-                <h2 class="h5 fw-bold mb-1 fg-body">Update personal information</h2>
-                <p class="fg-3 small mb-0">Manage your username, email address, and contact phone number.</p>
+                <h2 class="h5 fw-bold mb-1 fg-body">{{ __('profile.update_title') }}</h2>
+                <p class="fg-3 small mb-0">{{ __('profile.update_intro') }}</p>
             </div>
             @if ($user->isAdmin())
                 <span class="badge bg-subtle-danger fg-danger border border-danger rounded-pill px-3 py-2">
@@ -111,16 +111,16 @@
                 @endforeach
 
                 <div class="md:col-6">
-                    <label for="account_role" class="form-label fw-semibold">Account role</label>
+                    <label for="account_role" class="form-label fw-semibold">{{ __('profile.account_role') }}</label>
                     <input type="text" class="form-control rounded-5 bg-1" id="account_role" value="{{ $roleLabel }}" disabled>
-                    <div class="form-text small">Your role is managed automatically by LarpShop.</div>
+                    <div class="form-text small">{{ __('profile.role_help') }}</div>
                 </div>
             </div>
 
             <div class="mt-4 pt-3 border-top d-flex justify-content-end">
                 <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
                     <i class="bi bi-check2-circle"></i>
-                    <span>Save profile changes</span>
+                    <span>{{ __('profile.save') }}</span>
                 </button>
             </div>
         </form>

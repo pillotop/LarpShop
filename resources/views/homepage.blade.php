@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Larp Shop | Larp away your worries')
+@section('title', __('products.home.title'))
 
 @section('head')
 
@@ -48,53 +48,7 @@
             :product-categories="$productCategories"
             :cart="$cart"
         />
-        <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
-            <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
-                <li>
-                    <button
-                        type="button"
-                        class="side-panel-trigger nav-button rounded-pill border-0"
-                        data-bs-target="#side-panel"
-                        data-bs-toggle="drawer"
-                        data-side-panel-target="#settings"
-                    >
-                        <svg class="icon-16">
-                            <use href="/images/icons.svg#settings-sliders"></use>
-                        </svg>
-                        <span> Settings </span>
-                        <template id="settings">
-                            @auth
-                                <span class="text-center">Sad setting form with nothing other than the logout button</span>
-                                <form action="{{ route('logout') }}" method="post">
-                                    @csrf
-                                    <button
-                                        type="submit"
-                                        class="nav-button rounded-pill border-0"
-                                    >
-                                        Logout
-                                    </button>
-                                </form>
-                            @endauth
-                        </template>
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        Parcel delivery
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        Phone sales service
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        Return policy
-                    </button>
-                </li>
-            </ul>
-        </div>
+        <x-persistent-header />
         <div id="dropdown-portal"></div>
     </header>
     <main>
@@ -104,19 +58,19 @@
                     <div class="row g-4 flex-grow-1">
                         <div class="col-12 h-25">
                             <x-category-banner
-                                title="Cameras"
+                                :title="__('products.banners.cameras.title')"
                                 slug="cameras"
                                 image="/images/17067741-camera-1x1.jpg"
-                                alt="Camera collection"
+                                :alt="__('products.banners.cameras.alt')"
                                 ratio="ratio-21x9"
                             />
                         </div>
                         <div class="col-12 h-75">
                             <x-category-banner
-                                title="Home & Living"
+                                :title="__('products.banners.home_living.title')"
                                 slug="home-living"
                                 image="/images/aestheticjourney-cream-1x1.jpg"
-                                alt="Home and living collection"
+                                :alt="__('products.banners.home_living.alt')"
                                 ratio="ratio-1x1"
                             />
                         </div>
@@ -124,10 +78,10 @@
                 </div>
                 <div class="col-6 lg:col-5">
                     <x-category-banner
-                        title="Makeup"
+                        :title="__('products.banners.makeup.title')"
                         slug="makeup"
                         image="/images/8618939-makeup-150.jpg"
-                        alt="Makeup collection"
+                        :alt="__('products.banners.makeup.alt')"
                         custom-ratio="150%"
                     />
                 </div>
@@ -135,19 +89,19 @@
                     <div class="row g-4 h-100 lg:flex-grow-1">
                         <div class="col-5 lg:col-12">
                             <x-category-banner
-                                title="Kitchenware"
+                                :title="__('products.banners.kitchenware.title')"
                                 slug="kitchenware"
                                 image="/images/viarami-product-5222331_150.jpg"
-                                alt="Kitchenware collection"
+                                :alt="__('products.banners.kitchenware.alt')"
                                 custom-ratio="67.67%"
                             />
                         </div>
                         <div class="col-7 lg:col-12 h-100">
                             <x-category-banner
-                                title="Fabric"
+                                :title="__('products.banners.fabric.title')"
                                 slug="fabric"
                                 image="/images/engin_akyurt-fabric-2405110_66.jpg"
-                                alt="Fabric collection"
+                                :alt="__('products.banners.fabric.alt')"
                                 custom-ratio="67.67%"
                             />
                         </div>
@@ -159,8 +113,8 @@
             @vite('resources/css/broad_select.css')
             <header class="container">
                 <div class="text-center m-3">
-                    <h1> Get it all from one place </h1>
-                    Categorized down to every item
+                    <h1> {{ __('products.home.heading') }} </h1>
+                    {{ __('products.home.intro') }}
                 </div>
             </header>
             <div class="broad-select">
@@ -171,7 +125,7 @@
                                 <button type="button" class="selector-item">
                                     <div class="d-inline-flex flex-nowrap">
                                         <h3 class="fw-bold text-uppercase p-3" style="border-radius: 12px 0 12px 0; color: white; background: conic-gradient(from 45deg at 85% 96%, #f53003 0%, #49190B 6.3%, #1F4C5A 22.1%, #182E35 35%, #362710 45.6%, rgb(255,0,55) 58%, #F5024F 62.6%, #FFC9CA 70.6%, #FF6941 75.5%, #FFA3A7 87.1%, #FFA688 93.2%, #f53003 100%);">
-                                            Trending sales
+                                            {{ __('products.home.trending') }}
                                         </h3>
                                     </div>
                                 </button>
@@ -180,7 +134,7 @@
                                 <button type="button" class="selector-item">
                                     <div class="d-inline-flex flex-wrap">
                                         <h3 class="fw-bold text-uppercase p-3">
-                                            Foo
+                                            {{ __('products.home.placeholder') }}
                                         </h3>
                                     </div>
                                 </button>
@@ -204,17 +158,16 @@
                 <div class="container">
                     <header class="d-inline-flex flex-wrap position-relative pt-2 mb-4">
                         <h3 class="bg-complementary fg-white fw-bold text-decoration-underline text-uppercase p-3">
-                            Everything Larpable
+                            {{ __('products.home.everything') }}
                         </h3>
                         <p>
-                            Stock gathered from every nooks and cranny of the Internet. Get it all from one place, everything
-                            within reach. You don't need nothing else.
+                            {{ __('products.home.description') }}
                         </p>
                     </header>
 
                     <div style="text-align: end;">
                         <a href="{{ route('products.index') }}" class="text-decoration-none fw-semibold">
-                            Browse all products <i class="bi bi-arrow-right"></i>
+                            {{ __('products.home.browse') }} <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
 

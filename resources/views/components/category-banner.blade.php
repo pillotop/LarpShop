@@ -27,7 +27,7 @@
     <div class="category-banner__overlay position-absolute bottom-0 start-0 w-100 p-3">
         <h2 class="h5 mb-1">{{ $title }}</h2>
         <span class="category-banner__action">
-            Explore collection
+            {{ __('products.explore_collection') }}
         </span>
     </div>
 </a>

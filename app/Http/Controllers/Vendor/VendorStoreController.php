@@ -47,7 +47,7 @@ class VendorStoreController extends Controller
         );
 
         return redirect()->route('vendor.store.settings')
-            ->with('success', "Store '{$vendor->store_name}' settings have been updated successfully.");
+            ->with('success', __('management.messages.store_settings', ['name' => $vendor->store_name]));
     }
 
     /**
@@ -63,11 +63,11 @@ class VendorStoreController extends Controller
 
         if (! in_array($vendor->status, ['active', 'approved'], true)) {
             return redirect()->route('profile')
-                ->with('warning', 'Only an active or approved store can be managed.');
+                ->with('warning', __('management.messages.store_active'));
         }
 
         $request->session()->put('active_vendor_id', $vendor->vendor_id);
 
-        return back()->with('success', "Switched active store to '{$vendor->store_name}'.");
+        return back()->with('success', __('management.messages.store_switched', ['name' => $vendor->store_name]));
     }
 }

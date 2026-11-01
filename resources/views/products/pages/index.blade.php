@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Search Products - LarpShop')
+@section('title', __('products.search.title'))
 
 @section('head')
 
@@ -27,14 +27,6 @@
         'max_price' => null,
         'in_stock' => false,
         'sort' => 'newest',
-    ];
-    $sortOptions = $sortOptions ?? [
-        'newest' => 'Newest Arrivals',
-        'price_asc' => 'Price: Low to High',
-        'price_desc' => 'Price: High to Low',
-        'name_asc' => 'Name: A to Z',
-        'name_desc' => 'Name: Z to A',
-        'rating_desc' => 'Highest Rated',
     ];
     $hasActiveFilters = $filters['category'] !== ''
         || ($filters['min_price'] !== null && $filters['min_price'] !== '')
@@ -65,22 +57,22 @@
 
         <div class="mb-4">
             <h1 class="fw-bold">
-                {{ $keyword ? 'Search Results' : 'Explore Products' }}
+                {{ $keyword ? __('products.search.results') : __('products.search.explore') }}
             </h1>
 
             @if ($keyword)
                 <p class="fg-secondary">
-                    Results for:
+                    {{ __('products.search.results_for') }}
                     <strong>{{ $keyword }}</strong>
                 </p>
 
                 <a href="{{ route('products.index') }}"
                    class="btn btn-outline theme-secondary btn-sm">
-                    Clear Search
+                    {{ __('products.search.clear') }}
                 </a>
             @else
                 <p class="fg-secondary">
-                    Discover products that match your needs.
+                    {{ __('products.search.intro') }}
                 </p>
             @endif
         </div>
@@ -103,9 +95,9 @@
                 data-bs-target="#side-panel"
                 data-side-panel-target="#filter-panel-template"
             >
-                <i class="bi bi-funnel"></i> Filter &amp; Sort
+                <i class="bi bi-funnel"></i> {{ __('products.filters.title') }}
                 @if ($hasActiveFilters)
-                    <span class="badge bg-primary ms-1">Active</span>
+                    <span class="badge bg-primary ms-1">{{ __('products.filters.active') }}</span>
                 @endif
                 <template id="filter-panel-template">
                     <x-products.filter-panel
@@ -121,12 +113,11 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h5 mb-0">
-                {{ $keyword ? 'Matching Products' : 'All Products' }}
+                {{ $keyword ? __('products.search.matching') : __('products.search.all') }}
             </h2>
 
             <span class="badge bg-primary">
-                {{ $products->count() }}
-                {{ $products->count() === 1 ? 'product found' : 'products found' }}
+                {{ trans_choice('products.search.found', $products->count(), ['count' => $products->count()]) }}
             </span>
         </div>
 
@@ -135,15 +126,15 @@
             <div class="bg-white rounded-9 shadow-sm text-center p-5">
                 <i class="bi bi-search display-3 fg-secondary"></i>
 
-                <h3 class="h4 mt-3">No products found</h3>
+                <h3 class="h4 mt-3">{{ __('products.search.empty') }}</h3>
 
                 <p class="fg-secondary">
-                    Try another keyword or browse all products.
+                    {{ __('products.search.try_again') }}
                 </p>
 
                 <a href="{{ route('products.index') }}"
                    class="btn btn-solid theme-primary">
-                    Browse All Products
+                    {{ __('products.search.browse') }}
                 </a>
             </div>
 

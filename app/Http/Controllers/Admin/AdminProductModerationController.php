@@ -76,7 +76,7 @@ class AdminProductModerationController extends Controller
         $product->status = Product::STATUS_APPROVED;
         $product->save();
 
-        return back()->with('success', "Product '{$product->name}' has been approved.");
+        return back()->with('success', __('management.messages.product_approved', ['name' => $product->name]));
     }
 
     /**
@@ -87,6 +87,6 @@ class AdminProductModerationController extends Controller
         $product->status = Product::STATUS_REJECTED;
         $product->save();
 
-        return back()->with('success', "Product '{$product->name}' has been rejected.");
+        return back()->with('success', __('management.messages.product_rejected', ['name' => $product->name]));
     }
 }

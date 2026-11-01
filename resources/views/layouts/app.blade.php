@@ -23,6 +23,8 @@
     </head>
     <body>
 
+        @include('shared.cart-messages')
+
         @yield('content')
 
         {{-- Snap.svg CDN --}}

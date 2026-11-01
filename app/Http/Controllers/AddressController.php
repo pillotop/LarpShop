@@ -29,7 +29,7 @@ class AddressController extends Controller
             $request->validated(),
         );
 
-        return redirect()->to(route('profile').'#pane-billing')->with('success', 'Address saved.');
+        return redirect()->to(route('profile').'#pane-billing')->with('success', __('profile.success.address_saved'));
     }
 
     public function update(
@@ -42,7 +42,7 @@ class AddressController extends Controller
 
         $this->service->update($request->user(), $address, $request->validated());
 
-        return redirect()->to(route('profile').'#pane-billing')->with('success', 'Address updated.');
+        return redirect()->to(route('profile').'#pane-billing')->with('success', __('profile.success.address_updated'));
     }
 
     public function setDefault(
@@ -51,7 +51,7 @@ class AddressController extends Controller
     ): RedirectResponse {
         $this->service->setDefault($request->user(), $address);
 
-        return redirect()->to(route('profile').'#pane-billing')->with('success', 'Default address updated.');
+        return redirect()->to(route('profile').'#pane-billing')->with('success', __('profile.success.address_default'));
     }
 
     public function destroy(
@@ -60,6 +60,6 @@ class AddressController extends Controller
     ): RedirectResponse {
         $this->service->delete($request->user(), $address);
 
-        return redirect()->to(route('profile').'#pane-billing')->with('success', 'Address removed.');
+        return redirect()->to(route('profile').'#pane-billing')->with('success', __('profile.success.address_removed'));
     }
 }

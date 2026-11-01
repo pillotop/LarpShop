@@ -30,35 +30,7 @@
             :product-categories="$productCategories"
             :cart="$cart"
         />
-        <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
-            <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
-                <li>
-                    <button class="nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="drawer">
-                        <svg class="icon-16">
-                            <use href="/images/icons.svg#settings-sliders"></use>
-                        </svg>
-                        <span> Settings </span>
-                        <template id="settings">
-                        </template>
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        Parcel delivery
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        Phone sales service
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        Return policy
-                    </button>
-                </li>
-            </ul>
-        </div>
+        <x-persistent-header />
         <div id="dropdown-portal"></div>
     </header>
     <main>
@@ -70,7 +42,7 @@
                     <div class="col-4 d-flex flex-column overflow-scroll border-end-dashed border-top-0 border-thin border-start-0 border-bottom-0">
                     </div>
                     <div class="col-6 border-bottom-dashed border-thin border-top-0 border-start-0 border-end-0">
-                        <h5 class="fw-bold"> Categories </h5>
+                        <h5 class="fw-bold">{{ __('common.categories') }}</h5>
                     </div>
                 </div>
                 <div class="row">
@@ -105,7 +77,7 @@
         <section class="container">
             @if ($products->isNotEmpty())
                 <div class="d-flex justify-content-end border border-4 border-top-0 border-start-0 border-end-0 my-3" style="border-color: var(--color-tertiary-500) !important;">
-                    <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);"> Products of the same type </h2>
+                    <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);">{{ __('products.category.products') }}</h2>
                 </div>
                 <x-two-arrow-scroller>
                     <ul class="d-flex gap-4 overflow-scroll list-unstyled">
@@ -119,9 +91,9 @@
             @else
                 <div class="d-flex flex-column justify-content-center align-items-center text-center py-5" style="min-height: 350px;">
                     <i class="bi bi-box-seam display-4 fg-secondary mb-3"></i>
-                    <h3 class="h4 fw-bold fg-body">No products found in this category</h3>
-                    <p class="fg-3">Check back later or explore other categories.</p>
-                    <a href="{{ route('home') }}" class="btn btn-outline theme-primary mt-2">Back to Home</a>
+                    <h3 class="h4 fw-bold fg-body">{{ __('products.category.empty') }}</h3>
+                    <p class="fg-3">{{ __('products.category.explore') }}</p>
+                    <a href="{{ route('home') }}" class="btn btn-outline theme-primary mt-2">{{ __('products.category.home') }}</a>
                 </div>
             @endif
         </section>

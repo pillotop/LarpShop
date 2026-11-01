@@ -18,21 +18,21 @@ class AccountVendorController extends Controller
     {
         $vendor = $this->vendors->register($request->user(), $request->validated());
 
-        return $this->respond($request, $vendor, 'vendor-registered', 'Store application submitted for approval.', 201);
+        return $this->respond($request, $vendor, 'vendor-registered', __('profile.success.store_submitted'), 201);
     }
 
     public function update(UpdateVendorRequest $request): RedirectResponse|JsonResponse
     {
         $vendor = $this->vendors->update($request->user(), $request->vendor()->vendor_id, $request->validated());
 
-        return $this->respond($request, $vendor, 'vendor-updated', 'Store profile updated successfully.');
+        return $this->respond($request, $vendor, 'vendor-updated', __('profile.success.store_updated'));
     }
 
     public function resubmit(UpdateVendorRequest $request): RedirectResponse|JsonResponse
     {
         $vendor = $this->vendors->resubmit($request->user(), $request->vendor()->vendor_id, $request->validated());
 
-        return $this->respond($request, $vendor, 'vendor-registered', 'Store application resubmitted for approval.');
+        return $this->respond($request, $vendor, 'vendor-registered', __('profile.success.store_resubmitted'));
     }
 
     private function respond(Request $request, Vendor $vendor, string $status, string $message, int $code = 200): RedirectResponse|JsonResponse

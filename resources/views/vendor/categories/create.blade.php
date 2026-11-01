@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Category | ' . $vendor->store_name)
+@section('title', __('management.create_category').' | ' . $vendor->store_name)
 
 @section('head')
 
@@ -44,25 +44,25 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.categories.index') }}">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Category</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.categories.index') }}">{{ __('management.categories') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.create_category') }}</li>
             </ol>
         </nav>
 
         <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="border-bottom pb-3 mb-4">
                 <h3 class="fw-bold fg-body mb-1">
-                    <i class="bi bi-folder-plus fg-primary me-2"></i>Create Product Category
+                    <i class="bi bi-folder-plus fg-primary me-2"></i>{{ __('management.create_product_category') }}
                 </h3>
-                <p class="fg-3 small mb-0">Add a new category to organize products across the marketplace.</p>
+                <p class="fg-3 small mb-0">{{ __('management.add_a_new_category_to_organize_products_across_the_marketplace') }}</p>
             </div>
 
             <x-vendor.category-form
                 :parent-categories="$parentCategories"
                 :action="route('vendor.categories.store')"
                 method="POST"
-                submit-label="Create Category"
+                submit-label="{{ __('management.create_category') }}"
             />
         </div>
     </main>

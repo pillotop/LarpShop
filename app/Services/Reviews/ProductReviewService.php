@@ -21,7 +21,7 @@ class ProductReviewService
 
             if ($this->reviews->eligibleProductIds($user, [$product->getKey()]) === []) {
                 throw ValidationException::withMessages([
-                    'eligibility' => 'You can review a product once, after a paid purchase.',
+                    'eligibility' => __('reviews.purchase_required'),
                 ])->errorBag('review');
             }
 

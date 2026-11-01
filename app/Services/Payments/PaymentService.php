@@ -30,7 +30,7 @@ class PaymentService
     ): Payment {
         if (! $this->gateways->supports($provider, $method)) {
             throw ValidationException::withMessages([
-                'method' => 'Unsupported payment method for this provider',
+                'method' => __('checkout.errors.method'),
             ]);
         }
 
@@ -57,7 +57,7 @@ class PaymentService
                         )
                     ) {
                         throw ValidationException::withMessages([
-                            'order' => 'This order cannot be paid',
+                            'order' => __('checkout.errors.not_payable'),
                         ]);
                     }
 
@@ -76,7 +76,7 @@ class PaymentService
                             $existing->method !== $method
                         ) {
                             throw ValidationException::withMessages([
-                                'payment' => 'This order already has an active payment.',
+                                'payment' => __('checkout.errors.active_payment'),
                             ]);
                         }
 
@@ -136,7 +136,7 @@ class PaymentService
     {
         if ($payment->provider_reference === null) {
             throw ValidationException::withMessages([
-                'payment' => 'Payment has no provider reference.',
+                'payment' => __('checkout.errors.no_reference'),
             ]);
         }
 
@@ -157,14 +157,14 @@ class PaymentService
                 return new PaymentResult($payment->provider_reference ?? '', $payment->status->value);
             }
             if ($payment->provider_reference === null) {
-                throw ValidationException::withMessages(['payment' => 'Initialize the payment before completing it.']);
+                throw ValidationException::withMessages(['payment' => __('checkout.errors.initialize')]);
             }
             $gateway = $this->gateways->make($payment->provider);
             $result = $gateway->verifyPayment($payment->provider_reference);
             if ($result->status === PaymentStatus::Pending->value && $gateway instanceof CapturesPayment) {
                 $order = $payment->order;
                 if ($order->status !== OrderStatus::Pending || $order->expires_at?->lessThanOrEqualTo(now())) {
-                    throw ValidationException::withMessages(['payment' => 'This order can no longer accept a new capture.']);
+                    throw ValidationException::withMessages(['payment' => __('checkout.errors.capture')]);
                 }
                 $result = $gateway->capturePayment($payment->provider_reference, $this->requestFor($payment));
             }
@@ -191,7 +191,7 @@ class PaymentService
         if (($result->amount !== null && $result->amount !== $payment->amount)
             || ($result->currency !== null && $result->currency !== $payment->currency)
             || ($result->merchantReference !== null && $result->merchantReference !== (string) $payment->getKey())) {
-            throw ValidationException::withMessages(['payment' => 'Provider payment details do not match this payment.']);
+            throw ValidationException::withMessages(['payment' => __('checkout.errors.provider_details')]);
         }
 
         return DB::transaction(function () use ($payment, $result) {
@@ -204,7 +204,7 @@ class PaymentService
 
             if ($payment->provider_reference !== $result->reference) {
                 throw ValidationException::withMessages([
-                    'payment' => 'Provider reference does not match',
+                    'payment' => __('checkout.errors.reference'),
                 ]);
             }
 
@@ -236,7 +236,7 @@ class PaymentService
                 ], true)
             ) {
                 throw ValidationException::withMessages([
-                    'payment' => 'This payment is already finalized.',
+                    'payment' => __('checkout.errors.finalized'),
                 ]);
             }
 

@@ -43,6 +43,6 @@ class OrderController extends Controller
 
         return redirect()
             ->route('orders.show', ['order' => $order])
-            ->with('status', 'Order cancelled');
+            ->with('status', __('orders.cancelled'));
     }
 }

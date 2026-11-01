@@ -34,16 +34,16 @@ class LoginController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
-                'message' => 'The provided credentials are incorrect',
+                'message' => __('auth.invalid_credentials_message'),
                 'errors' => [
-                    'email' => ['The provided credentials are incorrect.'],
-                    'password' => [ 'The provided credentials are incorrect.' ],
+                    'email' => [__('auth.invalid_credentials')],
+                    'password' => [__('auth.invalid_credentials')],
                 ],
             ], 401);
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials are incorrect.',
+            'email' => __('auth.invalid_credentials'),
         ])->onlyInput('email');
     }
 

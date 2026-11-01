@@ -32,7 +32,7 @@ class FakePaymentController extends Controller
 
         if (! $order->addresses()->where('type', 'shipping')->exists()) {
             throw ValidationException::withMessages([
-                'address_id' => 'A shipping address is required.',
+                'address_id' => __('checkout.address.required'),
             ]);
         }
 
@@ -47,8 +47,8 @@ class FakePaymentController extends Controller
         $result = $payments->verify($payment);
 
         return redirect()->route('checkout.show', $order)->with('success', $result->status === 'succeeded'
-            ? 'Demo payment completed. No money was charged.'
-            : 'Demo payment received after the order closed. Refund review is required.');
+            ? __('checkout.demo.completed')
+            : __('checkout.demo.late'));
     }
 
     public function store(
@@ -94,7 +94,7 @@ class FakePaymentController extends Controller
         $result = $payments->verify($payment);
 
         if (! $request->expectsJson()) {
-            return redirect()->route('checkout.show', $payment->order_id)->with('success', 'Simulated payment status: '.$result->status);
+            return redirect()->route('checkout.show', $payment->order_id)->with('success', __('checkout.demo.status_message', ['status' => __('checkout.payment_status.'.$result->status)]));
         }
 
         return response()->json(['status' => $result->status]);
@@ -110,7 +110,7 @@ class FakePaymentController extends Controller
         $result = $payments->verify($payment);
 
         if (! $request->expectsJson()) {
-            return redirect()->route('checkout.show', $payment->order_id)->with('success', 'Simulated payment status: '.$result->status);
+            return redirect()->route('checkout.show', $payment->order_id)->with('success', __('checkout.demo.status_message', ['status' => __('checkout.payment_status.'.$result->status)]));
         }
 
         return response()->json(['status' => $result->status]);

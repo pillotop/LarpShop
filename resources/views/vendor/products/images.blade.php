@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Product Images (UC-32) | ' . $product->name)
+@section('title', __('management.manage_product_images').' (UC-32) | ' . $product->name)
 
 @section('head')
 
@@ -44,10 +44,10 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">Products & Inventory</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">{{ __('management.products_inventory') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('vendor.products.edit', $product->product_id) }}">{{ $product->name }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Manage Images</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.manage_images') }}</li>
             </ol>
         </nav>
 
@@ -55,7 +55,7 @@
             <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -66,7 +66,7 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -77,21 +77,20 @@
                         <i class="bi bi-images fs-2xl"></i>
                     </div>
                     <div>
-                        <h4 class="fw-bold fg-body mb-1">Manage Product Images (UC-32)</h4>
+                        <h4 class="fw-bold fg-body mb-1">{{ __('management.manage_product_images_uc_32') }}</h4>
                         <div class="fg-3 small">
-                            Product: <strong>{{ $product->name }}</strong> (#{{ $product->product_id }}) &bull;
-                            Price: <span class="fg-success fw-bold">${{ number_format((float) $product->price, 2) }}</span> &bull;
-                            Stock: <strong>{{ $product->stock }}</strong>
+                            {{ __('management.product_label') }} <strong>{{ $product->name }}</strong> (#{{ $product->product_id }}) &bull;
+                            {{ __('management.display.price') }} <span class="fg-success fw-bold">${{ number_format((float) $product->price, 2) }}</span> {{ __('management.stock_label') }} <strong>{{ $product->stock }}</strong>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('vendor.products.edit', $product->product_id) }}" class="btn btn-outline theme-secondary rounded-pill px-3">
-                        <i class="bi bi-pencil me-1"></i>Edit Product
+                        <i class="bi bi-pencil me-1"></i>{{ __('management.edit_product') }}
                     </a>
                     @if ($product->is_active && $product->status === 'approved')
                         <a href="{{ route('products.show', [$product->product_id, $product->slug]) }}" target="_blank" class="btn btn-outline theme-primary rounded-pill px-3">
-                            <i class="bi bi-eye me-1"></i>View Product Page
+                            <i class="bi bi-eye me-1"></i>{{ __('management.view_product_page') }}
                         </a>
                     @endif
                 </div>
@@ -101,16 +100,16 @@
         <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="border-bottom pb-3 mb-4">
                 <h5 class="fw-bold fg-body mb-1">
-                    <i class="bi bi-cloud-arrow-up fg-primary me-2"></i>Upload New Images
+                    <i class="bi bi-cloud-arrow-up fg-primary me-2"></i>{{ __('management.upload_new_images') }}
                 </h5>
-                <p class="fg-3 small mb-0">Supported formats: JPG, JPEG, PNG, WEBP, GIF (max 5MB per file). You can select multiple images at once.</p>
+                <p class="fg-3 small mb-0">{{ __('management.image_copy.upload_help') }}</p>
             </div>
 
             <form action="{{ route('vendor.products.images.store', $product->product_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-3 align-items-end">
                     <div class="md:col-7">
-                        <label for="images" class="form-label fw-semibold">Image Files <span class="fg-danger">*</span></label>
+                        <label for="images" class="form-label fw-semibold">{{ __('management.image_files') }} <span class="fg-danger">*</span></label>
                         <input
                             type="file"
                             class="form-control form-control-lg rounded-5 @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror"
@@ -126,19 +125,19 @@
                     </div>
 
                     <div class="md:col-3">
-                        <label for="alt_text" class="form-label fw-semibold">Alt Text</label>
+                        <label for="alt_text" class="form-label fw-semibold">{{ __('management.alt_text') }}</label>
                         <input
                             type="text"
                             class="form-control form-control-lg rounded-5"
                             id="alt_text"
                             name="alt_text"
-                            placeholder="Brief image description..."
+                            placeholder="{{ __('management.brief_image_description') }}"
                         >
                     </div>
 
                     <div class="md:col-2">
                         <button type="submit" class="btn btn-solid theme-primary btn-lg rounded-pill w-100 fw-semibold">
-                            <i class="bi bi-upload me-1"></i>Upload
+                            <i class="bi bi-upload me-1"></i>{{ __('management.upload') }}
                         </button>
                     </div>
                 </div>
@@ -150,14 +149,14 @@
                 <h5 class="fw-bold fg-body mb-0">
                     <i class="bi bi-grid-3x3 fg-primary me-2"></i>Current Gallery ({{ $images->count() }})
                 </h5>
-                <span class="fg-3 small">The image with the lowest sort order is displayed as the primary cover thumbnail.</span>
+                <span class="fg-3 small">{{ __('management.image_copy.cover_help') }}</span>
             </div>
 
             @if ($images->isEmpty())
                 <div class="text-center py-5 fg-3">
                     <i class="bi bi-image fs-3xl d-block mb-3 fg-secondary"></i>
-                    <h6 class="fw-bold">No images uploaded for this product yet</h6>
-                    <p class="small fg-3 mb-0">Upload clear photos to showcase your item to customers.</p>
+                    <h6 class="fw-bold">{{ __('management.no_images_uploaded_for_this_product_yet') }}</h6>
+                    <p class="small fg-3 mb-0">{{ __('management.upload_clear_photos_to_showcase_your_item_to_customers') }}</p>
                 </div>
             @else
                 <div class="row g-4">
