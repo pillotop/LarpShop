@@ -1,209 +1,129 @@
-import '../app.js';
-
-class PersistentHeader {
+export class PersistentHeader {
     constructor(element) {
-        this.anchor = this.getAnchor(element);
         this.container = element;
-        this.content = this.anchor != null
-            ? this.container
-            : this.container.querySelector(".persistent-header-content");
 
-        if (this.content === null)
-            throw new Error("persistent header requires a .persistent-header-content");
-
-        this.visible = this.maxVisible = 0;
-        this.updateDimensions();
-        this.visible = this.maxVisible;
-
-        this.scrollThreshold = Number(element.dataset.persistentHeaderScrollThreshold ?? "16");
-        this.lastScrollY = window.scrollY;
-
-        this.initState();
-        this.setupSignals();
-    }
-
-    initState() {
-        this.scrollResistance = 0;
-        this.duringScrollSession = false;
-
-        this.resizeObserver = new ResizeObserver(() => {
-            this.updateDimensions();
-            this.updateVisibility();
-            // console.log({
-            //     maxVisible: this.maxVisible,
-            //     visible: this.visible,
-            //     anchorBaseHeight: this.anchorBaseHeight,
-            //     anchorHeight: this.anchor?.offsetHeight
-            // });
-        });
-        this.resizeObserver.observe(this.content);
-
-        if (this.anchor != null) {
-            this.setSticky = this.#hasAnchorSetSticky;
-            this.setRelative = this.#hasAnchorSetRelative;
-            this.isTopOrAbove = this.#hasAnchorIsTopOrAbove;
-
-            this.updateAnchorDimensions();
-            this.mutationObserver = new MutationObserver(() => {
-                this.updateAnchorDimensions();
-                this.updateVisibility();
-            });
-            this.mutationObserver.observe(this.anchor, {
-                childList: true
-            });
-
-            this.state = this.isTopOrAbove()
-                ? "sticky"
-                : "relative";
-            return;
-        }
-
-        this.setSticky = this.#noAnchorSetSticky;
-        this.setRelative = this.#noAnchorSetRelative;
-        this.isTopOrAbove = this.#noAnchorIsTopOrAbove;
-
-        this.container.style.height = `${this.maxVisible}px`;
-
-        this.state = this.isTopOrAbove()
-            ? "sticky"
-            : "relative";
-    }
-
-    setupSignals() {
-        window.addEventListener("scroll", () => this.requestScroll());
-        window.addEventListener("scrollend", () => this.endScroll());
-    }
-
-    requestScroll() {
-        const scrollY = window.scrollY;
-        const delta = this.lastScrollY - scrollY;
-
-        if (!this.duringScrollSession) {
-            this.scrollResistance += delta;
-            if (Math.abs(this.scrollResistance) < this.scrollThreshold) {
-                this.lastScrollY = scrollY;
-                return;
-            }
-            this.duringScrollSession = true;
-            this.react(delta);
-        }
-
-        this.react(delta);
-        this.lastScrollY = scrollY;
-    }
-
-    endScroll() {
-        this.scrollResistance = 0;
-        this.duringScrollSession = false;
-    }
-
-    react(scroll) {
-        if (!this.isTopOrAbove()) {
-            this.setRelative();
-            this.visible = this.maxVisible;
-            return;
-        }
-
-        this.setSticky();
-        this.visible = Math.max(
-            Math.min(
-                this.visible + scroll,
-                this.maxVisible
-            ), 0
-        );
-
-        this.updateVisibility();
-    }
-
-    updateVisibility() {
-        this.content.style.transform =
-            `translateY(${this.visible - this.maxVisible}px)`;
-
-        if (this.anchor != null) {
-            this.anchor.style.height =
-                `${this.anchorBaseHeight + this.visible}px`;
-        }
-    }
-
-    updateAnchorDimensions() {
-        const previousHeight = this.anchor.style.height;
-
-        this.anchor.style.height = "";
-
-        const anchorHeight = this.anchor.offsetHeight;
-        const headerHeight = this.content.offsetHeight;
-
-        this.anchorBaseHeight = anchorHeight - headerHeight;
-
-        this.anchor.style.height = previousHeight;
-    }
-
-    updateDimensions() {
-        this.maxVisible = this.content.offsetHeight;
-        this.visible = Math.min(
-            this.visible,
-            this.maxVisible
-        );
-    }
-
-    getAnchor(element) {
         const parent = element.parentElement;
+        this.anchor = parent && getComputedStyle(parent).position === 'sticky' ? parent : null;
+        this.surface = this.anchor ?? element;
+        this.primary = this.anchor?.querySelector(':scope > nav') ?? null;
 
-        if (
-            parent &&
-            getComputedStyle(parent).position === "sticky"
-        ) {
-            return parent;
+        const threshold = Number(element.dataset.persistentHeaderScrollThreshold ?? 16);
+        this.threshold = Number.isFinite(threshold) ? Math.max(0, threshold) : 16;
+        this.stickyTop = Number.parseFloat(getComputedStyle(this.surface).top) || 0;
+        this.lastScrollY = this.scrollPosition();
+        this.direction = 0;
+        this.travel = 0;
+        this.frame = null;
+        this.needsMeasurement = true;
+        this.reveal = false;
+        this.height = 0;
+        this.visible = 0;
+
+        if (!this.anchor) {
+            // Keep the header in normal flow; native sticky positioning follows scrolling.
+            this.surface.style.setProperty('position', 'sticky', 'important');
         }
 
-        return null;
+        this.observer = new ResizeObserver(() => {
+            this.needsMeasurement = true;
+            this.schedule();
+        });
+        this.observer.observe(element);
+
+        this.#setupSignals();
+        this.schedule();
     }
 
-    #hasAnchorIsTopOrAbove = () => {
-        return this.anchor.getBoundingClientRect().top <= 0;
+    #setupSignals() {
+        window.addEventListener('scroll', () => {
+            return this.schedule()
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            this.needsMeasurement = true;
+            this.schedule();
+        }, { passive: true });
+
+        window.addEventListener('focusin', () => {
+            this.reveal = true;
+            this.schedule();
+        });
     }
 
-    #hasAnchorSetRelative = () => {
-        if (this.state === "relative") return;
-        this.state = "relative";
-
-        this.content.style.transform = "";
+    scrollPosition() {
+        const maximum = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        return Math.max(0, Math.min(window.scrollY, maximum));
     }
 
-    #hasAnchorSetSticky = () => {
-        if (this.state === "sticky") return;
-        this.state = "sticky";
+    schedule() {
+        if (this.frame !== null) return;
+        this.frame = requestAnimationFrame(() => {
+            this.frame = null;
+            this.update();
+        });
     }
 
-    #noAnchorIsTopOrAbove = () => {
-        return this.container.getBoundingClientRect().top <= 0;
+    measure() {
+        const styles = getComputedStyle(this.container);
+        const height = this.container.offsetHeight
+            + (Number.parseFloat(styles.marginTop) || 0)
+            + (Number.parseFloat(styles.marginBottom) || 0);
+        const wasFullyVisible = this.height === 0 || this.visible === this.height;
+        this.visible = wasFullyVisible ? height : Math.min(this.visible, height);
+        this.height = height;
+        this.needsMeasurement = false;
     }
 
-    #noAnchorSetRelative = () => {
-        if (this.state === "relative") return;
-        this.state = "relative";
+    update() {
+        // Read layout before changing styles. No scroll handler changes layout height.
+        if (this.needsMeasurement) this.measure();
+        const scrollY = this.scrollPosition();
+        const delta = scrollY - this.lastScrollY;
+        const pinned = this.surface.getBoundingClientRect().top <= this.stickyTop + 0.5;
+        this.lastScrollY = scrollY;
 
-        this.content.style.position = "relative";
-        this.content.style.top = "";
-        this.content.style.left = "";
-        this.content.style.right = "";
+        if (!pinned || scrollY === 0 || this.reveal) {
+            this.visible = this.height;
+            this.direction = 0;
+            this.travel = 0;
+            this.reveal = false;
+        } else if (delta !== 0) {
+            this.applyScroll(delta);
+        }
 
-        this.content.style.transform = "";
+        this.render();
     }
 
-    #noAnchorSetSticky = () => {
-        if (this.state === "sticky") return;
-        this.state = "sticky";
+    applyScroll(delta) {
+        const direction = Math.sign(delta);
+        if (direction !== this.direction) {
+            this.direction = direction;
+            this.travel = 0;
+        }
 
-        this.content.style.position = "fixed";
-        this.content.style.top = "0";
-        this.content.style.left = "0";
-        this.content.style.right = "0";
+        // Apply only the distance beyond the dead zone, once per frame.
+        const before = Math.max(0, this.travel - this.threshold);
+        this.travel += Math.abs(delta);
+        const movement = Math.max(0, this.travel - this.threshold) - before;
+        this.visible = Math.max(0, Math.min(this.height, this.visible - direction * movement));
+    }
+
+    render() {
+        const hidden = this.height - this.visible;
+        const top = `${this.stickyTop - hidden}px`;
+        if (this.surface.style.top !== top) this.surface.style.top = top;
+
+        // Move the sticky surface upward while keeping its primary navigation visible.
+        // Its normal-flow footprint stays unchanged, so scroll anchoring has nothing to correct.
+        if (this.primary) {
+            const transform = hidden ? `translateY(${hidden}px)` : '';
+            if (this.primary.style.transform !== transform) this.primary.style.transform = transform;
+        }
     }
 }
 
-
-document.querySelectorAll(".persistent-header").forEach((element) => {
-    if (element.querySelector(".persistent-header-content"))
-        new PersistentHeader(element);
-});
+if (typeof document !== 'undefined') {
+    document.querySelectorAll('.persistent-header').forEach(element => {
+        if (element.querySelector('.persistent-header-content')) new PersistentHeader(element);
+    });
+}
