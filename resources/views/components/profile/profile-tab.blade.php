@@ -45,10 +45,10 @@
     {{-- Quick Stats / Info Cards --}}
     <div class="row g-3 mb-4">
         @foreach ($credentials as $cred)
-            <div class="col-sm-6 col-md-4">
+            <div class="sm:col-6 md:col-4">
                 <div class="stat-card p-3 h-100">
-                    <div class="text-muted small fw-semibold">{{ $cred['display1'] }}</div>
-                    <div class="fs-5 fw-bold text-dark mt-1 text-truncate">
+                    <div class="fg-3 small fw-semibold">{{ $cred['display1'] }}</div>
+                    <div class="fs-lg fw-bold fg-body mt-1 text-truncate">
                         {{ $user->{$cred['prop']} ?: ($cred['fallback'] ?? '') }}
                     </div>
                 </div>
@@ -57,18 +57,18 @@
     </div>
 
     {{-- Update Profile Form --}}
-    <div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="card border-0 shadow-sm rounded-9 p-4">
         <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
             <div>
-                <h2 class="h5 fw-bold mb-1 text-dark">Update personal information</h2>
-                <p class="text-muted small mb-0">Manage your username, email address, and contact phone number.</p>
+                <h2 class="h5 fw-bold mb-1 fg-body">Update personal information</h2>
+                <p class="fg-3 small mb-0">Manage your username, email address, and contact phone number.</p>
             </div>
             @if ($user->isAdmin())
-                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2">
+                <span class="badge bg-subtle-danger fg-danger border border-danger rounded-pill px-3 py-2">
                     <i class="bi bi-shield-lock-fill me-1"></i> {{ $roleLabel }}
                 </span>
             @else
-                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2">
+                <span class="badge bg-subtle-primary fg-primary border border-primary rounded-pill px-3 py-2">
                     <i class="bi bi-person me-1"></i> {{ $roleLabel }}
                 </span>
             @endif
@@ -80,15 +80,15 @@
 
             <div class="row g-3">
                 @foreach ($credentials as $cred)
-                    <div class="col-md-6">
+                    <div class="md:col-6">
                         <label for="{{ $cred['prop'] }}" class="form-label fw-semibold">
                             {{ $cred['display2'] }}
                             @if ($cred['required'])
-                                <span class="text-danger">*</span>
+                                <span class="fg-danger">*</span>
                             @endif
                         </label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 rounded-start-3">
+                            <span class="input-group-text bg-1 border-end-0 rounded-start-3">
                                 <i class="bi {{ $cred['icon'] }}"></i>
                             </span>
                             <input
@@ -110,15 +110,15 @@
                     </div>
                 @endforeach
 
-                <div class="col-md-6">
+                <div class="md:col-6">
                     <label for="account_role" class="form-label fw-semibold">Account role</label>
-                    <input type="text" class="form-control rounded-3 bg-light" id="account_role" value="{{ $roleLabel }}" disabled>
+                    <input type="text" class="form-control rounded-5 bg-1" id="account_role" value="{{ $roleLabel }}" disabled>
                     <div class="form-text small">Your role is managed automatically by LarpShop.</div>
                 </div>
             </div>
 
             <div class="mt-4 pt-3 border-top d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
+                <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
                     <i class="bi bi-check2-circle"></i>
                     <span>Save profile changes</span>
                 </button>

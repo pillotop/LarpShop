@@ -23,10 +23,10 @@
                         </a>
                     </div>
                     <div>
-                        <ul class="m-0 d-inline-block d-lg-flex align-items-center gap-4" style="list-style-type: none;">
+                        <ul class="m-0 d-inline-block lg:d-flex align-items-center gap-4" style="list-style-type: none;">
                             <div class="d-flex align-items-center gap-4">
                                 <li>
-                                    <button id="login-trigger-products" class="hover-button d-flex align-items-center border-0 p-1 rounded-2">
+                                    <button id="login-trigger-products" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
                                         Products
                                         <svg id="dropdown-arrow-products" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-products" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
@@ -34,7 +34,7 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <button id="login-trigger-pricing" class="hover-button d-flex align-items-center border-0 p-1 rounded-2">
+                                    <button id="login-trigger-pricing" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
                                         Pricing
                                         <svg id="dropdown-arrow-pricing" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-pricing" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
@@ -42,7 +42,7 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <button id="login-trigger-enterprise" class="hover-button d-flex align-items-center border-0 p-1 rounded-2">
+                                    <button id="login-trigger-enterprise" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
                                         Enterprise
                                         <svg id="dropdown-arrow-enterprise" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-enterprise" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
@@ -50,7 +50,7 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <button id="login-trigger-events" class="hover-button d-flex align-items-center border-0 p-1 rounded-2">
+                                    <button id="login-trigger-events" class="hover-button d-flex align-items-center border-0 p-1 rounded-4">
                                         Events
                                         <svg id="dropdown-arrow-events" class="dropdown-arrow" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                             <path id="dropdown-arrow-path-events" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
@@ -63,8 +63,8 @@
                 </div>
             </div>
         </nav>
-        <section class="position-absolute top-0 p-xl-5 p-lg-4 p-md-3 p-sm-2 p-1 h-100">
-            <svg class="larp-shop-vertical d-xxl-block d-none z-0" viewBox="0 0 65.990994 509.89802" version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+        <section class="position-absolute top-0 xl:p-5 lg:p-4 md:p-3 sm:p-2 p-1 h-100">
+            <svg class="larp-shop-vertical 2xl:d-block d-none z-0" viewBox="0 0 65.990994 509.89802" version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
                 <g id="svgGroup" stroke-linecap="round" fill-rule="nonzero" fill="#02c8f5" stroke="#00000000" stroke-width="0.5" transform="rotate(90,46.306995,39.034007)">
                     <g id="line-0">
                         <path id="char-0-0" d="M 24.756,86.609 H 5.273 V 22.156 h 7.581 v 58.191 h 11.902 z" />
@@ -82,7 +82,7 @@
         <section class="container z-0 border-start-dashed border-end-dashed border-thin overflow-hidden">
             <header>
                 <h1 class="my-4"> The next generation e-commerce platform </h1>
-                <svg class="larp-shop-horizontal d-xxl-none d-block" width="509.89801" height="65.990982" viewBox="-2 -2 509.89798 65.990983" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                <svg class="larp-shop-horizontal 2xl:d-none d-block" width="509.89801" height="65.990982" viewBox="-2 -2 509.89798 65.990983" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
                     <g stroke-linecap="round" fill-rule="nonzero" fill="#02c8f5" stroke="#00000000" stroke-width="0.5" transform="translate(-7.2730062,-23.350003)">
                         <g>
                             <path d="M 24.756,86.609 H 5.273 V 22.156 h 7.581 v 58.191 h 11.902 z" />
@@ -97,8 +97,8 @@
                     </g>
                 </svg>
             </header>
-            <div class="d-lg-flex vh-100">
-                <div class="d-block d-lg-flex justify-content-between align-items-center w-100">
+            <div class="lg:d-flex vh-100">
+                <div class="d-block lg:d-flex justify-content-between align-items-center w-100">
                     <div class="position-relative">
                         <div class="position-absolute z-0 top-50 start-50 translate-middle">
                             <svg width="149.63327mm" height="150.05292mm" viewBox="0 0 149.63327 150.05292" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
@@ -120,7 +120,7 @@
                         <x-auth.login-form/>
                     </div>
                     <div class="preview-box z-1 end-0 overflow-hidden">
-                        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-autoplay="true">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <div class="position-absolute z-1 start-50 top-50">

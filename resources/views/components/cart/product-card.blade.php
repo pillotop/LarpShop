@@ -50,29 +50,29 @@
                         src="{{ $product['image_url'] }}"
                         alt="{{ $product['image_alt'] }}"
                         loading="lazy"
-                        class="rounded-1 border-0 bg-white object-fit-cover"
+                        class="rounded-3 border-0 bg-white object-fit-cover"
                         {{-- change this ples --}}
                         style="width: 114px; height: 114px;"
                     />
                 @else
-                    <span class="rounded-3 border bg-light d-flex align-items-center justify-content-center text-secondary" style="width: 76px; height: 76px;" role="img" aria-label="No product image available">
-                        <i class="bi bi-image fs-3" aria-hidden="true"></i>
+                    <span class="rounded-5 border bg-1 d-flex align-items-center justify-content-center fg-secondary" style="width: 76px; height: 76px;" role="img" aria-label="No product image available">
+                        <i class="bi bi-image fs-xl" aria-hidden="true"></i>
                     </span>
                 @endif
             </a>
             <div class="flex-grow-1" style="min-with: 0;">
                 <a
                     href="{{ $product['url'] }}"
-                    class="fw-semibold text-dark text-decoration-none d-block text-break lh-sm mb-2"
+                    class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-2"
                 >
                     {{ $product['name'] }}
                 </a>
-                <div class="small text-muted">
+                <div class="small fg-3">
                     ${{ number_format($product['price'], 2) }} each
                 </div>
                 <div class="d-flex align-items-center justify-content-between gap-2 mt-2">
                     <div>
-                        <div class="quantity-picker d-inline-flex align-items-center bg-white border rounded-2"
+                        <div class="quantity-picker d-inline-flex align-items-center bg-white border rounded-4"
                              data-cart-quantity data-product-id="{{ $product['product_id'] }}"
                              data-set-cart-url="{{ route('cart.store') }}">
                             @csrf
@@ -86,7 +86,7 @@
                         </div>
                         <button
                             type="button"
-                            class="btn btn-sm cart-item-remove border-0 rounded-2 ms-1"
+                            class="btn btn-sm cart-item-remove border-0 rounded-4 ms-1"
                             data-cart-remove="{{ $product['product_id'] }}"
                             aria-label="Remove {{ $product['name'] }} from cart"
                         >

@@ -34,7 +34,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -50,12 +50,12 @@
             </ol>
         </nav>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="border-bottom pb-3 mb-4">
-                <h3 class="fw-bold text-dark mb-1">
-                    <i class="bi bi-folder-plus text-primary me-2"></i>Create Product Category
+                <h3 class="fw-bold fg-body mb-1">
+                    <i class="bi bi-folder-plus fg-primary me-2"></i>Create Product Category
                 </h3>
-                <p class="text-muted small mb-0">Add a new category to organize products across the marketplace.</p>
+                <p class="fg-3 small mb-0">Add a new category to organize products across the marketplace.</p>
             </div>
 
             <x-vendor.category-form

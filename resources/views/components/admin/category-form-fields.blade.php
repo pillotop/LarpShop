@@ -8,12 +8,12 @@
     <input type="text" name="name" maxlength="100" required class="form-control" value="{{ $category?->name }}">
 </div>
 <div class="mb-3">
-    <label class="form-label fw-semibold">Slug <small class="text-muted">(auto-generated if empty)</small></label>
+    <label class="form-label fw-semibold">Slug <small class="fg-3">(auto-generated if empty)</small></label>
     <input type="text" name="slug" maxlength="100" class="form-control" value="{{ $category?->slug }}">
 </div>
 <div class="mb-3">
     <label class="form-label fw-semibold">Parent category</label>
-    <select name="parent_id" class="form-select">
+    <select name="parent_id" class="form-control">
         <option value="">— None (top-level) —</option>
         @foreach ($parentOptions as $option)
             @continue($category && $option->category_id === $category->category_id)

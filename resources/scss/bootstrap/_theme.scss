@@ -1,0 +1,32 @@
+@use 'sass:map';
+@use 'sass:color';
+@use './colors' as palette;
+
+$app-colors: map.merge(palette.$color-primary, palette.$color-secondary);
+$app-colors: map.merge($app-colors, palette.$color-tertiary);
+$app-colors: map.merge($app-colors, palette.$color-complementary);
+$app-colors: map.merge($app-colors, palette.$color-background);
+
+// Bootstrap 6 themes use semantic roles instead of a single color value.
+@function roles($base) {
+    $contrast: if(sass(color.channel($base, 'lightness', $space: hsl) > 55): #000; else: #fff);
+    @return (
+        'base': $base,
+        'bg': $base,
+        'fg': light-dark(color-mix(in oklch, $base 65%, #000), color-mix(in oklch, $base 70%, #fff)),
+        'fg-emphasis': light-dark(color-mix(in oklch, $base 40%, #000), color-mix(in oklch, $base 40%, #fff)),
+        'bg-subtle': light-dark(color-mix(in oklch, $base 15%, #fff), color-mix(in oklch, $base 20%, #000)),
+        'bg-muted': light-dark(color-mix(in oklch, $base 25%, #fff), color-mix(in oklch, $base 30%, #000)),
+        'border': color-mix(in oklch, $base 60%, transparent),
+        'focus-ring': color-mix(in oklch, $base 50%, transparent),
+        'contrast': $contrast,
+    );
+}
+
+$theme-colors: (
+    'primary': roles(map.get($app-colors, 'primary-300')),
+    'secondary': roles(map.get($app-colors, 'secondary-300')),
+    'tertiary': roles(map.get($app-colors, 'tertiary-400')),
+    'complementary': roles(map.get($app-colors, 'complementary-400')),
+    'background': roles(map.get($app-colors, 'background-200')),
+);

@@ -1,8 +1,8 @@
 @props(['review'])
 
 <article class="mb-4 pb-3 border-bottom">
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2 small text-muted">
-        <span class="text-warning" aria-label="{{ $review->rating }} out of 5 stars">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-2 small fg-3">
+        <span class="fg-warning" aria-label="{{ $review->rating }} out of 5 stars">
             @for ($star = 1; $star <= 5; $star++)
                 <i
                     class="bi {{ $star <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"
@@ -15,13 +15,13 @@
             {{ $review->created_at->diffForHumans() }}
         </time>
         @if ($review->verified_purchase)
-            <span class="text-success">Verified purchase</span>
+            <span class="fg-success">Verified purchase</span>
         @endif
     </div>
 
     @if ($review->comment)
         <p class="mb-0 text-break" style="white-space: pre-line;">{{ $review->comment }}</p>
     @else
-        <p class="mb-0 text-muted">This customer left a rating without a comment.</p>
+        <p class="mb-0 fg-3">This customer left a rating without a comment.</p>
     @endif
 </article>

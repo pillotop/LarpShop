@@ -1,9 +1,9 @@
-<div id="auth-form" class="blur position-relative shadow border rounded-2 p-4">
+<div id="auth-form" class="blur position-relative shadow border rounded-4 p-4">
     <h3 class="primary-text" id="login-form-header">
         Sign in or create account
     </h3>
 
-    <p id="login-form-email-text" class="text-muted"></p>
+    <p id="login-form-email-text" class="fg-3"></p>
     <div id="login-form-status-text" class="form-text" role="status" aria-live="polite"></div>
 
     <form
@@ -115,7 +115,7 @@
         <button
             type="submit"
             id="login-form-primary-button"
-            class="w-100 border-0 rounded-2 p-2 my-2"
+            class="w-100 border-0 rounded-4 p-2 my-2"
             hidden
         >
             Continue

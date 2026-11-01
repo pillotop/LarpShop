@@ -59,7 +59,7 @@
     <header class="container sticky-top" style="background-color: #ffffff99;">
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories"
             :cart="$cart"
         />

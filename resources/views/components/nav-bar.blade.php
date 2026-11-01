@@ -6,7 +6,7 @@
 ])
 
 <nav class="navigation-bar position-relative z-1 py-2">
-    <div class="row gap-1 gap-lg-3">
+    <div class="row gap-1 lg:gap-3">
         <div class="col-1 d-flex align-items-center justify-content-center">
             <a href="{{ route('home') }}">
                 <img src="/images/larp_shop.jpg" class="rounded-circle logo-larpshop-logo">
@@ -16,7 +16,7 @@
             <form
                 action="{{ route('products.index') }}"
                 method="GET"
-                class="d-flex rounded-4 h-100"
+                class="d-flex rounded-9 h-100"
                 role="search"
             >
                 <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="cateogry selection" data-dropdown-trigger="categories">
@@ -25,7 +25,7 @@
                         <path class="dropdown-arrow-path" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                     </svg>
                     <template data-dropdown-template="categories">
-                        <div class="category-dropdown-menu rounded-3 shadow">
+                        <div class="category-dropdown-menu rounded-5 shadow">
                             @foreach ($productCategories as $category)
                                 <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
                             @endforeach
@@ -53,7 +53,7 @@
                 </button>
             </form>
         </div>
-        <div class="col-12 col-lg-3 d-flex align-items-center justify-content-between">
+        <div class="col-12 lg:col-3 d-flex align-items-center justify-content-between">
             <button
                 id="product-cart"
                 class="side-panel-trigger border-0 rounded-pill p-2"
@@ -81,7 +81,7 @@
                     <x-cart :data="$cart"/>
                 </template>
             </button>
-            <span data-cart-error class="small text-danger" role="status" aria-live="polite"></span>
+            <span data-cart-error class="small fg-danger" role="status" aria-live="polite"></span>
             @guest
                 <a href="{{ route('login') }}">
                     <button class="border-0 rounded-pill p-2" type="submit">
@@ -90,73 +90,73 @@
                 </a>
             @endguest
             @auth
-                <div class="dropdown">
-                    <button class="border-0 rounded-pill px-3 py-2 d-flex align-items-center gap-2 bg-light shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle fs-5 text-primary"></i>
+                <div class="position-relative">
+                    <button class="border-0 rounded-pill px-3 py-2 d-flex align-items-center gap-2 bg-1 shadow-sm" type="button" data-bs-toggle="menu" data-bs-placement="bottom-end" aria-expanded="false">
+                        <i class="bi bi-person-circle fs-lg fg-primary"></i>
                         <span class="fw-semibold text-truncate" style="max-width: 120px;">{{ Auth::user()->username }}</span>
                         <svg class="icon-16" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                         </svg>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 mt-1" style="min-width: 220px;">
+                    <div class="menu  shadow border-0 rounded-5 p-2 mt-1" style="min-width: 220px;">
 
                         @if (Auth::user()->isAdmin())
-                            <li>
-                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2 text-danger fw-semibold" href="{{ route('admin.dashboard') }}">
+
+                                <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2 fg-danger fw-semibold" href="{{ route('admin.dashboard') }}">
                                     <i class="bi bi-speedometer2"></i>
                                     <span>Bảng điều khiển Admin</span>
                                 </a>
-                            </li>
+
                         @endif
-                        <li>
-                            <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}">
+
+                            <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}">
                                 <i class="bi bi-person-gear"></i>
                                 <span>Hồ sơ tài khoản</span>
                             </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}#pane-vendor">
+
+
+                            <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}#pane-vendor">
                                 <i class="bi bi-shop-window"></i>
                                 <span>My stores</span>
                             </a>
-                        </li>
+
                         @if (Auth::user()->isVendor())
-                            <li>
-                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2 text-primary fw-semibold" href="{{ route('vendor.products.index') }}">
+
+                                <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2 fg-primary fw-semibold" href="{{ route('vendor.products.index') }}">
                                     <i class="bi bi-box-seam"></i>
                                     <span>Sản phẩm của tôi</span>
                                 </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.orders.index') }}">
+
+
+                                <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.orders.index') }}">
                                     <i class="bi bi-truck"></i>
                                     <span>Store Orders</span>
                                 </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.categories.index') }}">
+
+
+                                <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.categories.index') }}">
                                     <i class="bi bi-tags"></i>
                                     <span>Danh mục của tôi</span>
                                 </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item rounded-2 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.reports.index') }}">
+
+
+                                <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.reports.index') }}">
                                     <i class="bi bi-graph-up"></i>
                                     <span>Store Reports</span>
                                 </a>
-                            </li>
+
                         @endif
-                        <li><hr class="dropdown-divider my-1"></li>
-                        <li>
+                        <hr class="menu-divider my-1">
+
                             <form action="{{ route('logout') }}" method="post" class="m-0">
                                 @csrf
-                                <button type="submit" class="dropdown-item rounded-2 py-2 text-danger d-flex align-items-center gap-2">
+                                <button type="submit" class="menu-item rounded-4 py-2 fg-danger d-flex align-items-center gap-2">
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>Đăng xuất</span>
                                 </button>
                             </form>
-                        </li>
-                    </ul>
+
+                    </div>
                 </div>
             @endauth
         </div>

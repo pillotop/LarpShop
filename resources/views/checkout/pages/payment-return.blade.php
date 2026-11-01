@@ -19,7 +19,7 @@
             @csrf
             <button
                 type="submit"
-                class="btn btn-primary"
+                class="btn btn-solid theme-primary"
             >
                 Confirm payment
             </button>

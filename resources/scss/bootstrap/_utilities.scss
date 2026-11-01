@@ -1,0 +1,15 @@
+@use './theme';
+
+// Project palette utilities supplement Bootstrap's semantic foreground/backgrounds.
+@layer utilities {
+    @each $name, $value in theme.$app-colors {
+        .fg-#{$name} { color: $value !important; }
+        .bg-#{$name} { background-color: $value !important; }
+    }
+}
+
+:root, :host {
+    @each $name, $value in theme.$app-colors {
+        --color-#{$name}: #{$value};
+    }
+}

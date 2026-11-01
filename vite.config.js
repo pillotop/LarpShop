@@ -21,6 +21,7 @@ export default defineConfig({
             input: [
                 ...entriesIn('resources/css', '.css'),
                 ...entriesIn('resources/js', '.js'),
+                'resources/scss/app.scss',
             ],
             refresh: true,
         }),

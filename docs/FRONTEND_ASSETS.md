@@ -1,6 +1,6 @@
 # Frontend assets
 
-LarpShop uses npm and Vite to build Bootstrap, Bootstrap Icons, project CSS, and browser JavaScript. Laravel continues to render Blade pages.
+LarpShop uses npm and Vite to build Bootstrap 6.0.0-alpha.1, Bootstrap Icons, project CSS, and browser JavaScript. Laravel continues to render Blade pages.
 
 ## Development
 
@@ -46,10 +46,12 @@ The default image excludes host-generated assets, local Vite markers, local envi
 
 ## Source and loading conventions
 
-- Keep CSS in `resources/css` and JavaScript in `resources/js`.
+- Keep CSS in `resources/css`, Bootstrap Sass configuration in `resources/scss`, and JavaScript in `resources/js`.
 - `vite.config.js` discovers CSS and JavaScript entries recursively. Literal wildcard strings are not used as entry filenames.
-- Common layouts load `resources/css/app.css` and `resources/js/app.js`.
-- `app.css` imports Bootstrap's compiled CSS and Bootstrap Icons before custom styles.
+- Common layouts load `resources/scss/app.scss`, `resources/css/app.css`, and `resources/js/app.js`, in that order.
+- `app.scss` loads Bootstrap through the Sass module system. Palette definitions live in `resources/scss/bootstrap/_colors.scss`; `_theme.scss` supplies semantic color-role maps and `_utilities.scss` adds project foreground/background utilities. The existing 0–5 spacing values are explicitly retained.
+- The palette also generates `--color-*` CSS variables for existing project styles. Examples include `.fg-primary-200`, `.bg-secondary-300`, and `var(--color-primary-300)`.
+- `app.css` imports Bootstrap Icons and adds project CSS. Do not also import the precompiled Bootstrap CSS, which would duplicate or override the Sass theme. Bootstrap 6 source CSS uses unprefixed tokens such as `--primary-base`; project palette tokens retain their `--color-*` names.
 - `app.js` exposes `window.bootstrap` for existing Blade handlers and initializes the shared cart modules.
 - Page component modules import `../app.js` so shared initialization runs before their own code. The two cart modules are loaded by `app.js` itself and do not import it back.
 - Load page-specific assets through grouped `@vite([...])` directives. Keep layout-wide assets in the layout.
@@ -61,7 +63,9 @@ Legacy raw HTML prototypes under `resources/views/*.html` retain their original 
 
 ## Verification
 
-- Production build succeeds and all 30 asset entry paths referenced by Blade exist in the manifest.
+Current Bootstrap 6 migration checks are recorded in [Bootstrap 6 migration](BOOTSTRAP_6_MIGRATION.md). The checks below describe the earlier Vite migration.
+
+- Production build succeeds and all 31 asset entry paths referenced by Blade exist in the manifest.
 - Browser smoke checks: homepage and login render without JavaScript console errors; the cart offcanvas opens and closes using the npm Bootstrap build.
 - Feature regression checks: 38 tests passed, 252 assertions (`ProductDetailTest`, `CheckoutPageTest`, `AccountVendorTest`, `AdminOrderTest`).
 - Full `view:cache` currently fails on the existing missing Breeze component `application-logo`. The view cache was cleared after this check.

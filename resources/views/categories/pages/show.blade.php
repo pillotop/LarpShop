@@ -26,14 +26,14 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories"
             :cart="$cart"
         />
         <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
             <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
                 <li>
-                    <button class="nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="offcanvas">
+                    <button class="nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="drawer">
                         <svg class="icon-16">
                             <use href="/images/icons.svg#settings-sliders"></use>
                         </svg>
@@ -84,7 +84,7 @@
                                         </button>
                                         <template id="{{ $loop->index }}">
                                             <div class="subcategory-banner">
-                                                <div class="ratio ratio-16x9">
+                                                <div class="media-frame ratio-16x9">
                                                     <img
                                                         class="object-fit-cover"
                                                         {{-- src="{{ asset('images/' . $childCategory->images) }}" --}}
@@ -118,10 +118,10 @@
                 </x-two-arrow-scroller>
             @else
                 <div class="d-flex flex-column justify-content-center align-items-center text-center py-5" style="min-height: 350px;">
-                    <i class="bi bi-box-seam display-4 text-secondary mb-3"></i>
-                    <h3 class="h4 fw-bold text-dark">No products found in this category</h3>
-                    <p class="text-muted">Check back later or explore other categories.</p>
-                    <a href="{{ route('home') }}" class="btn btn-outline-primary mt-2">Back to Home</a>
+                    <i class="bi bi-box-seam display-4 fg-secondary mb-3"></i>
+                    <h3 class="h4 fw-bold fg-body">No products found in this category</h3>
+                    <p class="fg-3">Check back later or explore other categories.</p>
+                    <a href="{{ route('home') }}" class="btn btn-outline theme-primary mt-2">Back to Home</a>
                 </div>
             @endif
         </section>

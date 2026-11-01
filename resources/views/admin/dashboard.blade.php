@@ -10,11 +10,11 @@
 
     {{-- Main Row: Pending Vendor Requests & Recent Active Vendors Components --}}
     <div class="row g-4">
-        <div class="col-12 col-xl-8">
+        <div class="col-12 xl:col-8">
             <x-admin.pending-vendor-requests :pending-vendor-requests="$pendingVendorRequests" :metrics="$metrics" />
         </div>
 
-        <div class="col-12 col-xl-4">
+        <div class="col-12 xl:col-4">
             <x-admin.recent-active-vendors :recent-vendors="$recentVendors" />
         </div>
     </div>

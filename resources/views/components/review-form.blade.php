@@ -7,10 +7,10 @@
 
 <details
     id="{{ $id }}"
-    class="border rounded-3 p-3 mt-3"
+    class="border rounded-5 p-3 mt-3"
     @if ($restore && $formErrors->any()) open @endif
 >
-    <summary class="btn btn-outline-primary rounded-pill px-4">Write a review</summary>
+    <summary class="btn btn-outline theme-primary rounded-pill px-4">Write a review</summary>
 
     <form
         action="{{ route('reviews.store', $product) }}"
@@ -22,7 +22,7 @@
         <p>Review for <strong>{{ $product->name }}</strong></p>
 
         @if ($formErrors->any())
-            <div class="alert alert-danger" role="alert">
+            <div class="alert theme-danger" role="alert">
                 <ul class="mb-0">
                     @foreach ($formErrors->all() as $error)
                         <li>{{ $error }}</li>
@@ -36,7 +36,7 @@
             <select
                 id="{{ $id }}-rating"
                 name="rating"
-                class="form-select"
+                class="form-control"
                 required
             >
                 <option value="">Choose a rating</option>
@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary rounded-pill px-4">
+        <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4">
             Submit review
         </button>
     </form>

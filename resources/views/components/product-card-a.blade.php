@@ -22,7 +22,7 @@
         'product' => $product->product_id,
         'slug' => $product->slug,
     ]) }}">
-        <div class="card-img-top ratio ratio-1x1 overflow-hidden">
+        <div class="card-img-top media-frame ratio-1x1 overflow-hidden">
             <img class="object-fit-cover" loading="lazy"
                 src="{{ $imagePath }}"
                 alt="{{ $imageAlt }}">
@@ -35,7 +35,7 @@
                 {{ $product->description }}
             </div>
             <div class="d-flex flex-wrap justify-content-start align-items-baseline">
-                <div class="me-1 me-xl-2 fw-bold text-dark">
+                <div class="me-1 xl:me-2 fw-bold fg-body">
                     <span class="small" style="vertical-align: 0.65ex; margin-right: 2px;">$</span>
                     <span class="h2">{{ $dollars }}</span>
                     <span class="small" style="vertical-align: 0.75ex;">{{ $cents }}</span>

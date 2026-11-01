@@ -9,17 +9,20 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
         @vite([
-            'resources/css/icons.css',
+            'resources/scss/app.scss',
             'resources/css/app.css',
+            'resources/js/app.js',
+        ])
+        @vite([
+            'resources/css/icons.css',
             'resources/css/components/dropdown.css',
             'resources/css/components/persistent_header.css',
         ])
         <title> Supports </title>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
     <body>
-        <header class="position-relative d-flex justify-content-center p-lg-4 p-2">
+        <header class="position-relative d-flex justify-content-center lg:p-4 p-2">
             <svg width="509.89801" height="65.990982" viewBox="-2 -2 509.89798 65.990983" version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
                 <g id="svgGroup" stroke-linecap="round" fill-rule="nonzero" fill="#02c8f5" stroke="#00000000" stroke-width="0.5" transform="translate(-7.2730062,-23.350003)">
                     <g id="line-0">
@@ -41,21 +44,21 @@
                 'resources/css/components/navigation_bar.css',
             ])
             <nav class="navigation-bar position-relative z-1 py-2" style="background-color: lightgray">
-                <div class="row gap-1 gap-lg-3">
+                <div class="row gap-1 lg:gap-3">
                     <div class="col-1 d-flex align-items-center justify-content-center">
                         <a href="/">
                             <img src="/images/larp_shop.png" class="rounded-circle logo-larpshop-logo">
                         </a>
                     </div>
-                    <div id="search-bar" class="col-10 col-lg-7">
-                        <form class="d-flex rounded-4 h-100">
+                    <div id="search-bar" class="col-10 lg:col-7">
+                        <form class="d-flex rounded-9 h-100">
                             <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="category selection" data-dropdown-trigger="categories">
                                 <span> Categories </span>
                                 <svg class="dropdown-arrow icon-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                     <path class="dropdown-arrow-path" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                                 </svg>
                                 <template data-dropdown-template="categories">
-                                    <div class="dropdown-menu rounded-3 shadow">
+                                    <div class="menu rounded-5 shadow">
                                         <a class="category-item" href="/categories/motors">Motors</a>
                                         <a class="category-item" href="/categories/electronics">Electronics</a>
                                         <a class="category-item" href="/categories/collectibles">Collectibles</a>
@@ -75,7 +78,7 @@
                             </button>
                         </form>
                     </div>
-                    <div class="col-12 col-lg-3 d-lg-flex align-items-center justify-content-between">
+                    <div class="col-12 lg:col-3 lg:d-flex align-items-center justify-content-between">
                         <button class="border-0 rounded-pill p-2" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                                 <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
@@ -93,7 +96,7 @@
             <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
                 <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
                     <li>
-                        <button class="nav-button rounded-pill border-0" data-bs-target="#side-modal" data-bs-toggle="modal">
+                        <button class="nav-button rounded-pill border-0" data-bs-target="#side-modal" data-bs-toggle="dialog">
                             <svg class="icon-16">
                                 <use href="/images/icons.svg#settings-sliders"></use>
                             </svg>
@@ -133,83 +136,77 @@
             </div>
             <h1 class="fw-bold text-caplitalize"> Customers frequently asked questions </h1>
             <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            How do I change the notification settings
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <details id="collapseOne" class="accordion-item" name="accordionExample" open>
+                    <summary class="accordion-header">
+                        How do I change the notification settings
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
                         <div class="accordion-body">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum
                         </div>
                     </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            How can i change my password
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                </details>
+                <details id="collapseTwo" class="accordion-item" name="accordionExample">
+                    <summary class="accordion-header">
+                        How can i change my password
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
                         <div class="accordion-body">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum
                         </div>
                     </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            How can i update my address
-                        </button>
-                    </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                </details>
+                <details id="collapseThree" class="accordion-item" name="accordionExample">
+                    <summary class="accordion-header">
+                        How can i update my address
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
                         <div class="accordion-body">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum
                         </div>
                     </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#change-username" aria-expanded="false" aria-controls="change-username">
-                            How can i change my username
-                        </button>
-                    </h2>
-                    <div id="change-username" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                </details>
+                <details id="change-username" class="accordion-item" name="accordionExample">
+                    <summary class="accordion-header">
+                        How can i change my username
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
                         <div class="accordion-body">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum
                         </div>
                     </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#create-account" aria-expanded="false" aria-controls="create-account">
-                            How do I create a Larp Shop account
-                        </button>
-                    </h2>
-                    <div id="create-account" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                </details>
+                <details id="create-account" class="accordion-item" name="accordionExample">
+                    <summary class="accordion-header">
+                        How do I create a Larp Shop account
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
                         <div class="accordion-body">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum
                         </div>
                     </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#larp" aria-expanded="false" aria-controls="larp">
-                            How do I larp
-                        </button>
-                    </h2>
-                    <div id="larp" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                </details>
+                <details id="larp" class="accordion-item" name="accordionExample">
+                    <summary class="accordion-header">
+                        How do I larp
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
                         <div class="accordion-body">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum
                         </div>
                     </div>
-                </div>
+                </details>
             </div>
         </main>
         <footer class="position-relative fixed-bottom d-block w-100 border-top-dashed border-start-dashed border-end-dashed border-thin p-4">
             <div class="container primary-container">
-                <div class="row row-cols-2 row-cols-lg-3 w-100 my-4">
+                <div class="row row-cols-2 lg:row-cols-3 w-100 my-4">
                     <div class="col">
                         <h4 class="text-uppercase"> COMPANY INFO </h4>
                         <ul class="p-0" style="list-style-type: none;">
@@ -239,8 +236,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="d-md-flex d-sm-block justify-content-center align-items-center gap-5">
-                    <button type="button" class="hover-button p-2 border-0 rounded-3"> Language </button>
+                <div class="md:d-flex sm:d-block justify-content-center align-items-center gap-5">
+                    <button type="button" class="hover-button p-2 border-0 rounded-5"> Language </button>
                     <div> Terms of Service </div>
                     <div> Legal </div>
                     <div> Privacy Policy </div>

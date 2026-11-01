@@ -26,12 +26,12 @@
 
 <div class="tab-pane fade" id="pane-vendor" role="tabpanel" aria-labelledby="tab-vendor-info">
     <div class="row g-3">
-        <div class="col-12 col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 p-2">
+        <div class="col-12 md:col-4">
+            <div class="card border-0 shadow-sm rounded-9 p-2">
                 <x-profile.nav-tabs id="vendorTabs" :panes="$panes" :active-id="$activeId" aria-label="Stores" />
             </div>
         </div>
-        <div class="col-12 col-md-8">
+        <div class="col-12 md:col-8">
             <div class="tab-content" id="vendorTabContent">
                 @foreach ($vendors as $vendor)
                     <x-profile.vendor-store-pane :vendor="$vendor" :active="$activeId === 'tab-vendor-'.$vendor->vendor_id" />

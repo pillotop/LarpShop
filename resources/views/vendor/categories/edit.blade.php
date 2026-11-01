@@ -34,7 +34,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -50,24 +50,24 @@
             </ol>
         </nav>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom pb-3 mb-4">
                 <div>
-                    <h3 class="fw-bold text-dark mb-1">
-                        <i class="bi bi-pencil-square text-primary me-2"></i>Edit Category
+                    <h3 class="fw-bold fg-body mb-1">
+                        <i class="bi bi-pencil-square fg-primary me-2"></i>Edit Category
                     </h3>
-                    <p class="text-muted small mb-0">Update details for <strong>{{ $category->name }}</strong>.</p>
+                    <p class="fg-3 small mb-0">Update details for <strong>{{ $category->name }}</strong>.</p>
                 </div>
                 <div>
                     <form action="{{ route('vendor.categories.toggle-status', $category->category_id) }}" method="POST" class="m-0">
                         @csrf
                         @method('PATCH')
                         @if ($category->is_active)
-                            <button type="submit" class="btn btn-outline-danger rounded-pill px-3">
+                            <button type="submit" class="btn btn-outline theme-danger rounded-pill px-3">
                                 <i class="bi bi-slash-circle me-1"></i>Disable Category
                             </button>
                         @else
-                            <button type="submit" class="btn btn-outline-success rounded-pill px-3">
+                            <button type="submit" class="btn btn-outline theme-success rounded-pill px-3">
                                 <i class="bi bi-check-circle me-1"></i>Enable Category
                             </button>
                         @endif

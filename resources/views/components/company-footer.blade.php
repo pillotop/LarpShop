@@ -1,6 +1,6 @@
 <footer class="blur company-footer position-relative fixed-bottom d-block w-100 border-top-dashed border-start-dashed border-end-dashed border-thin p-4">
     <div class="container">
-        <div class="row row-cols-2 row-cols-lg-3 w-100 my-4">
+        <div class="row row-cols-2 lg:row-cols-3 w-100 my-4">
             @foreach ($sections as $section)
                 <div class="col">
                     <h4 class="text-uppercase">
@@ -23,8 +23,8 @@
             @endforeach
         </div>
 
-        <div class="d-md-flex d-sm-block justify-content-center align-items-center gap-5">
-            <button type="button" class="hover-button p-2 border-0 rounded-3">
+        <div class="md:d-flex sm:d-block justify-content-center align-items-center gap-5">
+            <button type="button" class="hover-button p-2 border-0 rounded-5">
                 Language
             </button>
 

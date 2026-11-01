@@ -39,14 +39,14 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories"
             :cart="$cart"
         />
         <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
             <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
                 <li>
-                    <button class="nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="offcanvas">
+                    <button class="nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="drawer">
                         <svg class="icon-16">
                             <use href="/images/icons.svg#settings-sliders"></use>
                         </svg>
@@ -90,9 +90,9 @@
         <section class="container">
             {{ Breadcrumbs::render('product', $product) }}
             <div class="row g-4 my-4">
-                <div class="col-12 col-lg-10 mt-4">
+                <div class="col-12 lg:col-10 mt-4">
                     <div class="row">
-                        <div class="d-block col-12 col-lg-6 h-100">
+                        <div class="d-block col-12 lg:col-6 h-100">
                             <div class="carousel slide position-relative" id="previewCarousel">
                                 <div class="carousel-inner rounded overflow-hidden">
                                     @forelse ($product->images as $image)
@@ -150,9 +150,9 @@
                                             @csrf
                                             <label for="product-purchase-quantity" class="form-label mb-0">Quantity</label>
                                             <div class="input-group" style="max-width: 10rem;">
-                                                <button type="button" data-quantity-decrement class="btn btn-light fw-semibold" aria-label="Decrease quantity">−</button>
+                                                <button type="button" data-quantity-decrement class="btn btn-solid theme-secondary fw-semibold" aria-label="Decrease quantity">−</button>
                                                 <input id="product-purchase-quantity" data-quantity-counter type="number" min="0" step="1" value="1" class="form-control text-center">
-                                                <button type="button" data-quantity-increment class="btn btn-light fw-semibold" aria-label="Increase quantity">+</button>
+                                                <button type="button" data-quantity-increment class="btn btn-solid theme-secondary fw-semibold" aria-label="Increase quantity">+</button>
                                             </div>
                                             <a href="#" class="w-100">
                                                 <button type="button" class="w-100 button-primary">Larp it now</button>
@@ -164,35 +164,35 @@
                                 </article>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6" data-bs-spy="scroll" data-bs-target="#product" daba-bs-smooth-scroll="true">
+                        <div class="col-12 lg:col-6" data-bs-spy="scroll" data-bs-target="#product" daba-bs-smooth-scroll="true">
                             <div id="product-header" class="mb-4 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <span class="badge bg-secondary">
                                         <i class="bi bi-shop me-1"></i>{{ $product->vendor?->store_name ?? 'LarpShop Partner' }}
                                     </span>
                                     @if ($product->category)
-                                        <a href="{{ route('categories.show', ['slug' => $product->category->slug]) }}" class="badge bg-light text-dark text-decoration-none border">
+                                        <a href="{{ route('categories.show', ['slug' => $product->category->slug]) }}" class="badge bg-1 fg-body text-decoration-none border">
                                             {{ $product->category->name }}
                                         </a>
                                     @endif
                                 </div>
                                 <h1 class="h3 mb-3">{{ $product->name }}</h1>
                                 <x-wishlist.button :product="$product" />
-                                <p class="text-secondary mb-4">{{ $product->description }}</p>
+                                <p class="fg-secondary mb-4">{{ $product->description }}</p>
 
                                 <div class="d-flex align-items-baseline gap-2">
-                                    <span class="fs-1 fw-bold text-primary">${{ number_format($product->price, 2) }}</span>
+                                    <span class="fs-3xl fw-bold fg-primary">${{ number_format($product->price, 2) }}</span>
                                     @if ($product->stock > 0)
-                                        <span class="text-success small">In stock ({{ $product->stock }})</span>
+                                        <span class="fg-success small">In stock ({{ $product->stock }})</span>
                                     @else
-                                        <span class="text-danger small">Out of stock</span>
+                                        <span class="fg-danger small">Out of stock</span>
                                     @endif
                                 </div>
                                 <x-rating-container average-rating="{{ $product->average_rating }}" total-reviews="{{ $product->total_reviews }}" />
                                 @if ($product->vendor)
                                     <div class="mt-2 mb-3">
-                                        <span class="text-muted small">Sold by:</span>
-                                        <a href="{{ route('vendors.show', ['vendor' => $product->vendor->vendor_id]) }}" class="text-primary text-decoration-none fw-semibold">
+                                        <span class="fg-3 small">Sold by:</span>
+                                        <a href="{{ route('vendors.show', ['vendor' => $product->vendor->vendor_id]) }}" class="fg-primary text-decoration-none fw-semibold">
                                             <i class="bi bi-shop me-1"></i>{{ $product->vendor->store_name }}
                                         </a>
                                     </div>
@@ -203,21 +203,21 @@
                                 @if ($product->relationLoaded('variants') ? $product->variants->where('is_active', true)->isNotEmpty() : $product->variants()->active()->exists())
                                     <div class="d-flex flex-wrap gap-2">
                                         @foreach (($product->relationLoaded('variants') ? $product->variants->where('is_active', true) : $product->variants()->active()->get()) as $variant)
-                                            <div class="border rounded-3 p-2 px-3 bg-light d-flex align-items-center gap-2">
+                                            <div class="border rounded-5 p-2 px-3 bg-1 d-flex align-items-center gap-2">
                                                 <div>
                                                     <div class="fw-semibold small">{{ $variant->name }}</div>
-                                                    <div class="text-success small fw-bold">${{ number_format($variant->price, 2) }}</div>
+                                                    <div class="fg-success small fw-bold">${{ number_format($variant->price, 2) }}</div>
                                                 </div>
                                                 @if ($variant->stock <= 0)
                                                     <span class="badge bg-danger small ms-1">Out of Stock</span>
                                                 @else
-                                                    <span class="badge bg-secondary-subtle text-dark small ms-1">{{ $variant->stock }} left</span>
+                                                    <span class="badge bg-subtle-secondary fg-body small ms-1">{{ $variant->stock }} left</span>
                                                 @endif
                                             </div>
                                         @endforeach
                                     </div>
                                 @else
-                                    <p class="text-muted small mb-0">Standard edition — base product configuration.</p>
+                                    <p class="fg-3 small mb-0">Standard edition — base product configuration.</p>
                                 @endif
                             </div>
                             <div id="shipping-options" class="mb-4 border-bottom">
@@ -225,15 +225,15 @@
                                     <h1 class="h5 mb-3">Choose how you'll get this product</h1>
 
                                     <label class="d-flex align-items-center justify-content-start gap-2 mb-2" style="cursor: pointer;">
-                                        <i class="bi bi-shop fs-5"></i>
-                                        <input name="means" type="radio" class="form-check-input mt-0">
+                                        <i class="bi bi-shop fs-lg"></i>
+                                        <input name="means" type="radio" class="radio mt-0">
                                         <span class="fw-bold small">Get it at the front</span>
-                                        <span class="text-muted small">or...</span>
+                                        <span class="fg-3 small">or...</span>
                                     </label>
 
                                     <label class="d-flex align-items-center justify-content-start gap-2" style="cursor: pointer;">
-                                        <i class="bi bi-truck fs-5"></i>
-                                        <input name="means" type="radio" class="form-check-input mt-0">
+                                        <i class="bi bi-truck fs-lg"></i>
+                                        <input name="means" type="radio" class="radio mt-0">
                                         <span class="fw-bold small">We'll head straight to your house</span>
                                     </label>
                                 </form>
@@ -244,11 +244,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-2 sticky-lg-top">
-                    <nav id="product" class="d-none d-lg-flex flex-column align-items-stretch">
-                        <nav class="nav nav-pills flex-column">
+                <div class="col-12 lg:col-2 lg:sticky-top">
+                    <nav id="product" class="d-none lg:d-flex flex-column align-items-stretch">
+                        <nav class="nav nav flex-column">
                             <a class="nav-link text-truncate" href="#product-header">{{ $product->name }}</a>
-                            <nav class="nav nav-pills flex-column">
+                            <nav class="nav nav flex-column">
                                 <a class="nav-link ms-3 my-1" href="#product-variants">Product variants</a>
                                 <a class="nav-link ms-3 my-1" href="#shipping-options">Shipping options</a>
                                 <a class="nav-link ms-3 my-1" href="#warranty">Warranty</a>
@@ -256,29 +256,27 @@
                         </nav>
                     </nav>
                     <div class="accordion accordion-flush" id="aside">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq" aria-expanded="false">
-                                    Frequently asked questions
-                                </button>
-                            </h2>
-                            <div id="faq" class="accordion-collapse collapse" data-bs-parent="#aside">
+                        <details id="faq" class="accordion-item" name="aside">
+                            <summary class="accordion-header">
+                                Frequently asked questions
+                                <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                            </summary>
+                            <div class="accordion-panel">
                                 <div class="accordion-body">...</div>
                             </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#seller-options" aria-expanded="false">
-                                    Seller information
-                                </button>
-                            </h2>
-                            <div id="seller-options" class="accordion-collapse collapse" data-bs-parent="#aside">
+                        </details>
+                        <details id="seller-options" class="accordion-item" name="aside">
+                            <summary class="accordion-header">
+                                Seller information
+                                <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                            </summary>
+                            <div class="accordion-panel">
                                 <div class="accordion-body">
                                     <p class="mb-1 fw-bold">{{ $product->vendor?->store_name ?? 'LarpShop Partner' }}</p>
-                                    <p class="small text-muted mb-0">Status: {{ ucfirst($product->vendor?->status ?? 'active') }}</p>
+                                    <p class="small fg-3 mb-0">Status: {{ ucfirst($product->vendor?->status ?? 'active') }}</p>
                                 </div>
                             </div>
-                        </div>
+                        </details>
                     </div>
                 </div>
             </div>
@@ -302,7 +300,7 @@
                     </ul>
                 </x-two-arrow-scroller>
             @else
-                <div class="p-4 rounded bg-light text-center text-muted">
+                <div class="p-4 rounded bg-1 text-center fg-3">
                     <p class="mb-0">No similar products found in this category.</p>
                 </div>
             @endif

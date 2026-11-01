@@ -14,7 +14,7 @@
     >
     <button
         type="submit"
-        class="btn btn-primary w-100 py-3"
+        class="btn btn-solid theme-primary w-100 py-3"
         @disabled(! $canCreatePayment)
     >
         Continue to PayPal

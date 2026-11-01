@@ -6,7 +6,7 @@
 ])
 
 <ul
-    {{ $attributes->class(['nav nav-pills profile-nav-tabs gap-2', 'flex-column' => $orientation === 'vertical']) }}
+    {{ $attributes->class(['nav profile-nav-tabs gap-2', 'flex-column' => $orientation === 'vertical']) }}
     id="{{ $id }}"
     aria-orientation="{{ $orientation }}"
     role="tablist"
@@ -17,7 +17,7 @@
             <button
                 class="nav-link w-100 text-start d-flex align-items-center gap-2 {{ $active ? 'active' : '' }}"
                 id="{{ $pane['id'] }}"
-                data-bs-toggle="pill"
+                data-bs-toggle="tab"
                 data-bs-target="{{ $pane['target_id'] }}"
                 type="button"
                 role="tab"
@@ -25,11 +25,11 @@
                 aria-selected="{{ $active ? 'true' : 'false' }}"
             >
                 @if (!empty($pane['icon']))
-                    <i class="bi {{ $pane['icon'] }} fs-5"></i>
+                    <i class="bi {{ $pane['icon'] }} fs-lg"></i>
                 @endif
                 <span>{{ $pane['label'] }}</span>
                 @if (!empty($pane['badge']))
-                    <span class="badge bg-warning text-dark ms-auto">{{ $pane['badge'] }}</span>
+                    <span class="badge bg-warning fg-body ms-auto">{{ $pane['badge'] }}</span>
                 @endif
             </button>
         </li>

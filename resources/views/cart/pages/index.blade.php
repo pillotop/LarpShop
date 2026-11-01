@@ -27,11 +27,11 @@
             'resources/css/top_header.css',
             'resources/css/components/navigation_bar.css',
         ])
-        <x-nav-bar product-cart-bs-target="#side-panel" product-cart-bs-toggle="offcanvas" :product-categories="$productCategories" :cart="$cart" />
+        <x-nav-bar product-cart-bs-target="#side-panel" product-cart-bs-toggle="drawer" :product-categories="$productCategories" :cart="$cart" />
         <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
             <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
                 <li>
-                    <button type="button" class="side-panel-trigger nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="offcanvas" data-side-panel-target="#settings">
+                    <button type="button" class="side-panel-trigger nav-button rounded-pill border-0" data-bs-target="#side-panel" data-bs-toggle="drawer" data-side-panel-target="#settings">
                         <svg class="icon-16">
                             <use href="/images/icons.svg#settings-sliders"></use>
                         </svg>

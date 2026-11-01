@@ -5,10 +5,10 @@
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+    <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
         <header class="pb-3 border-bottom mb-4">
-            <h1 class="h5 fw-bold text-dark mb-1"><i class="bi bi-receipt text-primary me-2"></i>Order Investigation</h1>
-            <p class="text-muted small mb-0">Search every order on the marketplace and open one to review its items, vendors, and totals.</p>
+            <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-receipt fg-primary me-2"></i>Order Investigation</h1>
+            <p class="fg-3 small mb-0">Search every order on the marketplace and open one to review its items, vendors, and totals.</p>
         </header>
 
         {{-- Order Status Tabs and Search (UC-44) --}}

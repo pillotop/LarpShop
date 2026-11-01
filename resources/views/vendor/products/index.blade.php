@@ -34,7 +34,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -53,15 +53,15 @@
         <x-vendor.store-switcher :vendor="$vendor" :owned-vendors="$ownedVendors ?? collect()" />
 
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
-                <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+            <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show rounded-4 p-3 mb-4 shadow-sm" role="alert">
+            <div class="alert theme-danger alert-dismissible fade show rounded-9 p-3 mb-4 shadow-sm" role="alert">
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -73,56 +73,56 @@
 
         {{-- Inventory & Visibility Summary Cards (UC-33) --}}
         <div class="row g-3 mb-4">
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Total Products</div>
-                    <div class="fs-4 fw-bold text-dark mt-1">{{ $summary['total'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Total Products</div>
+                    <div class="fs-lg fw-bold fg-body mt-1">{{ $summary['total'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Visible</div>
-                    <div class="fs-4 fw-bold text-success mt-1">{{ $summary['visible'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Visible</div>
+                    <div class="fs-lg fw-bold fg-success mt-1">{{ $summary['visible'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Hidden</div>
-                    <div class="fs-4 fw-bold text-secondary mt-1">{{ $summary['hidden'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Hidden</div>
+                    <div class="fs-lg fw-bold fg-secondary mt-1">{{ $summary['hidden'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">In Stock</div>
-                    <div class="fs-4 fw-bold text-primary mt-1">{{ $summary['in_stock'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">In Stock</div>
+                    <div class="fs-lg fw-bold fg-primary mt-1">{{ $summary['in_stock'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Low Stock (&le; 5)</div>
-                    <div class="fs-4 fw-bold text-warning-emphasis mt-1">{{ $summary['low_stock'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Low Stock (&le; 5)</div>
+                    <div class="fs-lg fw-bold fg-emphasis-warning mt-1">{{ $summary['low_stock'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Out of Stock</div>
-                    <div class="fs-4 fw-bold text-danger mt-1">{{ $summary['out_of_stock'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Out of Stock</div>
+                    <div class="fs-lg fw-bold fg-danger mt-1">{{ $summary['out_of_stock'] ?? 0 }}</div>
                 </div>
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom mb-4">
                 <div>
-                    <h3 class="fw-bold text-dark mb-1">
-                        <i class="bi bi-box-seam text-primary me-2"></i>Store Products & Inventory
+                    <h3 class="fw-bold fg-body mb-1">
+                        <i class="bi bi-box-seam fg-primary me-2"></i>Store Products & Inventory
                     </h3>
-                    <p class="text-muted small mb-0">
+                    <p class="fg-3 small mb-0">
                         Create listings, update stock levels, toggle catalog visibility, and manage images for <strong>{{ $vendor->store_name }}</strong>.
                     </p>
                 </div>
                 <div class="d-flex gap-2 flex-wrap">
-                    <a href="{{ route('vendor.products.create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold">
+                    <a href="{{ route('vendor.products.create') }}" class="btn btn-solid theme-primary rounded-pill px-4 shadow-sm fw-semibold">
                         <i class="bi bi-plus-lg me-1"></i>New Product Listing
                     </a>
                 </div>
@@ -130,8 +130,8 @@
 
             {{-- Filter & Search Bar --}}
             <form action="{{ route('vendor.products.index') }}" method="GET" class="row g-2 align-items-end mb-4">
-                <div class="col-md-4">
-                    <label for="filter-q" class="form-label small text-muted fw-semibold mb-1">Search</label>
+                <div class="md:col-4">
+                    <label for="filter-q" class="form-label small fg-3 fw-semibold mb-1">Search</label>
                     <input
                         type="search"
                         id="filter-q"
@@ -142,9 +142,9 @@
                         maxlength="100"
                     >
                 </div>
-                <div class="col-md-3">
-                    <label for="filter-category" class="form-label small text-muted fw-semibold mb-1">Category</label>
-                    <select id="filter-category" name="category_id" class="form-select rounded-pill">
+                <div class="md:col-3">
+                    <label for="filter-category" class="form-label small fg-3 fw-semibold mb-1">Category</label>
+                    <select id="filter-category" name="category_id" class="form-control rounded-pill">
                         <option value="">All categories</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat->category_id }}" @selected(($filters['category_id'] ?? null) === (int) $cat->category_id)>
@@ -153,9 +153,9 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label for="filter-availability" class="form-label small text-muted fw-semibold mb-1">Availability & Stock</label>
-                    <select id="filter-availability" name="availability" class="form-select rounded-pill">
+                <div class="md:col-3">
+                    <label for="filter-availability" class="form-label small fg-3 fw-semibold mb-1">Availability & Stock</label>
+                    <select id="filter-availability" name="availability" class="form-control rounded-pill">
                         @foreach ($availabilityFilters as $key => $label)
                             <option value="{{ $key }}" @selected(($filters['availability'] ?? 'all') === $key)>
                                 {{ $label }}
@@ -163,17 +163,17 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2 d-flex gap-2">
-                    <button type="submit" class="btn btn-dark rounded-pill w-100">Filter</button>
+                <div class="md:col-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-solid theme-inverse rounded-pill w-100">Filter</button>
                     @if (! empty($filters['q']) || ! empty($filters['category_id']) || ($filters['availability'] ?? 'all') !== 'all')
-                        <a href="{{ route('vendor.products.index') }}" class="btn btn-outline-secondary rounded-pill" title="Clear filters">Reset</a>
+                        <a href="{{ route('vendor.products.index') }}" class="btn btn-outline theme-secondary rounded-pill" title="Clear filters">Reset</a>
                     @endif
                 </div>
             </form>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead class="bg-1">
                         <tr>
                             <th scope="col" style="width: 72px;">Image</th>
                             <th scope="col">Product</th>
@@ -189,33 +189,33 @@
                             @php
                                 $primaryImage = $product->images->first();
                             @endphp
-                            <tr class="{{ ! $product->is_active ? 'table-light opacity-75' : '' }}">
+                            <tr class="{{ ! $product->is_active ? 'bg-1 opacity-75' : '' }}">
                                 <td>
-                                    <div class="ratio ratio-1x1 rounded-3 overflow-hidden bg-light" style="width: 56px;">
+                                    <div class="media-frame ratio-1x1 rounded-5 overflow-hidden bg-1" style="width: 56px;">
                                         @if ($primaryImage)
                                             <img src="{{ $primaryImage->url }}" class="object-fit-cover w-100 h-100" alt="{{ $product->name }}">
                                         @else
-                                            <div class="d-flex align-items-center justify-content-center text-muted">
+                                            <div class="d-flex align-items-center justify-content-center fg-3">
                                                 <i class="bi bi-image"></i>
                                             </div>
                                         @endif
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="fw-bold text-dark">{{ $product->name }}</div>
-                                    <small class="text-muted">
+                                    <div class="fw-bold fg-body">{{ $product->name }}</div>
+                                    <small class="fg-3">
                                         #{{ $product->product_id }} &bull; {{ $product->images->count() }} image(s)
                                         @if ($product->status !== 'approved')
-                                            &bull; <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">{{ ucfirst($product->status) }}</span>
+                                            &bull; <span class="badge bg-subtle-warning fg-emphasis-warning rounded-pill">{{ ucfirst($product->status) }}</span>
                                         @endif
                                     </small>
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark border">
+                                    <span class="badge bg-1 fg-body border">
                                         {{ $product->category?->name ?? 'Uncategorized' }}
                                     </span>
                                 </td>
-                                <td class="fw-semibold text-success">
+                                <td class="fw-semibold fg-success">
                                     ${{ number_format((float) $product->price, 2) }}
                                 </td>
                                 <td>
@@ -233,27 +233,27 @@
                                             style="width: 85px;"
                                             aria-label="Stock for {{ $product->name }}"
                                         >
-                                        <button type="submit" class="btn btn-sm btn-outline-dark rounded-pill px-2" title="Save stock">
+                                        <button type="submit" class="btn btn-sm btn-outline theme-inverse rounded-pill px-2" title="Save stock">
                                             Save
                                         </button>
                                     </form>
                                     <div class="mt-1">
                                         @if ($product->stock === 0)
-                                            <span class="badge bg-danger-subtle text-danger rounded-pill">Out of stock</span>
+                                            <span class="badge bg-subtle-danger fg-danger rounded-pill">Out of stock</span>
                                         @elseif ($product->stock <= 5)
-                                            <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">Low stock</span>
+                                            <span class="badge bg-subtle-warning fg-emphasis-warning rounded-pill">Low stock</span>
                                         @else
-                                            <span class="badge bg-success-subtle text-success rounded-pill">In stock</span>
+                                            <span class="badge bg-subtle-success fg-success rounded-pill">In stock</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td>
                                     @if ($product->is_active)
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1">
+                                        <span class="badge bg-subtle-success fg-success border border-success rounded-pill px-2 py-1">
                                             <i class="bi bi-eye me-1"></i>Visible
                                         </span>
                                     @else
-                                        <span class="badge bg-secondary-subtle text-secondary border rounded-pill px-2 py-1">
+                                        <span class="badge bg-subtle-secondary fg-secondary border rounded-pill px-2 py-1">
                                             <i class="bi bi-eye-slash me-1"></i>Hidden
                                         </span>
                                     @endif
@@ -261,7 +261,7 @@
                                 <td class="text-end">
                                     <div class="d-inline-flex align-items-center gap-1 flex-wrap justify-content-end">
                                         {{-- UC-31: Edit Product --}}
-                                        <a href="{{ route('vendor.products.edit', $product->product_id) }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3" title="Edit product listing">
+                                        <a href="{{ route('vendor.products.edit', $product->product_id) }}" class="btn btn-sm btn-outline theme-secondary rounded-pill px-3" title="Edit product listing">
                                             <i class="bi bi-pencil me-1"></i>Edit
                                         </a>
 
@@ -270,23 +270,23 @@
                                             @csrf
                                             @method('PATCH')
                                             @if ($product->is_active)
-                                                <button type="submit" class="btn btn-sm btn-outline-warning rounded-pill px-3" title="Hide product from public catalog">
+                                                <button type="submit" class="btn btn-sm btn-outline theme-warning rounded-pill px-3" title="Hide product from public catalog">
                                                     <i class="bi bi-eye-slash me-1"></i>Hide
                                                 </button>
                                             @else
-                                                <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3" title="Show product in public catalog">
+                                                <button type="submit" class="btn btn-sm btn-outline theme-success rounded-pill px-3" title="Show product in public catalog">
                                                     <i class="bi bi-eye me-1"></i>Show
                                                 </button>
                                             @endif
                                         </form>
 
                                         {{-- UC-32: Manage Images --}}
-                                        <a href="{{ route('vendor.products.images.index', $product->product_id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="Manage product images">
+                                        <a href="{{ route('vendor.products.images.index', $product->product_id) }}" class="btn btn-sm btn-outline theme-primary rounded-pill px-3" title="Manage product images">
                                             <i class="bi bi-images me-1"></i>Images
                                         </a>
 
                                         @if ($product->is_active && $product->status === 'approved')
-                                            <a href="{{ route('products.show', [$product->product_id, $product->slug]) }}" target="_blank" class="btn btn-sm btn-light rounded-pill px-2" title="View on storefront">
+                                            <a href="{{ route('products.show', [$product->product_id, $product->slug]) }}" target="_blank" class="btn btn-sm btn-solid theme-secondary rounded-pill px-2" title="View on storefront">
                                                 <i class="bi bi-box-arrow-up-right"></i>
                                             </a>
                                         @endif
@@ -295,8 +295,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
-                                    <i class="bi bi-box2 fs-1 d-block mb-3 text-secondary"></i>
+                                <td colspan="7" class="text-center py-5 fg-3">
+                                    <i class="bi bi-box2 fs-3xl d-block mb-3 fg-secondary"></i>
                                     No products found for this store. Click <strong>New Product Listing</strong> to add your first item.
                                 </td>
                             </tr>
@@ -307,7 +307,7 @@
 
             @if ($products->hasPages())
                 <div class="mt-4 pt-3 border-top">
-                    {{ $products->links('pagination::bootstrap-5') }}
+                    {{ $products->links('shared.pagination') }}
                 </div>
             @endif
         </div>

@@ -9,12 +9,12 @@
 
 <a
     href="{{ route('categories.show', ['slug' => $slug]) }}"
-    class="category-banner d-block position-relative overflow-hidden rounded-1 h-100"
+    class="category-banner d-block position-relative overflow-hidden rounded-3 h-100"
 >
     <div
-        class="h-100 ratio {{ $customRatio ? '' : $ratio }}"
+        class="h-100 media-frame {{ $customRatio ? '' : $ratio }}"
         @if ($customRatio)
-            style="--bs-aspect-ratio: {{ $customRatio }};"
+            style="aspect-ratio: 100 / {{ rtrim($customRatio, '%') }};"
         @endif
     >
         <img

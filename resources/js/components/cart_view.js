@@ -46,10 +46,7 @@
         }
         root.querySelectorAll('[data-cart-details]').forEach(details => {
             const expanded = presentation.expanded.has(details.dataset.cartDetails);
-            details.classList.toggle('show', expanded);
-            const button = root.querySelector(`[aria-controls="${details.id}"]`);
-            button?.classList.toggle('collapsed', !expanded);
-            button?.setAttribute('aria-expanded', String(expanded));
+            if (details.open !== expanded) details.open = expanded;
         });
     }
 
@@ -73,16 +70,11 @@
         applyPresentation(template.content);
         if (page && typeof pageHtml === 'string') {
             const collapse = page.querySelector('#cart');
-            const collapsed = collapse && !collapse.classList.contains('show');
+            const collapsed = collapse && !collapse.open;
             const focusedId = page.contains(document.activeElement) ? document.activeElement.id : null;
             page.innerHTML = pageHtml;
             applyPresentation(page);
-            if (collapsed) {
-                page.querySelector('#cart')?.classList.remove('show');
-                const toggle = page.querySelector('[data-bs-target="#cart"]');
-                toggle?.classList.add('collapsed');
-                toggle?.setAttribute('aria-expanded', 'false');
-            }
+            if (collapsed) page.querySelector('#cart')?.removeAttribute('open');
             if (focusedId) page.querySelector(`[id="${focusedId}"]`)?.focus({ preventScroll: true });
         }
         if (panel?.dataset.activeSidePanel === '#cart-section') {
@@ -127,15 +119,15 @@
             remove.disabled = false;
         }
     });
-    for (const [eventName, expanded] of [['shown.bs.collapse', true], ['hidden.bs.collapse', false]]) {
-        panel?.addEventListener(eventName, event => {
-            const id = event.target.dataset.cartDetails;
-            if (!id) return;
-            if (expanded) presentation.expanded.add(id);
-            else presentation.expanded.delete(id);
-            applyPresentation(template.content);
-        });
-    }
+    // Native details toggle events do not bubble, so observe them in capture phase.
+    document.addEventListener('toggle', event => {
+        const details = event.target;
+        const id = details.dataset?.cartDetails;
+        if (!id || (!panel?.contains(details) && !page?.contains(details))) return;
+        if (details.open) presentation.expanded.add(id);
+        else presentation.expanded.delete(id);
+        applyPresentation(template.content);
+    }, true);
 
     trigger.addEventListener('click', () => store.refresh().catch(() => {}));
     store.refresh().catch(() => {});

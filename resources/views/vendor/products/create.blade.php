@@ -34,7 +34,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -52,12 +52,12 @@
 
         <x-vendor.store-switcher :vendor="$vendor" :owned-vendors="$ownedVendors ?? collect()" />
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="border-bottom pb-3 mb-4">
-                <h3 class="fw-bold text-dark mb-1">
-                    <i class="bi bi-plus-circle text-primary me-2"></i>Create New Product Listing (UC-30)
+                <h3 class="fw-bold fg-body mb-1">
+                    <i class="bi bi-plus-circle fg-primary me-2"></i>Create New Product Listing (UC-30)
                 </h3>
-                <p class="text-muted small mb-0">
+                <p class="fg-3 small mb-0">
                     Publish a new item for <strong>{{ $vendor->store_name }}</strong> with pricing, stock quantity, and optional images.
                 </p>
             </div>

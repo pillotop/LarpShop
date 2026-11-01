@@ -10,7 +10,7 @@
         : asset('images/product-placeholder.jpg');
 @endphp
 
-<article class="d-flex flex-wrap align-items-center gap-3 border rounded-3 p-3">
+<article class="d-flex flex-wrap align-items-center gap-3 border rounded-5 p-3">
     <img
         src="{{ $imageUrl }}"
         alt="{{ $image?->alt_text ?? $product->name }}"
@@ -25,7 +25,7 @@
             {{ $product->name }}
         </a>
         <p class="mb-1 fw-semibold">${{ number_format($product->price, 2) }}</p>
-        <span class="small text-muted">
+        <span class="small fg-3">
             {{ $product->stock > 0 ? 'In stock' : 'Out of stock' }}
         </span>
     </div>

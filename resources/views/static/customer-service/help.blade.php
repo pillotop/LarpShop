@@ -4,46 +4,46 @@
 
 @section('page-content')
     <section class="cs-hero mb-5 text-center">
-        <span class="badge bg-primary bg-opacity-25 text-info px-3 py-2 rounded-pill fw-semibold mb-3 border border-info border-opacity-25">
+        <span class="badge bg-primary bg-25 fg-info px-3 py-2 rounded-pill fw-semibold mb-3 border border-info border-25">
             <i class="bi bi-life-preserver me-1"></i> Help Centre
         </span>
         <h1 class="display-5 fw-bold mb-3">How Can We Help You Today?</h1>
-        <p class="lead text-light-emphasis mx-auto mb-0" style="max-width: 650px;">
+        <p class="lead fg-emphasis-secondary mx-auto mb-0" style="max-width: 650px;">
             Find answers about orders, shipping, returns, weapon safety, and your account.
         </p>
     </section>
 
     <section class="mb-5">
         <div class="row g-4">
-            <div class="col-6 col-lg-3">
+            <div class="col-6 lg:col-3">
                 <a href="#orders" class="text-decoration-none">
                     <div class="cs-card p-4 text-center h-100 shadow-sm">
-                        <div class="cs-icon bg-primary bg-opacity-10 text-primary mb-2"><i class="bi bi-box-seam"></i></div>
-                        <h6 class="fw-bold text-dark mb-0">Orders &amp; Shipping</h6>
+                        <div class="cs-icon bg-primary bg-10 fg-primary mb-2"><i class="bi bi-box-seam"></i></div>
+                        <h6 class="fw-bold fg-body mb-0">Orders &amp; Shipping</h6>
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-lg-3">
+            <div class="col-6 lg:col-3">
                 <a href="#returns" class="text-decoration-none">
                     <div class="cs-card p-4 text-center h-100 shadow-sm">
-                        <div class="cs-icon bg-success bg-opacity-10 text-success mb-2"><i class="bi bi-arrow-return-left"></i></div>
-                        <h6 class="fw-bold text-dark mb-0">Returns &amp; Refunds</h6>
+                        <div class="cs-icon bg-success bg-10 fg-success mb-2"><i class="bi bi-arrow-return-left"></i></div>
+                        <h6 class="fw-bold fg-body mb-0">Returns &amp; Refunds</h6>
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-lg-3">
+            <div class="col-6 lg:col-3">
                 <a href="#safety" class="text-decoration-none">
                     <div class="cs-card p-4 text-center h-100 shadow-sm">
-                        <div class="cs-icon bg-danger bg-opacity-10 text-danger mb-2"><i class="bi bi-shield-check"></i></div>
-                        <h6 class="fw-bold text-dark mb-0">Weapon Safety</h6>
+                        <div class="cs-icon bg-danger bg-10 fg-danger mb-2"><i class="bi bi-shield-check"></i></div>
+                        <h6 class="fw-bold fg-body mb-0">Weapon Safety</h6>
                     </div>
                 </a>
             </div>
-            <div class="col-6 col-lg-3">
+            <div class="col-6 lg:col-3">
                 <a href="#account" class="text-decoration-none">
                     <div class="cs-card p-4 text-center h-100 shadow-sm">
-                        <div class="cs-icon bg-warning bg-opacity-10 text-warning mb-2"><i class="bi bi-person-gear"></i></div>
-                        <h6 class="fw-bold text-dark mb-0">Account &amp; Vendors</h6>
+                        <div class="cs-icon bg-warning bg-10 fg-warning mb-2"><i class="bi bi-person-gear"></i></div>
+                        <h6 class="fw-bold fg-body mb-0">Account &amp; Vendors</h6>
                     </div>
                 </a>
             </div>
@@ -75,28 +75,27 @@
     @foreach ($faqGroups as $groupId => $group)
         <section id="{{ $groupId }}" class="mb-4">
             <h3 class="fw-bold mb-3">{{ $group['title'] }}</h3>
-            <div class="accordion bg-white rounded-4 shadow-sm" id="acc-{{ $groupId }}">
+            <div class="accordion bg-white rounded-9 shadow-sm" id="acc-{{ $groupId }}">
                 @foreach ($group['items'] as $i => $item)
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $groupId }}-{{ $i }}">
-                                {{ $item[0] }}
-                            </button>
-                        </h2>
-                        <div id="{{ $groupId }}-{{ $i }}" class="accordion-collapse collapse" data-bs-parent="#acc-{{ $groupId }}">
-                            <div class="accordion-body text-secondary small" style="line-height: 1.7;">{{ $item[1] }}</div>
+                    <details id="{{ $groupId }}-{{ $i }}" class="accordion-item" name="acc-{{ $groupId }}">
+                        <summary class="accordion-header">
+                            {{ $item[0] }}
+                            <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                        </summary>
+                        <div class="accordion-panel">
+                            <div class="accordion-body fg-secondary small" style="line-height: 1.7;">{{ $item[1] }}</div>
                         </div>
-                    </div>
+                    </details>
                 @endforeach
             </div>
         </section>
     @endforeach
 
-    <section class="card border-0 rounded-4 shadow-sm text-center p-5 bg-dark text-white mt-5">
+    <section class="card border-0 rounded-9 shadow-sm text-center p-5 bg-inverse fg-white mt-5">
         <h3 class="fw-bold mb-2">Still need help?</h3>
-        <p class="text-white-50 mb-3">Our support team replies within 1-2 business days.</p>
+        <p class="fg-white fg-50 mb-3">Our support team replies within 1-2 business days.</p>
         <div>
-            <a href="/contact" class="btn btn-primary rounded-pill px-4 fw-semibold">
+            <a href="/contact" class="btn btn-solid theme-primary rounded-pill px-4 fw-semibold">
                 <i class="bi bi-envelope me-1"></i> Contact Support
             </a>
         </div>

@@ -6,7 +6,7 @@
             <li class="border-top py-3">
                 <div class="d-flex flex-wrap justify-content-between gap-2">
                     <span>{{ $detail->product->name }}</span>
-                    <span class="text-muted">Quantity: {{ $detail->quantity }}</span>
+                    <span class="fg-3">Quantity: {{ $detail->quantity }}</span>
                 </div>
 
                 @if ($order->status === \App\Enums\OrderStatus::Paid && in_array($detail->product_id, $reviewableProductIds))

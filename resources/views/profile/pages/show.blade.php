@@ -60,7 +60,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -75,8 +75,8 @@
 
         {{-- Flash Messages --}}
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
-                <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+            <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">
                     <span class="fw-semibold">{{ session('success') }}</span>
                 </div>
@@ -85,8 +85,8 @@
         @endif
 
         @if (session('warning'))
-            <div class="alert alert-warning alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
-                <i class="bi bi-exclamation-triangle-fill fs-4 text-warning"></i>
+            <div class="alert theme-warning alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-lg fg-warning"></i>
                 <div class="flex-grow-1">
                     <span class="fw-semibold">{{ session('warning') }}</span>
                 </div>
@@ -95,8 +95,8 @@
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
-                <i class="bi bi-exclamation-octagon-fill fs-4 text-danger"></i>
+            <div class="alert theme-danger alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-octagon-fill fs-lg fg-danger"></i>
                 <div class="flex-grow-1">
                     <div class="fw-semibold mb-1">Vui lòng kiểm tra lại thông tin:</div>
                     <ul class="mb-0 ps-3">
@@ -114,8 +114,8 @@
 
         {{-- Navigation Tabs --}}
         <div class="row g-4">
-            <div class="col-12 col-lg-3">
-                <div class="card border-0 shadow-sm rounded-4 p-3 sticky-top" style="top: 100px;">
+            <div class="col-12 lg:col-3">
+                <div class="card border-0 shadow-sm rounded-9 p-3 sticky-top" style="top: 100px;">
                     <x-profile.nav-tabs
                         id="profileTabs"
                         :panes="[
@@ -157,11 +157,11 @@
                         ]"
                     />
 
-                    <hr class="my-3 text-muted">
+                    <hr class="my-3 fg-3">
 
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-outline-danger w-100 rounded-pill py-2 d-flex align-items-center justify-content-center gap-2">
+                        <button type="submit" class="btn btn-outline theme-danger w-100 rounded-pill py-2 d-flex align-items-center justify-content-center gap-2">
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Đăng xuất</span>
                         </button>
@@ -169,7 +169,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-lg-9">
+            <div class="col-12 lg:col-9">
                 <div class="tab-content" id="profileTabContent">
                     {{-- Tab 1: Customer Personal Profile --}}
                     <x-profile.profile-tab :user="$user" />

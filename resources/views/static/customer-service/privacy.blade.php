@@ -4,14 +4,14 @@
 
 @section('page-content')
     <section class="cs-hero mb-5 text-center">
-        <span class="badge bg-primary bg-opacity-25 text-info px-3 py-2 rounded-pill fw-semibold mb-3 border border-info border-opacity-25">
+        <span class="badge bg-primary bg-25 fg-info px-3 py-2 rounded-pill fw-semibold mb-3 border border-info border-25">
             <i class="bi bi-shield-lock me-1"></i> Privacy Policy
         </span>
         <h1 class="display-5 fw-bold mb-3">Your Privacy Matters to Us</h1>
-        <p class="lead text-light-emphasis mx-auto mb-0" style="max-width: 650px;">
+        <p class="lead fg-emphasis-secondary mx-auto mb-0" style="max-width: 650px;">
             This policy explains what data LarpShop collects, how we use it, and the choices you have.
         </p>
-        <p class="small text-white-50 mt-3 mb-0">Last updated: October 2026</p>
+        <p class="small fg-white fg-50 mt-3 mb-0">Last updated: October 2026</p>
     </section>
 
     @php
@@ -27,18 +27,18 @@
         ];
     @endphp
 
-    <section class="card border-0 rounded-4 shadow-sm bg-white p-4 p-lg-5 mb-5">
+    <section class="card border-0 rounded-9 shadow-sm bg-white p-4 lg:p-5 mb-5">
         @foreach ($sections as $i => $s)
             <div class="{{ $loop->last ? '' : 'mb-4 pb-4 border-bottom' }}">
                 <h4 class="fw-bold mb-2">{{ $i + 1 }}. {{ $s[0] }}</h4>
-                <p class="text-secondary mb-0" style="line-height: 1.8;">{{ $s[1] }}</p>
+                <p class="fg-secondary mb-0" style="line-height: 1.8;">{{ $s[1] }}</p>
             </div>
         @endforeach
     </section>
 
     <section class="cs-card p-4 text-center shadow-sm">
         <h5 class="fw-bold mb-1">Questions about privacy?</h5>
-        <p class="text-muted small mb-0">
+        <p class="fg-3 small mb-0">
             Email <a href="mailto:privacy@larpshop.com" class="text-decoration-none">privacy@larpshop.com</a>
         </p>
     </section>

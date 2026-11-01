@@ -10,7 +10,7 @@
                 @csrf
                 <button
                     type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-solid theme-primary"
                 >
                     Retry payment setup
                 </button>
@@ -26,7 +26,7 @@
             <select
                 id="fake-outcome"
                 name="outcome"
-                class="form-select mb-3"
+                class="form-control mb-3"
             >
                 <option value="succeeded">Succeeded</option>
                 <option value="failed">Failed</option>
@@ -35,7 +35,7 @@
             </select>
             <button
                 type="submit"
-                class="btn btn-primary"
+                class="btn btn-solid theme-primary"
             >
                 Simulate payment
             </button>
@@ -50,7 +50,7 @@
             @csrf
             <button
                 type="submit"
-                class="btn btn-outline-primary"
+                class="btn btn-outline theme-primary"
             >
                 Check / complete payment
             </button>

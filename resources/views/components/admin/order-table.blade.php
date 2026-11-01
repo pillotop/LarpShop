@@ -3,14 +3,14 @@
 ])
 
 @if ($orders->isEmpty())
-    <div class="text-center py-5 text-muted">
-        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+    <div class="text-center py-5 fg-3">
+        <i class="bi bi-inbox fs-3xl d-block mb-2"></i>
         No orders match your filters.
     </div>
 @else
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-            <thead class="table-light text-uppercase small text-muted">
+            <thead class="bg-1 text-uppercase small fg-3">
                 <tr>
                     <th>Order</th>
                     <th>Customer</th>
@@ -26,8 +26,8 @@
                     <tr>
                         <td class="fw-bold">#{{ $order->order_id }}</td>
                         <td>
-                            <div class="fw-semibold text-dark">{{ $order->user?->username ?? 'N/A' }}</div>
-                            <small class="text-muted">{{ $order->user?->email }}</small>
+                            <div class="fw-semibold fg-body">{{ $order->user?->username ?? 'N/A' }}</div>
+                            <small class="fg-3">{{ $order->user?->email }}</small>
                         </td>
                         <td class="text-center">{{ $order->details_count }}</td>
                         <td class="text-end">{{ number_format((float) $order->total_amount, 2) }}</td>
@@ -38,9 +38,9 @@
                                 {{ ucfirst($order->status->value) }}
                             </span>
                         </td>
-                        <td class="small text-muted">{{ $order->created_at?->format('d/m/Y H:i') }}</td>
+                        <td class="small fg-3">{{ $order->created_at?->format('d/m/Y H:i') }}</td>
                         <td class="text-end">
-                            <a href="{{ route('admin.orders.show', $order->order_id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Investigate</a>
+                            <a href="{{ route('admin.orders.show', $order->order_id) }}" class="btn btn-sm btn-outline theme-primary rounded-pill px-3">Investigate</a>
                         </td>
                     </tr>
                 @endforeach
@@ -49,9 +49,9 @@
     </div>
 
     <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
-        <div class="small text-muted">
+        <div class="small fg-3">
             Showing <strong>{{ $orders->firstItem() }}</strong> to <strong>{{ $orders->lastItem() }}</strong> of <strong>{{ $orders->total() }}</strong> orders
         </div>
-        <div>{{ $orders->links('pagination::bootstrap-5') }}</div>
+        <div>{{ $orders->links('shared.pagination') }}</div>
     </div>
 @endif

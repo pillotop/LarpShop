@@ -12,7 +12,7 @@
             <p role="alert">{{ $errors->first() }}</p>
         @endif
         @if ($order->status === \App\Enums\OrderStatus::Paid)
-            <p class="alert alert-success">Your order is confirmed. Payment received.</p>
+            <p class="alert theme-success">Your order is confirmed. Payment received.</p>
         @endif
         <p>Order status: {{ ucfirst($order->status->value) }}</p>
         <x-checkout.order-summary :data="$order" />
@@ -30,7 +30,7 @@
                 @csrf
                 <button
                     type="submit"
-                    class="btn btn-outline-danger"
+                    class="btn btn-outline theme-danger"
                 >
                     Cancel order
                 </button>

@@ -34,7 +34,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -51,15 +51,15 @@
         </nav>
 
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
-                <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+            <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show rounded-4 p-3 mb-4 shadow-sm" role="alert">
+            <div class="alert theme-danger alert-dismissible fade show rounded-9 p-3 mb-4 shadow-sm" role="alert">
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -71,59 +71,59 @@
 
         {{-- Fulfillment Summary Cards --}}
         <div class="row g-3 mb-4">
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Total Store Orders</div>
-                    <div class="fs-4 fw-bold text-dark mt-1">{{ $summary['total_orders'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Total Store Orders</div>
+                    <div class="fs-lg fw-bold fg-body mt-1">{{ $summary['total_orders'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Paid Orders</div>
-                    <div class="fs-4 fw-bold text-success mt-1">{{ $summary['paid_orders'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Paid Orders</div>
+                    <div class="fs-lg fw-bold fg-success mt-1">{{ $summary['paid_orders'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Unfulfilled Items</div>
-                    <div class="fs-4 fw-bold text-warning-emphasis mt-1">{{ $summary['unfulfilled'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Unfulfilled Items</div>
+                    <div class="fs-lg fw-bold fg-emphasis-warning mt-1">{{ $summary['unfulfilled'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Processing</div>
-                    <div class="fs-4 fw-bold text-primary mt-1">{{ $summary['processing'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Processing</div>
+                    <div class="fs-lg fw-bold fg-primary mt-1">{{ $summary['processing'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Shipped</div>
-                    <div class="fs-4 fw-bold text-info-emphasis mt-1">{{ $summary['shipped'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Shipped</div>
+                    <div class="fs-lg fw-bold fg-emphasis-info mt-1">{{ $summary['shipped'] ?? 0 }}</div>
                 </div>
             </div>
-            <div class="col-6 col-md-4 col-xl-2">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
-                    <div class="text-muted small fw-semibold">Delivered</div>
-                    <div class="fs-4 fw-bold text-success mt-1">{{ $summary['delivered'] ?? 0 }}</div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
+                    <div class="fg-3 small fw-semibold">Delivered</div>
+                    <div class="fs-lg fw-bold fg-success mt-1">{{ $summary['delivered'] ?? 0 }}</div>
                 </div>
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom mb-4">
                 <div>
-                    <h3 class="fw-bold text-dark mb-1">
-                        <i class="bi bi-truck text-primary me-2"></i>Store Orders & Fulfillment (UC-34, UC-35)
+                    <h3 class="fw-bold fg-body mb-1">
+                        <i class="bi bi-truck fg-primary me-2"></i>Store Orders & Fulfillment (UC-34, UC-35)
                     </h3>
-                    <p class="text-muted small mb-0">
+                    <p class="fg-3 small mb-0">
                         View customer orders containing products from <strong>{{ $vendor->store_name }}</strong> and manage item fulfillment.
                     </p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('vendor.products.index') }}" class="btn btn-outline-primary rounded-pill px-3">
+                    <a href="{{ route('vendor.products.index') }}" class="btn btn-outline theme-primary rounded-pill px-3">
                         <i class="bi bi-box-seam me-1"></i>Store Products
                     </a>
-                    <a href="{{ route('vendor.store.settings') }}" class="btn btn-outline-secondary rounded-pill px-3">
+                    <a href="{{ route('vendor.store.settings') }}" class="btn btn-outline theme-secondary rounded-pill px-3">
                         <i class="bi bi-gear me-1"></i>Store Settings
                     </a>
                 </div>
@@ -131,8 +131,8 @@
 
             {{-- Filter & Search Bar --}}
             <form action="{{ route('vendor.orders.index') }}" method="GET" class="row g-2 align-items-end mb-4">
-                <div class="col-md-4">
-                    <label for="filter-q" class="form-label small text-muted fw-semibold mb-1">Search Order or Customer</label>
+                <div class="md:col-4">
+                    <label for="filter-q" class="form-label small fg-3 fw-semibold mb-1">Search Order or Customer</label>
                     <input
                         type="search"
                         id="filter-q"
@@ -143,9 +143,9 @@
                         maxlength="100"
                     >
                 </div>
-                <div class="col-md-3">
-                    <label for="filter-order-status" class="form-label small text-muted fw-semibold mb-1">Order Payment Status</label>
-                    <select id="filter-order-status" name="order_status" class="form-select rounded-pill">
+                <div class="md:col-3">
+                    <label for="filter-order-status" class="form-label small fg-3 fw-semibold mb-1">Order Payment Status</label>
+                    <select id="filter-order-status" name="order_status" class="form-control rounded-pill">
                         <option value="all">All order statuses</option>
                         @foreach ($orderStatuses as $statusCase)
                             <option value="{{ $statusCase->value }}" @selected(($filters['order_status'] ?? 'all') === $statusCase->value)>
@@ -154,9 +154,9 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label for="filter-fulfillment-status" class="form-label small text-muted fw-semibold mb-1">Item Fulfillment Status</label>
-                    <select id="filter-fulfillment-status" name="fulfillment_status" class="form-select rounded-pill">
+                <div class="md:col-3">
+                    <label for="filter-fulfillment-status" class="form-label small fg-3 fw-semibold mb-1">Item Fulfillment Status</label>
+                    <select id="filter-fulfillment-status" name="fulfillment_status" class="form-control rounded-pill">
                         <option value="all">All fulfillment states</option>
                         @foreach ($fulfillmentStatuses as $fStatus)
                             <option value="{{ $fStatus->value }}" @selected(($filters['fulfillment_status'] ?? 'all') === $fStatus->value)>
@@ -165,17 +165,17 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2 d-flex gap-2">
-                    <button type="submit" class="btn btn-dark rounded-pill w-100">Filter</button>
+                <div class="md:col-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-solid theme-inverse rounded-pill w-100">Filter</button>
                     @if (! empty($filters['q']) || ($filters['order_status'] ?? 'all') !== 'all' || ($filters['fulfillment_status'] ?? 'all') !== 'all')
-                        <a href="{{ route('vendor.orders.index') }}" class="btn btn-outline-secondary rounded-pill">Reset</a>
+                        <a href="{{ route('vendor.orders.index') }}" class="btn btn-outline theme-secondary rounded-pill">Reset</a>
                     @endif
                 </div>
             </form>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead class="bg-1">
                         <tr>
                             <th scope="col">Order</th>
                             <th scope="col">Customer</th>
@@ -197,30 +197,30 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <div class="fw-bold text-dark">#{{ $order->order_id }}</div>
-                                    <small class="text-muted">{{ $order->created_at?->format('Y-m-d H:i') }}</small>
+                                    <div class="fw-bold fg-body">#{{ $order->order_id }}</div>
+                                    <small class="fg-3">{{ $order->created_at?->format('Y-m-d H:i') }}</small>
                                 </td>
                                 <td>
-                                    <div class="fw-semibold text-dark">{{ $order->user?->username ?? 'Guest' }}</div>
-                                    <small class="text-muted">{{ $order->user?->email }}</small>
+                                    <div class="fw-semibold fg-body">{{ $order->user?->username ?? 'Guest' }}</div>
+                                    <small class="fg-3">{{ $order->user?->email }}</small>
                                 </td>
                                 <td>
                                     <span @class([
                                         'badge rounded-pill px-3 py-1',
-                                        'bg-success-subtle text-success' => $orderStatusValue === 'paid',
-                                        'bg-warning-subtle text-warning-emphasis' => $orderStatusValue === 'pending',
-                                        'bg-secondary-subtle text-secondary' => in_array($orderStatusValue, ['cancelled', 'expired'], true),
+                                        'bg-subtle-success fg-success' => $orderStatusValue === 'paid',
+                                        'bg-subtle-warning fg-emphasis-warning' => $orderStatusValue === 'pending',
+                                        'bg-subtle-secondary fg-secondary' => in_array($orderStatusValue, ['cancelled', 'expired'], true),
                                     ])>
                                         {{ ucfirst($orderStatusValue) }}
                                     </span>
                                 </td>
                                 <td>
                                     <div class="fw-semibold">{{ $order->details->count() }} line(s) ({{ $vendorItemCount }} units)</div>
-                                    <small class="text-muted text-truncate d-inline-block" style="max-width: 240px;">
+                                    <small class="fg-3 text-truncate d-inline-block" style="max-width: 240px;">
                                         {{ $order->details->pluck('product.name')->filter()->implode(', ') }}
                                     </small>
                                 </td>
-                                <td class="fw-bold text-success">
+                                <td class="fw-bold fg-success">
                                     ${{ $subtotals[$order->order_id] ?? '0.00' }}
                                 </td>
                                 <td>
@@ -228,10 +228,10 @@
                                         @foreach ($distinctStatuses as $fCase)
                                             <span @class([
                                                 'badge rounded-pill px-2 py-1',
-                                                'bg-warning-subtle text-warning-emphasis' => $fCase->value === 'unfulfilled',
-                                                'bg-primary-subtle text-primary' => $fCase->value === 'processing',
-                                                'bg-info-subtle text-info-emphasis' => $fCase->value === 'shipped',
-                                                'bg-success-subtle text-success' => $fCase->value === 'delivered',
+                                                'bg-subtle-warning fg-emphasis-warning' => $fCase->value === 'unfulfilled',
+                                                'bg-subtle-primary fg-primary' => $fCase->value === 'processing',
+                                                'bg-subtle-info fg-emphasis-info' => $fCase->value === 'shipped',
+                                                'bg-subtle-success fg-success' => $fCase->value === 'delivered',
                                             ])>
                                                 {{ $fCase->label() }}
                                             </span>
@@ -239,15 +239,15 @@
                                     </div>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('vendor.orders.show', $order->order_id) }}" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">
+                                    <a href="{{ route('vendor.orders.show', $order->order_id) }}" class="btn btn-sm btn-solid theme-primary rounded-pill px-3 fw-semibold">
                                         Manage Order
                                     </a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
-                                    <i class="bi bi-inbox fs-1 d-block mb-3 text-secondary"></i>
+                                <td colspan="7" class="text-center py-5 fg-3">
+                                    <i class="bi bi-inbox fs-3xl d-block mb-3 fg-secondary"></i>
                                     No orders containing products from this store were found.
                                 </td>
                             </tr>
@@ -258,7 +258,7 @@
 
             @if ($orders->hasPages())
                 <div class="mt-4 pt-3 border-top">
-                    {{ $orders->links('pagination::bootstrap-5') }}
+                    {{ $orders->links('shared.pagination') }}
                 </div>
             @endif
         </div>

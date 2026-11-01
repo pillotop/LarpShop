@@ -14,26 +14,26 @@
 @endphp
 
 <div class="tab-pane fade" id="pane-billing" role="tabpanel" aria-labelledby="tab-billing">
-    <div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="card border-0 shadow-sm rounded-9 p-4">
         <h2 class="h5 fw-bold">Billing &amp; addresses</h2>
-        <p class="text-muted small">Manage your saved addresses and choose a default for checkout.</p>
+        <p class="fg-3 small">Manage your saved addresses and choose a default for checkout.</p>
         @if ($addresses->isEmpty())
-            <p class="text-muted">You have no saved addresses yet.</p>
+            <p class="fg-3">You have no saved addresses yet.</p>
         @endif
         @foreach ($forms as $address)
             @php
                 $formId = (string) ($address?->getKey() ?? 'new');
                 $failed = $errors->billing->any() && (string) old('address_form') === $formId;
             @endphp
-            <section class="border rounded-3 p-3 mb-3" aria-labelledby="address-heading-{{ $formId }}">
+            <section class="border rounded-5 p-3 mb-3" aria-labelledby="address-heading-{{ $formId }}">
                 <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
                     <h3 class="h6 mb-0" id="address-heading-{{ $formId }}">{{ $address ? $address->recipient_name : 'Add an address' }}</h3>
                     @if ($address?->is_default)
-                        <span class="badge text-bg-primary">Default</span>
+                        <span class="badge theme-primary theme-contrast">Default</span>
                     @endif
                 </div>
                 @if ($address)
-                    <address class="small text-muted">
+                    <address class="small fg-3">
                         {{ $address->address_line_1 }} {{ $address->address_line_2 }}<br>
                         {{ $address->city }}, {{ $address->region }} {{ $address->postal_code }} · {{ $address->country_code }}
                     </address>
@@ -51,7 +51,7 @@
                                     $name = $field['name'];
                                     $invalid = $failed && $errors->billing->has($name);
                                 @endphp
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 md:col-6">
                                     <label class="form-label" for="address-{{ $formId }}-{{ $name }}">{{ $field['label'] }}{{ !empty($field['required']) ? ' *' : '' }}</label>
                                     <input id="address-{{ $formId }}-{{ $name }}" name="{{ $name }}" type="{{ $field['type'] ?? 'text' }}" maxlength="{{ $field['max'] }}" autocomplete="{{ $field['autocomplete'] }}" value="{{ $failed ? old($name) : $address?->getAttribute($name) }}" class="form-control {{ $invalid ? 'is-invalid' : '' }}" @required(!empty($field['required'])) @if ($invalid) aria-invalid="true" aria-describedby="address-error-{{ $formId }}-{{ $name }}" @endif>
                                     @if ($invalid)
@@ -63,7 +63,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button type="submit" class="btn btn-primary rounded-pill mt-3">{{ $address ? 'Save changes' : 'Add address' }}</button>
+                        <button type="submit" class="btn btn-solid theme-primary rounded-pill mt-3">{{ $address ? 'Save changes' : 'Add address' }}</button>
                     </form>
                 </details>
                 @if ($address)
@@ -72,13 +72,13 @@
                             <form action="{{ route('addresses.default', $address) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit" class="btn btn-outline-primary btn-sm">Make default</button>
+                                <button type="submit" class="btn btn-outline theme-primary btn-sm">Make default</button>
                             </form>
                         @endunless
                         <form action="{{ route('addresses.destroy', $address) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete address</button>
+                            <button type="submit" class="btn btn-outline theme-danger btn-sm">Delete address</button>
                         </form>
                     </div>
                 @endif

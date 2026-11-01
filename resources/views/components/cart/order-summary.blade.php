@@ -60,7 +60,7 @@
         @auth
             @if ($addresses->isNotEmpty())
                 <label for="cart-shipping-address" class="form-label">Shipping address</label>
-                <select name="address_id" id="cart-shipping-address" class="form-select mb-3" required>
+                <select name="address_id" id="cart-shipping-address" class="form-control mb-3" required>
                     @foreach ($addresses as $address)
                         <option value="{{ $address->getKey() }}" @selected((string) old('address_id', $addresses->first()->getKey()) === (string) $address->getKey())>
                             {{ $address->recipient_name }} — {{ $address->address_line_1 }}, {{ $address->city }}{{ $address->is_default ? ' (Default)' : '' }}
@@ -74,11 +74,11 @@
             <p class="small"><a href="{{ route('login') }}">Sign in</a> to check out.</p>
         @endauth
         @if ($errors->any())
-            <ul class="small text-danger" role="alert">
+            <ul class="small fg-danger" role="alert">
                 @foreach ($errors->all() as $message)<li>{{ $message }}</li>@endforeach
             </ul>
         @endif
-        <button type="submit" class="w-100 rounded-1 border-0 p-3" @disabled($quantity < 1 || $addresses->isEmpty())>
+        <button type="submit" class="w-100 rounded-3 border-0 p-3" @disabled($quantity < 1 || $addresses->isEmpty())>
             Check out
         </button>
     </form>

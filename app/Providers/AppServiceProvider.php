@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\View\Composers\ProductCapabilityComposer;
 use App\View\Composers\WishlistButtonComposer;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::defaultView('shared.pagination');
+
         Facades\View::composer('components.wishlist.button', WishlistButtonComposer::class);
 
         Facades\View::composer([

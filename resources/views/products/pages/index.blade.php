@@ -42,7 +42,7 @@
         || !empty($filters['in_stock'])
         || ($filters['sort'] ?? 'newest') !== 'newest';
 @endphp
-<div class="bg-light min-vh-100">
+<div class="bg-1 min-vh-100">
 
     <header class="container sticky-top"
             style="background-color: #ffffffee;">
@@ -54,7 +54,7 @@
 
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories"
             :cart="$cart"
         />
@@ -69,24 +69,24 @@
             </h1>
 
             @if ($keyword)
-                <p class="text-secondary">
+                <p class="fg-secondary">
                     Results for:
                     <strong>{{ $keyword }}</strong>
                 </p>
 
                 <a href="{{ route('products.index') }}"
-                   class="btn btn-outline-secondary btn-sm">
+                   class="btn btn-outline theme-secondary btn-sm">
                     Clear Search
                 </a>
             @else
-                <p class="text-secondary">
+                <p class="fg-secondary">
                     Discover products that match your needs.
                 </p>
             @endif
         </div>
 
         @if ($errors->any())
-            <div class="alert alert-danger rounded-3 shadow-sm mb-4" role="alert">
+            <div class="alert theme-danger rounded-5 shadow-sm mb-4" role="alert">
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -98,8 +98,8 @@
         <div class="mb-4">
             <button
                 type="button"
-                class="btn btn-outline-dark side-panel-trigger"
-                data-bs-toggle="offcanvas"
+                class="btn btn-outline theme-inverse side-panel-trigger"
+                data-bs-toggle="drawer"
                 data-bs-target="#side-panel"
                 data-side-panel-target="#filter-panel-template"
             >
@@ -132,17 +132,17 @@
 
         @if ($products->isEmpty())
 
-            <div class="bg-white rounded-4 shadow-sm text-center p-5">
-                <i class="bi bi-search display-3 text-secondary"></i>
+            <div class="bg-white rounded-9 shadow-sm text-center p-5">
+                <i class="bi bi-search display-3 fg-secondary"></i>
 
                 <h3 class="h4 mt-3">No products found</h3>
 
-                <p class="text-secondary">
+                <p class="fg-secondary">
                     Try another keyword or browse all products.
                 </p>
 
                 <a href="{{ route('products.index') }}"
-                   class="btn btn-primary">
+                   class="btn btn-solid theme-primary">
                     Browse All Products
                 </a>
             </div>
@@ -151,7 +151,7 @@
 
             <div class="row g-4">
                 @foreach ($products as $product)
-                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <div class="col-12 sm:col-6 lg:col-4 xl:col-3">
                         <x-product-card-b
                             :product="$product"
                             class="h-100"

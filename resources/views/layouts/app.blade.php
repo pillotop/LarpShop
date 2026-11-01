@@ -13,7 +13,11 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite([
+            'resources/scss/app.scss',
+            'resources/css/app.css',
+            'resources/js/app.js',
+        ])
 
         @yield('head')
     </head>

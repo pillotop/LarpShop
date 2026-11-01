@@ -1,9 +1,9 @@
-<div id="auth-form" class="blur position-relative shadow border rounded-2 p-4 bg-white">
+<div id="auth-form" class="blur position-relative shadow border rounded-4 p-4 bg-white">
     <h3 class="primary-text" id="login-form-header">
         Forgot your password?
     </h3>
 
-    <p id="login-form-email-text" class="text-muted">
+    <p id="login-form-email-text" class="fg-3">
         Enter your email address and we'll send you a password reset link.
     </p>
 
@@ -60,7 +60,7 @@
         <button
             type="submit"
             id="login-form-primary-button"
-            class="w-100 border-0 rounded-2 p-2 my-2"
+            class="w-100 border-0 rounded-4 p-2 my-2"
         >
             Send reset link
         </button>

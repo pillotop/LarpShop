@@ -62,13 +62,13 @@
     @elseif ($canResumePayment && $activePayment !== null)
         <h2 class="h4 fw-bold mb-3">Continue payment</h2>
 
-        <p class="text-muted">
+        <p class="fg-3">
             Your payment session is ready. Continue with your payment provider.
         </p>
 
         <a
             href="{{ $activePayment->checkout_url }}"
-            class="btn btn-primary w-100 py-3"
+            class="btn btn-solid theme-primary w-100 py-3"
         >
             Continue payment
         </a>
@@ -86,7 +86,7 @@
         <h2 class="h4 fw-bold mb-3">Payment status</h2>
 
         <p
-            class="text-muted"
+            class="fg-3"
             role="status"
         >
             {{ $message }}

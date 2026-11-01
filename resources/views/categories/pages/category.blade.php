@@ -9,17 +9,20 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
         @vite([
+            'resources/scss/app.scss',
             'resources/css/app.css',
+            'resources/js/app.js',
+        ])
+        @vite([
             'resources/css/icons.css',
             'resources/css/components/dropdown.css',
             'resources/css/components/persistent_header.css',
         ])
         <title> {{ $category }} </title>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
     <body>
-        <section class="position-relative d-flex justify-content-center p-lg-4 p-2">
+        <section class="position-relative d-flex justify-content-center lg:p-4 p-2">
             <svg width="509.89801" height="65.990982" viewBox="-2 -2 509.89798 65.990983" version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
                 <g id="svgGroup" stroke-linecap="round" fill-rule="nonzero" fill="#02c8f5" stroke="#00000000" stroke-width="0.5" transform="translate(-7.2730062,-23.350003)">
                     <g id="line-0">
@@ -42,21 +45,21 @@
             ])
             <div class="container">
                 <nav class="navigation-bar position-relative z-1 py-2" style="background-color: var(--color-background-50);">
-                    <div class="row gap-1 gap-lg-3">
+                    <div class="row gap-1 lg:gap-3">
                         <div class="col-1 d-flex align-items-center justify-content-center">
                             <a href="/">
                                 <img src="/images/larp_shop.png" class="rounded-circle logo-larpshop-logo">
                             </a>
                         </div>
-                        <div id="search-bar" class="col-10 col-lg-7">
-                            <form class="d-flex rounded-4 h-100">
+                        <div id="search-bar" class="col-10 lg:col-7">
+                            <form class="d-flex rounded-9 h-100">
                                 <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="category selection" data-dropdown-trigger="categories">
                                     <span> Categories </span>
                                     <svg class="dropdown-arrow icon-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                                         <path class="dropdown-arrow-path" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                                     </svg>
                                     <template data-dropdown-template="categories">
-                                        <div class="dropdown-menu rounded-3 shadow">
+                                        <div class="menu rounded-5 shadow">
                                             <a class="category-item" href="/categories/motors">Motors</a>
                                             <a class="category-item" href="/categories/electronics">Electronics</a>
                                             <a class="category-item" href="/categories/collectibles">Collectibles</a>
@@ -76,7 +79,7 @@
                                 </button>
                             </form>
                         </div>
-                        <div class="col-12 col-lg-3 p-2 p-lg-0 d-flex align-items-center justify-content-lg-between gap-3">
+                        <div class="col-12 lg:col-3 p-2 lg:p-0 d-flex align-items-center lg:justify-content-between gap-3">
                             <button class="border-0 rounded-pill p-2" type="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
@@ -95,7 +98,7 @@
             <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
                 <ul class="container persistent-header-content d-flex align-items-center gap-3 px-5 overflow-scroll" style="list-style: none;">
                     <li>
-                        <button class="nav-button rounded-pill border-0 text-nowrap" data-bs-target="#side-modal" data-bs-toggle="modal">
+                        <button class="nav-button rounded-pill border-0 text-nowrap" data-bs-target="#side-modal" data-bs-toggle="dialog">
                             <svg class="icon-16">
                                 <use href="/images/icons.svg#settings-sliders"></use>
                             </svg>
@@ -157,7 +160,7 @@
                                 </button>
                                 <template id="subcat1">
                                     <div class="subcategory-banner">
-                                        <div class="ratio ratio-16x9">
+                                        <div class="media-frame ratio-16x9">
                                             <img class="object-fit-cover" src="https://static2.ikea.pr/assets/pageImages/page__en_us_1789747452_0_32.jpeg" alt="">
                                         </div>
                                         <h3 class="fw-bold position-absolute bottom-0" style="color: white;"> Larp Season </h3>
@@ -170,7 +173,7 @@
                                 </button>
                                 <template class="position-relative" id="subcat2">
                                     <div class="subcategory-banner">
-                                        <div class="ratio ratio-16x9">
+                                        <div class="media-frame ratio-16x9">
                                             <img class="object-fit-cover" src="https://duckduckgo.com/i/163134b965e3395b.jpg" alt="">
                                         </div>
                                         <h3 class="fw-bold position-absolute bottom-0" style="color: white;"> At lake Constance </h3>
@@ -183,7 +186,7 @@
                                 </button>
                                 <template class="position-relative" id="subcat3">
                                     <div class="subcategory-banner">
-                                        <div class="ratio ratio-16x9">
+                                        <div class="media-frame ratio-16x9">
                                             <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.rLKHC1pVBBNqZQz31FMI0AHaE7%3Fpid%3DApi&f=1&ipt=62f7b883d730e4ab5ff7702f882c161b348eaaa0da51b844d5129e2f9349a4ab&ipo=images" alt="">
                                         </div>
                                         <h3 class="fw-bold text-capitalize position-absolute bottom-0" style="color: white;"> Top 20 things to do in bregenz austria </h3>
@@ -196,7 +199,7 @@
                                 </button>
                                 <template class="position-relative" id="subcat4">
                                     <div class="subcategory-banner">
-                                        <div class="ratio ratio-16x9">
+                                        <div class="media-frame ratio-16x9">
                                             <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.3Oqw1QfvIs64oJFLpx9XBAHaE8%3Fpid%3DApi&f=1&ipt=5ab053d6e6f42a5515c656d76e25e0ed320b2f1942eb29db8a8e3354ed865712&ipo=images" alt="">
                                         </div>
                                         <h3 class="fw-bold text-capitalize position-absolute bottom-0" style="color: white;"> Floating Bregenz </h3>
@@ -217,7 +220,7 @@
                     <ul class="d-flex gap-4" style="list-style: none;">
                         <li>
                             <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                                <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                                <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                     <img class="object-fit-cover" src="https://i5.walmartimages.com/seo/Goodyear-Reliant-All-Season-225-65R17-102H-All-Season-Tire-Fits-2018-23-Chevrolet-Equinox-LT-2015-17-Subaru-Outback-3-6R-Touring_2490aea5-d278-43fb-8ae4-13eaccf64381.62da989f5edfbda341a6465340b3d905.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF" alt="">
                                 </div>
                                 <div class="card-body">
@@ -238,7 +241,7 @@
                         </li>
                         <li>
                             <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                                <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                                <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                     <img class="object-fit-cover" src="https://i5.walmartimages.com/seo/AVIA-SHEEN-FEATHER-S_b7f60cf0-e644-44aa-a9fd-cc475bb368c6.7b211fb76fd15fe1a3c980539f528bb5.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF" alt="">
                                 </div>
                                 <div class="card-body">
@@ -259,7 +262,7 @@
                         </li>
                         <li>
                             <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                                <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                                <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                     <img class="object-fit-cover" src="https://static2.ikea.pr/assets/pageImages/page__en_us_1789747452_0_32.jpeg" alt="">
                                 </div>
                                 <div class="card-body">
@@ -280,7 +283,7 @@
                         </li>
                         <li>
                             <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                                <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                                <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                     <img class="object-fit-cover" src="https://i5.walmartimages.com/seo/ComHoma-Office-Chair-Mid-Back-Mesh-Swivel-Ergonomic-Chair-with-Armrests-Black_f144a440-c7b2-41dd-94c7-f215e1d1ed8a.ccebdf20f112e3a9c9ae81c9a8c478d9.png?odnHeight=573&odnWidth=573&odnBg=FFFFFF" alt="">
                                 </div>
                                 <div class="card-body">
@@ -301,7 +304,7 @@
                         </li>
                         <li>
                             <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                                <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                                <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                     <img class="object-fit-cover" src="https://i5.walmartimages.com/seo/ComHoma-Office-Chair-Mid-Back-Mesh-Swivel-Ergonomic-Chair-with-Armrests-Black_f144a440-c7b2-41dd-94c7-f215e1d1ed8a.ccebdf20f112e3a9c9ae81c9a8c478d9.png?odnHeight=573&odnWidth=573&odnBg=FFFFFF" alt="">
                                 </div>
                                 <div class="card-body">
@@ -327,9 +330,9 @@
                 </div>
 
                 <div class="d-flex my-5 gap-4">
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card" style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.Lg6DSew9vkCwU51YGNs2vwHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=5002c58a6444fab96d1e6d4518c72b6501307866f39b61c536453beb03668ec3&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -343,9 +346,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://i5.walmartimages.com/seo/Marc-Ecko-Blue-Eau-de-Toilette-Spray-Cologne-for-Men-1-7-oz-with-Bonus-0-50-oz_fecb4192-e2bb-4b7f-afcc-4dadd75a5a2f.5cd17e4ebdfc0313379ac8e6e5c9823b.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF" alt="">
                             </div>
                             <div class="card-body">
@@ -359,9 +362,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://i5.walmartimages.com/seo/Coty-Aspen-Cologne-Spray-for-Men-4-fl-oz_3348433c-da64-483e-af2d-267ef21017e5.7cf988d2489674fea11495c27b692010.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF" alt="">
                             </div>
                             <div class="card-body">
@@ -375,9 +378,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-none d-lg-block col-3">
+                    <div class="d-none lg:d-block col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.explicit.bing.net%2Fth%2Fid%2FOIP.hGuoS6plQ5dr2LeQGkMFfwHaFj%3Fr%3D0%26pid%3DApi&f=1&ipt=0cbc9640812ec778bf81edd47d4194472bf04c3912c298fe5c4a4975b832a85d&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -393,10 +396,10 @@
                     </div>
                 </div>
 
-                <div class="d-flex row-cols-lg-4 my-5 gap-4">
-                    <div class="col-4 col-lg-3">
+                <div class="d-flex lg:row-cols-4 my-5 gap-4">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card" style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.L-78rs2jXJoTbRuYYbR0UgHaEK%3Fr%3D0%26pid%3DApi&f=1&ipt=5fa3799a1d2b4d78bc59d5797f1e4b6b5ba51bf9392e09cea11e5777b1bff2d9&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -410,9 +413,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.explicit.bing.net%2Fth%2Fid%2FOIP.0PZ1Z73kXUsLqM7VxadP8AHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=3b8a9ffc34dc0804745d222d0538595589af896814a290a7f9e1920bbe02c948&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -426,9 +429,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.imF1BHROQ8XpKI59I8ODSgHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=ca59c7f6d9d849124e750b326207b53bc40c82d917960178a88cd226c29f2739&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -442,9 +445,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-none d-lg-block col-3">
+                    <div class="d-none lg:d-block col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.explicit.bing.net%2Fth%2Fid%2FOIP.hGuoS6plQ5dr2LeQGkMFfwHaFj%3Fr%3D0%26pid%3DApi&f=1&ipt=0cbc9640812ec778bf81edd47d4194472bf04c3912c298fe5c4a4975b832a85d&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -460,10 +463,10 @@
                     </div>
                 </div>
 
-                <div class="d-flex d-lg-none row-cols-lg-4 my-5 gap-4">
-                    <div class="col-4 col-lg-3">
+                <div class="d-flex lg:d-none lg:row-cols-4 my-5 gap-4">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card" style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.explicit.bing.net%2Fth%2Fid%2FOIP.hGuoS6plQ5dr2LeQGkMFfwHaFj%3Fr%3D0%26pid%3DApi&f=1&ipt=0cbc9640812ec778bf81edd47d4194472bf04c3912c298fe5c4a4975b832a85d&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -477,9 +480,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.explicit.bing.net%2Fth%2Fid%2FOIP.hGuoS6plQ5dr2LeQGkMFfwHaFj%3Fr%3D0%26pid%3DApi&f=1&ipt=0cbc9640812ec778bf81edd47d4194472bf04c3912c298fe5c4a4975b832a85d&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -493,9 +496,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 col-lg-3">
+                    <div class="col-4 lg:col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.imF1BHROQ8XpKI59I8ODSgHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=ca59c7f6d9d849124e750b326207b53bc40c82d917960178a88cd226c29f2739&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -509,9 +512,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-none d-lg-auto col-3">
+                    <div class="d-none lg:d-auto col-3">
                         <div class="card item-card " style="background-color: #f5f5f5; color: #111111;">
-                            <div class="card-img-top ratio ratio-4x3 overflow-hidden">
+                            <div class="card-img-top media-frame ratio-4x3 overflow-hidden">
                                 <img class="object-fit-cover" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.explicit.bing.net%2Fth%2Fid%2FOIP.hGuoS6plQ5dr2LeQGkMFfwHaFj%3Fr%3D0%26pid%3DApi&f=1&ipt=0cbc9640812ec778bf81edd47d4194472bf04c3912c298fe5c4a4975b832a85d&ipo=images" alt="">
                             </div>
                             <div class="card-body">
@@ -530,7 +533,7 @@
         </main>
         <footer class="position-relative fixed-bottom d-block w-100 border-top-dashed border-start-dashed border-end-dashed border-thin p-4">
             <div class="container primary-container">
-                <div class="row row-cols-2 row-cols-lg-3 w-100 my-4">
+                <div class="row row-cols-2 lg:row-cols-3 w-100 my-4">
                     <div class="col">
                         <h4 class="text-uppercase"> COMPANY INFO </h4>
                         <ul class="p-0" style="list-style-type: none;">
@@ -560,8 +563,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="d-md-flex d-sm-block justify-content-center align-items-center gap-5">
-                    <button type="button" class="hover-button p-2 border-0 rounded-3"> Language </button>
+                <div class="md:d-flex sm:d-block justify-content-center align-items-center gap-5">
+                    <button type="button" class="hover-button p-2 border-0 rounded-5"> Language </button>
                     <div> Terms of Service </div>
                     <div> Legal </div>
                     <div> Privacy Policy </div>

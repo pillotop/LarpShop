@@ -44,7 +44,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories"
             :cart="$cart"
         />
@@ -55,7 +55,7 @@
                         type="button"
                         class="side-panel-trigger nav-button rounded-pill border-0"
                         data-bs-target="#side-panel"
-                        data-bs-toggle="offcanvas"
+                        data-bs-toggle="drawer"
                         data-side-panel-target="#settings"
                     >
                         <svg class="icon-16">
@@ -98,9 +98,9 @@
         <div id="dropdown-portal"></div>
     </header>
     <main>
-        <section id="main-banners" class="container px-lg-5 my-5">
+        <section id="main-banners" class="container lg:px-5 my-5">
             <div class="row g-4">
-                <div class="col-6 col-lg-3 d-flex flex-column overflow-hidden">
+                <div class="col-6 lg:col-3 d-flex flex-column overflow-hidden">
                     <div class="row g-4 flex-grow-1">
                         <div class="col-12 h-25">
                             <x-category-banner
@@ -122,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-lg-5">
+                <div class="col-6 lg:col-5">
                     <x-category-banner
                         title="Makeup"
                         slug="makeup"
@@ -131,9 +131,9 @@
                         custom-ratio="150%"
                     />
                 </div>
-                <div class="col-12 col-lg-4 d-lg-flex flex-lg-column overflow-hidden">
-                    <div class="row g-4 h-100 flex-lg-grow-1">
-                        <div class="col-5 col-lg-12">
+                <div class="col-12 lg:col-4 lg:d-flex lg:flex-column overflow-hidden">
+                    <div class="row g-4 h-100 lg:flex-grow-1">
+                        <div class="col-5 lg:col-12">
                             <x-category-banner
                                 title="Kitchenware"
                                 slug="kitchenware"
@@ -142,7 +142,7 @@
                                 custom-ratio="67.67%"
                             />
                         </div>
-                        <div class="col-7 col-lg-12 h-100">
+                        <div class="col-7 lg:col-12 h-100">
                             <x-category-banner
                                 title="Fabric"
                                 slug="fabric"
@@ -166,7 +166,7 @@
             <div class="broad-select">
                 <div class="d-flex selector">
                     <div id="vertical" class="carousel-scrollable position-relative overflow-hidden" data-carousel-direction="down" data-carousel-autoplay-speed="0">
-                        <ul class="selector-category-list carousel-scroller ps-0 p-lg-4 overflow-y-scroll">
+                        <ul class="selector-category-list carousel-scroller ps-0 lg:p-4 overflow-y-scroll">
                             <li>
                                 <button type="button" class="selector-item">
                                     <div class="d-inline-flex flex-nowrap">
@@ -203,7 +203,7 @@
             <x-rounded-section-radius>
                 <div class="container">
                     <header class="d-inline-flex flex-wrap position-relative pt-2 mb-4">
-                        <h3 class="fw-bold text-decoration-underline text-uppercase p-3" style="color: white; background: var(--color-complementary-400);">
+                        <h3 class="bg-complementary fg-white fw-bold text-decoration-underline text-uppercase p-3">
                             Everything Larpable
                         </h3>
                         <p>
@@ -223,7 +223,7 @@
                             <ul id="two-arrow-scrollable" class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-scroll m-0">
                                 @foreach ($productCategories as $category)
                                     <li>
-                                        <a href="{{ route('categories.show', ['slug' => $category->slug ?? $category['slug'] ?? '']) }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 text-nowrap text-decoration-none">
+                                        <a href="{{ route('categories.show', ['slug' => $category->slug ?? $category['slug'] ?? '']) }}" class="btn btn-sm btn-outline theme-secondary rounded-pill px-3 text-nowrap text-decoration-none">
                                             {{ $category->name ?? $category['name'] }}
                                         </a>
                                     </li>

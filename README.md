@@ -8,12 +8,12 @@ LarpShop is a multi-category, multi-vendor e-commerce application built as a uni
 | --- | --- |
 | Backend | PHP 8.3+, Laravel 13; Docker uses PHP 8.4 CLI |
 | Database | MySQL; Docker Compose uses MySQL 8.4 |
-| Frontend | Blade, Bootstrap 5.3, Bootstrap Icons, vanilla JavaScript |
+| Frontend | Blade, Bootstrap 6.0.0-alpha.1, Bootstrap Icons, vanilla JavaScript |
 | Asset pipeline | Node.js, npm, Vite 8, Laravel Vite plugin |
 | Tests | PHPUnit 12, isolated MySQL database `larpshop_testing` |
 | Development services | Docker Compose, Mailpit |
 
-Bootstrap and Bootstrap Icons are installed through npm. Vite bundles and minifies project CSS and JavaScript for production. Snap.svg and Google Fonts still use their existing CDN URLs.
+Bootstrap is pinned to the explicitly selected 6.0.0-alpha.1 prerelease. Bootstrap and Bootstrap Icons are installed through npm. Vite bundles and minifies project CSS and JavaScript for production. Snap.svg and Google Fonts still use their existing CDN URLs.
 
 ## Application features
 
@@ -269,6 +269,7 @@ php artisan payments:reconcile
 
 ## Project documentation
 
+- [Bootstrap 6 migration](docs/BOOTSTRAP_6_MIGRATION.md) — Alpha version, theme modules, markup, and verification.
 - [Frontend assets](docs/FRONTEND_ASSETS.md) — Vite, npm, source locations, and build conventions.
 - [Order status model](docs/ORDER_STATUS_MODEL.md) — Order lifecycle and payment status responsibilities.
 - [Account and vendor refactor](docs/ACCOUNT_VENDOR_REFACTOR.md) — Account/store relationship changes.

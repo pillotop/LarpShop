@@ -99,7 +99,7 @@ class ProductQuantityPicker {
         if (!this.feedback) return;
         this.feedback.textContent = message;
         this.feedback.classList.toggle('visually-hidden', !isError);
-        this.feedback.classList.toggle('text-danger', isError);
+        this.feedback.classList.toggle('fg-danger', isError);
     }
 }
 

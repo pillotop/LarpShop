@@ -24,7 +24,7 @@
     ]) }}" class="w-100 h-100 z-1 position-absolute" aria-label="{{ $product->name }}">
     </a>
 
-    <div class="card-img-top ratio ratio-1x1 overflow-hidden">
+    <div class="card-img-top media-frame ratio-1x1 overflow-hidden">
         <img class="object-fit-cover" loading="lazy"
             src="{{ $imagePath }}"
             alt="{{ $imageAlt }}"
@@ -43,7 +43,7 @@
                     @csrf
                     <button
                         id="add-to-cart"
-                        class="btn btn-sm btn-primary d-flex align-items-center justify-content-center shadow px-2"
+                        class="btn btn-sm btn-solid theme-primary d-flex align-items-center justify-content-center shadow px-2"
                         type="button"
                     >
                         Add to cart
@@ -58,7 +58,7 @@
                 :product="$product"
                 :compact="true"
             />
-            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center shadow px-2" type="button">
+            <button class="btn btn-sm btn-outline theme-secondary d-flex align-items-center justify-content-center shadow px-2" type="button">
                 Options
             </button>
         </div>
@@ -67,7 +67,7 @@
     <div class="card-body px-0">
         <div class="card-title mt-1">
             <div class="d-flex flex-wrap justify-content-start align-items-baseline">
-                <div class="me-1 me-xl-2 fw-bold text-dark">
+                <div class="me-1 xl:me-2 fw-bold fg-body">
                     <span class="small" style="vertical-align: 0.65ex; margin-right: 2px;">$</span>
                     <span>{{ $dollars }}</span>
                     <span class="small" style="vertical-align: 0.75ex;">{{ $cents }}</span>

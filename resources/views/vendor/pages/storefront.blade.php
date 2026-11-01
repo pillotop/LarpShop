@@ -40,7 +40,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -54,26 +54,26 @@
         </nav>
 
         {{-- Vendor Store Header / Profile Banner --}}
-        <section class="card border-0 shadow-sm p-4 mb-4 rounded-4" style="background: linear-gradient(135deg, #f8f9fa 0%, #eef2f5 100%);">
+        <section class="card border-0 shadow-sm p-4 mb-4 rounded-9" style="background: linear-gradient(135deg, #f8f9fa 0%, #eef2f5 100%);">
             <div class="row align-items-center g-3">
                 <div class="col-auto">
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow" style="width: 72px; height: 72px; font-size: 2rem;">
+                    <div class="rounded-circle bg-primary fg-white d-flex align-items-center justify-content-center shadow" style="width: 72px; height: 72px; font-size: 2rem;">
                         <i class="bi bi-shop"></i>
                     </div>
                 </div>
                 <div class="col">
                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h1 class="h3 fw-bold mb-0 text-dark">{{ $vendor->store_name }}</h1>
-                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">
+                        <h1 class="h3 fw-bold mb-0 fg-body">{{ $vendor->store_name }}</h1>
+                        <span class="badge bg-subtle-success fg-success border border-success rounded-pill px-3 py-1">
                             <i class="bi bi-patch-check-fill me-1"></i>Verified Merchant
                         </span>
                     </div>
 
                     @if ($vendor->description)
-                        <p class="text-secondary mt-2 mb-2">{{ $vendor->description }}</p>
+                        <p class="fg-secondary mt-2 mb-2">{{ $vendor->description }}</p>
                     @endif
 
-                    <div class="d-flex align-items-center gap-4 text-muted small mt-2">
+                    <div class="d-flex align-items-center gap-4 fg-3 small mt-2">
                         <span>
                             <i class="bi bi-calendar3 me-1"></i>Joined {{ $vendor->created_at ? $vendor->created_at->format('M Y') : 'recently' }}
                         </span>
@@ -87,19 +87,19 @@
 
         {{-- Filter & Search Toolbar --}}
         <section class="mb-4">
-            <div class="card border-0 shadow-sm p-3 rounded-3">
+            <div class="card border-0 shadow-sm p-3 rounded-5">
                 <form method="GET" action="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="row g-2 align-items-center">
                     {{-- Search within store --}}
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 md:col-5">
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0">
-                                <i class="bi bi-search text-muted"></i>
+                            <span class="input-group-text bg-1 border-end-0">
+                                <i class="bi bi-search fg-3"></i>
                             </span>
                             <input
                                 type="text"
                                 name="q"
                                 value="{{ request('q') }}"
-                                class="form-control bg-light border-start-0"
+                                class="form-control bg-1 border-start-0"
                                 placeholder="Search in this store..."
                                 aria-label="Search products"
                             >
@@ -107,8 +107,8 @@
                     </div>
 
                     {{-- Category filter --}}
-                    <div class="col-6 col-md-3">
-                        <select name="category_id" class="form-select bg-light" onchange="this.form.submit()">
+                    <div class="col-6 md:col-3">
+                        <select name="category_id" class="form-control bg-1" onchange="this.form.submit()">
                             <option value="">All Categories</option>
                             @foreach ($vendorCategories as $cat)
                                 <option value="{{ $cat->category_id }}" {{ (string)request('category_id') === (string)$cat->category_id ? 'selected' : '' }}>
@@ -119,8 +119,8 @@
                     </div>
 
                     {{-- Sort options --}}
-                    <div class="col-6 col-md-3">
-                        <select name="sort" class="form-select bg-light" onchange="this.form.submit()">
+                    <div class="col-6 md:col-3">
+                        <select name="sort" class="form-control bg-1" onchange="this.form.submit()">
                             <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Newest Arrivals</option>
                             <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
                             <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
@@ -128,15 +128,15 @@
                         </select>
                     </div>
 
-                    <div class="col-12 col-md-1 d-grid">
-                        <button type="submit" class="btn btn-primary">Filter</button>
+                    <div class="col-12 md:col-1 d-grid">
+                        <button type="submit" class="btn btn-solid theme-primary">Filter</button>
                     </div>
                 </form>
 
                 {{-- Active filter indicators --}}
                 @if (request('q') || request('category_id') || request('sort'))
                     <div class="d-flex align-items-center gap-2 mt-3 pt-2 border-top small">
-                        <span class="text-muted">Filtering by:</span>
+                        <span class="fg-3">Filtering by:</span>
                         @if (request('q'))
                             <span class="badge bg-secondary">Keyword: "{{ request('q') }}"</span>
                         @endif
@@ -146,7 +146,7 @@
                                 <span class="badge bg-secondary">Category: {{ $activeCategory->name }}</span>
                             @endif
                         @endif
-                        <a href="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="text-danger text-decoration-none ms-auto">
+                        <a href="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="fg-danger text-decoration-none ms-auto">
                             <i class="bi bi-x-circle me-1"></i>Reset filters
                         </a>
                     </div>
@@ -157,7 +157,7 @@
         {{-- Products Grid --}}
         <section class="mb-5">
             @if ($products->count() > 0)
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <div class="row row-cols-1 sm:row-cols-2 md:row-cols-3 lg:row-cols-4 g-4">
                     @foreach ($products as $product)
                         <div class="col">
                             <x-product-card-b :product="$product" />
@@ -167,15 +167,15 @@
 
                 {{-- Pagination --}}
                 <div class="d-flex justify-content-center mt-5">
-                    {{ $products->links('pagination::bootstrap-5') }}
+                    {{ $products->links('shared.pagination') }}
                 </div>
             @else
-                <div class="text-center py-5 my-4 bg-light rounded-4">
-                    <div class="text-muted mb-3" style="font-size: 3rem;">
+                <div class="text-center py-5 my-4 bg-1 rounded-9">
+                    <div class="fg-3 mb-3" style="font-size: 3rem;">
                         <i class="bi bi-box-seam"></i>
                     </div>
-                    <h2 class="h5 fw-bold text-dark">No products found</h2>
-                    <p class="text-muted small mb-3">
+                    <h2 class="h5 fw-bold fg-body">No products found</h2>
+                    <p class="fg-3 small mb-3">
                         @if (request('q') || request('category_id'))
                             Try adjusting your search or filters to find what you're looking for.
                         @else
@@ -183,7 +183,7 @@
                         @endif
                     </p>
                     @if (request('q') || request('category_id'))
-                        <a href="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="btn btn-outline theme-primary btn-sm">
                             Clear filters
                         </a>
                     @endif

@@ -34,7 +34,7 @@
         ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
-            product-cart-bs-toggle="offcanvas"
+            product-cart-bs-toggle="drawer"
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
@@ -52,15 +52,15 @@
         </nav>
 
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-4 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
-                <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+            <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show rounded-4 p-3 mb-4 shadow-sm" role="alert">
+            <div class="alert theme-danger alert-dismissible fade show rounded-9 p-3 mb-4 shadow-sm" role="alert">
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -70,27 +70,27 @@
             </div>
         @endif
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-4 bg-primary bg-opacity-10 p-3 text-primary">
-                        <i class="bi bi-images fs-2"></i>
+                    <div class="rounded-9 bg-primary bg-10 p-3 fg-primary">
+                        <i class="bi bi-images fs-2xl"></i>
                     </div>
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">Manage Product Images (UC-32)</h4>
-                        <div class="text-muted small">
+                        <h4 class="fw-bold fg-body mb-1">Manage Product Images (UC-32)</h4>
+                        <div class="fg-3 small">
                             Product: <strong>{{ $product->name }}</strong> (#{{ $product->product_id }}) &bull;
-                            Price: <span class="text-success fw-bold">${{ number_format((float) $product->price, 2) }}</span> &bull;
+                            Price: <span class="fg-success fw-bold">${{ number_format((float) $product->price, 2) }}</span> &bull;
                             Stock: <strong>{{ $product->stock }}</strong>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('vendor.products.edit', $product->product_id) }}" class="btn btn-outline-secondary rounded-pill px-3">
+                    <a href="{{ route('vendor.products.edit', $product->product_id) }}" class="btn btn-outline theme-secondary rounded-pill px-3">
                         <i class="bi bi-pencil me-1"></i>Edit Product
                     </a>
                     @if ($product->is_active && $product->status === 'approved')
-                        <a href="{{ route('products.show', [$product->product_id, $product->slug]) }}" target="_blank" class="btn btn-outline-primary rounded-pill px-3">
+                        <a href="{{ route('products.show', [$product->product_id, $product->slug]) }}" target="_blank" class="btn btn-outline theme-primary rounded-pill px-3">
                             <i class="bi bi-eye me-1"></i>View Product Page
                         </a>
                     @endif
@@ -98,22 +98,22 @@
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="border-bottom pb-3 mb-4">
-                <h5 class="fw-bold text-dark mb-1">
-                    <i class="bi bi-cloud-arrow-up text-primary me-2"></i>Upload New Images
+                <h5 class="fw-bold fg-body mb-1">
+                    <i class="bi bi-cloud-arrow-up fg-primary me-2"></i>Upload New Images
                 </h5>
-                <p class="text-muted small mb-0">Supported formats: JPG, JPEG, PNG, WEBP, GIF (max 5MB per file). You can select multiple images at once.</p>
+                <p class="fg-3 small mb-0">Supported formats: JPG, JPEG, PNG, WEBP, GIF (max 5MB per file). You can select multiple images at once.</p>
             </div>
 
             <form action="{{ route('vendor.products.images.store', $product->product_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-7">
-                        <label for="images" class="form-label fw-semibold">Image Files <span class="text-danger">*</span></label>
+                    <div class="md:col-7">
+                        <label for="images" class="form-label fw-semibold">Image Files <span class="fg-danger">*</span></label>
                         <input
                             type="file"
-                            class="form-control form-control-lg rounded-3 @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror"
+                            class="form-control form-control-lg rounded-5 @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror"
                             id="images"
                             name="images[]"
                             multiple
@@ -125,19 +125,19 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="md:col-3">
                         <label for="alt_text" class="form-label fw-semibold">Alt Text</label>
                         <input
                             type="text"
-                            class="form-control form-control-lg rounded-3"
+                            class="form-control form-control-lg rounded-5"
                             id="alt_text"
                             name="alt_text"
                             placeholder="Brief image description..."
                         >
                     </div>
 
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill w-100 fw-semibold">
+                    <div class="md:col-2">
+                        <button type="submit" class="btn btn-solid theme-primary btn-lg rounded-pill w-100 fw-semibold">
                             <i class="bi bi-upload me-1"></i>Upload
                         </button>
                     </div>
@@ -145,19 +145,19 @@
             </form>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 border-bottom pb-3 mb-4">
-                <h5 class="fw-bold text-dark mb-0">
-                    <i class="bi bi-grid-3x3 text-primary me-2"></i>Current Gallery ({{ $images->count() }})
+                <h5 class="fw-bold fg-body mb-0">
+                    <i class="bi bi-grid-3x3 fg-primary me-2"></i>Current Gallery ({{ $images->count() }})
                 </h5>
-                <span class="text-muted small">The image with the lowest sort order is displayed as the primary cover thumbnail.</span>
+                <span class="fg-3 small">The image with the lowest sort order is displayed as the primary cover thumbnail.</span>
             </div>
 
             @if ($images->isEmpty())
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-image fs-1 d-block mb-3 text-secondary"></i>
+                <div class="text-center py-5 fg-3">
+                    <i class="bi bi-image fs-3xl d-block mb-3 fg-secondary"></i>
                     <h6 class="fw-bold">No images uploaded for this product yet</h6>
-                    <p class="small text-muted mb-0">Upload clear photos to showcase your item to customers.</p>
+                    <p class="small fg-3 mb-0">Upload clear photos to showcase your item to customers.</p>
                 </div>
             @else
                 <div class="row g-4">

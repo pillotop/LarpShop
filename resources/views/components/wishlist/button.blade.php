@@ -21,13 +21,13 @@
 
         <button
             type="submit"
-            class="btn btn-sm btn-outline-secondary"
+            class="btn btn-sm btn-outline theme-secondary"
             aria-label="{{ $label }}: {{ $product->name }}"
             title="{{ $label }}"
             aria-pressed="{{ $saved ? 'true' : 'false' }}"
         >
             <i
-                class="bi {{ $saved ? 'bi-heart-fill text-danger' : 'bi-heart' }}"
+                class="bi {{ $saved ? 'bi-heart-fill fg-danger' : 'bi-heart' }}"
                 aria-hidden="true"
             ></i>
             <span @class(['visually-hidden' => $compact])>{{ $label }}</span>
@@ -36,7 +36,7 @@
 @else
     <a
         href="{{ route('login') }}"
-        class="btn btn-sm btn-outline-secondary"
+        class="btn btn-sm btn-outline theme-secondary"
         aria-label="Sign in to save {{ $product->name }} to your wishlist"
     >
         <i class="bi bi-heart" aria-hidden="true"></i>

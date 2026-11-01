@@ -1,7 +1,7 @@
 <div>
     <h2 class="h4 fw-bold mb-3">Credit or Debit card</h2>
 
-    <p class="small text-muted">
+    <p class="small fg-3">
         Card payments are not available yet. These sample fields are a preview only.
     </p>
 
@@ -66,7 +66,7 @@
 
     <button
         type="button"
-        class="btn btn-secondary w-100 py-3"
+        class="btn btn-solid theme-secondary w-100 py-3"
         disabled
     >
         Card payments coming soon

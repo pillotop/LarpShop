@@ -4,9 +4,13 @@
         <meta charset="UTF-8">
         <title>Đăng sản phẩm mới - Larp Shop</title>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite([
+            'resources/scss/app.scss',
+            'resources/css/app.css',
+            'resources/js/app.js',
+        ])
 </head>
-    <body class="bg-light">
+    <body class="bg-1">
         <div class="container mt-5">
             <div class="card shadow-sm p-4">
                 <h3 class="mb-4">Thêm sản phẩm mới (Vendor Dashboard)</h3>
@@ -22,7 +26,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Danh mục</label>
-                        <select name="category_id" class="form-select">
+                        <select name="category_id" class="form-control">
                             <option value="1">Collectibles</option>
                             <option value="2">Electronics</option>
                             <option value="3">Fashion</option>
@@ -32,7 +36,7 @@
                         <label class="form-label">Hình ảnh sản phẩm</label>
                         <input type="file" name="image" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary">Đăng sản phẩm</button>
+                    <button type="submit" class="btn btn-solid theme-primary">Đăng sản phẩm</button>
                 </form>
             </div>
         </div>

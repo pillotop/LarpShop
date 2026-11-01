@@ -21,25 +21,25 @@
 
 @section('content')
     <header>
-        <nav class="navigation-bar navbar navbar-expand-lg">
+        <nav class="navigation-bar navbar lg:navbar-expand">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="/images/larp_shop.jpg" alt="LarpShop home" class="rounded-circle logo-larpshop-logo">
                 </a>
                 <div class="d-flex flex-grow-1">
-                    <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <div class="navbar-nav me-auto mb-2 lg:mb-0">
                         <button
                             type="button"
                             class="side-panel-trigger nav-link"
                             data-side-panel-target="#sm-cart"
-                            data-bs-toggle="offcanvas"
+                            data-bs-toggle="drawer"
                             data-bs-target="#side-panel"
                         >
                             Your order
                         </button>
                         <template id="sm-cart">
                             <div class="p-3 text-end">
-                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="Close"></button>
                             </div>
                             <x-checkout.order-summary :data="$order"/>
                         </template>
@@ -49,7 +49,7 @@
                     type="button"
                     class="side-panel-trigger nav-link d-flex align-items-center gap-2"
                     data-side-panel-target="#settings"
-                    data-bs-toggle="offcanvas"
+                    data-bs-toggle="drawer"
                     data-bs-target="#side-panel"
                 >
 
@@ -75,15 +75,15 @@
     <main>
         <div class="container">
             @if (session('success'))
-                <div class="alert alert-success" role="status">{{ session('success') }}</div>
+                <div class="alert theme-success" role="status">{{ session('success') }}</div>
             @endif
             @if ($errors->any())
-                <div class="alert alert-danger" role="alert">
+                <div class="alert theme-danger" role="alert">
                     <ul class="mb-0">@foreach ($errors->all() as $message)<li>{{ $message }}</li>@endforeach</ul>
                 </div>
             @endif
             <div class="row g-3">
-                <div class="col-12 col-lg-7 d-flex flex-column">
+                <div class="col-12 lg:col-7 d-flex flex-column">
                     <div class="p-4">
                         <x-checkout.details-section :user="$user" :order="$order"/>
                     </div>
@@ -99,7 +99,7 @@
                         />
                     </div>
                 </div>
-                <div class="d-none d-lg-block col-5">
+                <div class="d-none lg:d-block col-5">
                     <div class="sticky-top pt-4">
                     <x-checkout.order-summary :data="$order"/>
                     </div>

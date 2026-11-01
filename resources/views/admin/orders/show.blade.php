@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="container-fluid p-0">
-    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-light rounded-pill mb-3">
+    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-solid theme-secondary rounded-pill mb-3">
         <i class="bi bi-arrow-left"></i> Back to orders
     </a>
 

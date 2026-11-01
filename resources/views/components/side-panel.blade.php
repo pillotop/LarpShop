@@ -8,25 +8,16 @@
 
 @if ($admin || request()->is('admin*'))
     <x-admin.side-panel />
-@elseif ($slot->isNotEmpty())
-    <div
+@else
+    <dialog
         id="side-panel"
-        class="offcanvas offcanvas-{{ $alignment }} {{ $showByDefault ? 'show' : '' }} rounded-2"
+        class="drawer drawer-{{ $alignment }} rounded-4"
         tabindex="-1"
         data-bs-scroll="{{ $enableScroll ? 'true' : 'false' }}"
         data-bs-backdrop="{{ $enableBackdrop ? 'true' : 'false' }}"
+        @if ($showByDefault) open @endif
         {{ $attributes }}
     >
         {{ $slot }}
-    </div>
-@else
-    <div
-        id="side-panel"
-        class="offcanvas offcanvas-{{ $alignment }} {{ $showByDefault ? 'show' : '' }} rounded-2"
-        tabindex="-1"
-        data-bs-scroll="{{ $enableScroll ? 'true' : 'false' }}"
-        data-bs-backdrop="{{ $enableBackdrop ? 'true' : 'false' }}"
-        {{ $attributes }}
-    >
-    </div>
+    </dialog>
 @endif
