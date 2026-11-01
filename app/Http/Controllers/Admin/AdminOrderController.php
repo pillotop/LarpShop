@@ -69,6 +69,6 @@ class AdminOrderController extends Controller
 
         $order = $this->orderService->updateStatus($order, OrderStatus::from($validated['status']));
 
-        return back()->with('success', "Order #{$order->order_id} status updated to '{$order->status->value}'.");
+        return back()->with('success', __('management.messages.order_status', ['id' => $order->order_id, 'status' => __('checkout.order_status.'.$order->status->value)]));
     }
 }

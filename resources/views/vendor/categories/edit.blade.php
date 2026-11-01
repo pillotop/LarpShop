@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Category | ' . $category->name)
+@section('title', __('management.edit_category').' | ' . $category->name)
 
 @section('head')
 
@@ -44,9 +44,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.categories.index') }}">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Edit: {{ $category->name }}</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.categories.index') }}">{{ __('management.categories') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.display.edit') }} {{ $category->name }}</li>
             </ol>
         </nav>
 
@@ -54,9 +54,9 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom pb-3 mb-4">
                 <div>
                     <h3 class="fw-bold fg-body mb-1">
-                        <i class="bi bi-pencil-square fg-primary me-2"></i>Edit Category
+                        <i class="bi bi-pencil-square fg-primary me-2"></i>{{ __('management.edit_category') }}
                     </h3>
-                    <p class="fg-3 small mb-0">Update details for <strong>{{ $category->name }}</strong>.</p>
+                    <p class="fg-3 small mb-0">{{ __('management.update_details_for') }} <strong>{{ $category->name }}</strong>.</p>
                 </div>
                 <div>
                     <form action="{{ route('vendor.categories.toggle-status', $category->category_id) }}" method="POST" class="m-0">
@@ -64,11 +64,11 @@
                         @method('PATCH')
                         @if ($category->is_active)
                             <button type="submit" class="btn btn-outline theme-danger rounded-pill px-3">
-                                <i class="bi bi-slash-circle me-1"></i>Disable Category
+                                <i class="bi bi-slash-circle me-1"></i>{{ __('management.disable_category') }}
                             </button>
                         @else
                             <button type="submit" class="btn btn-outline theme-success rounded-pill px-3">
-                                <i class="bi bi-check-circle me-1"></i>Enable Category
+                                <i class="bi bi-check-circle me-1"></i>{{ __('management.enable_category') }}
                             </button>
                         @endif
                     </form>
@@ -80,7 +80,7 @@
                 :parent-categories="$parentCategories"
                 :action="route('vendor.categories.update', $category->category_id)"
                 method="PUT"
-                submit-label="Update Category"
+                submit-label="{{ __('management.update_category') }}"
             />
         </div>
     </main>

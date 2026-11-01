@@ -1,16 +1,18 @@
 @props([
+    'id' => 'side-panel',
     'alignment' => 'start',
     'enableScroll' => true,
     'enableBackdrop' => true,
     'showByDefault' => false,
     'admin' => false,
+    'forceDrawer' => false,
 ])
 
-@if ($admin || request()->is('admin*'))
+@if ($admin || (! $forceDrawer && request()->is('admin*')))
     <x-admin.side-panel />
 @else
     <dialog
-        id="side-panel"
+        id="{{ $id }}"
         class="drawer drawer-{{ $alignment }} rounded-4"
         tabindex="-1"
         data-bs-scroll="{{ $enableScroll ? 'true' : 'false' }}"

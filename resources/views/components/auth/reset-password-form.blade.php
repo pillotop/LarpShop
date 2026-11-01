@@ -4,12 +4,14 @@
 ])
 
 <div id="auth-form" class="blur position-relative shadow border rounded-4 p-4">
+    @include('auth.partials.messages')
+
     <h3 class="primary-text" id="login-form-header">
-        Reset your password
+        {{ __('auth.recovery.reset_your_password') }}
     </h3>
 
     <p id="login-form-email-text" class="fg-3">
-        Enter a new password for your account.
+        {{ __('auth.recovery.enter_a_new_password_for_your_account') }}
     </p>
 
     <div
@@ -40,7 +42,7 @@
         <fieldset id="reset-password-state" class="border-0 p-0">
             <div class="my-2">
                 <label for="email-input" class="form-label">
-                    Email address
+                    {{ __('auth.recovery.email_address') }}
                 </label>
 
                 <input
@@ -67,7 +69,7 @@
 
             <div class="my-2">
                 <label for="new-password-input" class="form-label">
-                    New password
+                    {{ __('auth.recovery.new_password') }}
                 </label>
 
                 <input
@@ -93,7 +95,7 @@
 
             <div class="my-2">
                 <label for="confirm-password-input" class="form-label">
-                    Confirm new password
+                    {{ __('auth.recovery.confirm_new_password') }}
                 </label>
 
                 <input
@@ -124,7 +126,7 @@
             id="login-form-primary-button"
             class="w-100 border-0 rounded-4 p-2 my-2"
         >
-            Reset password
+            {{ __('auth.recovery.reset_password') }}
         </button>
 
         <a
@@ -132,7 +134,7 @@
             id="login-form-secondary-button"
             class="btn btn-link"
         >
-            Back to sign in
+            {{ __('auth.recovery.back_to_sign_in') }}
         </a>
     </form>
 </div>

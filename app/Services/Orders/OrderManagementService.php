@@ -18,7 +18,7 @@ class OrderManagementService
     {
         if ($status !== OrderStatus::Cancelled) {
             throw ValidationException::withMessages([
-                'status' => 'Only eligible order cancellation is available here. Payment status is managed by the payment flow.',
+                'status' => __('management.messages.cancellation_only'),
             ]);
         }
 

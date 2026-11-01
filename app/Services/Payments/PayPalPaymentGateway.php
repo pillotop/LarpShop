@@ -58,14 +58,14 @@ class PayPalPaymentGateway implements CapturesPayment, PaymentGateway
         $result = $this->result($reference, $order);
         if ($result->amount !== $request->amount || $result->currency !== $request->currency
             || $result->merchantReference !== $request->reference) {
-            throw ValidationException::withMessages(['payment' => 'Provider payment details do not match this payment.']);
+            throw ValidationException::withMessages(['payment' => __('checkout.errors.provider_details')]);
         }
 
         if (in_array($result->status, ['succeeded', 'processing', 'failed', 'cancelled'], true)) {
             return $result;
         }
         if (($order['status'] ?? null) !== 'APPROVED') {
-            throw ValidationException::withMessages(['payment' => 'Approve the payment with PayPal before completing it.']);
+            throw ValidationException::withMessages(['payment' => __('checkout.errors.paypal_approval')]);
         }
 
         return $this->result($reference, $this->client->captureOrder($reference, $request->requestId.'-capture'));

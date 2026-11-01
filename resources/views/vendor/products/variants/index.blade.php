@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Product Variants (UC-37) | ' . $product->name)
+@section('title', __('management.manage_product_variants').' (UC-37) | ' . $product->name)
 
 @section('head')
 
@@ -45,9 +45,9 @@
         {{-- Breadcrumbs Navigation --}}
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('profile') }}">Profile</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">Products</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('profile') }}">{{ __('management.profile') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">{{ __('management.products') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Variants ({{ $product->name }})</li>
             </ol>
         </nav>
@@ -57,21 +57,21 @@
             <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">
-                    <strong>Success!</strong> {{ session('success') }}
+                    <strong>{{ __('management.success') }}</strong> {{ session('success') }}
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
         @if ($errors->any())
             <div class="alert theme-danger alert-dismissible fade show rounded-9 p-3 mb-4 shadow-sm" role="alert">
-                <div class="fw-bold mb-1">Please correct the following errors:</div>
+                <div class="fw-bold mb-1">{{ __('management.please_correct_the_following_errors') }}</div>
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -79,20 +79,18 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <div>
                     <h1 class="h4 fw-bold fg-body mb-1">
-                        <i class="bi bi-diagram-3-fill fg-primary me-2"></i>Product Variants: {{ $product->name }}
+                        <i class="bi bi-diagram-3-fill fg-primary me-2"></i>{{ __('management.display.product_variants') }} {{ $product->name }}
                     </h1>
                     <p class="fg-3 small mb-0">
-                        Base Price: <strong class="fg-success">${{ number_format($product->price, 2) }}</strong> |
-                        Base Stock: <strong>{{ $product->stock }}</strong> |
-                        Store: <strong>{{ $vendor->store_name }}</strong>
+                        {{ __('management.base_price') }} <strong class="fg-success">${{ number_format($product->price, 2) }}</strong> {{ __('management.base_stock') }} <strong>{{ $product->stock }}</strong> {{ __('management.store_label') }} <strong>{{ $vendor->store_name }}</strong>
                     </p>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('vendor.products.index') }}" class="btn btn-outline theme-secondary rounded-pill px-3">
-                        <i class="bi bi-arrow-left me-1"></i>Back to Products
+                        <i class="bi bi-arrow-left me-1"></i>{{ __('management.back_to_products') }}
                     </a>
                     <button type="button" class="btn btn-solid theme-primary rounded-pill px-3" data-bs-toggle="collapse" data-bs-target="#createVariantForm" aria-expanded="false">
-                        <i class="bi bi-plus-lg me-1"></i>Add Variant
+                        <i class="bi bi-plus-lg me-1"></i>{{ __('management.add_variant') }}
                     </button>
                 </div>
             </div>
@@ -101,36 +99,36 @@
         {{-- Add Variant Form (Collapsible) --}}
         <div class="collapse mb-4 {{ $errors->any() ? 'show' : '' }}" id="createVariantForm">
             <div class="card border-0 shadow-sm rounded-9 p-4 bg-1">
-                <h2 class="h5 fw-bold mb-3"><i class="bi bi-plus-circle me-2"></i>New Product Variant</h2>
+                <h2 class="h5 fw-bold mb-3"><i class="bi bi-plus-circle me-2"></i>{{ __('management.new_product_variant') }}</h2>
                 <form action="{{ route('vendor.products.variants.store', $product) }}" method="POST">
                     @csrf
                     <div class="row g-3">
                         <div class="col-12 md:col-4">
-                            <label class="form-label fw-semibold small">Variant Name <span class="fg-danger">*</span></label>
-                            <input type="text" name="name" class="form-control rounded-5" placeholder="e.g. Size XL / Color Black" value="{{ old('name') }}" required>
+                            <label class="form-label fw-semibold small">{{ __('management.variant_name') }} <span class="fg-danger">*</span></label>
+                            <input type="text" name="name" class="form-control rounded-5" placeholder="{{ __('management.e_g_size_xl_color_black') }}" value="{{ old('name') }}" required>
                         </div>
                         <div class="col-12 md:col-3">
-                            <label class="form-label fw-semibold small">SKU</label>
-                            <input type="text" name="sku" class="form-control rounded-5" placeholder="e.g. SKU-PROD-XL" value="{{ old('sku') }}">
+                            <label class="form-label fw-semibold small">{{ __('management.sku') }}</label>
+                            <input type="text" name="sku" class="form-control rounded-5" placeholder="{{ __('management.e_g_sku_prod_xl') }}" value="{{ old('sku') }}">
                         </div>
                         <div class="col-12 md:col-2">
-                            <label class="form-label fw-semibold small">Price ($) <span class="fg-danger">*</span></label>
+                            <label class="form-label fw-semibold small">{{ __('management.price_text') }} <span class="fg-danger">*</span></label>
                             <input type="number" step="0.01" min="0" name="price" class="form-control rounded-5" value="{{ old('price', $product->price) }}" required>
                         </div>
                         <div class="col-12 md:col-2">
-                            <label class="form-label fw-semibold small">Stock <span class="fg-danger">*</span></label>
+                            <label class="form-label fw-semibold small">{{ __('management.stock') }} <span class="fg-danger">*</span></label>
                             <input type="number" min="0" name="stock" class="form-control rounded-5" value="{{ old('stock', 0) }}" required>
                         </div>
                         <div class="col-12 md:col-1 d-flex flex-column justify-content-end">
                             <div class="d-flex align-items-center gap-2 d-flex align-items-center gap-2 mb-2">
                                 <input type="hidden" name="is_active" value="0">
                                 <input class="switch" type="checkbox" role="switch" name="is_active" value="1" id="isActiveSwitch" checked>
-                                <label class="form-label small" for="isActiveSwitch">Active</label>
+                                <label class="form-label small" for="isActiveSwitch">{{ __('management.active') }}</label>
                             </div>
                         </div>
                         <div class="col-12 text-end">
-                            <button type="button" class="btn btn-outline theme-secondary rounded-pill px-3 me-2" data-bs-toggle="collapse" data-bs-target="#createVariantForm">Cancel</button>
-                            <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4">Save Variant</button>
+                            <button type="button" class="btn btn-outline theme-secondary rounded-pill px-3 me-2" data-bs-toggle="collapse" data-bs-target="#createVariantForm">{{ __('management.cancel') }}</button>
+                            <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4">{{ __('management.save_variant') }}</button>
                         </div>
                     </div>
                 </form>
@@ -144,12 +142,12 @@
                     <thead class="bg-1">
                         <tr>
                             <th class="ps-4">#</th>
-                            <th>Variant Name</th>
-                            <th>SKU</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th>{{ __('management.variant_name') }}</th>
+                            <th>{{ __('management.sku') }}</th>
+                            <th>{{ __('management.price') }}</th>
+                            <th>{{ __('management.stock') }}</th>
+                            <th>{{ __('management.status') }}</th>
+                            <th class="text-end pe-4">{{ __('management.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,29 +155,29 @@
                             <tr>
                                 <td class="ps-4 fg-3 small">{{ $variant->variant_id }}</td>
                                 <td class="fw-semibold">{{ $variant->name }}</td>
-                                <td><span class="badge bg-1 fg-body border">{{ $variant->sku ?? 'N/A' }}</span></td>
+                                <td><span class="badge bg-1 fg-body border">{{ $variant->sku ?? __('management.n_a') }}</span></td>
                                 <td class="fg-success fw-bold">${{ number_format($variant->price, 2) }}</td>
                                 <td>
                                     @if ($variant->stock <= 0)
-                                        <span class="badge bg-danger">Out of Stock</span>
+                                        <span class="badge bg-danger">{{ __('management.out_of_stock') }}</span>
                                     @elseif ($variant->stock <= 5)
-                                        <span class="badge bg-warning fg-body">{{ $variant->stock }} (Low)</span>
+                                        <span class="badge bg-warning fg-body">{{ __('management.low_stock_count', ['count' => $variant->stock]) }}</span>
                                     @else
-                                        <span class="badge bg-subtle-success fg-success border border-success">{{ $variant->stock }} in stock</span>
+                                        <span class="badge bg-subtle-success fg-success border border-success">{{ $variant->stock }} {{ __('management.quantity_labels.in_stock') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if ($variant->is_active)
-                                        <span class="badge bg-subtle-success fg-success">Active</span>
+                                        <span class="badge bg-subtle-success fg-success">{{ __('management.active') }}</span>
                                     @else
-                                        <span class="badge bg-secondary">Inactive</span>
+                                        <span class="badge bg-secondary">{{ __('management.inactive') }}</span>
                                     @endif
                                 </td>
                                 <td class="text-end pe-4">
                                     <button type="button" class="btn btn-sm btn-outline theme-primary rounded-pill px-2 me-1" data-bs-toggle="dialog" data-bs-target="#editModal{{ $variant->variant_id }}">
-                                        <i class="bi bi-pencil me-1"></i>Edit
+                                        <i class="bi bi-pencil me-1"></i>{{ __('management.edit') }}
                                     </button>
-                                    <form action="{{ route('vendor.products.variants.destroy', [$product, $variant]) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this variant?');">
+                                    <form action="{{ route('vendor.products.variants.destroy', [$product, $variant]) }}" method="POST" class="d-inline" data-confirm="{{ __('management.are_you_sure_you_want_to_delete_this_variant') }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-2">
@@ -195,37 +193,37 @@
                                             @csrf
                                             @method('PUT')
                                             <div class="dialog-header">
-                                                <h5 class="dialog-title fw-bold" id="editModalLabel{{ $variant->variant_id }}">Edit Variant</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Close"></button>
+                                                <h5 class="dialog-title fw-bold" id="editModalLabel{{ $variant->variant_id }}">{{ __('management.edit_variant') }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="{{ __('management.close') }}"></button>
                                             </div>
                                             <div class="dialog-body">
                                                 <div class="mb-3">
-                                                    <label class="form-label fw-semibold small">Variant Name <span class="fg-danger">*</span></label>
+                                                    <label class="form-label fw-semibold small">{{ __('management.variant_name') }} <span class="fg-danger">*</span></label>
                                                     <input type="text" name="name" class="form-control rounded-5" value="{{ old('name', $variant->name) }}" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label fw-semibold small">SKU</label>
+                                                    <label class="form-label fw-semibold small">{{ __('management.sku') }}</label>
                                                     <input type="text" name="sku" class="form-control rounded-5" value="{{ old('sku', $variant->sku) }}">
                                                 </div>
                                                 <div class="row g-2 mb-3">
                                                     <div class="col-6">
-                                                        <label class="form-label fw-semibold small">Price ($) <span class="fg-danger">*</span></label>
+                                                        <label class="form-label fw-semibold small">{{ __('management.price_text') }} <span class="fg-danger">*</span></label>
                                                         <input type="number" step="0.01" min="0" name="price" class="form-control rounded-5" value="{{ old('price', $variant->price) }}" required>
                                                     </div>
                                                     <div class="col-6">
-                                                        <label class="form-label fw-semibold small">Stock <span class="fg-danger">*</span></label>
+                                                        <label class="form-label fw-semibold small">{{ __('management.stock') }} <span class="fg-danger">*</span></label>
                                                         <input type="number" min="0" name="stock" class="form-control rounded-5" value="{{ old('stock', $variant->stock) }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center gap-2 d-flex align-items-center gap-2">
                                                     <input type="hidden" name="is_active" value="0">
                                                     <input class="switch" type="checkbox" role="switch" name="is_active" value="1" id="editActiveSwitch{{ $variant->variant_id }}" @checked($variant->is_active)>
-                                                    <label class="form-label small" for="editActiveSwitch{{ $variant->variant_id }}">Active / Visible</label>
+                                                    <label class="form-label small" for="editActiveSwitch{{ $variant->variant_id }}">{{ __('management.active_visible') }}</label>
                                                 </div>
                                             </div>
                                             <div class="dialog-footer">
-                                                <button type="button" class="btn btn-outline theme-secondary rounded-pill" data-bs-dismiss="dialog">Cancel</button>
-                                                <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4">Update</button>
+                                                <button type="button" class="btn btn-outline theme-secondary rounded-pill" data-bs-dismiss="dialog">{{ __('management.cancel') }}</button>
+                                                <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4">{{ __('management.update') }}</button>
                                             </div>
                                         </form>
                                     </dialog>
@@ -233,10 +231,10 @@
                             <tr>
                                 <td colspan="7" class="text-center py-5">
                                     <div class="fg-3 mb-2"><i class="bi bi-diagram-3 fs-3xl"></i></div>
-                                    <h5 class="fw-bold fg-body">No variants added yet</h5>
-                                    <p class="fg-3 small mb-3">You can add variants like sizes, colors, or specifications for this product.</p>
+                                    <h5 class="fw-bold fg-body">{{ __('management.no_variants_added_yet') }}</h5>
+                                    <p class="fg-3 small mb-3">{{ __('management.variants_help') }}</p>
                                     <button type="button" class="btn btn-sm btn-solid theme-primary rounded-pill px-3" data-bs-toggle="collapse" data-bs-target="#createVariantForm">
-                                        <i class="bi bi-plus-lg me-1"></i>Add First Variant
+                                        <i class="bi bi-plus-lg me-1"></i>{{ __('management.add_first_variant') }}
                                     </button>
                                 </td>
                             </tr>

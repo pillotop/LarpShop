@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 
-@section('title', 'Order #'.$order->order_id.' (UC-44)')
-@section('page_title', 'Order #'.$order->order_id)
+@section('title', __('management.display.order').''.$order->order_id.' (UC-44)')
+@section('page_title', __('management.display.order').''.$order->order_id)
 
 @section('content')
 <div class="container-fluid p-0">
     <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-solid theme-secondary rounded-pill mb-3">
-        <i class="bi bi-arrow-left"></i> Back to orders
+        <i class="bi bi-arrow-left"></i> {{ __('management.back_to_orders') }}
     </a>
 
     {{-- Order Summary, Totals & Status (UC-44) --}}

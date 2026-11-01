@@ -49,7 +49,7 @@ class AdminCategoryController extends Controller
         $category = $this->categoryService->create($validated);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', "Category '{$category->name}' has been created.");
+            ->with('success', __('management.messages.category_created', ['name' => $category->name]));
     }
 
     /**
@@ -62,7 +62,7 @@ class AdminCategoryController extends Controller
         $this->categoryService->update($category, $validated);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', "Category '{$category->name}' has been updated.");
+            ->with('success', __('management.messages.category_updated', ['name' => $category->name]));
     }
 
     /**
@@ -77,7 +77,7 @@ class AdminCategoryController extends Controller
         }
 
         return redirect()->route('admin.categories.index')
-            ->with('success', "Category '{$category->name}' has been deleted.");
+            ->with('success', __('management.messages.category_deleted', ['name' => $category->name]));
     }
 
     /**

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Product Listing (UC-30) | ' . $vendor->store_name)
+@section('title', __('management.create_product_listing').' (UC-30) | ' . $vendor->store_name)
 
 @section('head')
 
@@ -44,9 +44,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">Products & Inventory</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Product Listing</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">{{ __('management.products_inventory') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.create_product_listing') }}</li>
             </ol>
         </nav>
 
@@ -55,10 +55,10 @@
         <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white mb-4">
             <div class="border-bottom pb-3 mb-4">
                 <h3 class="fw-bold fg-body mb-1">
-                    <i class="bi bi-plus-circle fg-primary me-2"></i>Create New Product Listing (UC-30)
+                    <i class="bi bi-plus-circle fg-primary me-2"></i>{{ __('management.create_new_product_listing_uc_30') }}
                 </h3>
                 <p class="fg-3 small mb-0">
-                    Publish a new item for <strong>{{ $vendor->store_name }}</strong> with pricing, stock quantity, and optional images.
+                    {{ __('management.copy.create_intro', ['store' => $vendor->store_name]) }}
                 </p>
             </div>
 
@@ -66,7 +66,7 @@
                 :categories="$categories"
                 :action="route('vendor.products.store')"
                 method="POST"
-                submit-label="Create Product Listing"
+                submit-label="{{ __('management.create_product_listing') }}"
                 :allow-image-upload="true"
             />
         </div>

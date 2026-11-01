@@ -1,3 +1,4 @@
+import { cartMessage } from './cart_messages.js';
 (() => {
     const trigger = document.querySelector('#product-cart[data-cart-show-url]');
     const initial = document.getElementById('cart-initial-state');
@@ -57,7 +58,7 @@
             applyPresentation(panel);
             const status = panel.querySelector('[data-cart-sort-status]');
             const label = panel.querySelector('[data-cart-sort] option:checked')?.textContent;
-            if (status) status.textContent = `Sorted by ${label}, ${presentation.direction === 'asc' ? 'ascending' : 'descending'}.`;
+            if (status) status.textContent = cartMessage('sorted', { field: label, direction: cartMessage(presentation.direction === 'asc' ? 'ascending' : 'descending') });
         }
     }
 

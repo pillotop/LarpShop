@@ -41,11 +41,11 @@ class ProfileController extends Controller
         ]);
 
         if ($request->expectsJson()) {
-            return response()->json(['message' => 'Profile updated successfully.', 'user' => $user]);
+            return response()->json(['message' => __('profile.success.updated'), 'user' => $user]);
         }
 
         return redirect()->route('profile')
             ->with('status', 'profile-updated')
-            ->with('success', 'Profile updated successfully.');
+            ->with('success', __('profile.success.updated'));
     }
 }

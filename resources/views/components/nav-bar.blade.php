@@ -8,7 +8,10 @@
 <nav class="navigation-bar position-relative z-1 py-2">
     <div class="row gap-1 lg:gap-3">
         <div class="col-1 d-flex align-items-center justify-content-center">
-            <a href="{{ route('home') }}">
+            <a
+                href="{{ route('home') }}"
+                aria-label="{{ __('common.home') }}"
+            >
                 <img src="/images/larp_shop.jpg" class="rounded-circle logo-larpshop-logo">
             </a>
         </div>
@@ -19,8 +22,8 @@
                 class="d-flex rounded-9 h-100"
                 role="search"
             >
-                <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="cateogry selection" data-dropdown-trigger="categories">
-                    <span>Categories</span>
+                <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="{{ __('common.select_category') }}" data-dropdown-trigger="categories">
+                    <span>{{ __('common.categories') }}</span>
                     <svg class="dropdown-arrow icon-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                         <path class="dropdown-arrow-path" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                     </svg>
@@ -37,19 +40,23 @@
                         type="search"
                         name="q"
                         value="{{ request()->query('q', '') }}"
-                        placeholder="Search products..."
-                        aria-label="Search products"
+                        placeholder="{{ __('common.search_placeholder') }}"
+                        aria-label="{{ __('common.search_products') }}"
                         maxlength="100"
                         class="position-relative border ps-3 z-0 w-100 h-100"
                     >
-                    <button type="submit" class="border-0 rounded-circle position-absolute z-1 end-0 me-2 py-1 px-2">
+                    <button
+                        type="submit"
+                        class="border-0 rounded-circle position-absolute z-1 end-0 me-2 py-1 px-2"
+                        aria-label="{{ __('common.search_products') }}"
+                    >
                         <svg class="icon-16">
                             <use href="/images/icons.svg#search-magnifier"></use>
                         </svg>
                     </button>
                 </div>
                 <button class="rounded-end-pill border-0 p-2 px-3" type="button">
-                    <span>Advanced</span>
+                    <span>{{ __('common.advanced') }}</span>
                 </button>
             </form>
         </div>
@@ -72,7 +79,7 @@
                     <span
                         data-cart-count
                         class="position-absolute badge bg-primary end-0 top-0"
-                        aria-label="Items in cart">{{ $cart['total_count'] }}
+                        aria-label="{{ __('common.items_in_cart') }}">{{ $cart['total_count'] }}
                     </span>
                 </div>
                 <span data-cart-total>${{ $cart['total_amount'] }}</span>
@@ -83,10 +90,15 @@
             </button>
             <span data-cart-error class="small fg-danger" role="status" aria-live="polite"></span>
             @guest
-                <a href="{{ route('login') }}">
-                    <button class="border-0 rounded-pill p-2" type="submit">
-                        <span class="text-decoration-underline"><b>Login</b> or <b>Register</b></span>
-                    </button>
+                <a
+                    href="{{ route('login') }}"
+                    class="rounded-pill p-2 text-decoration-none"
+                >
+                    <span class="text-decoration-underline">
+                        <b>{{ __('common.login') }}</b>
+                        {{ __('common.or') }}
+                        <b>{{ __('common.register') }}</b>
+                    </span>
                 </a>
             @endguest
             @auth
@@ -104,45 +116,45 @@
 
                                 <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2 fg-danger fw-semibold" href="{{ route('admin.dashboard') }}">
                                     <i class="bi bi-speedometer2"></i>
-                                    <span>Bảng điều khiển Admin</span>
+                                    <span>{{ __('common.admin_dashboard') }}</span>
                                 </a>
 
                         @endif
 
                             <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}">
                                 <i class="bi bi-person-gear"></i>
-                                <span>Hồ sơ tài khoản</span>
+                                <span>{{ __('common.profile') }}</span>
                             </a>
 
 
                             <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}#pane-vendor">
                                 <i class="bi bi-shop-window"></i>
-                                <span>My stores</span>
+                                <span>{{ __('common.my_stores') }}</span>
                             </a>
 
                         @if (Auth::user()->isVendor())
 
                                 <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2 fg-primary fw-semibold" href="{{ route('vendor.products.index') }}">
                                     <i class="bi bi-box-seam"></i>
-                                    <span>Sản phẩm của tôi</span>
+                                    <span>{{ __('common.my_products') }}</span>
                                 </a>
 
 
                                 <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.orders.index') }}">
                                     <i class="bi bi-truck"></i>
-                                    <span>Store Orders</span>
+                                    <span>{{ __('common.store_orders') }}</span>
                                 </a>
 
 
                                 <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.categories.index') }}">
                                     <i class="bi bi-tags"></i>
-                                    <span>Danh mục của tôi</span>
+                                    <span>{{ __('common.my_categories') }}</span>
                                 </a>
 
 
                                 <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.reports.index') }}">
                                     <i class="bi bi-graph-up"></i>
-                                    <span>Store Reports</span>
+                                    <span>{{ __('common.store_reports') }}</span>
                                 </a>
 
                         @endif
@@ -152,7 +164,7 @@
                                 @csrf
                                 <button type="submit" class="menu-item rounded-4 py-2 fg-danger d-flex align-items-center gap-2">
                                     <i class="bi bi-box-arrow-right"></i>
-                                    <span>Đăng xuất</span>
+                                    <span>{{ __('common.logout') }}</span>
                                 </button>
                             </form>
 

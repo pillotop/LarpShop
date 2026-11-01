@@ -13,8 +13,8 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
-            abort(403, 'Bạn không có quyền truy cập trang quản trị này.');
+        if (! auth()->check() || auth()->user()->role !== 'admin') {
+            abort(403, __('management.messages.admin_access'));
         }
 
         return $next($request);

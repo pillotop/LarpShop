@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Store Settings (UC-29) | ' . $vendor->store_name)
+@section('title', __('management.store_settings').' (UC-29) | ' . $vendor->store_name)
 
 @section('head')
 
@@ -44,9 +44,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('profile') }}">Account Profile</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Store Settings</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('profile') }}">{{ __('management.account_profile') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.store_settings') }}</li>
             </ol>
         </nav>
 
@@ -56,7 +56,7 @@
             <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -67,7 +67,7 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -81,39 +81,39 @@
                     <div class="mb-3">
                         @if ($vendor->status === 'active' || $vendor->status === 'approved')
                             <span class="badge bg-subtle-success fg-success border border-success rounded-pill px-3 py-1">
-                                <i class="bi bi-check-circle me-1"></i>Active
+                                <i class="bi bi-check-circle me-1"></i>{{ __('management.active') }}
                             </span>
                         @elseif ($vendor->status === 'pending')
                             <span class="badge bg-subtle-warning fg-emphasis-warning border border-warning rounded-pill px-3 py-1">
-                                <i class="bi bi-clock-history me-1"></i>Pending Approval
+                                <i class="bi bi-clock-history me-1"></i>{{ __('management.pending_approval') }}
                             </span>
                         @else
                             <span class="badge bg-subtle-secondary fg-secondary border rounded-pill px-3 py-1">
-                                {{ ucfirst($vendor->status) }}
+                                {{ __('products.vendor_status.'.$vendor->status) }}
                             </span>
                         @endif
                     </div>
 
                     <div class="d-flex justify-content-around py-3 border-top border-bottom mb-3 text-start">
                         <div>
-                            <small class="fg-3 d-block">Products</small>
+                            <small class="fg-3 d-block">{{ __('management.products') }}</small>
                             <span class="fw-bold fs-lg">{{ $vendor->products_count ?? 0 }}</span>
                         </div>
                         <div>
-                            <small class="fg-3 d-block">Store ID</small>
+                            <small class="fg-3 d-block">{{ __('management.store_id') }}</small>
                             <span class="fw-bold fs-lg">#{{ $vendor->vendor_id }}</span>
                         </div>
                     </div>
 
                     <div class="d-grid gap-2">
                         <a href="{{ route('vendor.products.index') }}" class="btn btn-solid theme-primary rounded-pill">
-                            <i class="bi bi-box-seam me-1"></i>Products & Inventory
+                            <i class="bi bi-box-seam me-1"></i>{{ __('management.products_inventory') }}
                         </a>
                         <a href="{{ route('vendors.show', $vendor->vendor_id) }}" class="btn btn-outline theme-primary rounded-pill" target="_blank">
-                            <i class="bi bi-box-arrow-up-right me-1"></i>View Public Storefront
+                            <i class="bi bi-box-arrow-up-right me-1"></i>{{ __('management.view_public_storefront') }}
                         </a>
                         <a href="{{ route('vendor.categories.index') }}" class="btn btn-solid theme-secondary rounded-pill">
-                            <i class="bi bi-tags me-1"></i>Platform Categories
+                            <i class="bi bi-tags me-1"></i>{{ __('management.platform_categories') }}
                         </a>
                     </div>
                 </div>
@@ -123,9 +123,9 @@
                 <div class="card border-0 shadow-sm rounded-9 p-4 md:p-5 bg-white">
                     <div class="border-bottom pb-3 mb-4">
                         <h4 class="fw-bold fg-body mb-1">
-                            <i class="bi bi-gear-wide-connected fg-primary me-2"></i>Store Configuration (UC-29)
+                            <i class="bi bi-gear-wide-connected fg-primary me-2"></i>{{ __('management.store_configuration_uc_29') }}
                         </h4>
-                        <p class="fg-3 small mb-0">Update your store name and public brand description.</p>
+                        <p class="fg-3 small mb-0">{{ __('management.update_your_store_name_and_public_brand_description') }}</p>
                     </div>
 
                     <form action="{{ route('vendor.store.settings.update') }}" method="POST">
@@ -133,7 +133,7 @@
                         @method('PUT')
 
                         <div class="mb-4">
-                            <label for="store_name" class="form-label fw-semibold">Store Name <span class="fg-danger">*</span></label>
+                            <label for="store_name" class="form-label fw-semibold">{{ __('management.store_name') }} <span class="fg-danger">*</span></label>
                             <input
                                 type="text"
                                 class="form-control form-control-lg rounded-5 @error('store_name') is-invalid @enderror"
@@ -145,17 +145,17 @@
                             @error('store_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">Store names must be unique across LarpShop.</div>
+                            <div class="form-text">{{ __('management.store_names_must_be_unique_across_larpshop') }}</div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="description" class="form-label fw-semibold">Store Description</label>
+                            <label for="description" class="form-label fw-semibold">{{ __('management.store_description') }}</label>
                             <textarea
                                 class="form-control rounded-5 @error('description') is-invalid @enderror"
                                 id="description"
                                 name="description"
                                 rows="5"
-                                placeholder="Describe your store's specialty, craftsmanship, and policies..."
+                                placeholder="{{ __('management.describe_your_store_s_specialty_craftsmanship_and_policies') }}"
                             >{{ old('description', $vendor->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -164,10 +164,10 @@
 
                         <div class="pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <a href="{{ route('profile') }}" class="btn btn-solid theme-secondary rounded-pill px-4">
-                                <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                                <i class="bi bi-arrow-left me-1"></i>{{ __('management.back_to_profile') }}
                             </a>
                             <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4 py-2 fw-semibold">
-                                <i class="bi bi-save me-1"></i>Save Store Settings
+                                <i class="bi bi-save me-1"></i>{{ __('management.save_store_settings') }}
                             </button>
                         </div>
                     </form>

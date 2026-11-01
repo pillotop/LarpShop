@@ -66,7 +66,7 @@ class CartController extends Controller
         } catch (LockTimeoutException) {
             return response()->json([
                 'success' => false,
-                'error' => 'Your cart is busy. Please try again.',
+                'error' => __('cart.errors.busy'),
             ], 409);
         }
 
@@ -74,7 +74,7 @@ class CartController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Cart updated.',
+            'message' => __('cart.updated'),
             'cart' => $cart,
             'cart_html' => view('components.cart', ['products' => $cart['products']])->render(),
             'cart_page_html' => view('cart.partials.content', ['cart' => $cart])->render(),

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Forgot Password')
+@section('title', __('auth.recovery.forgot_password'))
 
 @section('head')
 
@@ -18,7 +18,7 @@
                 <div class="col-12 lg:col-5 position-relative">
                     <div class="position-absolute top-50 start-50 translate-middle-x">
                         <header class="h1">
-                            Enter code
+                            {{ __('auth.recovery.forgot_password') }}
                         </header>
                     </div>
                 </div>

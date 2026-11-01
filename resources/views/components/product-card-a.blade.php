@@ -60,7 +60,12 @@
                 :compact="true"
             />
 
-        <button id="add-to-cart" class="overlay-btn rounded-circle py-2 px-2" type="button">
+        <button
+            id="add-to-cart"
+            aria-label="{{ __('products.add_to_cart') }}"
+            class="overlay-btn rounded-circle py-2 px-2"
+            type="button"
+        >
             <svg class="icon-24"> <use href="/images/icons.svg#cart"></use> </svg>
         </button>
     </div>

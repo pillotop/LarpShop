@@ -93,36 +93,8 @@
                     </div>
                 </div>
             </nav>
-            <div class="persistent-header position-relative mt-2 px-4 py-2 z-0">
-                <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll" style="list-style: none;">
-                    <li>
-                        <button class="nav-button rounded-pill border-0" data-bs-target="#side-modal" data-bs-toggle="dialog">
-                            <svg class="icon-16">
-                                <use href="/images/icons.svg#settings-sliders"></use>
-                            </svg>
-                            <span> Settings </span>
-                            <template id="settings">
-                            </template>
-                        </button>
-                    </li>
-                    <li>
-                        <button type="button" class="nav-button rounded-pill border-0">
-                            Parcel delivery
-                        </button>
-                    </li>
-                    <li>
-                        <button type="button" class="nav-button rounded-pill border-0">
-                            Phone sales service
-                        </button>
-                    </li>
-                    <li>
-                        <button type="button" class="nav-button rounded-pill border-0">
-                            Return policy
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div id="dropdown-portal"></div>
+            <x-persistent-header />
+        <div id="dropdown-portal"></div>
         </header>
         <main class="container my-5">
             <div class="row pt-2 border-0 breadcrumbContainer" style="background-color: white;">

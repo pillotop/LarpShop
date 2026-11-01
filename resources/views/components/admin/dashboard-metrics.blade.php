@@ -8,7 +8,7 @@
         <div class="card metric-card h-100 border-start border-warning border-4 p-3 bg-white">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="fg-3 small fw-semibold text-uppercase">Đơn Vendor chờ duyệt</span>
+                    <span class="fg-3 small fw-semibold text-uppercase">{{ __('management.vendor_applications_awaiting_approval') }}</span>
                     <h2 class="display-6 fw-bold fg-emphasis-warning mb-0 mt-1">{{ $metrics['pending_vendors'] ?? 0 }}</h2>
                 </div>
                 <div class="rounded-circle bg-warning bg-10 fg-warning p-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
@@ -16,9 +16,9 @@
                 </div>
             </div>
             <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
-                <small class="fg-3">Cần xử lý phê duyệt</small>
+                <small class="fg-3">{{ __('management.awaiting_approval') }}</small>
                 <a href="{{ route('admin.vendors.index', ['status' => 'pending']) }}" class="small text-decoration-none fw-bold fg-emphasis-warning">
-                    Xử lý ngay <i class="bi bi-arrow-right"></i>
+                    {{ __('management.review_now') }} <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
         </div>
@@ -29,7 +29,7 @@
         <div class="card metric-card h-100 border-start border-success border-4 p-3 bg-white">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="fg-3 small fw-semibold text-uppercase">Gian hàng hoạt động</span>
+                    <span class="fg-3 small fw-semibold text-uppercase">{{ __('management.active_stores') }}</span>
                     <h2 class="display-6 fw-bold fg-success mb-0 mt-1">{{ $metrics['total_vendors'] ?? 0 }}</h2>
                 </div>
                 <div class="rounded-circle bg-success bg-10 fg-success p-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
@@ -37,9 +37,9 @@
                 </div>
             </div>
             <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
-                <small class="fg-3">Đang mở bán trên sàn</small>
+                <small class="fg-3">{{ __('management.currently_selling_on_the_platform') }}</small>
                 <a href="{{ route('admin.vendors.index', ['status' => 'approved']) }}" class="small text-decoration-none fw-bold fg-success">
-                    Xem danh sách <i class="bi bi-arrow-right"></i>
+                    {{ __('management.view_list') }} <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
         </div>
@@ -50,7 +50,7 @@
         <div class="card metric-card h-100 border-start border-primary border-4 p-3 bg-white">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="fg-3 small fw-semibold text-uppercase">Tổng Khách hàng</span>
+                    <span class="fg-3 small fw-semibold text-uppercase">{{ __('management.total_customers') }}</span>
                     <h2 class="display-6 fw-bold fg-primary mb-0 mt-1">{{ $metrics['total_customers'] ?? 0 }}</h2>
                 </div>
                 <div class="rounded-circle bg-primary bg-10 fg-primary p-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="mt-3 pt-2 border-top">
-                <small class="fg-3">Tổng {{ $metrics['total_users'] ?? 0 }} tài khoản thành viên</small>
+                <small class="fg-3">{{ __('management.member_accounts', ['count' => $metrics['total_users'] ?? 0]) }}</small>
             </div>
         </div>
     </div>
@@ -68,7 +68,7 @@
         <div class="card metric-card h-100 border-start border-info border-4 p-3 bg-white">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="fg-3 small fw-semibold text-uppercase">Sản phẩm niêm yết</span>
+                    <span class="fg-3 small fw-semibold text-uppercase">{{ __('management.listed_products') }}</span>
                     <h2 class="display-6 fw-bold fg-info mb-0 mt-1">{{ $metrics['total_products'] ?? 0 }}</h2>
                 </div>
                 <div class="rounded-circle bg-info bg-10 fg-info p-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="mt-3 pt-2 border-top">
-                <small class="fg-3">Đạo cụ, giáp trụ & phục trang LARP</small>
+                <small class="fg-3">{{ __('management.larp_props_armor_costumes') }}</small>
             </div>
         </div>
     </div>

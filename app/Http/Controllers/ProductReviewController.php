@@ -29,6 +29,6 @@ class ProductReviewController extends Controller
         $reviews->create($request->user(), $product, $request->validated());
 
         return back()->withFragment('review-feedback')
-            ->with('review_success', 'Thank you! Your review has been published.');
+            ->with('review_success', __('reviews.success'));
     }
 }

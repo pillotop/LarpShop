@@ -9,7 +9,10 @@
 @endphp
 
 <div class="d-inline-flex align-items-center gap-2">
-    <div class="rating-container position-relative d-flex fg-secondary" aria-label="Rated {{ $rating }} out of 5 stars">
+    <div
+        class="rating-container position-relative d-flex fg-secondary"
+        aria-label="{{ __('products.rating', ['rating' => $rating]) }}"
+    >
 
         <div class="d-flex fg-3 opacity-25">
             @for ($i = 0; $i < 5; $i++)

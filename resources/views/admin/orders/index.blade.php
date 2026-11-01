@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Order Investigation (UC-44)')
-@section('page_title', 'Orders')
+@section('title', __('management.order_investigation').' (UC-44)')
+@section('page_title', __('management.orders'))
 
 @section('content')
 <div class="container-fluid p-0">
     <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
         <header class="pb-3 border-bottom mb-4">
-            <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-receipt fg-primary me-2"></i>Order Investigation</h1>
-            <p class="fg-3 small mb-0">Search every order on the marketplace and open one to review its items, vendors, and totals.</p>
+            <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-receipt fg-primary me-2"></i>{{ __('management.order_investigation') }}</h1>
+            <p class="fg-3 small mb-0">{{ __('management.order_copy.intro') }}</p>
         </header>
 
         {{-- Order Status Tabs and Search (UC-44) --}}

@@ -18,7 +18,7 @@ class UserManagementService
         if ($target->role === $newRole) {
             return [
                 'type' => 'warning',
-                'message' => "User '{$target->username}' already has the '{$newRole}' role.",
+                'message' => __('management.messages.role_unchanged', ['name' => $target->username, 'role' => __('profile.role.'.$newRole)]),
             ];
         }
 
@@ -26,7 +26,7 @@ class UserManagementService
             if ($target->user_id === $actor->user_id) {
                 return [
                     'type' => 'warning',
-                    'message' => 'You cannot remove your own administrator role.',
+                    'message' => __('management.messages.own_admin'),
                 ];
             }
 
@@ -47,7 +47,7 @@ class UserManagementService
             if (! $demoted) {
                 return [
                     'type' => 'warning',
-                    'message' => 'The last administrator account cannot be demoted.',
+                    'message' => __('management.messages.last_admin'),
                 ];
             }
         } else {
@@ -57,7 +57,7 @@ class UserManagementService
 
         return [
             'type' => 'success',
-            'message' => "User '{$target->username}' is now a(n) {$newRole}.",
+            'message' => __('management.messages.role_changed', ['name' => $target->username, 'role' => __('profile.role.'.$newRole)]),
         ];
     }
 }

@@ -1,5 +1,5 @@
 @unless ($breadcrumbs->isEmpty())
-    <nav aria-label="Breadcrumb">
+    <nav aria-label="{{ __('common.breadcrumb') }}">
         <ol class="breadcrumb">
             @foreach ($breadcrumbs as $breadcrumb)
                 <li class="breadcrumb-item">

@@ -35,12 +35,12 @@ class EnsureActiveVendor
         if (! $activeVendor) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Active vendor account required to perform this action.',
+                    'message' => __('management.messages.active_vendor_required'),
                 ], 403);
             }
 
             return redirect()->route('profile')
-                ->with('warning', 'You need an active or approved vendor store to access vendor management features.');
+                ->with('warning', __('management.messages.vendor_management_required'));
         }
 
         if ($request->hasSession()) {

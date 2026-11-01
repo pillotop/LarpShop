@@ -57,6 +57,6 @@ class AdminReviewModerationController extends Controller
     {
         $review->delete();
 
-        return back()->with('success', "Review #{$review->review_id} has been removed.");
+        return back()->with('success', __('management.messages.review_removed', ['id' => $review->review_id]));
     }
 }

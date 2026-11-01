@@ -40,9 +40,9 @@ class AdminVendorTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSee('Bảng điều khiển quản trị')
+            ->assertSee('Admin Dashboard')
             ->assertSee('Pending Leather Works')
-            ->assertSee('Đơn Vendor chờ duyệt');
+            ->assertSee('Vendor applications awaiting approval');
     }
 
     public function test_admin_can_view_vendor_management_page(): void
@@ -61,7 +61,7 @@ class AdminVendorTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Royal Shields Guild')
-            ->assertSee('Xét duyệt và Quản lý gian hàng');
+            ->assertSee('Store approval and management');
     }
 
     public function test_admin_can_approve_pending_vendor(): void

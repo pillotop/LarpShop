@@ -93,7 +93,7 @@ class CategoryManagementService
     {
         if (! $vendor->user?->isAdmin()) {
             throw ValidationException::withMessages([
-                'category' => 'Only administrators can edit or disable shared platform categories.',
+                'category' => __('management.messages.shared_category'),
             ]);
         }
     }
@@ -131,11 +131,11 @@ class CategoryManagementService
     public function delete(Category $category): ?string
     {
         if ($category->children()->exists()) {
-            return "Category '{$category->name}' cannot be deleted because it has subcategories.";
+            return __('management.messages.category_has_children', ['name' => $category->name]);
         }
 
         if ($category->products()->exists()) {
-            return "Category '{$category->name}' cannot be deleted because it still contains products.";
+            return __('management.messages.category_has_products', ['name' => $category->name]);
         }
 
         $category->delete();
@@ -155,7 +155,7 @@ class CategoryManagementService
 
         if ($slug === '') {
             throw ValidationException::withMessages([
-                'slug' => 'A valid slug could not be generated. Please provide one.',
+                'slug' => __('management.messages.slug_required'),
             ]);
         }
 
@@ -166,7 +166,7 @@ class CategoryManagementService
 
         if ($slugTaken) {
             throw ValidationException::withMessages([
-                'slug' => 'This slug is already used by another category.',
+                'slug' => __('management.messages.slug_used'),
             ]);
         }
 
@@ -178,7 +178,7 @@ class CategoryManagementService
 
             if ($circular) {
                 throw ValidationException::withMessages([
-                    'parent_id' => 'A category cannot be moved under itself or one of its descendants.',
+                    'parent_id' => __('management.messages.category_cycle'),
                 ]);
             }
         }

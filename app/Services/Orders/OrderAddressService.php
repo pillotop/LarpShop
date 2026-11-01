@@ -20,7 +20,7 @@ class OrderAddressService
             $order = $user->orders()->whereKey($order->getKey())->lockForUpdate()->firstOrFail();
             if ($order->status !== OrderStatus::Pending || $order->expires_at?->lessThanOrEqualTo(now()) ||
                 $order->payments()->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value, PaymentStatus::Succeeded->value, PaymentStatus::RefundRequired->value])->exists()) {
-                throw ValidationException::withMessages(['address_id' => 'The shipping address can no longer be changed for this order.']);
+                throw ValidationException::withMessages(['address_id' => __('checkout.errors.address_locked')]);
             }
             $address = $this->addresses->getForCheckout($user, $addressId);
             $order->addresses()->updateOrCreate(['type' => 'shipping'], $address->snapshot());

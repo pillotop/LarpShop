@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'User Management (UC-39)')
-@section('page_title', 'Users & Roles')
+@section('title', __('management.user_management').' (UC-39)')
+@section('page_title', __('management.users_roles'))
 
 @section('content')
 <div class="container-fluid p-0">
     <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
         <header class="pb-3 border-bottom mb-4">
-            <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-people fg-primary me-2"></i>User Management</h1>
-            <p class="fg-3 small mb-0">Review accounts and assign the customer or administrator role. Store ownership is managed separately under Vendors.</p>
+            <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-people fg-primary me-2"></i>{{ __('management.user_management') }}</h1>
+            <p class="fg-3 small mb-0">{{ __('management.user_copy.intro') }}</p>
         </header>
 
         {{-- Filter Tabs and Search (UC-39) --}}

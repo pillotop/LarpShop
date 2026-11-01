@@ -69,7 +69,7 @@ class CheckoutController extends Controller
         );
 
         return redirect()->route('checkout.show', $order)
-            ->with('success', 'Shipping address updated.');
+            ->with('success', __('checkout.address.updated'));
     }
 
     public function store(

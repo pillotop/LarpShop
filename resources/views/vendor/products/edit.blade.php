@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Product Listing (UC-31) | ' . $product->name)
+@section('title', __('management.edit_product_listing').' (UC-31) | ' . $product->name)
 
 @section('head')
 
@@ -44,9 +44,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">Products & Inventory</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Edit: {{ $product->name }}</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">{{ __('management.products_inventory') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.display.edit') }} {{ $product->name }}</li>
             </ol>
         </nav>
 
@@ -56,10 +56,10 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom pb-3 mb-4">
                 <div>
                     <h3 class="fw-bold fg-body mb-1">
-                        <i class="bi bi-pencil-square fg-primary me-2"></i>Edit Product Listing (UC-31)
+                        <i class="bi bi-pencil-square fg-primary me-2"></i>{{ __('management.edit_product_listing_uc_31') }}
                     </h3>
                     <p class="fg-3 small mb-0">
-                        Update details, stock quantity, and catalog visibility for <strong>{{ $product->name }}</strong> (#{{ $product->product_id }}).
+                        {{ __('management.update_details_stock_quantity_and_catalog_visibility_for') }} <strong>{{ $product->name }}</strong> (#{{ $product->product_id }}).
                     </p>
                 </div>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -71,11 +71,11 @@
                         @method('PATCH')
                         @if ($product->is_active)
                             <button type="submit" class="btn btn-outline theme-warning rounded-pill px-3">
-                                <i class="bi bi-eye-slash me-1"></i>Hide from Catalog
+                                <i class="bi bi-eye-slash me-1"></i>{{ __('management.hide_from_catalog') }}
                             </button>
                         @else
                             <button type="submit" class="btn btn-outline theme-success rounded-pill px-3">
-                                <i class="bi bi-eye me-1"></i>Make Visible
+                                <i class="bi bi-eye me-1"></i>{{ __('management.make_visible') }}
                             </button>
                         @endif
                     </form>
@@ -87,7 +87,7 @@
                 :categories="$categories"
                 :action="route('vendor.products.update', $product->product_id)"
                 method="PUT"
-                submit-label="Update Product Listing"
+                submit-label="{{ __('management.update_product_listing') }}"
             />
         </div>
     </main>

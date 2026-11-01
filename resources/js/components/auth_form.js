@@ -1,28 +1,8 @@
 import '../app.js';
+import { authMessages, authStateDefaults } from './auth_messages.js';
 
 class LoginForm {
-    static defaults = {
-        email: {
-            header: 'Sign in or create account',
-            loading: () => 'Checking email…',
-        },
-        login: {
-            header: 'Enter your password',
-            loading: () => 'Signing in…',
-        },
-        register: {
-            header: 'Create your account',
-            loading: () => 'Creating account…',
-        },
-        'forgot-password': {
-            header: 'Forgot your password?',
-            loading: () => 'Sending password reset link…',
-        },
-        'reset-password': {
-            header: 'Reset your password',
-            loading: () => 'Resetting password…',
-        },
-    };
+    static defaults = authStateDefaults;
 
     static FormState = class {
         static displayProps = ['primaryButton', 'secondaryButton', 'header', 'emailText', 'statusText'];
@@ -128,7 +108,9 @@ class LoginForm {
 
         handleDefaultError(error) {
             this.outer.statusText.textContent =
-                error.message || 'A network error happened. Please try again.';
+                error instanceof TypeError
+                    ? authMessages.network_error
+                    : error.message || authMessages.network_error;
         }
 
         cancel() {
@@ -284,7 +266,7 @@ class LoginForm {
             use: (result) => {
                 this.statusText.textContent =
                     result.message ||
-                    "If the account exists, a request link will be sent."
+                    authMessages.reset_link_sent
             }
         });
     }
@@ -447,7 +429,7 @@ class LoginForm {
 
         if (!response.ok) {
             throw new LoginForm.FormRequestError(
-                result.message || 'The request could not be completed.',
+                result.message || authMessages.request_error,
                 result.errors ?? {},
                 response.status,
             );

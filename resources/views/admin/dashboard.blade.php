@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Bảng điều khiển quản trị (Dashboard)')
-@section('page_title', 'Bảng điều khiển quản trị')
+@section('title', __('management.admin_dashboard'))
+@section('page_title', __('management.admin_dashboard'))
 
 @section('content')
 <div class="container-fluid p-0">

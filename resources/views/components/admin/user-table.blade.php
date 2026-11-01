@@ -6,20 +6,20 @@
 @if ($users->isEmpty())
     <div class="text-center py-5 fg-3">
         <i class="bi bi-inbox fs-3xl d-block mb-2"></i>
-        No users match your filters.
+        {{ __('management.no_users_match_your_filters') }}
     </div>
 @else
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="bg-1 text-uppercase small fg-3">
                 <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th>User</th>
-                    <th>Phone</th>
-                    <th class="text-center">Stores</th>
-                    <th class="text-center">Orders</th>
-                    <th>Joined</th>
-                    <th style="min-width: 220px;">Role</th>
+                    <th style="width: 60px;">{{ __('management.id_text') }}</th>
+                    <th>{{ __('management.user') }}</th>
+                    <th>{{ __('management.phone') }}</th>
+                    <th class="text-center">{{ __('management.stores') }}</th>
+                    <th class="text-center">{{ __('management.orders') }}</th>
+                    <th>{{ __('management.joined') }}</th>
+                    <th style="min-width: 220px;">{{ __('management.role') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,10 +40,10 @@
                                 @method('PATCH')
                                 <select name="role" class="form-control form-control-sm">
                                     @foreach ($roles as $roleOption)
-                                        <option value="{{ $roleOption }}" @selected($user->role === $roleOption)>{{ ucfirst($roleOption) }}</option>
+                                        <option value="{{ $roleOption }}" @selected($user->role === $roleOption)>{{ __('profile.role.'.$roleOption) }}</option>
                                     @endforeach
                                 </select>
-                                <button type="submit" class="btn btn-sm btn-solid theme-primary">Save</button>
+                                <button type="submit" class="btn btn-sm btn-solid theme-primary">{{ __('management.save') }}</button>
                             </form>
                         </td>
                     </tr>
@@ -54,7 +54,7 @@
 
     <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
         <div class="small fg-3">
-            Showing <strong>{{ $users->firstItem() }}</strong> to <strong>{{ $users->lastItem() }}</strong> of <strong>{{ $users->total() }}</strong> users
+            {{ __('pagination.summary', ['first' => $users->firstItem(), 'last' => $users->lastItem(), 'total' => $users->total()]) }}
         </div>
         <div>{{ $users->links('shared.pagination') }}</div>
     </div>

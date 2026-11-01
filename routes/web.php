@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountVendorController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorStorefrontController;
@@ -13,6 +14,9 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
 
+Route::post('/locale', [LocaleController::class, 'update'])
+    ->name('locale.update');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -22,12 +26,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
-    $trail->push('Home', route('home'));
+    $trail->push(__('common.home'), route('home'));
 });
 
 Breadcrumbs::for('profile', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Hồ sơ tài khoản', route('profile'));
+    $trail->push(__('common.profile'), route('profile'));
 });
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
@@ -58,27 +62,27 @@ Breadcrumbs::for('vendor', function (BreadcrumbTrail $trail, Vendor $vendor) {
 
 Breadcrumbs::for('about', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('About Us', route('about'));
+    $trail->push(__('footer.about'), route('about'));
 });
 
 Breadcrumbs::for('contact', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Contact Us', route('contact'));
+    $trail->push(__('footer.contact'), route('contact'));
 });
 
 Breadcrumbs::for('investors', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Investors', route('investors'));
+    $trail->push(__('footer.investors'), route('investors'));
 });
 
 Breadcrumbs::for('blog', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Blog', route('blog'));
+    $trail->push(__('footer.blog'), route('blog'));
 });
 
 Breadcrumbs::for('press', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Press & Media', route('press'));
+    $trail->push(__('footer.press'), route('press'));
 });
 
 Route::get('/vendors/{vendor}', [VendorStorefrontController::class, 'show'])
@@ -101,20 +105,20 @@ require __DIR__.'/admin.php';
 // Customer Service Static Pages
 Breadcrumbs::for('help', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Help Centre', route('help'));
+    $trail->push(__('footer.help'), route('help'));
 });
 
 Breadcrumbs::for('privacy', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Privacy Policy', route('privacy'));
+    $trail->push(__('footer.privacy'), route('privacy'));
 });
 
 Breadcrumbs::for('community', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Community Forum', route('community'));
+    $trail->push(__('footer.community'), route('community'));
 });
 
 Breadcrumbs::for('recalls', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push('Product Recalls', route('recalls'));
+    $trail->push(__('footer.recalls'), route('recalls'));
 });
