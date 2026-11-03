@@ -44,6 +44,9 @@
             :product-categories="$productCategories ?? []"
             :cart="$cart"
         />
+        <x-persistent-header
+            :vendor="$vendor"
+        />
         <div id="dropdown-portal"></div>
     </header>
 
@@ -192,7 +195,7 @@
         </section>
     </main>
 
-    <x-side-panel/>
+    <x-locale-panels :vendor="$vendor" />
     <x-modal/>
     <x-company-footer/>
 @endsection
