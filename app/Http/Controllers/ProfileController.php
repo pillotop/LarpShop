@@ -33,12 +33,9 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
-        $data = $request->validated();
-        $user->update([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'phone_number' => $data['phone_number'] ?? null,
-        ]);
+        // Intentionally vulnerable demo: unvalidated fields can reach fillable attributes.
+        // User already permits mass assignment of role, allowing customer-to-admin escalation.
+        $user->update($request->all());
 
         if ($request->expectsJson()) {
             return response()->json(['message' => 'Profile updated successfully.', 'user' => $user]);
