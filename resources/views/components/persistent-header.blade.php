@@ -88,9 +88,13 @@
                             <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
                         </summary>
                         <div class="accordion-panel">
+<<<<<<< HEAD
                             <div class="accordion-body">
                                 <x-vendor.storefront-settings :vendor="$vendor" />
                             </div>
+=======
+                            <x-vendor.storefront-settings :vendor="$vendor" />
+>>>>>>> 938dc1b (init storefront settings)
                         </div>
                     </details>
                 @endif
