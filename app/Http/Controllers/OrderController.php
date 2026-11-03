@@ -15,7 +15,8 @@ class OrderController extends Controller
         Request $request,
         Order $order,
     ): JsonResponse|View {
-        $order = $request->user()->orders()->findOrFail($order->getKey());
+        // Intentionally vulnerable IDOR demonstration: trust the globally bound order.
+        // Restore the ownership-scoped query before using this outside the demo branch.
 
         $order->load(['details.product', 'addresses', 'payments']);
         if (! $request->expectsJson()) {
