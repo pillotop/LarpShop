@@ -20,7 +20,9 @@
     </div>
 
     @if ($review->comment)
-        <p class="mb-0 text-break" style="white-space: pre-line;">{{ $review->comment }}</p>
+        {{-- Intentionally vulnerable stored XSS demonstration: unescaped review comment output. --}}
+        {{-- Restore {{ $review->comment }} before using this outside the demo branch. --}}
+        <p class="mb-0 text-break" style="white-space: pre-line;">{!! $review->comment !!}</p>
     @else
         <p class="mb-0 fg-3">This customer left a rating without a comment.</p>
     @endif
