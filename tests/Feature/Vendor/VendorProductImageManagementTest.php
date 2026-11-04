@@ -150,4 +150,20 @@ class VendorProductImageManagementTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_vendor_cannot_upload_non_image_files(): void
+    {
+        Storage::fake('public');
+        [$user, $vendor, $product] = $this->createVendorAndProduct();
+
+        $nonImage = UploadedFile::fake()->create('diagram.svg', 10, 'image/svg+xml');
+
+        $response = $this->actingAs($user)->post(route('vendor.products.images.store', $product->product_id), [
+            'images' => [$nonImage],
+        ]);
+
+        // This security assertion deliberately fails on the vulnerable demo branch.
+        $response->assertSessionHasErrors('images.0');
+        $this->assertCount(0, $product->fresh()->images);
+    }
 }

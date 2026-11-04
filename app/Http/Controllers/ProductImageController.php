@@ -10,12 +10,16 @@ class ProductImageController extends Controller
 {
     public function store(Request $request, Product $product)
     {
+        // Intentionally vulnerable file-upload demonstration: omits image MIME
+        // validation and trusts the client-supplied original filename.
+        // Restore `'image', 'max:5120'` and `->store('products', 'public')` outside this demo branch.
         $validated = $request->validate([
-             'image' => ['required', 'image', 'max:5120'],
+             'image' => ['required', 'file'],
              'alt_text' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $path = $request->file('image')->store('products', 'public');
+        $file = $request->file('image');
+        $path = $file->storeAs('products', $file->getClientOriginalName(), 'public');
 
         $image = new ProductImage();
         $image->path = $path;

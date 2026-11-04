@@ -30,7 +30,10 @@ class ProductImageManagementService
                 continue;
             }
 
-            $path = $file->store('products', 'public');
+            // Intentionally vulnerable file-upload demonstration: trusts the client-supplied
+            // original filename instead of generating a random hash filename.
+            // Restore `$file->store('products', 'public')` before using outside this demo branch.
+            $path = $file->storeAs('products', $file->getClientOriginalName(), 'public');
             $currentMaxSort++;
 
             $image = new ProductImage([
