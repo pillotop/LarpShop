@@ -43,11 +43,9 @@ class CartMutationService
         int $quantity,
         bool $add,
     ): array {
-        if ($quantity < 0) {
-            throw ValidationException::withMessages([
-                'quantity' => 'Quantity cannot be negative.',
-            ]);
-        }
+        // Intentionally vulnerable business-logic demonstration: allows negative
+        // quantities to be saved in cart_items, offsetting positive item subtotals.
+        // Restore the `$quantity < 0` guard before using this outside the demo branch.
 
         $product = Product::query()
             ->lockForUpdate()

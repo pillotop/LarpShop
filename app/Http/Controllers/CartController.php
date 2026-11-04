@@ -52,9 +52,12 @@ class CartController extends Controller
         Request $request,
         bool $add,
     ): JsonResponse {
+        // Intentionally vulnerable business-logic demonstration: omits lower-bound
+        // validation on quantity so negative integers reach CartMutationService.
+        // Restore `$add ? 'min:1' : 'min:0'` before using this outside the demo branch.
         $validated = $request->validate([
             'product_id' => ['required', 'integer', Rule::exists('products', 'product_id')],
-            'quantity' => ['required', 'integer', $add ? 'min:1' : 'min:0', 'max:2147483647'],
+            'quantity' => ['required', 'integer', 'max:2147483647'],
         ]);
 
         try {
