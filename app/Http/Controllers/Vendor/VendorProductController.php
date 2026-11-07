@@ -87,7 +87,7 @@ class VendorProductController extends Controller
         );
 
         return redirect()->route('vendor.products.index')
-            ->with('success', "Product '{$product->name}' has been created successfully.");
+            ->with('success', __('management.messages.product_created', ['name' => $product->name]));
     }
 
     /**
@@ -121,7 +121,7 @@ class VendorProductController extends Controller
         $updated = $this->productService->update($vendor, $product, $request->validated());
 
         return redirect()->route('vendor.products.index')
-            ->with('success', "Product '{$updated->name}' has been updated successfully.");
+            ->with('success', __('management.messages.product_updated', ['name' => $updated->name]));
     }
 
     /**
@@ -137,7 +137,7 @@ class VendorProductController extends Controller
         $visibility = $updated->is_active ? 'visible in the catalog' : 'hidden from the catalog';
 
         return redirect()->route('vendor.products.index')
-            ->with('success', "Product '{$updated->name}' is now {$visibility}.");
+            ->with('success', __('management.messages.product_visibility', ['name' => $updated->name, 'visibility' => __('management.state_labels.'.$visibility)]));
     }
 
     /**
@@ -158,6 +158,6 @@ class VendorProductController extends Controller
         );
 
         return redirect()->route('vendor.products.index')
-            ->with('success', "Inventory for '{$updated->name}' has been updated to {$updated->stock} in stock.");
+            ->with('success', __('management.messages.stock_updated', ['name' => $updated->name, 'stock' => $updated->stock]));
     }
 }

@@ -95,6 +95,6 @@ class VendorOrderController extends Controller
 
         return redirect()
             ->route('vendor.orders.show', $order->order_id)
-            ->with('success', "Fulfillment status updated to '{$target->label()}' successfully.");
+            ->with('success', __('management.messages.fulfillment_updated', ['status' => $target->label()]));
     }
 }

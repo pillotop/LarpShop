@@ -38,7 +38,7 @@ class VendorOrderFulfillmentService
                 ->exists();
 
             if (! $hasVendorItems) {
-                abort(403, 'You do not have permission to access or update this order.');
+                abort(403, __('management.messages.order_access'));
             }
 
             if ($orderDetailId !== null) {
@@ -50,11 +50,11 @@ class VendorOrderFulfillmentService
                     ->first();
 
                 if (! $targetDetail) {
-                    abort(404, 'Order item not found in this order.');
+                    abort(404, __('management.messages.order_item_missing'));
                 }
 
                 if ((int) $targetDetail->product?->vendor_id !== $vendorId) {
-                    abort(403, 'You can only update fulfillment status for items belonging to your store.');
+                    abort(403, __('management.messages.fulfillment_access'));
                 }
 
                 $details = new Collection([$targetDetail]);
@@ -69,7 +69,7 @@ class VendorOrderFulfillmentService
 
             if ($lockedOrder->status !== OrderStatus::Paid) {
                 throw ValidationException::withMessages([
-                    'fulfillment_status' => 'Only paid orders can be processed or shipped.',
+                    'fulfillment_status' => __('management.messages.paid_only'),
                 ]);
             }
 
@@ -82,7 +82,7 @@ class VendorOrderFulfillmentService
 
                 if (! $current->canTransitionTo($target)) {
                     throw ValidationException::withMessages([
-                        'fulfillment_status' => "Cannot transition fulfillment status from {$current->value} back to {$target->value}.",
+                        'fulfillment_status' => __('management.messages.fulfillment_transition', ['current' => $current->label(), 'target' => $target->label()]),
                     ]);
                 }
 

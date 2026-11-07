@@ -1,0 +1,31 @@
+.profile-container {
+    aspect-ratio: 1;
+    width: 76px;
+    height: 76px;
+}
+
+.profile-image {
+    transition: filter 150ms ease;
+}
+
+.profile-edit-button {
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 50%;
+
+    color: white;
+    background: rgb(0 0 0 / 45%);
+    opacity: 0;
+
+    transition: opacity 150ms ease;
+}
+
+.profile-container:hover .profile-edit-button,
+.profile-container:focus-within .profile-edit-button {
+    opacity: 1;
+}

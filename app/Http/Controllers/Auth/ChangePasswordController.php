@@ -19,12 +19,12 @@ class ChangePasswordController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Password changed successfully.',
+                'message' => __('profile.success.password'),
             ]);
         }
 
         return redirect()->route('profile')
             ->with('status', 'password-updated')
-            ->with('success', 'Password changed successfully.');
+            ->with('success', __('profile.success.password'));
     }
 }

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Đánh giá sản phẩm',
+    'joined' => 'Tham gia từ :date',
+    'visit_store' => 'Xem gian hàng',
+    'rating_summary' => ':rating trên 5',
+    'count' => '{0} :count đánh giá|[1,*] :count đánh giá',
+    'eligibility' => 'Khách hàng có thể đánh giá mỗi sản phẩm một lần sau khi thanh toán.',
+    'empty' => 'Chưa có đánh giá.',
+    'more' => 'Xem thêm đánh giá',
+    'loading' => 'Đang tải đánh giá…',
+    'load_error' => 'Không thể tải đánh giá. Vui lòng thử lại.',
+    'customer' => 'Khách hàng',
+    'verified' => 'Đã mua hàng',
+    'no_comment' => 'Khách hàng này đã chấm điểm mà không viết nhận xét.',
+    'write' => 'Viết đánh giá',
+    'for_product' => 'Đánh giá cho',
+    'rating' => 'Điểm đánh giá',
+    'choose_rating' => 'Chọn điểm đánh giá',
+    'stars' => '{1} :count sao|[2,5] :count sao',
+    'comment' => 'Nhận xét của bạn (không bắt buộc)',
+    'help' => 'Chia sẻ trải nghiệm của bạn với sản phẩm. Tối đa 2.000 ký tự.',
+    'submit' => 'Gửi đánh giá',
+    'success' => 'Cảm ơn bạn! Đánh giá đã được đăng.',
+    'purchase_required' => 'Bạn có thể đánh giá mỗi sản phẩm một lần sau khi thanh toán.',
+];

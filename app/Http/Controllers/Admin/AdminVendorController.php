@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminUpdateVendorRequest;
 use App\Models\Vendor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'approved';
         $vendor->save();
 
-        return back()->with('success', "Store '{$vendor->store_name}' has been approved.");
+        return back()->with('success', __('management.messages.store_approved', ['name' => $vendor->store_name]));
     }
 
     /**
@@ -59,7 +60,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'rejected';
         $vendor->save();
 
-        return back()->with('warning', "Application for '{$vendor->store_name}' has been rejected.");
+        return back()->with('warning', __('management.messages.store_rejected', ['name' => $vendor->store_name]));
     }
 
     /**
@@ -70,7 +71,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'suspended';
         $vendor->save();
 
-        return back()->with('warning', "Store '{$vendor->store_name}' has been suspended.");
+        return back()->with('warning', __('management.messages.store_suspended', ['name' => $vendor->store_name]));
     }
 
     /**
@@ -81,7 +82,7 @@ class AdminVendorController extends Controller
         $vendor->status = 'approved';
         $vendor->save();
 
-        return back()->with('success', "Store '{$vendor->store_name}' has been reinstated.");
+        return back()->with('success', __('management.messages.store_reinstated', ['name' => $vendor->store_name]));
     }
 
     /**
@@ -90,17 +91,18 @@ class AdminVendorController extends Controller
     public function edit(Vendor $vendor): View
     {
         $vendor->load('user', 'products');
+
         return view('admin.vendors.edit', compact('vendor'));
     }
 
     /**
      * UC-29: Administrator update vendor store configuration.
      */
-    public function update(\App\Http\Requests\Admin\AdminUpdateVendorRequest $request, Vendor $vendor): RedirectResponse
+    public function update(AdminUpdateVendorRequest $request, Vendor $vendor): RedirectResponse
     {
         $vendor->update($request->validated());
 
         return redirect()->route('admin.vendors.index')
-            ->with('success', "Vendor store '{$vendor->store_name}' configuration updated successfully.");
+            ->with('success', __('management.messages.store_configuration', ['name' => $vendor->store_name]));
     }
 }

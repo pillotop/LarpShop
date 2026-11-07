@@ -270,6 +270,7 @@ php artisan payments:reconcile
 ## Project documentation
 
 - [Bootstrap 6 migration](docs/BOOTSTRAP_6_MIGRATION.md) — Alpha version, theme modules, markup, and verification.
+- [Localization](docs/LOCALIZATION.md) — English/Vietnamese request flow, language controls, translation conventions, and completed scope.
 - [Frontend assets](docs/FRONTEND_ASSETS.md) — Vite, npm, source locations, and build conventions.
 - [Order status model](docs/ORDER_STATUS_MODEL.md) — Order lifecycle and payment status responsibilities.
 - [Account and vendor refactor](docs/ACCOUNT_VENDOR_REFACTOR.md) — Account/store relationship changes.

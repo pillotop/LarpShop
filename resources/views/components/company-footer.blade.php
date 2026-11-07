@@ -4,7 +4,7 @@
             @foreach ($sections as $section)
                 <div class="col">
                     <h4 class="text-uppercase">
-                        {{ $section['title'] }}
+                        {{ __($section['title']) }}
                     </h4>
 
                     <ul class="list-unstyled">
@@ -14,7 +14,7 @@
                                     href="{{ $link['url'] }}"
                                     class="text-capitalize text-decoration-none"
                                 >
-                                    {{ $link['label'] }}
+                                    {{ __($link['label']) }}
                                 </a>
                             </li>
                         @endforeach
@@ -24,13 +24,21 @@
         </div>
 
         <div class="md:d-flex sm:d-block justify-content-center align-items-center gap-5">
-            <button type="button" class="hover-button p-2 border-0 rounded-5">
-                Language
+            <button
+                type="button"
+                class="hover-button p-2 border-0 rounded-5"
+                data-locale-panel
+                data-bs-toggle="drawer"
+                data-bs-target="#language-panel"
+                aria-haspopup="dialog"
+                aria-controls="language-panel"
+            >
+                {{ __('common.language') }}
             </button>
 
             @foreach ($legalLinks as $link)
                 <a href="{{ $link['url'] }}" class="text-decoration-none">
-                    {{ $link['label'] }}
+                    {{ __($link['label']) }}
                 </a>
             @endforeach
         </div>
@@ -40,3 +48,5 @@
         </div>
     </div>
 </footer>
+
+<x-locale-panels />

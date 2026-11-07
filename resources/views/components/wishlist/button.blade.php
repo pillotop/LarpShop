@@ -5,7 +5,7 @@
 
 @php
     $saved = in_array($product->getKey(), $wishlistProductIds);
-    $label = $saved ? 'Remove from wishlist' : 'Save to wishlist';
+    $label = $saved ? __('wishlist.remove') : __('wishlist.save');
 @endphp
 
 @auth
@@ -37,9 +37,9 @@
     <a
         href="{{ route('login') }}"
         class="btn btn-sm btn-outline theme-secondary"
-        aria-label="Sign in to save {{ $product->name }} to your wishlist"
+        aria-label="{{ __('wishlist.sign_in', ['name' => $product->name]) }}"
     >
         <i class="bi bi-heart" aria-hidden="true"></i>
-        <span @class(['visually-hidden' => $compact])>Save to wishlist</span>
+        <span @class(['visually-hidden' => $compact])>{{ __('wishlist.save') }}</span>
     </a>
 @endauth

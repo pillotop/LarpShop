@@ -41,7 +41,7 @@ class OrderLifecycleService
 
             if ($order->status !== OrderStatus::Pending) {
                 throw ValidationException::withMessages([
-                    'order' => 'This order cannot be cancelled or expired.',
+                    'order' => __('orders.errors.not_cancellable'),
                 ]);
             }
 
@@ -53,7 +53,7 @@ class OrderLifecycleService
                 )
             ) {
                 throw ValidationException::withMessages([
-                    'order' => 'This order has not expired.',
+                    'order' => __('orders.errors.not_expired'),
                 ]);
             }
 

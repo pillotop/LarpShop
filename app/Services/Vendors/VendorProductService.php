@@ -113,7 +113,7 @@ class VendorProductService
 
         if ($stock < 0) {
             throw ValidationException::withMessages([
-                'stock' => 'Stock quantity cannot be negative.',
+                'stock' => __('management.messages.negative_stock'),
             ]);
         }
 
@@ -138,7 +138,7 @@ class VendorProductService
     public function authorizeProductOwnership(Vendor $vendor, Product $product): void
     {
         if ((int) $product->vendor_id !== (int) $vendor->vendor_id) {
-            abort(403, 'You do not have permission to manage this product.');
+            abort(403, __('management.messages.product_access'));
         }
     }
 

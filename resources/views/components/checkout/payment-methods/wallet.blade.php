@@ -6,7 +6,7 @@
 >
     @csrf
     <h2 class="h4 fw-bold mb-3">PayPal</h2>
-    <p>You will approve your payment on PayPal, then return here to confirm it.</p>
+    <p>{{ __('checkout.wallet.notice') }}</p>
     <input
         type="hidden"
         name="payment_option"
@@ -17,6 +17,6 @@
         class="btn btn-solid theme-primary w-100 py-3"
         @disabled(! $canCreatePayment)
     >
-        Continue to PayPal
+        {{ __('checkout.wallet.continue') }}
     </button>
 </form>

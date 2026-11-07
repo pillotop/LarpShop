@@ -68,7 +68,7 @@
                     <div class="d-flex align-items-center gap-2 flex-wrap">
                         <h1 class="h3 fw-bold mb-0 fg-body">{{ $vendor->store_name }}</h1>
                         <span class="badge bg-subtle-success fg-success border border-success rounded-pill px-3 py-1">
-                            <i class="bi bi-patch-check-fill me-1"></i>Verified Merchant
+                            <i class="bi bi-patch-check-fill me-1"></i>{{ __('management.verified_merchant') }}
                         </span>
                     </div>
 
@@ -78,10 +78,10 @@
 
                     <div class="d-flex align-items-center gap-4 fg-3 small mt-2">
                         <span>
-                            <i class="bi bi-calendar3 me-1"></i>Joined {{ $vendor->created_at ? $vendor->created_at->format('M Y') : 'recently' }}
+                            <i class="bi bi-calendar3 me-1"></i>{{ __('management.joined', ['date' => $vendor->created_at ? $vendor->created_at->locale(app()->getLocale())->translatedFormat('M Y') : __('management.recently')]) }}
                         </span>
                         <span>
-                            <i class="bi bi-box-seam me-1"></i><strong>{{ $products->total() }}</strong> Products available
+                            <i class="bi bi-box-seam me-1"></i><strong>{{ $products->total() }}</strong> {{ __('management.products_available') }}
                         </span>
                     </div>
                 </div>
@@ -103,8 +103,8 @@
                                 name="q"
                                 value="{{ request('q') }}"
                                 class="form-control bg-1 border-start-0"
-                                placeholder="Search in this store..."
-                                aria-label="Search products"
+                                placeholder="{{ __('management.search_in_this_store') }}"
+                                aria-label="{{ __('management.search_products') }}"
                             >
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                     {{-- Category filter --}}
                     <div class="col-6 md:col-3">
                         <select name="category_id" class="form-control bg-1" onchange="this.form.submit()">
-                            <option value="">All Categories</option>
+                            <option value="">{{ __('management.all_categories') }}</option>
                             @foreach ($vendorCategories as $cat)
                                 <option value="{{ $cat->category_id }}" {{ (string)request('category_id') === (string)$cat->category_id ? 'selected' : '' }}>
                                     {{ $cat->name }}
@@ -124,33 +124,33 @@
                     {{-- Sort options --}}
                     <div class="col-6 md:col-3">
                         <select name="sort" class="form-control bg-1" onchange="this.form.submit()">
-                            <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Newest Arrivals</option>
-                            <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                            <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-                            <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Name: A to Z</option>
+                            <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>{{ __('management.newest_arrivals') }}</option>
+                            <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>{{ __('management.price_low_to_high') }}</option>
+                            <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>{{ __('management.price_high_to_low') }}</option>
+                            <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>{{ __('management.name_a_to_z') }}</option>
                         </select>
                     </div>
 
                     <div class="col-12 md:col-1 d-grid">
-                        <button type="submit" class="btn btn-solid theme-primary">Filter</button>
+                        <button type="submit" class="btn btn-solid theme-primary">{{ __('management.filter') }}</button>
                     </div>
                 </form>
 
                 {{-- Active filter indicators --}}
                 @if (request('q') || request('category_id') || request('sort'))
                     <div class="d-flex align-items-center gap-2 mt-3 pt-2 border-top small">
-                        <span class="fg-3">Filtering by:</span>
+                        <span class="fg-3">{{ __('management.filtering_by') }}</span>
                         @if (request('q'))
-                            <span class="badge bg-secondary">Keyword: "{{ request('q') }}"</span>
+                            <span class="badge bg-secondary">{{ __('management.keyword', ['keyword' => request('q')]) }}</span>
                         @endif
                         @if (request('category_id'))
                             @php $activeCategory = $vendorCategories->firstWhere('category_id', request('category_id')); @endphp
                             @if ($activeCategory)
-                                <span class="badge bg-secondary">Category: {{ $activeCategory->name }}</span>
+                                <span class="badge bg-secondary">{{ __('management.display.category') }} {{ $activeCategory->name }}</span>
                             @endif
                         @endif
                         <a href="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="fg-danger text-decoration-none ms-auto">
-                            <i class="bi bi-x-circle me-1"></i>Reset filters
+                            <i class="bi bi-x-circle me-1"></i>{{ __('management.reset_filters') }}
                         </a>
                     </div>
                 @endif
@@ -177,17 +177,17 @@
                     <div class="fg-3 mb-3" style="font-size: 3rem;">
                         <i class="bi bi-box-seam"></i>
                     </div>
-                    <h2 class="h5 fw-bold fg-body">No products found</h2>
+                    <h2 class="h5 fw-bold fg-body">{{ __('management.no_products_found') }}</h2>
                     <p class="fg-3 small mb-3">
                         @if (request('q') || request('category_id'))
-                            Try adjusting your search or filters to find what you're looking for.
+                            {{ __('management.storefront.try_filters') }}
                         @else
-                            This vendor currently has no products listed.
+                            {{ __('management.storefront.empty') }}
                         @endif
                     </p>
                     @if (request('q') || request('category_id'))
                         <a href="{{ route('vendors.show', ['vendor' => $vendor->vendor_id]) }}" class="btn btn-outline theme-primary btn-sm">
-                            Clear filters
+                            {{ __('management.clear_filters') }}
                         </a>
                     @endif
                 </div>

@@ -10,7 +10,7 @@
     class="border rounded-5 p-3 mt-3"
     @if ($restore && $formErrors->any()) open @endif
 >
-    <summary class="btn btn-outline theme-primary rounded-pill px-4">Write a review</summary>
+    <summary class="btn btn-outline theme-primary rounded-pill px-4">{{ __('reviews.write') }}</summary>
 
     <form
         action="{{ route('reviews.store', $product) }}"
@@ -19,7 +19,7 @@
     >
         @csrf
         <input type="hidden" name="review_form" value="{{ $id }}">
-        <p>Review for <strong>{{ $product->name }}</strong></p>
+        <p>{{ __('reviews.for_product') }} <strong>{{ $product->name }}</strong></p>
 
         @if ($formErrors->any())
             <div class="alert theme-danger" role="alert">
@@ -32,27 +32,27 @@
         @endif
 
         <div class="mb-3">
-            <label for="{{ $id }}-rating" class="form-label">Rating</label>
+            <label for="{{ $id }}-rating" class="form-label">{{ __('reviews.rating') }}</label>
             <select
                 id="{{ $id }}-rating"
                 name="rating"
                 class="form-control"
                 required
             >
-                <option value="">Choose a rating</option>
+                <option value="">{{ __('reviews.choose_rating') }}</option>
                 @foreach ([5, 4, 3, 2, 1] as $rating)
                     <option
                         value="{{ $rating }}"
                         @selected($restore && (string) old('rating') === (string) $rating)
                     >
-                        {{ $rating }} {{ $rating === 1 ? 'star' : 'stars' }}
+                        {{ trans_choice('reviews.stars', $rating, ['count' => $rating]) }}
                     </option>
                 @endforeach
             </select>
         </div>
 
         <div class="mb-3">
-            <label for="{{ $id }}-comment" class="form-label">Your review (optional)</label>
+            <label for="{{ $id }}-comment" class="form-label">{{ __('reviews.comment') }}</label>
             <textarea
                 id="{{ $id }}-comment"
                 name="comment"
@@ -62,12 +62,12 @@
                 aria-describedby="{{ $id }}-help"
             >{{ $restore ? old('comment') : '' }}</textarea>
             <div id="{{ $id }}-help" class="form-text">
-                Share your experience with this product. Up to 2,000 characters.
+                {{ __('reviews.help') }}
             </div>
         </div>
 
         <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4">
-            Submit review
+            {{ __('reviews.submit') }}
         </button>
     </form>
 </details>

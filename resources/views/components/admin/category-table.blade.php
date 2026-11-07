@@ -6,20 +6,20 @@
 @if ($categories->isEmpty())
     <div class="text-center py-5 fg-3">
         <i class="bi bi-inbox fs-3xl d-block mb-2"></i>
-        No categories match your filters.
+        {{ __('management.no_categories_match_your_filters') }}
     </div>
 @else
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="bg-1 text-uppercase small fg-3">
                 <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th>Name</th>
-                    <th>Slug</th>
-                    <th>Parent</th>
-                    <th class="text-center">Subcategories</th>
-                    <th class="text-center">Products</th>
-                    <th class="text-end">Actions</th>
+                    <th style="width: 60px;">{{ __('management.id_text') }}</th>
+                    <th>{{ __('management.name') }}</th>
+                    <th>{{ __('management.slug') }}</th>
+                    <th>{{ __('management.parent') }}</th>
+                    <th class="text-center">{{ __('management.subcategories') }}</th>
+                    <th class="text-center">{{ __('management.products') }}</th>
+                    <th class="text-end">{{ __('management.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,14 +40,14 @@
                             <div class="d-inline-flex gap-2">
                                 <button type="button" class="btn btn-sm btn-outline theme-primary rounded-pill px-3"
                                     data-bs-toggle="dialog" data-bs-target="#categoryEditModal{{ $category->category_id }}">
-                                    <i class="bi bi-pencil"></i> Edit
+                                    <i class="bi bi-pencil"></i> {{ __('management.edit') }}
                                 </button>
                                 <form action="{{ route('admin.categories.destroy', $category->category_id) }}" method="POST" class="m-0"
-                                    onsubmit="return confirm('Delete this category?');">
+                                    data-confirm="{{ __('management.delete_this_category') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3">
-                                        <i class="bi bi-trash"></i> Delete
+                                        <i class="bi bi-trash"></i> {{ __('management.delete') }}
                                     </button>
                                 </form>
                             </div>
@@ -60,7 +60,7 @@
 
     <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
         <div class="small fg-3">
-            Showing <strong>{{ $categories->firstItem() }}</strong> to <strong>{{ $categories->lastItem() }}</strong> of <strong>{{ $categories->total() }}</strong> categories
+            {{ __('pagination.summary', ['first' => $categories->firstItem(), 'last' => $categories->lastItem(), 'total' => $categories->total()]) }}
         </div>
         <div>{{ $categories->links('shared.pagination') }}</div>
     </div>
@@ -72,15 +72,15 @@
                     @csrf
                     @method('PUT')
                     <div class="dialog-header">
-                        <h5 class="dialog-title">Edit category #{{ $category->category_id }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Close"></button>
+                        <h5 class="dialog-title">{{ __('management.display.edit_category') }}{{ $category->category_id }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="{{ __('management.close') }}"></button>
                     </div>
                     <div class="dialog-body">
                         <x-admin.category-form-fields :category="$category" :parent-options="$parentOptions" />
                     </div>
                     <div class="dialog-footer">
-                        <button type="button" class="btn btn-solid theme-secondary" data-bs-dismiss="dialog">Cancel</button>
-                        <button type="submit" class="btn btn-solid theme-primary">Save changes</button>
+                        <button type="button" class="btn btn-solid theme-secondary" data-bs-dismiss="dialog">{{ __('management.cancel') }}</button>
+                        <button type="submit" class="btn btn-solid theme-primary">{{ __('management.save_changes') }}</button>
                     </div>
                 </form>
             </dialog>

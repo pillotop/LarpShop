@@ -26,7 +26,7 @@ class VendorProductVariantService
                 ->firstOrFail();
 
             if ((int) $lockedProduct->vendor_id !== (int) $vendor->vendor_id) {
-                throw new AuthorizationException('You are not authorized to add variants to this product.');
+                throw new AuthorizationException(__('management.messages.variant_add_access'));
             }
 
             $sku = isset($data['sku']) ? trim((string) $data['sku']) : null;
@@ -58,7 +58,7 @@ class VendorProductVariantService
                 ->firstOrFail();
 
             if ((int) $lockedProduct->vendor_id !== (int) $vendor->vendor_id) {
-                throw new AuthorizationException('You are not authorized to update variants for this product.');
+                throw new AuthorizationException(__('management.messages.variant_update_access'));
             }
 
             $lockedVariant = ProductVariant::query()
@@ -112,7 +112,7 @@ class VendorProductVariantService
                 ->firstOrFail();
 
             if ((int) $lockedProduct->vendor_id !== (int) $vendor->vendor_id) {
-                throw new AuthorizationException('You are not authorized to delete variants from this product.');
+                throw new AuthorizationException(__('management.messages.variant_delete_access'));
             }
 
             $lockedVariant = ProductVariant::query()

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Store Orders (UC-34) | ' . $vendor->store_name)
+@section('title', __('management.store_orders').' (UC-34) | ' . $vendor->store_name)
 
 @section('head')
 
@@ -44,9 +44,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('profile') }}">Account Profile</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Store Orders</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('profile') }}">{{ __('management.account_profile') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.store_orders') }}</li>
             </ol>
         </nav>
 
@@ -54,7 +54,7 @@
             <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -65,7 +65,7 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -73,37 +73,37 @@
         <div class="row g-3 mb-4">
             <div class="col-6 md:col-4 xl:col-2">
                 <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
-                    <div class="fg-3 small fw-semibold">Total Store Orders</div>
+                    <div class="fg-3 small fw-semibold">{{ __('management.total_store_orders') }}</div>
                     <div class="fs-lg fw-bold fg-body mt-1">{{ $summary['total_orders'] ?? 0 }}</div>
                 </div>
             </div>
             <div class="col-6 md:col-4 xl:col-2">
                 <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
-                    <div class="fg-3 small fw-semibold">Paid Orders</div>
+                    <div class="fg-3 small fw-semibold">{{ __('management.paid_orders') }}</div>
                     <div class="fs-lg fw-bold fg-success mt-1">{{ $summary['paid_orders'] ?? 0 }}</div>
                 </div>
             </div>
             <div class="col-6 md:col-4 xl:col-2">
                 <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
-                    <div class="fg-3 small fw-semibold">Unfulfilled Items</div>
+                    <div class="fg-3 small fw-semibold">{{ __('management.unfulfilled_items') }}</div>
                     <div class="fs-lg fw-bold fg-emphasis-warning mt-1">{{ $summary['unfulfilled'] ?? 0 }}</div>
                 </div>
             </div>
             <div class="col-6 md:col-4 xl:col-2">
                 <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
-                    <div class="fg-3 small fw-semibold">Processing</div>
+                    <div class="fg-3 small fw-semibold">{{ __('management.processing') }}</div>
                     <div class="fs-lg fw-bold fg-primary mt-1">{{ $summary['processing'] ?? 0 }}</div>
                 </div>
             </div>
             <div class="col-6 md:col-4 xl:col-2">
                 <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
-                    <div class="fg-3 small fw-semibold">Shipped</div>
+                    <div class="fg-3 small fw-semibold">{{ __('management.shipped') }}</div>
                     <div class="fs-lg fw-bold fg-emphasis-info mt-1">{{ $summary['shipped'] ?? 0 }}</div>
                 </div>
             </div>
             <div class="col-6 md:col-4 xl:col-2">
                 <div class="card border-0 shadow-sm rounded-9 p-3 h-100 bg-white">
-                    <div class="fg-3 small fw-semibold">Delivered</div>
+                    <div class="fg-3 small fw-semibold">{{ __('management.delivered') }}</div>
                     <div class="fs-lg fw-bold fg-success mt-1">{{ $summary['delivered'] ?? 0 }}</div>
                 </div>
             </div>
@@ -113,18 +113,18 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom mb-4">
                 <div>
                     <h3 class="fw-bold fg-body mb-1">
-                        <i class="bi bi-truck fg-primary me-2"></i>Store Orders & Fulfillment (UC-34, UC-35)
+                        <i class="bi bi-truck fg-primary me-2"></i>{{ __('management.store_orders_fulfillment_uc_34_uc_35') }}
                     </h3>
                     <p class="fg-3 small mb-0">
-                        View customer orders containing products from <strong>{{ $vendor->store_name }}</strong> and manage item fulfillment.
+                        {{ __('management.copy.orders_intro', ['store' => $vendor->store_name]) }}
                     </p>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('vendor.products.index') }}" class="btn btn-outline theme-primary rounded-pill px-3">
-                        <i class="bi bi-box-seam me-1"></i>Store Products
+                        <i class="bi bi-box-seam me-1"></i>{{ __('management.store_products') }}
                     </a>
                     <a href="{{ route('vendor.store.settings') }}" class="btn btn-outline theme-secondary rounded-pill px-3">
-                        <i class="bi bi-gear me-1"></i>Store Settings
+                        <i class="bi bi-gear me-1"></i>{{ __('management.store_settings') }}
                     </a>
                 </div>
             </div>
@@ -132,32 +132,32 @@
             {{-- Filter & Search Bar --}}
             <form action="{{ route('vendor.orders.index') }}" method="GET" class="row g-2 align-items-end mb-4">
                 <div class="md:col-4">
-                    <label for="filter-q" class="form-label small fg-3 fw-semibold mb-1">Search Order or Customer</label>
+                    <label for="filter-q" class="form-label small fg-3 fw-semibold mb-1">{{ __('management.search_order_or_customer') }}</label>
                     <input
                         type="search"
                         id="filter-q"
                         name="q"
                         value="{{ $filters['q'] ?? '' }}"
                         class="form-control rounded-pill"
-                        placeholder="Search by #Order ID, username, or email..."
+                        placeholder="{{ __('management.search_by_order_id_username_or_email') }}"
                         maxlength="100"
                     >
                 </div>
                 <div class="md:col-3">
-                    <label for="filter-order-status" class="form-label small fg-3 fw-semibold mb-1">Order Payment Status</label>
+                    <label for="filter-order-status" class="form-label small fg-3 fw-semibold mb-1">{{ __('management.order_payment_status') }}</label>
                     <select id="filter-order-status" name="order_status" class="form-control rounded-pill">
-                        <option value="all">All order statuses</option>
+                        <option value="all">{{ __('management.all_order_statuses') }}</option>
                         @foreach ($orderStatuses as $statusCase)
                             <option value="{{ $statusCase->value }}" @selected(($filters['order_status'] ?? 'all') === $statusCase->value)>
-                                {{ ucfirst($statusCase->value) }}
+                                {{ __('checkout.order_status.'.$statusCase->value) }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="md:col-3">
-                    <label for="filter-fulfillment-status" class="form-label small fg-3 fw-semibold mb-1">Item Fulfillment Status</label>
+                    <label for="filter-fulfillment-status" class="form-label small fg-3 fw-semibold mb-1">{{ __('management.item_fulfillment_status') }}</label>
                     <select id="filter-fulfillment-status" name="fulfillment_status" class="form-control rounded-pill">
-                        <option value="all">All fulfillment states</option>
+                        <option value="all">{{ __('management.all_fulfillment_states') }}</option>
                         @foreach ($fulfillmentStatuses as $fStatus)
                             <option value="{{ $fStatus->value }}" @selected(($filters['fulfillment_status'] ?? 'all') === $fStatus->value)>
                                 {{ $fStatus->label() }}
@@ -166,9 +166,9 @@
                     </select>
                 </div>
                 <div class="md:col-2 d-flex gap-2">
-                    <button type="submit" class="btn btn-solid theme-inverse rounded-pill w-100">Filter</button>
+                    <button type="submit" class="btn btn-solid theme-inverse rounded-pill w-100">{{ __('management.filter') }}</button>
                     @if (! empty($filters['q']) || ($filters['order_status'] ?? 'all') !== 'all' || ($filters['fulfillment_status'] ?? 'all') !== 'all')
-                        <a href="{{ route('vendor.orders.index') }}" class="btn btn-outline theme-secondary rounded-pill">Reset</a>
+                        <a href="{{ route('vendor.orders.index') }}" class="btn btn-outline theme-secondary rounded-pill">{{ __('management.reset') }}</a>
                     @endif
                 </div>
             </form>
@@ -177,13 +177,13 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-1">
                         <tr>
-                            <th scope="col">Order</th>
-                            <th scope="col">Customer</th>
-                            <th scope="col">Payment Status</th>
-                            <th scope="col">Your Store Items</th>
-                            <th scope="col">Your Store Subtotal</th>
-                            <th scope="col">Fulfillment Status</th>
-                            <th scope="col" class="text-end">Action</th>
+                            <th scope="col">{{ __('management.order') }}</th>
+                            <th scope="col">{{ __('management.customer') }}</th>
+                            <th scope="col">{{ __('management.payment_status') }}</th>
+                            <th scope="col">{{ __('management.your_store_items') }}</th>
+                            <th scope="col">{{ __('management.your_store_subtotal') }}</th>
+                            <th scope="col">{{ __('management.fulfillment_status') }}</th>
+                            <th scope="col" class="text-end">{{ __('management.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -201,7 +201,7 @@
                                     <small class="fg-3">{{ $order->created_at?->format('Y-m-d H:i') }}</small>
                                 </td>
                                 <td>
-                                    <div class="fw-semibold fg-body">{{ $order->user?->username ?? 'Guest' }}</div>
+                                    <div class="fw-semibold fg-body">{{ $order->user?->username ?? __('management.guest') }}</div>
                                     <small class="fg-3">{{ $order->user?->email }}</small>
                                 </td>
                                 <td>
@@ -211,7 +211,7 @@
                                         'bg-subtle-warning fg-emphasis-warning' => $orderStatusValue === 'pending',
                                         'bg-subtle-secondary fg-secondary' => in_array($orderStatusValue, ['cancelled', 'expired'], true),
                                     ])>
-                                        {{ ucfirst($orderStatusValue) }}
+                                        {{ __('checkout.order_status.'.$orderStatusValue) }}
                                     </span>
                                 </td>
                                 <td>
@@ -240,7 +240,7 @@
                                 </td>
                                 <td class="text-end">
                                     <a href="{{ route('vendor.orders.show', $order->order_id) }}" class="btn btn-sm btn-solid theme-primary rounded-pill px-3 fw-semibold">
-                                        Manage Order
+                                        {{ __('management.manage_order') }}
                                     </a>
                                 </td>
                             </tr>
@@ -248,7 +248,7 @@
                             <tr>
                                 <td colspan="7" class="text-center py-5 fg-3">
                                     <i class="bi bi-inbox fs-3xl d-block mb-3 fg-secondary"></i>
-                                    No orders containing products from this store were found.
+                                    {{ __('management.no_orders_containing_products_from_this_store_were_found') }}
                                 </td>
                             </tr>
                         @endforelse

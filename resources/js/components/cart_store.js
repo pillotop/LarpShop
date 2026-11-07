@@ -1,3 +1,4 @@
+import { cartMessage } from './cart_messages.js';
 // Shared cart state
 class CartStore {
     constructor({ showUrl, addUrl, setUrl, csrfToken, initial = null, channelName = 'larpshop-cart' }) {
@@ -98,18 +99,18 @@ class CartStore {
 
             if (!response.ok || result?.success !== true) {
                 throw new Error(result?.error ?? Object.values(result?.errors ?? {}).flat()[0]
-                    ?? result?.message ?? 'Could not confirm the cart update. Refresh before trying again.');
+                    ?? result?.message ?? cartMessage('unconfirmed'));
             }
 
             if (!Array.isArray(result.cart?.products) || typeof result.cart_html !== 'string') {
-                throw new Error('Could not read the cart response. Refresh before trying again.');
+                throw new Error(cartMessage('unreadable'));
             }
 
             this.publish({ cart: result.cart, html: result.cart_html, pageHtml: result.cart_page_html });
             return result;
         } catch (error) {
             const failure = error instanceof TypeError
-                ? new Error('Connection interrupted. Refresh to check your cart before trying again.') : error;
+                ? new Error(cartMessage('interrupted')) : error;
             this.errorListeners.forEach(listener => this.notify(listener, failure));
             throw failure;
         }

@@ -46,12 +46,12 @@
                         class="btn btn-sm btn-solid theme-primary d-flex align-items-center justify-content-center shadow px-2"
                         type="button"
                     >
-                        Add to cart
+                        {{ __('products.add_to_cart') }}
                     </button>
                 </div>
             @else
                 <span class="badge bg-danger d-flex align-items-center justify-content-center px-2 py-1">
-                    Out of Stock
+                    {{ __('products.out_of_stock') }}
                 </span>
             @endif
             <x-wishlist.button
@@ -59,7 +59,7 @@
                 :compact="true"
             />
             <button class="btn btn-sm btn-outline theme-secondary d-flex align-items-center justify-content-center shadow px-2" type="button">
-                Options
+                {{ __('products.options') }}
             </button>
         </div>
     </div>

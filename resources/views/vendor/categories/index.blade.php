@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Platform Categories | ' . $vendor->store_name)
+@section('title', __('management.platform_categories').' | ' . $vendor->store_name)
 
 @section('head')
 
@@ -44,9 +44,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">Products & Inventory</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.products.index') }}">{{ __('management.products_inventory') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.categories') }}</li>
             </ol>
         </nav>
 
@@ -56,7 +56,7 @@
             <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -67,7 +67,7 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -75,15 +75,15 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom mb-4">
                 <div>
                     <h3 class="fw-bold fg-body mb-1">
-                        <i class="bi bi-tags fg-primary me-2"></i>Platform Product Categories
+                        <i class="bi bi-tags fg-primary me-2"></i>{{ __('management.platform_product_categories') }}
                     </h3>
                     <p class="fg-3 small mb-0">
-                        Browse shared catalog categories or propose a new category. Shared categories can only be modified or disabled by administrators.
+                        {{ __('management.categories_shared_help') }}
                     </p>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('vendor.categories.create') }}" class="btn btn-solid theme-primary rounded-pill px-4 shadow-sm fw-semibold">
-                        <i class="bi bi-plus-lg me-1"></i>New Category
+                        <i class="bi bi-plus-lg me-1"></i>{{ __('management.new_category') }}
                     </a>
                 </div>
             </div>
@@ -92,12 +92,12 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-1">
                         <tr>
-                            <th scope="col" style="width: 60px;">#ID</th>
-                            <th scope="col">Category Name</th>
-                            <th scope="col">Slug</th>
-                            <th scope="col">Parent Category</th>
-                            <th scope="col">Status</th>
-                            <th scope="col" class="text-end" style="width: 220px;">Actions</th>
+                            <th scope="col" style="width: 60px;">{{ __('management.id') }}</th>
+                            <th scope="col">{{ __('management.category_name') }}</th>
+                            <th scope="col">{{ __('management.slug') }}</th>
+                            <th scope="col">{{ __('management.parent_category') }}</th>
+                            <th scope="col">{{ __('management.status') }}</th>
+                            <th scope="col" class="text-end" style="width: 220px;">{{ __('management.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,17 +119,17 @@
                                             <i class="bi bi-diagram-2 me-1"></i>{{ $cat->parent->name }}
                                         </span>
                                     @else
-                                        <span class="fg-3 small">-- Root --</span>
+                                        <span class="fg-3 small">{{ __('management.root') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if ($cat->is_active)
                                         <span class="badge bg-subtle-success fg-success border border-success rounded-pill px-2 py-1">
-                                            <i class="bi bi-check-circle me-1"></i>Active
+                                            <i class="bi bi-check-circle me-1"></i>{{ __('management.active') }}
                                         </span>
                                     @else
                                         <span class="badge bg-subtle-danger fg-danger border border-danger rounded-pill px-2 py-1">
-                                            <i class="bi bi-slash-circle me-1"></i>Disabled
+                                            <i class="bi bi-slash-circle me-1"></i>{{ __('management.disabled') }}
                                         </span>
                                     @endif
                                 </td>
@@ -137,24 +137,24 @@
                                     @if (auth()->user()?->isAdmin())
                                         <div class="d-inline-flex gap-2">
                                             <a href="{{ route('vendor.categories.edit', $cat->category_id) }}" class="btn btn-sm btn-outline theme-secondary rounded-pill px-3">
-                                                <i class="bi bi-pencil me-1"></i>Edit
+                                                <i class="bi bi-pencil me-1"></i>{{ __('management.edit') }}
                                             </a>
                                             <form action="{{ route('vendor.categories.toggle-status', $cat->category_id) }}" method="POST" class="m-0">
                                                 @csrf
                                                 @method('PATCH')
                                                 @if ($cat->is_active)
                                                     <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3">
-                                                        <i class="bi bi-eye-slash me-1"></i>Disable
+                                                        <i class="bi bi-eye-slash me-1"></i>{{ __('management.disable') }}
                                                     </button>
                                                 @else
                                                     <button type="submit" class="btn btn-sm btn-outline theme-success rounded-pill px-3">
-                                                        <i class="bi bi-eye me-1"></i>Enable
+                                                        <i class="bi bi-eye me-1"></i>{{ __('management.enable') }}
                                                     </button>
                                                 @endif
                                             </form>
                                         </div>
                                     @else
-                                        <span class="fg-3 small fst-italic">Shared Category</span>
+                                        <span class="fg-3 small fst-italic">{{ __('management.shared_category') }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -162,7 +162,7 @@
                             <tr>
                                 <td colspan="6" class="text-center py-5 fg-3">
                                     <i class="bi bi-folder2-open fs-3xl d-block mb-2 fg-secondary"></i>
-                                    No categories available yet.
+                                    {{ __('management.no_categories_available_yet') }}
                                 </td>
                             </tr>
                         @endforelse

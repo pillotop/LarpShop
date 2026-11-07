@@ -1,10 +1,12 @@
 <div id="auth-form" class="blur position-relative shadow border rounded-4 p-4 bg-white">
+    @include('auth.partials.messages')
+
     <h3 class="primary-text" id="login-form-header">
-        Forgot your password?
+        {{ __('auth.recovery.forgot_your_password') }}
     </h3>
 
     <p id="login-form-email-text" class="fg-3">
-        Enter your email address and we'll send you a password reset link.
+        {{ __('auth.recovery.enter_your_email_address_and_we_ll_send_you_a_password_reset_link') }}
     </p>
 
     <div
@@ -28,7 +30,7 @@
         <fieldset id="email-state" class="border-0 p-0">
             <div class="my-2">
                 <label for="email-input" class="form-label">
-                    Email address
+                    {{ __('auth.recovery.email_address') }}
                 </label>
 
                 <input
@@ -37,7 +39,7 @@
                     type="email"
                     name="email"
                     value="{{ old('email') }}"
-                    placeholder="Email address"
+                    placeholder="{{ __('auth.recovery.email_address') }}"
                     autocomplete="email"
                     maxlength="100"
                     aria-describedby="email-input-error"
@@ -62,7 +64,7 @@
             id="login-form-primary-button"
             class="w-100 border-0 rounded-4 p-2 my-2"
         >
-            Send reset link
+            {{ __('auth.recovery.send_reset_link') }}
         </button>
 
         <a
@@ -70,7 +72,7 @@
             id="login-form-secondary-button"
             class="btn btn-link"
         >
-            Back to sign in
+            {{ __('auth.recovery.back_to_sign_in') }}
         </a>
     </form>
 </div>

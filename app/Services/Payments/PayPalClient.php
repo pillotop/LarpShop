@@ -12,7 +12,7 @@ class PayPalClient
     {
         if (! config('services.paypal.client_id') || ! config('services.paypal.client_secret')) {
             throw ValidationException::withMessages([
-                'payment' => 'PayPal is not configured yet. Please choose another payment method.',
+                'payment' => __('checkout.errors.paypal_configuration'),
             ]);
         }
         $response = Http::withBasicAuth(

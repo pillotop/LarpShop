@@ -11,7 +11,7 @@
         'id' => 'tab-vendor-new',
         'target_id' => '#pane-vendor-new',
         'aria_controls' => 'pane-vendor-new',
-        'label' => 'New store',
+        'label' => __('profile.store.new'),
         'icon' => 'bi-plus-lg',
     ];
     $activeId = $panes[0]['id'];
@@ -28,7 +28,7 @@
     <div class="row g-3">
         <div class="col-12 md:col-4">
             <div class="card border-0 shadow-sm rounded-9 p-2">
-                <x-profile.nav-tabs id="vendorTabs" :panes="$panes" :active-id="$activeId" aria-label="Stores" />
+                <x-profile.nav-tabs id="vendorTabs" :panes="$panes" :active-id="$activeId" aria-label="{{ __('profile.stores') }}" />
             </div>
         </div>
         <div class="col-12 md:col-8">

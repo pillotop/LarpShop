@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
-use App\Http\Requests\Auth\ForgotPasswordRequest;
 
 class ForgotPasswordController extends Controller
 {
@@ -22,11 +22,11 @@ class ForgotPasswordController extends Controller
         );
 
         logger()->info('password reset broker result', [
-            'status' => $status
+            'status' => $status,
         ]);
 
         return response()->json([
-            'message' => 'If an account exists for this email address, a password reset link will be sent.',
+            'message' => __('passwords.requested'),
         ]);
     }
 }

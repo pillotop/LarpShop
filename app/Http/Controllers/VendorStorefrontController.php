@@ -20,7 +20,7 @@ class VendorStorefrontController extends Controller
 
         // Ensure store is active or approved for public storefront view
         if (! in_array($vendorModel->status, ['active', 'approved'])) {
-            abort(404, 'Store is currently unavailable.');
+            abort(404, __('management.messages.store_unavailable'));
         }
 
         $query = $vendorModel->products()

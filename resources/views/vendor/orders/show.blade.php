@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order #' . $order->order_id . ' Fulfillment (UC-34, UC-35) | ' . $vendor->store_name)
+@section('title', __('management.display.order').'' . $order->order_id . ' '.__('management.fulfillment').' (UC-34, UC-35) | ' . $vendor->store_name)
 
 @section('head')
 
@@ -49,9 +49,9 @@
     <main class="container my-4">
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('vendor.orders.index') }}">Store Orders</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Order #{{ $order->order_id }}</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('management.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('vendor.orders.index') }}">{{ __('management.store_orders') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('management.display.order') }}{{ $order->order_id }}</li>
             </ol>
         </nav>
 
@@ -59,7 +59,7 @@
             <div class="alert theme-success alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-check-circle-fill fs-lg fg-success"></i>
                 <div class="flex-grow-1">{{ session('success') }}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -70,7 +70,7 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('management.close') }}"></button>
             </div>
         @endif
 
@@ -80,7 +80,7 @@
                 <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
                     <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
                         <div>
-                            <div class="fg-3 small fw-semibold">Order Reference</div>
+                            <div class="fg-3 small fw-semibold">{{ __('management.order_reference') }}</div>
                             <h4 class="fw-bold fg-body mb-0">#{{ $order->order_id }}</h4>
                         </div>
                         <span @class([
@@ -89,31 +89,31 @@
                             'bg-subtle-warning fg-emphasis-warning' => $orderStatusValue === 'pending',
                             'bg-subtle-secondary fg-secondary' => in_array($orderStatusValue, ['cancelled', 'expired'], true),
                         ])>
-                            {{ ucfirst($orderStatusValue) }}
+                            {{ __('checkout.order_status.'.$orderStatusValue) }}
                         </span>
                     </div>
 
                     <dl class="row mb-0 small">
-                        <dt class="col-5 fg-3">Placed At</dt>
+                        <dt class="col-5 fg-3">{{ __('management.placed_at') }}</dt>
                         <dd class="col-7 fw-semibold text-end">{{ $order->created_at?->format('Y-m-d H:i') }}</dd>
 
-                        <dt class="col-5 fg-3">Customer</dt>
-                        <dd class="col-7 fw-semibold text-end">{{ $order->user?->username ?? 'Guest' }}</dd>
+                        <dt class="col-5 fg-3">{{ __('management.customer') }}</dt>
+                        <dd class="col-7 fw-semibold text-end">{{ $order->user?->username ?? __('management.guest') }}</dd>
 
-                        <dt class="col-5 fg-3">Email</dt>
-                        <dd class="col-7 text-end text-break">{{ $order->user?->email ?? 'N/A' }}</dd>
+                        <dt class="col-5 fg-3">{{ __('management.email') }}</dt>
+                        <dd class="col-7 text-end text-break">{{ $order->user?->email ?? __('management.n_a') }}</dd>
 
-                        <dt class="col-5 fg-3">Your Store Items</dt>
-                        <dd class="col-7 fw-semibold text-end">{{ $order->details->sum('quantity') }} unit(s)</dd>
+                        <dt class="col-5 fg-3">{{ __('management.your_store_items') }}</dt>
+                        <dd class="col-7 fw-semibold text-end">{{ $order->details->sum('quantity') }} {{ __('management.quantity_labels.unit_s_') }}</dd>
 
-                        <dt class="col-5 fg-3 pt-2 border-top">Store Subtotal</dt>
+                        <dt class="col-5 fg-3 pt-2 border-top">{{ __('management.store_subtotal') }}</dt>
                         <dd class="col-7 fw-bold fg-success fs-lg text-end pt-2 border-top mb-0">${{ $vendorSubtotal }}</dd>
                     </dl>
                 </div>
 
                 <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
                     <h5 class="fw-bold fg-body pb-2 border-bottom mb-3">
-                        <i class="bi bi-geo-alt fg-primary me-1"></i>Shipping Address
+                        <i class="bi bi-geo-alt fg-primary me-1"></i>{{ __('management.shipping_address') }}
                     </h5>
                     @if ($shippingAddress)
                         <div class="fw-bold fg-body">{{ $shippingAddress->recipient_name }}</div>
@@ -130,12 +130,12 @@
                             <div class="fw-semibold">{{ $shippingAddress->country_code }}</div>
                         </div>
                     @else
-                        <p class="fg-3 small mb-0">No shipping address recorded for this order.</p>
+                        <p class="fg-3 small mb-0">{{ __('management.no_shipping_address_recorded_for_this_order') }}</p>
                     @endif
                 </div>
 
                 <a href="{{ route('vendor.orders.index') }}" class="btn btn-solid theme-secondary rounded-pill w-100">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Store Orders
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('management.back_to_store_orders') }}
                 </a>
             </div>
 
@@ -145,10 +145,10 @@
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom mb-4">
                         <div>
                             <h4 class="fw-bold fg-body mb-1">
-                                <i class="bi bi-box2-heart fg-primary me-2"></i>Items Managed by {{ $vendor->store_name }}
+                                <i class="bi bi-box2-heart fg-primary me-2"></i>{{ __('management.managed_by', ['name' => $vendor->store_name]) }}
                             </h4>
                             <p class="fg-3 small mb-0">
-                                Only order items belonging to your store are shown below.
+                                {{ __('management.only_order_items_belonging_to_your_store_are_shown_below') }}
                             </p>
                         </div>
 
@@ -157,13 +157,13 @@
                             <form action="{{ route('vendor.orders.fulfillment.update', $order->order_id) }}" method="POST" class="d-flex align-items-center gap-2 m-0">
                                 @csrf
                                 @method('PATCH')
-                                <select name="fulfillment_status" class="form-control form-control-sm rounded-pill" aria-label="Bulk fulfillment status">
+                                <select name="fulfillment_status" class="form-control form-control-sm rounded-pill" aria-label="{{ __('management.bulk_fulfillment_status') }}">
                                     @foreach ($fulfillmentStatuses as $statusCase)
                                         <option value="{{ $statusCase->value }}">{{ $statusCase->label() }}</option>
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn btn-sm btn-solid theme-primary rounded-pill px-3 text-nowrap fw-semibold">
-                                    Update All Items
+                                    {{ __('management.update_all_items') }}
                                 </button>
                             </form>
                         @endif
@@ -173,7 +173,7 @@
                         <div class="alert theme-warning rounded-9 d-flex align-items-center gap-2 mb-4">
                             <i class="bi bi-info-circle-fill"></i>
                             <span>
-                                This order is currently <strong>{{ ucfirst($orderStatusValue) }}</strong>. Fulfillment and shipping status can only be updated once payment is confirmed (<strong>Paid</strong>).
+                                {{ __('management.fulfillment_payment_notice', ['status' => __('checkout.order_status.'.$orderStatusValue)]) }}
                             </span>
                         </div>
                     @endif
@@ -182,11 +182,11 @@
                         <table class="table align-middle mb-0">
                             <thead class="bg-1">
                                 <tr>
-                                    <th scope="col">Product</th>
-                                    <th scope="col" class="text-center">Qty</th>
-                                    <th scope="col">Unit Price</th>
-                                    <th scope="col">Line Total</th>
-                                    <th scope="col">Fulfillment Status (UC-35)</th>
+                                    <th scope="col">{{ __('management.product') }}</th>
+                                    <th scope="col" class="text-center">{{ __('management.qty') }}</th>
+                                    <th scope="col">{{ __('management.unit_price') }}</th>
+                                    <th scope="col">{{ __('management.line_total') }}</th>
+                                    <th scope="col">{{ __('management.fulfillment_status_uc_35') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -199,16 +199,16 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <div class="fw-bold fg-body">{{ $detail->product?->name ?? 'Product #' . $detail->product_id }}</div>
-                                            <small class="fg-3">Item ID: #{{ $detail->order_detail_id }}</small>
+                                            <div class="fw-bold fg-body">{{ $detail->product?->name ?? __('management.product_number', ['id' => $detail->product_id]) }}</div>
+                                            <small class="fg-3">{{ __('management.display.item_id') }}{{ $detail->order_detail_id }}</small>
                                             @if ($detail->shipped_at)
                                                 <div class="fg-3 small">
-                                                    <i class="bi bi-truck me-1"></i>Shipped: {{ $detail->shipped_at->format('Y-m-d H:i') }}
+                                                    <i class="bi bi-truck me-1"></i>{{ __('management.display.shipped') }} {{ $detail->shipped_at->format('Y-m-d H:i') }}
                                                 </div>
                                             @endif
                                             @if ($detail->delivered_at)
                                                 <div class="fg-success small">
-                                                    <i class="bi bi-check2-all me-1"></i>Delivered: {{ $detail->delivered_at->format('Y-m-d H:i') }}
+                                                    <i class="bi bi-check2-all me-1"></i>{{ __('management.display.delivered') }} {{ $detail->delivered_at->format('Y-m-d H:i') }}
                                                 </div>
                                             @endif
                                         </td>
@@ -233,7 +233,7 @@
                                                         @endforeach
                                                     </select>
                                                     <button type="submit" class="btn btn-sm btn-outline theme-inverse rounded-pill px-3">
-                                                        Save
+                                                        {{ __('management.save') }}
                                                     </button>
                                                 </form>
                                             @else

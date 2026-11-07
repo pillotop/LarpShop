@@ -28,7 +28,7 @@ class VendorManagementService
 
             if (! in_array($vendor->status, ['active', 'approved'], true)) {
                 throw ValidationException::withMessages([
-                    'store_name' => 'Only an active or approved store can be edited.',
+                    'store_name' => __('profile.errors.store_edit'),
                 ]);
             }
 
@@ -48,7 +48,7 @@ class VendorManagementService
 
             if ($vendor->status !== 'rejected') {
                 throw ValidationException::withMessages([
-                    'store_name' => 'Only a rejected application can be resubmitted.',
+                    'store_name' => __('profile.errors.store_resubmit'),
                 ]);
             }
 

@@ -8,8 +8,8 @@
 
 {{-- Product filter & sort form. Rendered inside <x-side-panel> via a <template>. --}}
 <div class="drawer-header border-bottom">
-    <h5 class="drawer-title fw-bold">Filter &amp; Sort</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="Close"></button>
+    <h5 class="drawer-title fw-bold">{{ __('products.filters.title') }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="{{ __('common.close') }}"></button>
 </div>
 
 <form method="GET" action="{{ route('products.index') }}" class="d-flex flex-column flex-grow-1 overflow-hidden">
@@ -19,9 +19,9 @@
         @endif
 
         <fieldset class="mb-4">
-            <legend class="h6 fw-semibold">Sort By</legend>
+            <legend class="h6 fw-semibold">{{ __('products.filters.sort_by') }}</legend>
             <div class="d-flex flex-column gap-2">
-                @foreach ($sortOptions as $sortKey => $sortLabel)
+                @foreach (array_keys($sortOptions) as $sortKey)
                     <div class="d-flex align-items-center gap-2">
                         <input
                             id="filter-sort-{{ $sortKey }}"
@@ -32,7 +32,7 @@
                             @checked(($filters['sort'] ?? 'newest') === $sortKey)
                         >
                         <label for="filter-sort-{{ $sortKey }}" class="form-label">
-                            {{ $sortLabel }}
+                            {{ __('products.sort.' . $sortKey) }}
                         </label>
                     </div>
                 @endforeach
@@ -40,9 +40,9 @@
         </fieldset>
 
         <div class="mb-4">
-            <label for="filter-category" class="form-label h6 fw-semibold">Category</label>
+            <label for="filter-category" class="form-label h6 fw-semibold">{{ __('products.filters.category') }}</label>
             <select id="filter-category" name="category" class="form-control">
-                <option value="">All Categories</option>
+                <option value="">{{ __('products.filters.all_categories') }}</option>
                 @foreach ($categories as $categoryOption)
                     <option
                         value="{{ $categoryOption->slug }}"
@@ -55,30 +55,30 @@
         </div>
 
         <fieldset class="mb-4">
-            <legend class="h6 fw-semibold">Price ($)</legend>
+            <legend class="h6 fw-semibold">{{ __('products.filters.price') }}</legend>
             <div class="row g-2">
                 <div class="col-6">
-                    <label for="filter-min-price" class="visually-hidden">Min Price</label>
+                    <label for="filter-min-price" class="visually-hidden">{{ __('products.filters.min_price') }}</label>
                     <input
                         id="filter-min-price"
                         type="number"
                         name="min_price"
                         min="0"
                         step="0.01"
-                        placeholder="Min"
+                        placeholder="{{ __('products.filters.min') }}"
                         value="{{ $filters['min_price'] ?? '' }}"
                         class="form-control"
                     >
                 </div>
                 <div class="col-6">
-                    <label for="filter-max-price" class="visually-hidden">Max Price</label>
+                    <label for="filter-max-price" class="visually-hidden">{{ __('products.filters.max_price') }}</label>
                     <input
                         id="filter-max-price"
                         type="number"
                         name="max_price"
                         min="0"
                         step="0.01"
-                        placeholder="Max"
+                        placeholder="{{ __('products.filters.max') }}"
                         value="{{ $filters['max_price'] ?? '' }}"
                         class="form-control"
                     >
@@ -95,18 +95,18 @@
                 class="check"
                 @checked(!empty($filters['in_stock']))
             >
-            <label for="filter-in-stock" class="form-label">In Stock Only</label>
+            <label for="filter-in-stock" class="form-label">{{ __('products.filters.in_stock') }}</label>
         </div>
     </div>
 
     <div class="border-top p-3 d-flex gap-2">
-        <button type="submit" class="btn btn-solid theme-primary flex-grow-1">Apply Filters</button>
+        <button type="submit" class="btn btn-solid theme-primary flex-grow-1">{{ __('products.filters.apply') }}</button>
         @if ($hasActiveFilters)
             <a
                 href="{{ route('products.index', $keyword !== '' ? ['q' => $keyword] : []) }}"
                 class="btn btn-outline theme-secondary"
             >
-                Reset
+                {{ __('products.filters.reset') }}
             </a>
         @endif
     </div>

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Product reviews',
+    'joined' => 'Joined :date',
+    'visit_store' => 'Visit store',
+    'rating_summary' => ':rating out of 5',
+    'count' => '{1} :count review|[0,*] :count reviews',
+    'eligibility' => 'Customers can review each product once after a paid purchase.',
+    'empty' => 'No reviews yet.',
+    'more' => 'Show more reviews',
+    'loading' => 'Loading reviews…',
+    'load_error' => 'Could not load reviews. Please try again.',
+    'customer' => 'Customer',
+    'verified' => 'Verified purchase',
+    'no_comment' => 'This customer left a rating without a comment.',
+    'write' => 'Write a review',
+    'for_product' => 'Review for',
+    'rating' => 'Rating',
+    'choose_rating' => 'Choose a rating',
+    'stars' => '{1} :count star|[2,5] :count stars',
+    'comment' => 'Your review (optional)',
+    'help' => 'Share your experience with this product. Up to 2,000 characters.',
+    'submit' => 'Submit review',
+    'success' => 'Thank you! Your review has been published.',
+    'purchase_required' => 'You can review a product once, after a paid purchase.',
+];

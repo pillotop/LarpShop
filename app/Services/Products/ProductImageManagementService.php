@@ -55,7 +55,7 @@ class ProductImageManagementService
 
         if ((int) $image->product_id !== (int) $product->product_id) {
             throw ValidationException::withMessages([
-                'image' => 'The selected image does not belong to this product.',
+                'image' => __('management.messages.image_product_mismatch'),
             ]);
         }
 
@@ -75,7 +75,7 @@ class ProductImageManagementService
 
         if ((int) $image->product_id !== (int) $product->product_id) {
             throw ValidationException::withMessages([
-                'image' => 'The selected image does not belong to this product.',
+                'image' => __('management.messages.image_product_mismatch'),
             ]);
         }
 
@@ -95,7 +95,7 @@ class ProductImageManagementService
     public function authorizeProductOwnership(Vendor $vendor, Product $product): void
     {
         if ((int) $product->vendor_id !== (int) $vendor->vendor_id && ! $vendor->user?->isAdmin()) {
-            abort(403, 'You do not have permission to manage images for this product.');
+            abort(403, __('management.messages.image_access'));
         }
     }
 }

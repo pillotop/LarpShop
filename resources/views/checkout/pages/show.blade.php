@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Details')
+@section('title', __('checkout.title'))
 
 @section('head')
 
@@ -24,7 +24,7 @@
         <nav class="navigation-bar navbar lg:navbar-expand">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ route('home') }}">
-                    <img src="/images/larp_shop.jpg" alt="LarpShop home" class="rounded-circle logo-larpshop-logo">
+                    <img src="/images/larp_shop.jpg" alt="{{ __('common.home') }}" class="rounded-circle logo-larpshop-logo">
                 </a>
                 <div class="d-flex flex-grow-1">
                     <div class="navbar-nav me-auto mb-2 lg:mb-0">
@@ -35,11 +35,11 @@
                             data-bs-toggle="drawer"
                             data-bs-target="#side-panel"
                         >
-                            Your order
+                            {{ __('checkout.order') }}
                         </button>
                         <template id="sm-cart">
                             <div class="p-3 text-end">
-                                <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="{{ __('common.close') }}"></button>
                             </div>
                             <x-checkout.order-summary :data="$order"/>
                         </template>
@@ -58,10 +58,10 @@
                     @endphp
 
                     <div class="avatar-circle" aria-hidden="true">
-                        {{ mb_strtoupper(mb_substr($user?->username ?? 'Guest', 0, 1)) }}
+                        {{ mb_strtoupper(mb_substr($user?->username ?? __('common.guest'), 0, 1)) }}
                     </div>
 
-                    {{ $user?->username ?? 'Guest' }}
+                    {{ $user?->username ?? __('common.guest') }}
 
                 </button>
 

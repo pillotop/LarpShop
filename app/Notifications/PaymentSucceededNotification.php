@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enums\PaymentMethod;
 use App\Models\Payment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,6 +20,7 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
         public Payment $payment,
     ) {
         $this->afterCommit();
+        $this->locale(app()->getLocale());
     }
 
     /**
@@ -37,14 +39,18 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('LarpShop - Payment confirmed')
-            ->greeting('Payment confirmed')
-            ->line("Order #{$this->payment->order_id}")
-            ->line("Amount: {$this->payment->amount} {$this->payment->currency}")
-            ->line("Payment method: {$this->payment->method?->value}")
-            ->line('Your payment was successful.')
+            ->subject(__('notifications.payment.subject'))
+            ->greeting(__('notifications.payment.greeting'))
+            ->line(__('notifications.payment.order', ['id' => $this->payment->order_id]))
+            ->line(__('notifications.payment.amount', ['amount' => $this->payment->amount, 'currency' => $this->payment->currency]))
+            ->line(__('notifications.payment.method', ['method' => match ($this->payment->method) {
+                PaymentMethod::Card => __('checkout.payment.card'),
+                PaymentMethod::EWallet => __('checkout.payment.wallet'),
+                default => __('checkout.details.not_provided'),
+            }]))
+            ->line(__('notifications.payment.success'))
             ->action(
-                'View order history',
+                __('notifications.payment.action'),
                 route('orders.index')
             );
     }

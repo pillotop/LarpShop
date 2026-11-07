@@ -4,11 +4,11 @@
 
     $priceBreakdownRows = [
         [
-            'left'  => 'Product' . ($quantity > 1 ? 's' : '') . ' (' . $quantity . ')',
+            'left'  => trans_choice('checkout.summary_products', $quantity, ['count' => $quantity]),
             'right' => '$' . $subtotal,
         ],
         [
-            'left' => 'Delivery price',
+            'left' => __('checkout.delivery_price'),
             'right' => '',
         ],
     ];
@@ -16,19 +16,19 @@
     $priceBreakdownCalc = [
         [
             'class' => 'price-breakdown-subtotal',
-            'label' => 'Subtotal',
+            'label' => __('cart.sort.subtotal'),
             'value' => $subtotal,
         ],
         [
             'class' => 'price-breakdown-total',
-            'label' => 'Total',
+            'label' => __('checkout.total'),
             'value' => ''
         ]
     ]
 @endphp
 
 <div class="order-summary">
-    <header class="h4 fw-semibold">Order summary</header>
+    <header class="h4 fw-semibold">{{ __('checkout.summary') }}</header>
     <div class="price-breakdown">
         @foreach ($priceBreakdownRows as $row)
             <div class="d-flex flex-nowrap justify-content-between my-1">
@@ -52,26 +52,26 @@
         @endforeach
     </dl>
     <span class="small">
-        By clicking "check out", you're agreeing to our
-        <a href="#">Privacy Policy</a>
+        {{ __('checkout.privacy_intro') }}
+        <a href="#">{{ __('checkout.privacy') }}</a>
     </span>
     <form action="{{ route('checkout.store') }}" method="POST" class="my-3">
         @csrf
         @auth
             @if ($addresses->isNotEmpty())
-                <label for="cart-shipping-address" class="form-label">Shipping address</label>
+                <label for="cart-shipping-address" class="form-label">{{ __('checkout.address.title') }}</label>
                 <select name="address_id" id="cart-shipping-address" class="form-control mb-3" required>
                     @foreach ($addresses as $address)
                         <option value="{{ $address->getKey() }}" @selected((string) old('address_id', $addresses->first()->getKey()) === (string) $address->getKey())>
-                            {{ $address->recipient_name }} — {{ $address->address_line_1 }}, {{ $address->city }}{{ $address->is_default ? ' (Default)' : '' }}
+                            {{ $address->recipient_name }} — {{ $address->address_line_1 }}, {{ $address->city }}{{ $address->is_default ? __('checkout.address.default') : '' }}
                         </option>
                     @endforeach
                 </select>
             @else
-                <p class="small">Add a shipping address before checking out. <a href="{{ route('profile') }}#pane-billing">Manage addresses</a></p>
+                <p class="small">{{ __('checkout.address.add_first') }} <a href="{{ route('profile') }}#pane-billing">{{ __('checkout.address.manage') }}</a></p>
             @endif
         @else
-            <p class="small"><a href="{{ route('login') }}">Sign in</a> to check out.</p>
+            <p class="small"><a href="{{ route('login') }}">{{ __('common.login') }}</a> {{ __('checkout.sign_in_suffix') }}</p>
         @endauth
         @if ($errors->any())
             <ul class="small fg-danger" role="alert">
@@ -79,7 +79,7 @@
             </ul>
         @endif
         <button type="submit" class="w-100 rounded-3 border-0 p-3" @disabled($quantity < 1 || $addresses->isEmpty())>
-            Check out
+            {{ __('checkout.checkout') }}
         </button>
     </form>
 </div>

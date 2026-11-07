@@ -9,7 +9,7 @@
         @if ($isPrimary)
             <div class="position-absolute top-0 start-0 m-2 z-2">
                 <span class="badge bg-primary rounded-pill shadow-sm px-3 py-1">
-                    <i class="bi bi-star-fill me-1"></i>Primary Cover
+                    <i class="bi bi-star-fill me-1"></i>{{ __('management.primary_cover') }}
                 </span>
             </div>
         @endif
@@ -21,10 +21,10 @@
         <div class="card-body p-3 d-flex flex-column justify-content-between">
             <div class="mb-2">
                 <small class="fg-3 d-block text-truncate" title="{{ $image->alt_text }}">
-                    <i class="bi bi-card-text me-1"></i>{{ $image->alt_text ?: 'No alt text' }}
+                    <i class="bi bi-card-text me-1"></i>{{ $image->alt_text ?: __('management.no_alt_text') }}
                 </small>
                 <small class="fg-3">
-                    <i class="bi bi-sort-numeric-down me-1"></i>Order: <strong>{{ $image->sort_order }}</strong>
+                    <i class="bi bi-sort-numeric-down me-1"></i>{{ __('management.order_label') }} <strong>{{ $image->sort_order }}</strong>
                 </small>
             </div>
 
@@ -33,20 +33,20 @@
                     <form action="{{ route('vendor.products.images.primary', [$product->product_id, $image->product_image_id]) }}" method="POST" class="m-0">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" class="btn btn-sm btn-outline theme-primary rounded-pill px-2" title="Set as primary cover">
-                            <i class="bi bi-star me-1"></i>Set Primary
+                        <button type="submit" class="btn btn-sm btn-outline theme-primary rounded-pill px-2" title="{{ __('management.set_as_primary_cover') }}">
+                            <i class="bi bi-star me-1"></i>{{ __('management.set_primary') }}
                         </button>
                     </form>
                 @else
                     <span class="fg-success small fw-semibold">
-                        <i class="bi bi-check-circle-fill me-1"></i>Primary
+                        <i class="bi bi-check-circle-fill me-1"></i>{{ __('management.primary') }}
                     </span>
                 @endif
 
                 <form action="{{ route('vendor.products.images.destroy', [$product->product_id, $image->product_image_id]) }}" method="POST" class="m-0">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-2" title="Delete image">
+                    <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-2" title="{{ __('management.delete_image') }}">
                         <i class="bi bi-trash"></i>
                     </button>
                 </form>

@@ -61,7 +61,7 @@ class VendorCategoryController extends Controller
         $category = $this->categoryService->createForVendor($vendor, $request->validated());
 
         return redirect()->route('vendor.categories.index')
-            ->with('success', "Category '{$category->name}' has been created successfully.");
+            ->with('success', __('management.messages.category_created_success', ['name' => $category->name]));
     }
 
     /**
@@ -73,7 +73,7 @@ class VendorCategoryController extends Controller
         $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
         if (! $request->user()->isAdmin()) {
-            abort(403, 'Only administrators can edit shared platform categories.');
+            abort(403, __('management.messages.category_edit'));
         }
 
         $parents = $this->categoryService->getEligibleParentCategories($category->category_id);
@@ -96,7 +96,7 @@ class VendorCategoryController extends Controller
         $this->categoryService->updateForVendor($vendor, $category, $request->validated());
 
         return redirect()->route('vendor.categories.index')
-            ->with('success', "Category '{$category->name}' has been updated successfully.");
+            ->with('success', __('management.messages.category_updated_success', ['name' => $category->name]));
     }
 
     /**
@@ -108,7 +108,7 @@ class VendorCategoryController extends Controller
         $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
         if (! $request->user()->isAdmin()) {
-            abort(403, 'Only administrators can enable or disable shared platform categories.');
+            abort(403, __('management.messages.category_toggle'));
         }
 
         $this->categoryService->toggleActiveForVendor($vendor, $category);
@@ -116,6 +116,6 @@ class VendorCategoryController extends Controller
         $statusText = $category->is_active ? 'activated' : 'disabled';
 
         return redirect()->route('vendor.categories.index')
-            ->with('success', "Category '{$category->name}' has been {$statusText} successfully.");
+            ->with('success', __('management.messages.category_visibility', ['name' => $category->name, 'status' => __('management.state_labels.'.$statusText)]));
     }
 }

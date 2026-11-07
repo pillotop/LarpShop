@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Hồ sơ tài khoản | LarpShop')
+@section('title', __('profile.title'))
 
 @section('head')
 
@@ -80,7 +80,7 @@
                 <div class="flex-grow-1">
                     <span class="fw-semibold">{{ session('success') }}</span>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') }}"></button>
             </div>
         @endif
 
@@ -90,7 +90,7 @@
                 <div class="flex-grow-1">
                     <span class="fw-semibold">{{ session('warning') }}</span>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') }}"></button>
             </div>
         @endif
 
@@ -98,14 +98,14 @@
             <div class="alert theme-danger alert-dismissible fade show rounded-9 d-flex align-items-center gap-3 p-3 mb-4 shadow-sm" role="alert">
                 <i class="bi bi-exclamation-octagon-fill fs-lg fg-danger"></i>
                 <div class="flex-grow-1">
-                    <div class="fw-semibold mb-1">Vui lòng kiểm tra lại thông tin:</div>
+                    <div class="fw-semibold mb-1">{{ __('profile.check_information') }}</div>
                     <ul class="mb-0 ps-3">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('common.close') }}"></button>
             </div>
         @endif
 
@@ -124,35 +124,35 @@
                                 'target_id' => '#pane-customer',
                                 'aria_controls' => 'pane-customer',
                                 'icon' => 'bi-person-lines-fill',
-                                'label' => 'Personal profile',
+                                'label' => __('profile.personal'),
                             ],
                             [
                                 'id' => 'tab-vendor-info',
                                 'target_id' => '#pane-vendor',
                                 'aria_controls' => 'pane-vendor',
                                 'icon' => 'bi-shop-window',
-                                'label' => 'Stores',
+                                'label' => __('profile.stores'),
                             ],
                             [
                                 'id' => 'tab-security',
                                 'target_id' => '#pane-security',
                                 'aria_controls' => 'pane-security',
                                 'icon' => 'bi-shield-lock',
-                                'label' => 'Change password',
+                                'label' => __('profile.password'),
                             ],
                             [
                                 'id' => 'tab-wishlist',
                                 'target_id' => '#pane-wishlist',
                                 'aria_controls' => 'pane-wishlist',
                                 'icon' => 'bi-heart',
-                                'label' => 'Wishlist',
+                                'label' => __('wishlist.title'),
                             ],
                             [
                                 'id' => 'tab-billing',
                                 'target_id' => '#pane-billing',
                                 'aria_controls' => 'pane-billing',
                                 'icon' => 'bi-geo-alt',
-                                'label' => 'Billing & addresses',
+                                'label' => __('profile.billing'),
                             ],
                         ]"
                     />
@@ -163,7 +163,7 @@
                         @csrf
                         <button type="submit" class="btn btn-outline theme-danger w-100 rounded-pill py-2 d-flex align-items-center justify-content-center gap-2">
                             <i class="bi bi-box-arrow-right"></i>
-                            <span>Đăng xuất</span>
+                            <span>{{ __('common.logout') }}</span>
                         </button>
                     </form>
                 </div>

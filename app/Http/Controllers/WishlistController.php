@@ -14,7 +14,7 @@ class WishlistController extends Controller
         $wishlist->add($request->user(), $product);
 
         return back()->with('status', 'wishlist-updated')
-            ->with('success', 'Product saved to your wishlist.');
+            ->with('success', __('wishlist.saved'));
     }
 
     public function destroy(Request $request, Product $product, WishlistService $wishlist): RedirectResponse
@@ -22,6 +22,6 @@ class WishlistController extends Controller
         $wishlist->remove($request->user(), $product);
 
         return back()->with('status', 'wishlist-updated')
-            ->with('success', 'Product removed from your wishlist.');
+            ->with('success', __('wishlist.removed'));
     }
 }

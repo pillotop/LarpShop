@@ -44,7 +44,7 @@ class OrderCreationService
 
         if (! $cart) {
             throw ValidationException::withMessages([
-                'cart' => 'Your cart is empty',
+                'cart' => __('checkout.errors.empty'),
             ]);
         }
 
@@ -56,7 +56,7 @@ class OrderCreationService
 
         if ($items->isEmpty()) {
             throw ValidationException::withMessages([
-                'cart' => 'Your cart is empty',
+                'cart' => __('checkout.errors.empty'),
             ]);
         }
 
@@ -69,7 +69,7 @@ class OrderCreationService
                 $item->quantity < 1
             ) {
                 throw ValidationException::withMessages([
-                    'cart' => 'Your cart contains an invalid item.',
+                    'cart' => __('checkout.errors.invalid_item'),
                 ]);
             }
         }
@@ -90,7 +90,7 @@ class OrderCreationService
 
         if ($products->count() !== $productIds->count()) {
             throw ValidationException::withMessages([
-                'cart' => 'Some products are no longer available',
+                'cart' => __('checkout.errors.unavailable_products'),
             ]);
         }
 
@@ -102,7 +102,7 @@ class OrderCreationService
 
             if ($item->quantity > $product->stock) {
                 throw ValidationException::withMessages([
-                    'cart' => "Insufficient stock for {$product->name}",
+                    'cart' => __('checkout.errors.stock_unavailable', ['name' => $product->name]),
                 ]);
             }
 

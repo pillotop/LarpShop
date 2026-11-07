@@ -51,7 +51,7 @@ class VendorProductImageController extends Controller
         $this->imageService->uploadImages($vendor, $product, $uploadedFiles, $altText);
 
         return redirect()->route('vendor.products.images.index', $product->product_id)
-            ->with('success', 'Uploaded '.count($uploadedFiles).' image(s) successfully.');
+            ->with('success', __('management.messages.images_uploaded', ['count' => count($uploadedFiles)]));
     }
 
     /**
@@ -65,7 +65,7 @@ class VendorProductImageController extends Controller
         $this->imageService->deleteImage($vendor, $product, $image);
 
         return redirect()->route('vendor.products.images.index', $product->product_id)
-            ->with('success', 'Product image deleted successfully.');
+            ->with('success', __('management.messages.image_deleted'));
     }
 
     /**
@@ -79,6 +79,6 @@ class VendorProductImageController extends Controller
         $this->imageService->setPrimaryImage($vendor, $product, $image);
 
         return redirect()->route('vendor.products.images.index', $product->product_id)
-            ->with('success', 'Primary product image updated successfully.');
+            ->with('success', __('management.messages.image_primary'));
     }
 }

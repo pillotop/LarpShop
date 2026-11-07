@@ -25,7 +25,7 @@ class VendorProductVariantController extends Controller
         $vendor = $request->attributes->get('active_vendor') ?? $request->user()->activeVendor();
 
         if ((int) $product->vendor_id !== (int) $vendor->vendor_id) {
-            abort(403, 'Unauthorized access to this product.');
+            abort(403, __('management.messages.product_unauthorized'));
         }
 
         $product->load(['variants' => fn ($q) => $q->orderBy('variant_id')]);
@@ -45,7 +45,7 @@ class VendorProductVariantController extends Controller
         $this->variants->createVariant($vendor, $product, $request->validated());
 
         return redirect()->route('vendor.products.variants.index', $product)
-            ->with('success', 'Product variant added successfully.');
+            ->with('success', __('management.messages.variant_added'));
     }
 
     public function update(
@@ -59,7 +59,7 @@ class VendorProductVariantController extends Controller
         $this->variants->updateVariant($vendor, $product, $variant, $request->validated());
 
         return redirect()->route('vendor.products.variants.index', $product)
-            ->with('success', 'Product variant updated successfully.');
+            ->with('success', __('management.messages.variant_updated'));
     }
 
     public function destroy(
@@ -73,6 +73,6 @@ class VendorProductVariantController extends Controller
         $this->variants->deleteVariant($vendor, $product, $variant);
 
         return redirect()->route('vendor.products.variants.index', $product)
-            ->with('success', 'Product variant removed successfully.');
+            ->with('success', __('management.messages.variant_removed'));
     }
 }
