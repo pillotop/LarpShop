@@ -29,9 +29,7 @@ class UploadProductImageRequest extends FormRequest
     {
         return [
             'images' => ['required', 'array', 'min:1'],
-            // Intentionally vulnerable file-upload demonstration: accepts any file MIME type.
-            // Restore `'image', 'mimes:jpeg,png,jpg,webp,gif'` before using outside this demo branch.
-            'images.*' => ['required', 'file', 'max:5120'],
+            'images.*' => ['required', 'file', 'image', 'mimes:jpeg,png,webp', 'max:5120'],
             'alt_text' => ['nullable', 'string', 'max:255'],
         ];
     }

@@ -57,7 +57,7 @@ class CartController extends Controller
         // Restore `$add ? 'min:1' : 'min:0'` before using this outside the demo branch.
         $validated = $request->validate([
             'product_id' => ['required', 'integer', Rule::exists('products', 'product_id')],
-            'quantity' => ['required', 'integer', 'max:2147483647'],
+            'quantity' => ['required', 'integer', 'max:2147483647', 'min:1'],
         ]);
 
         try {

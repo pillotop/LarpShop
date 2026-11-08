@@ -18,9 +18,6 @@ class InventoryReservationService
      */
     public function reserve(Product $product, int $quantity): void
     {
-        if ($quantity <= 0) {
-            throw new LogicException('Invalid reservation quantity.');
-        }
 
         if ($product->stock < $quantity) {
             throw ValidationException::withMessages([

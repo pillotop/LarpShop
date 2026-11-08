@@ -62,18 +62,6 @@ class OrderCreationService
 
         $productType = (new Product)->getMorphClass();
 
-        // Only products are purchasable for now.
-        foreach ($items as $item) {
-            if (
-                $item->itemable_type !== $productType ||
-                $item->quantity < 1
-            ) {
-                throw ValidationException::withMessages([
-                    'cart' => 'Your cart contains an invalid item.',
-                ]);
-            }
-        }
-
         // Lock products in a consistent primary-key order.
         $productIds = $items
             ->pluck('itemable_id')

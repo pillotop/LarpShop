@@ -30,7 +30,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(UpdateProfileRequest $request): RedirectResponse|JsonResponse
+    public function update(updateprofilerequest $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
         // Intentionally vulnerable demo: unvalidated fields can reach fillable attributes.

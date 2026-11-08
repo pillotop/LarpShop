@@ -7,6 +7,7 @@ use App\Queries\Cart\CartQuery;
 use App\Support\Carts\CartLock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use InvalidArgumentException;
 
 class CartMutationService
 {
@@ -46,6 +47,9 @@ class CartMutationService
         // Intentionally vulnerable business-logic demonstration: allows negative
         // quantities to be saved in cart_items, offsetting positive item subtotals.
         // Restore the `$quantity < 0` guard before using this outside the demo branch.
+        if ($quantity < 1) {
+            throw new InvalidArgumentException('Cart quantity must be greater than zero.');
+        }
 
         $product = Product::query()
             ->lockForUpdate()
