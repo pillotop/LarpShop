@@ -21,21 +21,24 @@ class AuthPageLocalizationTest extends TestCase
 
     public function test_login_page_defaults_to_english(): void
     {
-        $this->get(route('login'))->assertOk()
+        $this->get(route('login'))->assertRedirect(route('home'));
+
+        $this->get(route('home'))->assertOk()
             ->assertSee('<html lang="en">', false)
-            ->assertSee('Login &amp; Register', false)
+            ->assertSee('id="auth-panel"', false)
             ->assertSee('Sign in or create account')
             ->assertSee('Use another email');
     }
 
     public function test_vietnamese_login_page_provides_copy_for_every_dynamic_state(): void
     {
-        $response = $this->withSession(['locale' => 'vi'])->get(route('login'))
+        $this->withSession(['locale' => 'vi'])->get(route('login'))
+            ->assertRedirect(route('home'));
+
+        $response = $this->withSession(['locale' => 'vi'])->get(route('home'))
             ->assertOk()
             ->assertSee('<html lang="vi">', false)
-            ->assertSee('Đăng nhập và đăng ký')
-            ->assertSee('Nền tảng thương mại điện tử thế hệ mới')
-            ->assertSee('Mọi thứ đều có tại LarpShop')
+            ->assertSee('id="auth-panel"', false)
             ->assertSee('Đăng nhập hoặc tạo tài khoản')
             ->assertSee('Địa chỉ email')
             ->assertSee('Xác nhận mật khẩu')
@@ -89,11 +92,12 @@ class AuthPageLocalizationTest extends TestCase
         $this->postJson(route('register.store'), [
             'email' => 'new-buyer@example.test', 'username' => 'Original buyer',
             'password' => 'test-password', 'password_confirmation' => 'test-password',
-        ])->assertCreated()->assertJsonPath('redirect', route('home'))
+        ])->assertStatus(202)->assertJsonPath('verify', true)
             ->assertSessionHas('locale', 'vi');
 
         $user = User::where('email', 'new-buyer@example.test')->sole();
-        $this->assertAuthenticatedAs($user);
+        $this->assertGuest();
+        $this->assertNull($user->email_verified_at);
         $this->assertSame('customer', $user->role);
         $this->assertSame('Original buyer', $user->username);
         $this->assertTrue(Hash::check('test-password', $user->password));

@@ -16,7 +16,31 @@ return [
         'enterprise' => 'Enterprise',
         'events' => 'Events',
     ],
+    'verification' => [
+        'sent' => 'We sent a 6-digit code to :email. Enter it below to activate your account.',
+        'required' => 'Please verify your email first. We sent a 6-digit code to :email.',
+        'resent' => 'If this account is waiting for verification, a new code has been sent.',
+        'invalid_code' => 'The code is invalid or has expired.',
+        'send_failed' => 'We could not send the verification email. Please try again later.',
+    ],
+    'mail' => [
+        'subject' => 'Your LarpShop verification code: :code',
+        'greeting' => 'Hi :name,',
+        'intro' => 'Use the code below to verify your email address and finish creating your LarpShop account.',
+        'expires' => 'This code expires in :minutes minutes.',
+        'ignore' => 'If you did not create an account, you can safely ignore this email.',
+    ],
+    'google' => [
+        'not_configured' => 'Google sign-in is not configured yet. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.',
+        'invalid_state' => 'Your Google sign-in session expired. Please try again.',
+        'cancelled' => 'Google sign-in was cancelled.',
+        'failed' => 'Could not verify your Google account. Please try again.',
+    ],
     'form' => [
+        'or' => 'or',
+        'continue_with_google' => 'Continue with Google',
+        'verification_code' => 'Verification code',
+        'resend_code' => 'Resend code',
         'heading' => 'Sign in or create account',
         'email' => 'Email address',
         'password' => 'Password',
@@ -31,6 +55,10 @@ return [
         'request_error' => 'The request could not be completed.',
         'reset_link_sent' => 'If the account exists, a request link will be sent.',
         'states' => [
+            'verify' => [
+                'header' => 'Verify your email',
+                'loading' => 'Verifying code…',
+            ],
             'email' => [
                 'header' => 'Sign in or create account',
                 'loading' => 'Checking email…',

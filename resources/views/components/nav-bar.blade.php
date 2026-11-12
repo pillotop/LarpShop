@@ -90,16 +90,23 @@
             </button>
             <span data-cart-error class="small fg-danger" role="status" aria-live="polite"></span>
             @guest
-                <a
-                    href="{{ route('login') }}"
-                    class="rounded-pill p-2 text-decoration-none"
+                <button
+                    type="button"
+                    id="auth-drawer-trigger"
+                    class="border-0 bg-transparent rounded-pill p-2 d-flex align-items-center gap-2"
+                    data-bs-toggle="drawer"
+                    data-bs-target="#auth-panel"
+                    aria-haspopup="dialog"
+                    aria-controls="auth-panel"
                 >
+                    <i class="bi bi-person fs-5" aria-hidden="true"></i>
                     <span class="text-decoration-underline">
                         <b>{{ __('common.login') }}</b>
                         {{ __('common.or') }}
                         <b>{{ __('common.register') }}</b>
                     </span>
-                </a>
+                </button>
+                <x-auth.drawer />
             @endguest
             @auth
                 <div class="position-relative">
