@@ -10,6 +10,7 @@
         'resources/css/components/dropdown.css',
         'resources/css/components/persistent_header.css',
         'resources/css/components/two_arrow_scroller.css',
+        'resources/css/components/product_card.css',
     ])
 @endsection
 
@@ -80,7 +81,7 @@
                     <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);">{{ __('products.category.products') }}</h2>
                 </div>
                 <x-two-arrow-scroller>
-                    <ul class="d-flex gap-4 overflow-scroll list-unstyled">
+                    <ul id="two-arrow-scrollable" class="d-flex gap-4 overflow-scroll list-unstyled">
                         @foreach ($products as $product)
                             <li>
                                 <x-product-card-b :product="$product"/>

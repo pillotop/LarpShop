@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\Auth\EmailVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class LoginController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
-        return view('auth.pages.login');
+        $request->session()->reflash();
+
+        return redirect()->route('home');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, EmailVerificationService $verification)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -21,6 +25,30 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($verification->isRequired() && $user->email_verified_at === null) {
+                Auth::logout();
+
+                try {
+                    $verification->send($user);
+                } catch (Throwable $exception) {
+                    report($exception);
+                }
+
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'requires_verification' => true,
+                        'email' => $user->email,
+                        'message' => __('auth.verification.required', ['email' => $user->email]),
+                    ], 403);
+                }
+
+                return back()->withErrors([
+                    'email' => __('auth.verification.required', ['email' => $user->email]),
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
             if ($request->expectsJson()) {

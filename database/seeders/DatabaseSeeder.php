@@ -206,6 +206,10 @@ class DatabaseSeeder extends Seeder
                         'path' => 'https://img.aosomcdn.com/thumbnail/100/n0/product/2026/08/21/AWk9911a021bd4c88.jpg',
                         'alt_text' => 'Adjustable Dumbbell Set - Main View',
                     ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Adjustable Dumbbell Set - Home Gym Context',
+                    ],
                 ],
                 'reviews' => [
                     ['rating' => 5, 'comment' => 'Saves so much space in my home gym. Weight switching is fast and smooth.'],
@@ -222,6 +226,10 @@ class DatabaseSeeder extends Seeder
                     [
                         'path' => 'https://arkansasoutside.com/wp-content/uploads/2023/03/ozarktrail-biker-in-curve-frontside.jpg',
                         'alt_text' => 'All-Terrain Mountain Bike - Action View',
+                    ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'All-Terrain Mountain Bike - Trail Context',
                     ],
                 ],
                 'reviews' => [
@@ -241,6 +249,10 @@ class DatabaseSeeder extends Seeder
                         'path' => 'https://bettertrail.com/image/camper-walking-away-from-the-north-face-wawona-tent?hash=%2F4f8b939880f042eb9b2ddfa09a361cf0%2F1ce1681d36fc45dfbfb02c9dd47d6ca6&width=768&quality=70&format=auto&fit=scale-down',
                         'alt_text' => '4-Person Weatherproof Camping Tent - Campsite View',
                     ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => '4-Person Weatherproof Camping Tent - Night Forest Context',
+                    ],
                 ],
                 'reviews' => [
                     ['rating' => 5, 'comment' => 'Stood strong through a heavy thunderstorm without a single leak!'],
@@ -257,6 +269,10 @@ class DatabaseSeeder extends Seeder
                     [
                         'path' => 'https://images.squarespace-cdn.com/content/v1/53154ab7e4b0d7a9a7218ac2/1420725527356-MT52GRCG7YLQPBCR4AAX/Fairport+Boys+Varsity+Basketball+team+composite+photo',
                         'alt_text' => 'Official Composite Leather Basketball - Studio View',
+                    ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Official Composite Leather Basketball - Court Context',
                     ],
                 ],
                 'reviews' => [
@@ -275,6 +291,10 @@ class DatabaseSeeder extends Seeder
                         'path' => 'https://i5.walmartimages.com/seo/yillto-Plus-Size-Jackets-for-Womens-Long-Sleeve-Lightweight-Shirts-Summer-Hiking-Running-Activewear-Jacket_fb8107cb-c66b-4db0-b25c-6549ceedf638.2ed45c2f0a761fb84d519897784f825a.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF',
                         'alt_text' => 'Lightweight Moisture-Wicking Running Jacket - Product View',
                     ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Lightweight Moisture-Wicking Running Jacket - Lifestyle Context',
+                    ],
                 ],
                 'reviews' => [
                     ['rating' => 5, 'comment' => 'Super lightweight and keeps me dry during intense runs.'],
@@ -291,6 +311,10 @@ class DatabaseSeeder extends Seeder
                     [
                         'path' => 'https://www.lg.com/ae/images/tvs/md06140657/gallery/medium01_V2.jpg',
                         'alt_text' => 'Ultra HD 4K Smart TV - Main View',
+                    ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Ultra HD 4K Smart TV - Living Room Context',
                     ],
                 ],
                 'reviews' => [
@@ -310,6 +334,10 @@ class DatabaseSeeder extends Seeder
                         'path' => 'https://destiny-files.com/image/webp_large/BBA6624_13.webp',
                         'alt_text' => 'AeroSound Bluetooth Bookshelf Speakers - Main View',
                     ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'AeroSound Bluetooth Bookshelf Speakers - Studio Desk Context',
+                    ],
                 ],
                 'reviews' => [
                     ['rating' => 5, 'comment' => 'Crystal clear highs and deep bass. Incredible for the size.'],
@@ -326,6 +354,10 @@ class DatabaseSeeder extends Seeder
                     [
                         'path' => 'https://vortexgear.store/cdn/shop/products/DSC_3227.png?v=1664776562&width=1946',
                         'alt_text' => 'Vortex RGB Mechanical Gaming Keyboard - Main View',
+                    ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Vortex RGB Mechanical Gaming Keyboard - Desk Setup Context',
                     ],
                 ],
                 'reviews' => [
@@ -345,6 +377,10 @@ class DatabaseSeeder extends Seeder
                         'path' => 'https://epicgamers.gg/wp-content/uploads/2024/08/Apex-1.webp',
                         'alt_text' => 'Apex UltraWide 34-Inch Curved Monitor - Main View',
                     ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Apex UltraWide 34-Inch Curved Monitor - Workstation Context',
+                    ],
                 ],
                 'reviews' => [
                     ['rating' => 5, 'comment' => 'Multitasking on this curve monitor is a dream come true.'],
@@ -361,6 +397,10 @@ class DatabaseSeeder extends Seeder
                     [
                         'path' => 'https://www.smarthome.com.au/wp-content/uploads/2023/04/homey-pro-2-700x700.jpg',
                         'alt_text' => 'Smart Hub Pro with Voice Control - Main View',
+                    ],
+                    [
+                        'path' => 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80',
+                        'alt_text' => 'Smart Hub Pro with Voice Control - Home Interior Context',
                     ],
                 ],
                 'reviews' => [
@@ -421,6 +461,9 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+
+        // Seeded demo accounts do not go through the emailed verification step.
+        User::whereNull('email_verified_at')->update(['email_verified_at' => now()]);
 
         // ==========================================
         // 4. SAMPLE ORDERS (UC-44 Investigation)

@@ -150,7 +150,7 @@
                             @endforeach
                         </ul>
                     </div>
-                <div>
+                </div>
             </div>
         </section>
         <section>
@@ -186,16 +186,17 @@
                     </div>
 
                     <x-grid
-                        class="d-flex"
                         gap="4"
                         :columns="[
                             'default' => 2,
                             'md' => 3,
-                            'xl' => 6,
+                            'xl' => 4,
                         ]"
                     >
                         @foreach ($products as $product)
-                            <x-product-card-b class="col" :product="$product"/>
+                            <div class="col">
+                                <x-product-card-b class="h-100" :product="$product"/>
+                            </div>
                         @endforeach
                     </x-grid>
                 </div>
