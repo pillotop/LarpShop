@@ -6,25 +6,26 @@
 ])
 
 <nav class="navigation-bar position-relative z-1 py-2">
-    <div class="row gap-1 lg:gap-3">
-        <div class="col-1 d-flex align-items-center justify-content-center">
+    <div class="navigation-bar-inner d-flex flex-wrap lg:flex-nowrap align-items-center justify-content-between gap-2 lg:gap-3 px-2 lg:px-3">
+        <div class="order-1 flex-shrink-0 d-flex align-items-center">
             <a
                 href="{{ route('home') }}"
                 aria-label="{{ __('common.home') }}"
+                class="d-inline-flex align-items-center"
             >
-                <img src="/images/larp_shop.jpg" class="rounded-circle logo-larpshop-logo">
+                <img src="/images/larp_shop.jpg" alt="" class="rounded-circle logo-larpshop-logo">
             </a>
         </div>
-        <div id="search-bar" class="col-7">
+        <div id="search-bar" class="order-3 lg:order-2 w-100 lg:flex-grow-1">
             <form
                 action="{{ route('products.index') }}"
                 method="GET"
-                class="d-flex rounded-9 h-100"
+                class="search-form d-flex align-items-stretch rounded-9 h-100 w-100"
                 role="search"
             >
-                <button type="button" class="d-flex gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-3" aria-label="{{ __('common.select_category') }}" data-dropdown-trigger="categories">
-                    <span>{{ __('common.categories') }}</span>
-                    <svg class="dropdown-arrow icon-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                <button type="button" class="search-category-btn d-flex gap-1 sm:gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-2 sm:px-3 flex-shrink-0" aria-label="{{ __('common.select_category') }}" data-dropdown-trigger="categories">
+                    <span class="text-nowrap">{{ __('common.categories') }}</span>
+                    <svg class="dropdown-arrow icon-16 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                         <path class="dropdown-arrow-path" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
                     </svg>
                     <template data-dropdown-template="categories">
@@ -35,7 +36,7 @@
                         </div>
                     </template>
                 </button>
-                <div class="d-flex align-items-center position-relative w-100">
+                <div class="search-input-wrap d-flex align-items-center position-relative flex-grow-1">
                     <input
                         type="search"
                         name="q"
@@ -43,11 +44,11 @@
                         placeholder="{{ __('common.search_placeholder') }}"
                         aria-label="{{ __('common.search_products') }}"
                         maxlength="100"
-                        class="position-relative border ps-3 z-0 w-100 h-100"
+                        class="search-input position-relative border ps-2 sm:ps-3 pe-5 z-0 w-100 h-100"
                     >
                     <button
                         type="submit"
-                        class="border-0 rounded-circle position-absolute z-1 end-0 me-2 py-1 px-2"
+                        class="search-submit-btn border-0 rounded-circle position-absolute z-1 end-0 me-1 sm:me-2 py-1 px-2"
                         aria-label="{{ __('common.search_products') }}"
                     >
                         <svg class="icon-16">
@@ -55,12 +56,12 @@
                         </svg>
                     </button>
                 </div>
-                <button class="rounded-end-pill border-0 p-2 px-3" type="button">
-                    <span>{{ __('common.advanced') }}</span>
+                <button class="search-advanced-btn rounded-end-pill border-0 py-2 px-2 sm:px-3 flex-shrink-0" type="button">
+                    <span class="text-nowrap">{{ __('common.advanced') }}</span>
                 </button>
             </form>
         </div>
-        <div class="col-12 lg:col-3 d-flex align-items-center justify-content-between">
+        <div class="order-2 lg:order-3 ms-auto lg:ms-0 flex-shrink-0 d-flex align-items-center justify-content-end gap-2 lg:gap-3">
             <button
                 id="product-cart"
                 class="side-panel-trigger border-0 rounded-pill p-2"
@@ -100,10 +101,12 @@
                     aria-controls="auth-panel"
                 >
                     <i class="bi bi-person fs-5" aria-hidden="true"></i>
-                    <span class="text-decoration-underline">
+                    <span class="text-decoration-underline text-nowrap">
                         <b>{{ __('common.login') }}</b>
-                        {{ __('common.or') }}
-                        <b>{{ __('common.register') }}</b>
+                        <span class="d-none sm:d-inline">
+                            {{ __('common.or') }}
+                            <b>{{ __('common.register') }}</b>
+                        </span>
                     </span>
                 </button>
                 <x-auth.drawer />

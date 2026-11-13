@@ -26,6 +26,7 @@ services:
       MAIL_FROM_NAME: "${MAIL_FROM_NAME:-LarpShop Official}"
 
       QUEUE_CONNECTION: sync
+      PHP_CLI_SERVER_WORKERS: "4"
     depends_on:
       db:
         condition: service_healthy

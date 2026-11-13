@@ -118,7 +118,7 @@
         {{-- Navigation Tabs --}}
         <div class="row g-4">
             <div class="col-12 lg:col-3">
-                <div class="card border-0 shadow-sm rounded-9 p-3 sticky-top" style="top: 100px;">
+                <div class="card border-0 shadow-sm rounded-9 p-3 lg:sticky-top" style="top: 100px;">
                     <x-profile.nav-tabs
                         id="profileTabs"
                         :panes="[
