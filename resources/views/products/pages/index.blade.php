@@ -91,6 +91,7 @@
             <div class="d-flex align-items-center gap-3">
                 <button
                     type="button"
+                    id="open-filter-panel-btn"
                     class="btn btn-outline theme-inverse rounded-0 side-panel-trigger"
                     data-bs-toggle="drawer"
                     data-bs-target="#side-panel"

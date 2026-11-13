@@ -2,6 +2,15 @@
     border: none;
 }
 
+.two-arrow-scroller #two-arrow-scrollable {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.two-arrow-scroller #two-arrow-scrollable::-webkit-scrollbar {
+    display: none;
+}
+
 .two-arrow-scroller #arrow-left {
     background: linear-gradient(
         to left,
