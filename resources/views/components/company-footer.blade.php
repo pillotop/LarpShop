@@ -23,7 +23,7 @@
             @endforeach
         </div>
 
-        <div class="md:d-flex sm:d-block justify-content-center align-items-center gap-5">
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 md:gap-5">
             <button
                 type="button"
                 class="hover-button p-2 border-0 rounded-5"

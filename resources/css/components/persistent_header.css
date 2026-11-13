@@ -2,3 +2,19 @@
 .persistent-header .persistent-header-content {
     width: 100%;
 }
+
+.persistent-header .persistent-header-content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.persistent-header .persistent-header-content::-webkit-scrollbar {
+    display: none;
+}
+
+.persistent-header .nav-button {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}

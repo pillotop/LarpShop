@@ -40,14 +40,14 @@
             <h1>{{ $category->name }}</h1>
             @if ($category->children->isNotEmpty())
                 <div class="row">
-                    <div class="col-4 d-flex flex-column overflow-scroll border-end-dashed border-top-0 border-thin border-start-0 border-bottom-0">
+                    <div class="col-12 md:col-4 d-none md:d-flex flex-column overflow-auto border-end-dashed border-top-0 border-thin border-start-0 border-bottom-0">
                     </div>
-                    <div class="col-6 border-bottom-dashed border-thin border-top-0 border-start-0 border-end-0">
+                    <div class="col-12 md:col-8 border-bottom-dashed border-thin border-top-0 border-start-0 border-end-0">
                         <h5 class="fw-bold">{{ __('common.categories') }}</h5>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="subcategory-container col-4 p-0 overflow-scroll border-end-dashed border-top-dashed border-thin border-start-0 border-bottom-0">
+                    <div class="subcategory-container col-12 md:col-4 p-0 overflow-auto border-end-dashed border-top-dashed border-thin border-start-0 border-bottom-0">
                         <ul id="subcategory-list" class="d-flex flex-column gap-2" style="list-style: none;">
                             @foreach ($category->children as $childCategory)
                                 <li>
@@ -70,7 +70,7 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="col-6 p-4" data-subcategory-container-injection-point>
+                    <div class="col-12 md:col-8 p-4" data-subcategory-container-injection-point>
                     </div>
                 </div>
             @endif
