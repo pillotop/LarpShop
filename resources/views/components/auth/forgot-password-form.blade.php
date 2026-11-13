@@ -59,6 +59,13 @@
         </fieldset>
 
         {{-- Shared controls --}}
+        <div id="forgot-spinner" class="d-none text-center my-3">
+            <div class="spinner-border text-danger spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <span class="small ms-2 fg-3" id="forgot-spinner-text"></span>
+        </div>
+
         <button
             type="submit"
             id="login-form-primary-button"

@@ -78,7 +78,7 @@
         </div>
 
         @if ($errors->any())
-            <div class="alert theme-danger rounded-5 shadow-sm mb-4" role="alert">
+            <div class="alert theme-danger rounded-0 shadow-sm mb-4" role="alert">
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -87,43 +87,44 @@
             </div>
         @endif
 
-        <div class="mb-4">
-            <button
-                type="button"
-                class="btn btn-outline theme-inverse side-panel-trigger"
-                data-bs-toggle="drawer"
-                data-bs-target="#side-panel"
-                data-side-panel-target="#filter-panel-template"
-            >
-                <i class="bi bi-funnel"></i> {{ __('products.filters.title') }}
-                @if ($hasActiveFilters)
-                    <span class="badge bg-primary ms-1">{{ __('products.filters.active') }}</span>
-                @endif
-                <template id="filter-panel-template">
-                    <x-products.filter-panel
-                        :categories="$productCategories"
-                        :filters="$filters"
-                        :sort-options="$sortOptions"
-                        :keyword="$keyword"
-                        :has-active-filters="$hasActiveFilters"
-                    />
-                </template>
-            </button>
-        </div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 pb-3 mb-4 border-bottom">
+            <div class="d-flex align-items-center gap-3">
+                <button
+                    type="button"
+                    class="btn btn-outline theme-inverse rounded-0 side-panel-trigger"
+                    data-bs-toggle="drawer"
+                    data-bs-target="#side-panel"
+                    data-side-panel-target="#filter-panel-template"
+                >
+                    <i class="bi bi-Sliders"></i>
+                    <i class="bi bi-funnel"></i> {{ __('products.filters.title') }}
+                    @if ($hasActiveFilters)
+                        <span class="badge bg-primary rounded-0 ms-1">{{ __('products.filters.active') }}</span>
+                    @endif
+                    <template id="filter-panel-template">
+                        <x-products.filter-panel
+                            :categories="$productCategories"
+                            :filters="$filters"
+                            :sort-options="$sortOptions"
+                            :keyword="$keyword"
+                            :has-active-filters="$hasActiveFilters"
+                        />
+                    </template>
+                </button>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h5 mb-0">
-                {{ $keyword ? __('products.search.matching') : __('products.search.all') }}
-            </h2>
+                <h2 class="h6 mb-0 fw-bold text-uppercase">
+                    {{ $keyword ? __('products.search.matching') : __('products.search.all') }}
+                </h2>
+            </div>
 
-            <span class="badge bg-primary">
+            <span class="small fw-semibold fg-secondary">
                 {{ trans_choice('products.search.found', $products->count(), ['count' => $products->count()]) }}
             </span>
         </div>
 
         @if ($products->isEmpty())
 
-            <div class="bg-white rounded-9 shadow-sm text-center p-5">
+            <div class="bg-white rounded-0 border text-center p-5">
                 <i class="bi bi-search display-3 fg-secondary"></i>
 
                 <h3 class="h4 mt-3">{{ __('products.search.empty') }}</h3>
@@ -133,7 +134,7 @@
                 </p>
 
                 <a href="{{ route('products.index') }}"
-                   class="btn btn-solid theme-primary">
+                   class="btn btn-solid theme-primary rounded-0">
                     {{ __('products.search.browse') }}
                 </a>
             </div>
@@ -142,7 +143,7 @@
 
             <div class="row g-4">
                 @foreach ($products as $product)
-                    <div class="col-12 sm:col-6 lg:col-4 xl:col-3">
+                    <div class="col-6 lg:col-4 xl:col-3">
                         <x-product-card-b
                             :product="$product"
                             class="h-100"

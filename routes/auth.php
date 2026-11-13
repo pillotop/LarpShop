@@ -1,16 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\ChangePasswordController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Livewire\Volt\Volt;
-
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
-use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
 Route::post('/auth/check-email', function (Request $request) {
     $validated = $request->validate([
@@ -18,6 +18,7 @@ Route::post('/auth/check-email', function (Request $request) {
     ]);
 
     $exists = User::where('email', $validated['email'])->exists();
+
     return response()->json([
         'exists' => $exists,
     ]);
@@ -32,6 +33,20 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/register', [RegistrationController::class, 'store'])
         ->name('register.store');
+
+    Route::post('/auth/verify-email', [EmailVerificationController::class, 'verify'])
+        ->middleware('throttle:10,1')
+        ->name('verification.code.verify');
+
+    Route::post('/auth/resend-verification', [EmailVerificationController::class, 'resend'])
+        ->middleware('throttle:3,1')
+        ->name('verification.code.resend');
+
+    Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])
+        ->name('auth.google.redirect');
+
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])
+        ->name('auth.google.callback');
 
     Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])
         ->name('password.request');
