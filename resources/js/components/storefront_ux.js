@@ -383,8 +383,79 @@ function initProductCompare() {
     }
 }
 
+function initProductDetailInteractions() {
+    const variantButtons = Array.from(document.querySelectorAll('[data-variant-option]'));
+    const priceEl = document.getElementById('product-detail-price');
+    const stockEl = document.getElementById('product-detail-stock');
+    const selectedLabel = document.getElementById('product-selected-variant-name');
+    const counter = document.getElementById('product-purchase-quantity');
+    const addBtn = document.querySelector('.quantity-picker [data-add-to-cart]');
+    const buyNowBtn = document.querySelector('.quantity-picker [data-buy-now]');
+
+    if (variantButtons.length > 0) {
+        variantButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                variantButtons.forEach((other) => {
+                    const active = other === btn;
+                    other.classList.toggle('border-primary', active);
+                    other.classList.toggle('bg-white', active);
+                    other.classList.toggle('shadow-xs', active);
+                    other.setAttribute('aria-pressed', active ? 'true' : 'false');
+                });
+
+                const price = btn.getAttribute('data-variant-price');
+                const stockCount = Number(btn.getAttribute('data-variant-stock') || 0);
+                const stockText = btn.getAttribute('data-variant-stock-label') || '';
+                const name = btn.getAttribute('data-variant-name') || '';
+
+                if (priceEl && price) {
+                    priceEl.textContent = price;
+                }
+                if (selectedLabel && name) {
+                    selectedLabel.textContent = name;
+                }
+                if (stockEl && stockText) {
+                    stockEl.textContent = stockText;
+                    stockEl.classList.toggle('fg-success', stockCount > 0);
+                    stockEl.classList.toggle('fg-danger', stockCount <= 0);
+                }
+                if (counter && stockCount > 0) {
+                    counter.max = String(stockCount);
+                    if (Number(counter.value) > stockCount) {
+                        counter.value = String(stockCount);
+                    }
+                }
+                if (addBtn) addBtn.disabled = stockCount <= 0;
+                if (buyNowBtn) buyNowBtn.disabled = stockCount <= 0;
+            });
+        });
+    }
+
+    const carouselEl = document.getElementById('previewCarousel');
+    const thumbButtons = Array.from(document.querySelectorAll('[data-carousel-thumb-index]'));
+    if (carouselEl && thumbButtons.length > 0) {
+        carouselEl.addEventListener('slide.bs.carousel', (event) => {
+            const nextIndex = Number(event.to);
+            thumbButtons.forEach((btn, idx) => {
+                btn.classList.toggle('border-primary', idx === nextIndex);
+                btn.classList.toggle('border-2', idx === nextIndex);
+            });
+        });
+        thumbButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                thumbButtons.forEach((other) => {
+                    const active = other === btn;
+                    other.classList.toggle('border-primary', active);
+                    other.classList.toggle('border-2', active);
+                });
+            });
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initAdvancedSearchButton();
     initHomepageBroadSelect();
     initProductCompare();
+    initProductDetailInteractions();
 });

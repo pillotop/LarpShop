@@ -45,4 +45,30 @@ class Category extends Model
     {
         return $query->where('is_active', true);
     }
+
+    public function getNameAttribute(?string $value): string
+    {
+        $slug = $this->attributes['slug'] ?? null;
+        if (is_string($slug) && $slug !== '' && app()->getLocale() !== 'en') {
+            $key = "products.category_names.{$slug}";
+            if (app('translator')->hasForLocale($key, app()->getLocale())) {
+                return __($key);
+            }
+        }
+
+        return (string) $value;
+    }
+
+    public function getDescriptionAttribute(?string $value): ?string
+    {
+        $slug = $this->attributes['slug'] ?? null;
+        if (is_string($slug) && $slug !== '' && app()->getLocale() !== 'en') {
+            $key = "products.category_descriptions.{$slug}";
+            if (app('translator')->hasForLocale($key, app()->getLocale())) {
+                return __($key);
+            }
+        }
+
+        return $value;
+    }
 }

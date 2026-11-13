@@ -179,4 +179,45 @@ class ProductDetailTest extends TestCase
 
         $response->assertNotFound();
     }
+
+    public function test_product_detail_renders_interactive_variants_buy_now_and_warranty_info(): void
+    {
+        $vendorId = $this->createVendor('Royal Armoury');
+        $catId = $this->createCategory('Armour', 'armour');
+        $prodId = $this->createProduct('Chainmail Hauberk', 'chainmail-hauberk', $catId, $vendorId, stock: 8, price: 150.00);
+
+        DB::table('product_variants')->insert([
+            [
+                'product_id' => $prodId,
+                'sku' => 'CH-M-150',
+                'name' => 'Medium (Riveted)',
+                'price' => 165.00,
+                'stock' => 4,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'product_id' => $prodId,
+                'sku' => 'CH-XL-180',
+                'name' => 'Extra Large (Riveted)',
+                'price' => 185.00,
+                'stock' => 0,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        $response = $this->get("/products/{$prodId}/chainmail-hauberk");
+
+        $response->assertOk();
+        $response->assertSee('data-buy-now="'.route('cart.index').'"', false);
+        $response->assertSee('data-variant-option', false);
+        $response->assertSee('Medium (Riveted)');
+        $response->assertSee('Extra Large (Riveted)');
+        $response->assertSee('30-day LarpShop Buyer Protection');
+        $response->assertSee('How long does shipping take?');
+        $response->assertDontSee('feature not yet implemented');
+    }
 }
