@@ -56,7 +56,11 @@
                         </svg>
                     </button>
                 </div>
-                <button class="search-advanced-btn rounded-end-pill border-0 py-2 px-2 sm:px-3 flex-shrink-0" type="button">
+                <button
+                    class="search-advanced-btn rounded-end-pill border-0 py-2 px-2 sm:px-3 flex-shrink-0"
+                    type="button"
+                    data-advanced-search="{{ route('products.index') }}"
+                >
                     <span class="text-nowrap">{{ __('common.advanced') }}</span>
                 </button>
             </form>
@@ -140,6 +144,16 @@
                             <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}#pane-vendor">
                                 <i class="bi bi-shop-window"></i>
                                 <span>{{ __('common.my_stores') }}</span>
+                            </a>
+
+                            <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}#pane-purchases">
+                                <i class="bi bi-bag-check"></i>
+                                <span>{{ __('profile.purchases.tab') }}</span>
+                            </a>
+
+                            <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('profile') }}#pane-wishlist">
+                                <i class="bi bi-heart"></i>
+                                <span>{{ __('wishlist.title') }}</span>
                             </a>
 
                         @if (Auth::user()->isVendor())

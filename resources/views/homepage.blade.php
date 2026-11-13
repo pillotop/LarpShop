@@ -118,22 +118,22 @@
                 </div>
             </header>
             <div class="broad-select">
-                <div class="d-flex selector">
+                <div class="d-flex flex-column md:flex-row selector">
                     <div id="vertical" class="carousel-scrollable position-relative overflow-hidden" data-carousel-direction="down" data-carousel-autoplay-speed="0">
-                        <ul class="selector-category-list carousel-scroller ps-0 lg:p-4 overflow-y-scroll">
+                        <ul class="selector-category-list carousel-scroller ps-0 lg:p-4 overflow-y-auto d-flex flex-row md:flex-column gap-2 justify-content-center">
                             <li>
-                                <button type="button" class="selector-item">
+                                <button type="button" class="selector-item is-active" data-broad-select-mode="trending" aria-pressed="true">
                                     <div class="d-inline-flex flex-nowrap">
-                                        <h3 class="fw-bold text-uppercase p-3" style="border-radius: 12px 0 12px 0; color: white; background: conic-gradient(from 45deg at 85% 96%, #f53003 0%, #49190B 6.3%, #1F4C5A 22.1%, #182E35 35%, #362710 45.6%, rgb(255,0,55) 58%, #F5024F 62.6%, #FFC9CA 70.6%, #FF6941 75.5%, #FFA3A7 87.1%, #FFA688 93.2%, #f53003 100%);">
+                                        <h3 class="selector-item-pill fw-bold text-uppercase p-3 mb-0">
                                             {{ __('products.home.trending') }}
                                         </h3>
                                     </div>
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="selector-item">
+                                <button type="button" class="selector-item" data-broad-select-mode="top_rated" aria-pressed="false">
                                     <div class="d-inline-flex flex-wrap">
-                                        <h3 class="fw-bold text-uppercase p-3">
+                                        <h3 class="selector-item-pill fw-bold text-uppercase p-3 mb-0">
                                             {{ __('products.home.placeholder') }}
                                         </h3>
                                     </div>
@@ -142,9 +142,13 @@
                         </ul>
                     </div>
                     <div id="horizontal" class="carousel-scrollable w-100 overflow-hidden" data-carousel-direction="right" data-carousel-autoplay-speed="1">
-                        <ul class="d-flex gap-3 w-100 h-100 ps-0 selector-product-list carousel-scroller overflow-x-scroll" style="list-style: none;">
+                        <ul class="d-flex gap-3 w-100 h-100 ps-0 selector-product-list carousel-scroller overflow-x-auto" style="list-style: none;">
                             @foreach ($products as $product)
-                                <li>
+                                <li
+                                    data-product-order="{{ $loop->index }}"
+                                    data-product-rating="{{ (float) ($product->average_rating ?? 0) }}"
+                                    data-product-reviews="{{ (int) ($product->total_reviews ?? 0) }}"
+                                >
                                     <x-product-card-a :product="$product"/>
                                 </li>
                             @endforeach
@@ -173,7 +177,7 @@
 
                     <div class="rounded-pill py-2 my-2 overflow-hidden shadow" style="background-color: white;">
                         <x-two-arrow-scroller scroll-step="0.4">
-                            <ul id="two-arrow-scrollable" class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-scroll m-0">
+                            <ul id="two-arrow-scrollable" class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0">
                                 @foreach ($productCategories as $category)
                                     <li>
                                         <a href="{{ route('categories.show', ['slug' => $category->slug ?? $category['slug'] ?? '']) }}" class="btn btn-sm btn-outline theme-secondary rounded-pill px-3 text-nowrap text-decoration-none">

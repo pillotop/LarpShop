@@ -25,9 +25,14 @@ class SubcategoryContainer {
                 .cloneNode(true)
                 .firstElementChild;
 
+            if (i === 0 && this.injectionPoint && !this.injectionPoint.firstElementChild) {
+                this.injectionPoint.appendChild(banner.cloneNode(true));
+            }
+
             button.addEventListener("mouseenter", (_) => {
+                if (!this.injectionPoint) return;
                 this.injectionPoint.firstElementChild?.remove();
-                this.injectionPoint.appendChild(banner);
+                this.injectionPoint.appendChild(banner.cloneNode(true));
             });
         }
     }
