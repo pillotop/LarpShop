@@ -5,7 +5,9 @@ namespace App\View;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Queries\Products\ProductCatalogQuery;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class ProductSearchController extends Controller
@@ -13,6 +15,44 @@ class ProductSearchController extends Controller
     public function __construct(
         private ProductCatalogQuery $productCatalogQuery
     ) {}
+
+    public function suggestions(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $keyword = trim($validated['q'] ?? '');
+        if (mb_strlen($keyword) < 2) {
+            return response()->json(['items' => []]);
+        }
+
+        $items = $this->productCatalogQuery
+            ->suggestProducts($keyword, 6)
+            ->map(function ($product): array {
+                $firstPath = $product->images->first()?->path;
+                $imageUrl = $firstPath
+                    ? (Str::startsWith($firstPath, ['http://', 'https://'])
+                        ? $firstPath
+                        : asset('storage/'.ltrim($firstPath, '/')))
+                    : asset('images/product-placeholder.jpg');
+
+                return [
+                    'id' => $product->product_id,
+                    'name' => $product->name,
+                    'price' => '$'.number_format((float) $product->price, 2),
+                    'category' => $product->category?->name ?? '',
+                    'image_url' => $imageUrl,
+                    'url' => route('products.show', [
+                        'product' => $product->product_id,
+                        'slug' => $product->slug,
+                    ]),
+                ];
+            })
+            ->values();
+
+        return response()->json(['items' => $items]);
+    }
 
     public function index(Request $request)
     {

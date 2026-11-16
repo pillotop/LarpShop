@@ -206,6 +206,7 @@
                 </div>
             </x-rounded-section-radius>
         </section>
+        <section id="recently-viewed-section" class="container my-5" hidden></section>
     </main>
     <x-side-panel/>
     <x-modal/>

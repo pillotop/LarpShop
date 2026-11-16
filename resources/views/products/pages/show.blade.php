@@ -336,6 +336,25 @@
                 </div>
             @endif
         </section>
+
+        @php
+            $firstPath = $product->images->first()?->path;
+            $primaryImageUrl = $firstPath
+                ? (\Illuminate\Support\Str::startsWith($firstPath, ['http://', 'https://'])
+                    ? $firstPath
+                    : asset('storage/' . ltrim($firstPath, '/')))
+                : asset('images/product-placeholder.jpg');
+            $recentlyViewedPayload = [
+                'id' => $product->product_id,
+                'name' => $product->name,
+                'price' => '$' . number_format((float) $product->price, 2),
+                'image' => $primaryImageUrl,
+                'category' => $product->category?->name ?? '',
+                'url' => route('products.show', ['product' => $product->product_id, 'slug' => $product->slug]),
+            ];
+        @endphp
+        <script type="application/json" id="recently-viewed-product">@json($recentlyViewedPayload)</script>
+        <section id="recently-viewed-section" class="container my-5" data-current-product-id="{{ $product->product_id }}" hidden></section>
     </main>
     <x-side-panel/>
     <x-company-footer />

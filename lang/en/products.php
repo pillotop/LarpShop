@@ -14,6 +14,15 @@ return [
         'empty' => 'No products found',
         'try_again' => 'Try another keyword or browse all products.',
         'browse' => 'Browse All Products',
+        'suggestions_for' => 'Search all results for ":query"',
+        'quick_sort' => 'Sort:',
+        'active_filters' => 'Active filters:',
+        'filter_price' => 'Price:',
+        'filter_in_stock' => 'In stock only',
+    ],
+    'recently_viewed' => [
+        'title' => 'Recently Viewed',
+        'clear' => 'Clear history',
     ],
     'filters' => [
         'title' => 'Filter & Sort',

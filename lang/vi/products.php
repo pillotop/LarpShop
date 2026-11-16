@@ -14,6 +14,15 @@ return [
         'empty' => 'Không tìm thấy sản phẩm',
         'try_again' => 'Thử từ khóa khác hoặc xem tất cả sản phẩm.',
         'browse' => 'Xem tất cả sản phẩm',
+        'suggestions_for' => 'Xem tất cả kết quả cho ":query"',
+        'quick_sort' => 'Sắp xếp:',
+        'active_filters' => 'Đang lọc:',
+        'filter_price' => 'Giá:',
+        'filter_in_stock' => 'Chỉ còn hàng',
+    ],
+    'recently_viewed' => [
+        'title' => 'Sản phẩm đã xem gần đây',
+        'clear' => 'Xóa lịch sử',
     ],
     'filters' => [
         'title' => 'Lọc và sắp xếp',

@@ -117,10 +117,74 @@
                 </h2>
             </div>
 
-            <span class="small fw-semibold fg-secondary">
-                {{ trans_choice('products.search.found', $products->count(), ['count' => $products->count()]) }}
-            </span>
+            <div class="d-flex flex-wrap align-items-center gap-2 ms-auto">
+                <span class="small fg-secondary fw-semibold">{{ __('products.search.quick_sort') }}</span>
+                @foreach (['newest', 'price_asc', 'price_desc', 'rating_desc'] as $quickSortKey)
+                    @php
+                        $isCurrentSort = ($filters['sort'] ?? 'newest') === $quickSortKey;
+                        $quickSortParams = array_filter([
+                            'q' => $keyword !== '' ? $keyword : null,
+                            'category' => $filters['category'] !== '' ? $filters['category'] : null,
+                            'min_price' => $filters['min_price'] ?? null,
+                            'max_price' => $filters['max_price'] ?? null,
+                            'in_stock' => !empty($filters['in_stock']) ? '1' : null,
+                            'sort' => $quickSortKey !== 'newest' ? $quickSortKey : null,
+                        ], fn ($v) => $v !== null && $v !== '');
+                    @endphp
+                    <a href="{{ route('products.index', $quickSortParams) }}"
+                       @class([
+                           'btn btn-sm rounded-pill px-3',
+                           'btn-solid theme-primary' => $isCurrentSort,
+                           'btn-outline theme-secondary bg-white' => ! $isCurrentSort,
+                       ])>
+                        {{ __('products.sort.' . $quickSortKey) }}
+                    </a>
+                @endforeach
+                <span class="small fw-semibold fg-secondary ms-md-2">
+                    {{ trans_choice('products.search.found', $products->total(), ['count' => $products->total()]) }}
+                </span>
+            </div>
         </div>
+
+        @if ($hasActiveFilters)
+            @php
+                $baseFilterParams = array_filter([
+                    'q' => $keyword !== '' ? $keyword : null,
+                    'category' => $filters['category'] !== '' ? $filters['category'] : null,
+                    'min_price' => $filters['min_price'] ?? null,
+                    'max_price' => $filters['max_price'] ?? null,
+                    'in_stock' => !empty($filters['in_stock']) ? '1' : null,
+                    'sort' => ($filters['sort'] ?? 'newest') !== 'newest' ? $filters['sort'] : null,
+                ], fn ($v) => $v !== null && $v !== '');
+            @endphp
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                <span class="small fg-secondary fw-semibold">{{ __('products.search.active_filters') }}</span>
+                @if ($filters['category'] !== '')
+                    @php($withoutCategory = array_diff_key($baseFilterParams, ['category' => true]))
+                    <a href="{{ route('products.index', $withoutCategory) }}" class="badge rounded-pill bg-white fg-body border text-decoration-none d-inline-flex align-items-center gap-1 px-3 py-2">
+                        <span>{{ __('products.filters.category') }}: {{ $selectedCategory?->name ?? $filters['category'] }}</span>
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </a>
+                @endif
+                @if (($filters['min_price'] ?? '') !== '' || ($filters['max_price'] ?? '') !== '')
+                    @php($withoutPrice = array_diff_key($baseFilterParams, ['min_price' => true, 'max_price' => true]))
+                    <a href="{{ route('products.index', $withoutPrice) }}" class="badge rounded-pill bg-white fg-body border text-decoration-none d-inline-flex align-items-center gap-1 px-3 py-2">
+                        <span>{{ __('products.search.filter_price') }} ${{ $filters['min_price'] ?? '0' }} – ${{ $filters['max_price'] ?? '∞' }}</span>
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </a>
+                @endif
+                @if (!empty($filters['in_stock']))
+                    @php($withoutStock = array_diff_key($baseFilterParams, ['in_stock' => true]))
+                    <a href="{{ route('products.index', $withoutStock) }}" class="badge rounded-pill bg-white fg-body border text-decoration-none d-inline-flex align-items-center gap-1 px-3 py-2">
+                        <span>{{ __('products.search.filter_in_stock') }}</span>
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </a>
+                @endif
+                <a href="{{ route('products.index', $keyword !== '' ? ['q' => $keyword] : []) }}" class="btn btn-sm btn-link text-decoration-none">
+                    {{ __('products.filters.reset') }}
+                </a>
+            </div>
+        @endif
 
         @if ($products->isEmpty())
 
@@ -151,6 +215,12 @@
                     </div>
                 @endforeach
             </div>
+
+            @if ($products->hasPages())
+                <div class="d-flex justify-content-center mt-5">
+                    {{ $products->links('shared.pagination') }}
+                </div>
+            @endif
 
         @endif
 
