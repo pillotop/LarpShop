@@ -21,7 +21,7 @@ class CategoryController extends Controller
     public function show(string $slug): View
     {
         $category = Category::query()
-            ->with('children')
+            ->with(['children.products.images'])
             ->where('slug', $slug)
             ->firstOrFail();
 

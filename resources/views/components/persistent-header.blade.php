@@ -17,19 +17,22 @@
             </button>
         </li>
         <li>
-            <button type="button" class="nav-button rounded-pill border-0">
-                {{ __('common.parcel_delivery') }}
-            </button>
+            <a href="{{ route('help') }}#orders" class="nav-button rounded-pill border-0 text-decoration-none">
+                <i class="bi bi-truck" aria-hidden="true"></i>
+                <span>{{ __('common.parcel_delivery') }}</span>
+            </a>
         </li>
         <li>
-            <button type="button" class="nav-button rounded-pill border-0">
-                {{ __('common.phone_sales') }}
-            </button>
+            <a href="{{ route('contact') }}" class="nav-button rounded-pill border-0 text-decoration-none">
+                <i class="bi bi-telephone" aria-hidden="true"></i>
+                <span>{{ __('common.phone_sales') }}</span>
+            </a>
         </li>
         <li>
-            <button type="button" class="nav-button rounded-pill border-0">
-                {{ __('common.return_policy') }}
-            </button>
+            <a href="{{ route('help') }}#returns" class="nav-button rounded-pill border-0 text-decoration-none">
+                <i class="bi bi-arrow-return-left" aria-hidden="true"></i>
+                <span>{{ __('common.return_policy') }}</span>
+            </a>
         </li>
         {{ $slot }}
     </ul>

@@ -50,20 +50,37 @@
                     <div class="subcategory-container col-12 md:col-4 p-0 overflow-auto border-end-dashed border-top-dashed border-thin border-start-0 border-bottom-0">
                         <ul id="subcategory-list" class="d-flex flex-column gap-2" style="list-style: none;">
                             @foreach ($category->children as $childCategory)
+                                @php
+                                    $childFirstImagePath = $childCategory->products->first()?->images->first()?->path;
+                                    $childBannerUrl = $childFirstImagePath
+                                        ? (\Illuminate\Support\Str::startsWith($childFirstImagePath, ['http://', 'https://'])
+                                            ? $childFirstImagePath
+                                            : asset('storage/' . ltrim($childFirstImagePath, '/')))
+                                        : asset('images/product-placeholder.jpg');
+                                @endphp
                                 <li>
                                     <a href="{{ route('categories.show', ['slug' => $childCategory->slug]) }}">
-                                        <button class="subcategory-button w-100" type="button" data-subcategory-container-anchor-id="{{ $loop->index }}">
+                                        <button class="subcategory-button w-100 text-start fw-semibold rounded-3" type="button" data-subcategory-container-anchor-id="{{ $loop->index }}">
                                             {{ $childCategory->name }}
                                         </button>
                                         <template id="{{ $loop->index }}">
-                                            <div class="subcategory-banner">
+                                            <a href="{{ route('categories.show', ['slug' => $childCategory->slug]) }}" class="subcategory-banner text-decoration-none">
                                                 <div class="media-frame ratio-16x9">
                                                     <img
                                                         class="object-fit-cover"
-                                                        {{-- src="{{ asset('images/' . $childCategory->images) }}" --}}
+                                                        src="{{ $childBannerUrl }}"
                                                         alt="{{ $childCategory->name }}" />
                                                 </div>
-                                            </div>
+                                                <div class="position-absolute bottom-0 start-0 z-2 p-3 text-white">
+                                                    <h4 class="h5 fw-bold mb-1">{{ $childCategory->name }}</h4>
+                                                    @if ($childCategory->description)
+                                                        <p class="small mb-2 opacity-75">{{ $childCategory->description }}</p>
+                                                    @endif
+                                                    <span class="badge bg-white text-dark rounded-pill px-3 py-2">
+                                                        {{ __('products.explore_collection') }} <i class="bi bi-arrow-right ms-1"></i>
+                                                    </span>
+                                                </div>
+                                            </a>
                                         </template>
                                     </a>
                                 </li>
@@ -81,7 +98,7 @@
                     <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);">{{ __('products.category.products') }}</h2>
                 </div>
                 <x-two-arrow-scroller>
-                    <ul id="two-arrow-scrollable" class="d-flex gap-4 overflow-scroll list-unstyled">
+                    <ul id="two-arrow-scrollable" class="d-flex gap-4 overflow-x-auto list-unstyled">
                         @foreach ($products as $product)
                             <li>
                                 <x-product-card-b :product="$product"/>
