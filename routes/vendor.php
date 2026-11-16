@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Vendor\VendorBannerController;
 use App\Http\Controllers\Vendor\VendorCategoryController;
 use App\Http\Controllers\Vendor\VendorOrderController;
 use App\Http\Controllers\Vendor\VendorProductController;
@@ -13,7 +14,17 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     // UC-29: Vendor Store Configuration & Multi-Store Switcher
     Route::get('/store/settings', [VendorStoreController::class, 'edit'])->name('store.settings');
     Route::put('/store/settings', [VendorStoreController::class, 'update'])->name('store.settings.update');
+    Route::patch('/stores/{vendor}/name', [VendorStoreController::class, 'updateName'])->name('store.name.update');
+    Route::patch('/stores/{vendor}/profile', [VendorStoreController::class, 'updateProfile'])->name('store.profile.update');
+    Route::patch('/stores/{vendor}/description', [VendorStoreController::class, 'updateDescription'])->name('store.description.update');
     Route::post('/store/switch', [VendorStoreController::class, 'switchStore'])->name('store.switch');
+
+    Route::scopeBindings()->prefix('/stores/{vendor}/banners')->name('store.banners.')->group(function () {
+        Route::post('/', [VendorBannerController::class, 'store'])->name('store');
+        Route::patch('/{banner}', [VendorBannerController::class, 'update'])->name('update');
+        Route::patch('/{banner}/active', [VendorBannerController::class, 'toggle'])->name('toggle');
+        Route::delete('/{banner}', [VendorBannerController::class, 'destroy'])->name('destroy');
+    });
 
     // Category Proposals (Vendor can view and propose categories; only Admin can edit/disable shared categories)
     Route::get('/categories', [VendorCategoryController::class, 'index'])->name('categories.index');

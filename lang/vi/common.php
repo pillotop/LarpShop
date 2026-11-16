@@ -29,6 +29,8 @@ return [
     'choose_language' => 'Chọn ngôn ngữ của bạn',
     'selection' => 'Lựa chọn',
     'settings' => 'Cài đặt',
+    'storefront_settings' => 'Trang trí cửa hàng của bạn',
+    'storefront_settings_header' => 'Trang trí gian hàng',
     'parcel_delivery' => 'Giao hàng',
     'phone_sales' => 'Tư vấn qua điện thoại',
     'return_policy' => 'Chính sách đổi trả',

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Vendor;
+use App\Queries\Banners\BannerQuery;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class VendorStorefrontController extends Controller
 {
+    public function __construct(private BannerQuery $banners) {}
+
     /**
      * Display the specified vendor storefront with products.
      */
@@ -59,6 +62,10 @@ class VendorStorefrontController extends Controller
 
         return view('vendor.pages.storefront', [
             'vendor' => $vendorModel,
+            'headerBanners' => $this->banners->visibleForVendor($vendorModel, 'vendor_header'),
+            'managedBanners' => $request->user()?->user_id === $vendorModel->user_id
+                ? $this->banners->managedByVendor($vendorModel)
+                : collect(),
             'products' => $products,
             'vendorCategories' => $vendorCategories,
             'productCategories' => $productCategories,

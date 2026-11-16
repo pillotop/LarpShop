@@ -114,7 +114,7 @@ test('resize preserves a collapsed bar without changing the anchor height', () =
 test('keyboard focus reveals the secondary navigation', () => {
     const fixture = header();
     fixture.scroll(300);
-    fixture.elementListeners.focusin();
+    fixture.listeners.focusin();
     fixture.flush();
     assert.equal(fixture.instance.visible, 80);
     assert.equal(fixture.anchor.style.top, '0px');

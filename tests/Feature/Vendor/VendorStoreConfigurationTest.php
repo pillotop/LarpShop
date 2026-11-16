@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class VendorStoreConfigurationTest extends TestCase
@@ -72,6 +74,134 @@ class VendorStoreConfigurationTest extends TestCase
         $vendor->refresh();
         $this->assertSame('Updated Brand Store', $vendor->store_name);
         $this->assertSame('Updated Store Description for customers', $vendor->description);
+    }
+
+    public function test_storefront_update_saves_image_and_description_for_the_requested_store(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+        $first = $user->vendors()->create(['store_name' => 'First Store', 'status' => 'active']);
+        $second = $user->vendors()->create(['store_name' => 'Second Store', 'status' => 'active']);
+        $image = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aN1sAAAAASUVORK5CYII=');
+        $oldPath = UploadedFile::fake()->createWithContent('old.png', $image)->store('vendors/profiles', 'public');
+        $second->brand_path = $oldPath;
+        $second->save();
+
+        $this->actingAs($user)
+            ->from('/vendors/'.$second->vendor_id)
+            ->patch(route('vendor.store.profile.update', $second), [
+                'description' => 'Must not update description',
+                'brand_image' => UploadedFile::fake()->createWithContent('brand.png', $image),
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/vendors/'.$second->vendor_id);
+
+        $second->refresh();
+        $this->assertNull($second->description);
+        Storage::disk('public')->assertExists($second->brand_path);
+        Storage::disk('public')->assertMissing($oldPath);
+        $this->assertNull($first->fresh()->brand_path);
+    }
+
+    public function test_storefront_update_cannot_fall_back_to_a_different_owned_store(): void
+    {
+        $user = User::factory()->create();
+        $ownStore = $user->vendors()->create(['store_name' => 'Owned Store', 'status' => 'active']);
+        $otherUser = User::factory()->create();
+        $otherStore = $otherUser->vendors()->create(['store_name' => 'Other Store', 'status' => 'active']);
+
+        $this->actingAs($user)
+            ->put(route('vendor.store.settings.update', ['vendor_id' => $otherStore->vendor_id]), [
+                'store_name' => 'Unexpected change',
+            ])
+            ->assertForbidden();
+
+        $this->assertSame('Owned Store', $ownStore->fresh()->store_name);
+        $this->assertSame('Other Store', $otherStore->fresh()->store_name);
+    }
+
+    public function test_description_update_preserves_image_and_name_and_allows_clearing(): void
+    {
+        $user = User::factory()->create();
+        $vendor = $user->vendors()->create(['store_name' => 'Description Store', 'status' => 'active']);
+        $vendor->brand_path = 'vendors/profiles/existing.png';
+        $vendor->save();
+
+        foreach (['New description', ''] as $description) {
+            $this->actingAs($user)
+                ->patch(route('vendor.store.description.update', $vendor), [
+                    'description' => $description,
+                    'store_name' => 'Ignored name',
+                ])
+                ->assertSessionHasNoErrors()
+                ->assertRedirect();
+
+            $vendor->refresh();
+            $this->assertSame($description ?: null, $vendor->description);
+            $this->assertSame('Description Store', $vendor->store_name);
+            $this->assertSame('vendors/profiles/existing.png', $vendor->brand_path);
+        }
+    }
+
+    public function test_separate_store_updates_reject_other_owners(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $owner->vendors()->create(['store_name' => 'Own Store', 'status' => 'active']);
+        $vendor = $other->vendors()->create(['store_name' => 'Protected Store', 'status' => 'active']);
+
+        foreach (['profile', 'description', 'name'] as $section) {
+            $this->actingAs($owner)
+                ->patch(route('vendor.store.'.$section.'.update', $vendor), [])
+                ->assertForbidden();
+        }
+    }
+
+    public function test_separate_store_updates_require_their_fields(): void
+    {
+        $owner = User::factory()->create();
+        $vendor = $owner->vendors()->create(['store_name' => 'Required Store', 'status' => 'active']);
+
+        foreach (['profile' => 'brand_image', 'description' => 'description', 'name' => 'store_name'] as $section => $field) {
+            $this->actingAs($owner)
+                ->patch(route('vendor.store.'.$section.'.update', $vendor), [])
+                ->assertSessionHasErrors($field);
+        }
+    }
+
+    public function test_store_name_update_is_independent_and_enforces_unique_names(): void
+    {
+        $owner = User::factory()->create();
+        $vendor = $owner->vendors()->create([
+            'store_name' => 'Original Name', 'description' => 'Keep description', 'status' => 'approved',
+        ]);
+        $vendor->brand_path = 'vendors/profiles/keep.png';
+        $vendor->save();
+        $owner->vendors()->create(['store_name' => 'Taken Name', 'status' => 'active']);
+
+        foreach (['Original Name', 'New Store Name'] as $name) {
+            $this->actingAs($owner)
+                ->patch(route('vendor.store.name.update', $vendor), [
+                    'store_name' => $name,
+                    'description' => 'Ignored description',
+                ])
+                ->assertSessionHasNoErrors()
+                ->assertRedirect();
+        }
+
+        $vendor->refresh();
+        $this->assertSame('New Store Name', $vendor->store_name);
+        $this->assertSame('Keep description', $vendor->description);
+        $this->assertSame('vendors/profiles/keep.png', $vendor->brand_path);
+        $this->assertSame('approved', $vendor->status);
+
+        foreach (['Taken Name', 'X', str_repeat('x', 101)] as $name) {
+            $this->actingAs($owner)
+                ->patch(route('vendor.store.name.update', $vendor), ['store_name' => $name])
+                ->assertSessionHasErrors('store_name');
+        }
+
+        $this->assertSame('New Store Name', $vendor->fresh()->store_name);
     }
 
     public function test_multi_store_owner_can_switch_active_store(): void

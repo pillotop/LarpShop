@@ -1,0 +1,35 @@
+.file-dropzone {
+    transition:
+        border-color 150ms ease,
+        background-color 150ms ease;
+}
+
+.file-dropzone-target {
+    cursor: pointer;
+    border-radius: inherit;
+}
+
+.file-dropzone:hover,
+.file-dropzone:focus-within,
+.file-dropzone.is-dragging {
+    border-color: var(--bs-primary) !important;
+    background-color: var(--bs-tertiary-bg);
+}
+
+.file-preview {
+    max-width: 10rem;
+    overflow-wrap: anywhere;
+}
+
+.file-preview-image {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    border-radius: var(--bs-border-radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .file-dropzone {
+        transition: none;
+    }
+}

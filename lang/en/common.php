@@ -29,6 +29,8 @@ return [
     'choose_language' => 'Choose your language',
     'selection' => 'Selection',
     'settings' => 'Settings',
+    'storefront_settings' => 'Customize your storefront',
+    'storefront_settings_header' => 'Vendor Customization',
     'parcel_delivery' => 'Parcel delivery',
     'phone_sales' => 'Phone sales service',
     'return_policy' => 'Return policy',

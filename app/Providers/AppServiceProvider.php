@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Banner;
+use App\Models\Vendor;
+use App\Observers\BannerObserver;
+use App\Observers\VendorBannerObserver;
 use App\View\Composers\ProductCapabilityComposer;
 use App\View\Composers\WishlistButtonComposer;
 use Illuminate\Pagination\Paginator;
@@ -20,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Banner::observe(BannerObserver::class);
+        Vendor::observe(VendorBannerObserver::class);
+
         Paginator::defaultView('shared.pagination');
 
         Facades\View::composer('components.wishlist.button', WishlistButtonComposer::class);

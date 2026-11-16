@@ -103,7 +103,7 @@ class LocaleTest extends TestCase
         $this->assertStringContainsString('drawer-bottom', $html);
         $this->assertStringContainsString('drawer-end', $html);
         $this->assertStringContainsString('--drawer-backdrop-blur: 0px', $html);
-        $this->assertStringContainsString('<details class="accordion-item" open>', $html);
+        $this->assertStringContainsString('<details id="language" class="accordion-item" open>', $html);
         $this->assertStringNotContainsString('data-side-panel-target="#settings"', $html);
     }
 

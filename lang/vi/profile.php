@@ -43,6 +43,9 @@ return [
         'sign_out' => 'Luôn đăng xuất sau khi sử dụng thiết bị dùng chung.',
     ],
     'store' => [
+        'update_name' => 'Cập nhật tên gian hàng',
+        'update_image' => 'Cập nhật ảnh đại diện',
+        'update_description' => 'Cập nhật mô tả',
         'new' => 'Gian hàng mới',
         'name' => 'Tên gian hàng',
         'status' => 'Trạng thái gian hàng',
@@ -66,6 +69,9 @@ return [
         'intro' => 'Tạo gian hàng để chia sẻ sản phẩm LARP với cộng đồng.',
         'submit' => 'Gửi đơn đăng ký',
         'unavailable' => 'Gian hàng hiện ở trạng thái :status. Liên hệ quản trị viên để được hỗ trợ.',
+        'banner' => 'Banner gian hàng',
+        'profile_not_present' => 'Cửa hàng của bạn hiện không có hình đại diện, nên chúng tôi đã cung cấp hình ảnh mặc định cho bạn.',
+        'change_profile' => 'Bạn có thể thay đổi hình đại diện ở đây.',
     ],
     'address' => [
         'recipient' => 'Tên người nhận',
@@ -149,4 +155,8 @@ return [
         'pages' => 'Các trang lịch sử mua hàng',
     ],
     'member_since' => 'Thành viên từ: :date',
+    'profile_container' => [
+        'alt_text' => 'Hình đại diện',
+        'edit_button_aria' => 'Cập nhật hình đại diện',
+    ],
 ];

@@ -1,0 +1,39 @@
+.image-cropper {
+    --crop-accent: var(--color-primary-600, #2186a2);
+}
+
+.image-cropper [hidden] {
+    display: none !important;
+}
+
+.image-cropper-picker {
+    background: var(--bg-1, #fafafa);
+}
+
+.image-cropper-picker:focus-within {
+    outline: 2px solid var(--crop-accent);
+    outline-offset: 3px;
+}
+
+.image-cropper-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--bg-2, #f4f4f4);
+    cursor: grab;
+    touch-action: none;
+}
+
+.image-cropper-canvas:active {
+    cursor: grabbing;
+}
+
+.image-cropper-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1rem;
+}
+
+.image-cropper input[type="range"] {
+    accent-color: var(--crop-accent);
+}
