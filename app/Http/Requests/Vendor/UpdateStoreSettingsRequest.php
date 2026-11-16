@@ -12,7 +12,9 @@ class UpdateStoreSettingsRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return $this->vendor() !== null;
+        return $this->vendor() !== null
+            && ($this->query('vendor_id') === null
+                || (string) $this->vendor()->vendor_id === (string) $this->query('vendor_id'));
     }
 
     public function vendor(): ?Vendor

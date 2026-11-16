@@ -4,10 +4,10 @@
 
 <div {{ $attributes->class(['persistent-header position-relative mt-2 px-4 py-2 z-0']) }}>
     <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll list-unstyled">
-        <li>
+        <li class="flex-shrink-0">
             <button
                 type="button"
-                class="nav-button rounded-pill border-0"
+                class="nav-button rounded-pill border-0 px-3"
                 data-locale-panel
                 data-bs-toggle="drawer"
                 data-bs-target="#settings-panel"
@@ -20,27 +20,34 @@
                 <span>{{ __('common.settings') }}</span>
             </button>
         </li>
-        @if ($vendor)
-            <li>
-                <a href="#storefront-settings">
-                    <button type="button" class="nav-button rounded-pill border-0">
-                        {{ __('common.storefront_settings') }}
-                    </button>
-                </a>
-            </li>
+
+        @if ($vendor?->user_id === Auth::id())
+        <li class="flex-shrink-0">
+            <button
+                x-data
+                x-on:click="$dispatch('open-settings', { section: 'storefront-settings' })"
+                data-bs-toggle="drawer"
+                data-bs-target="#settings-panel"
+                type="button"
+                class="nav-button rounded-pill border-0 px-3"
+            >
+                {{ __('common.storefront_settings') }}
+            </button>
+        </li>
         @endif
-        <li>
-            <button type="button" class="nav-button rounded-pill border-0">
+
+        <li class="flex-shrink-0">
+            <button type="button" class="nav-button rounded-pill border-0 px-3">
                 {{ __('common.parcel_delivery') }}
             </button>
         </li>
-        <li>
-            <button type="button" class="nav-button rounded-pill border-0">
+        <li class="flex-shrink-0">
+            <button type="button" class="nav-button rounded-pill border-0 px-3">
                 {{ __('common.phone_sales') }}
             </button>
         </li>
-        <li>
-            <button type="button" class="nav-button rounded-pill border-0">
+        <li class="flex-shrink-0">
+            <button type="button" class="nav-button rounded-pill border-0 px-3">
                 {{ __('common.return_policy') }}
             </button>
         </li>
@@ -69,8 +76,18 @@
             ></button>
         </header>
         <div class="drawer-body">
-            <div class="accordion">
-                <details class="accordion-item">
+            <div
+                class="accordion"
+                x-data
+                x-on:open-settings.window="
+                    $el.querySelectorAll('details.accordion-item')
+                        .forEach(item => {
+                            item.open = item.id === $event.detail.section
+                        })
+                "
+            >
+
+                <details id="language" class="accordion-item">
                     <summary class="accordion-header">
                         {{ __('common.language') }}
                         <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
@@ -81,23 +98,24 @@
                         </div>
                     </div>
                 </details>
-                @if ($vendor)
-                    <details class="accordion-item">
-                        <summary class="accordion-header">
-                            {{ __('common.storefront_settings_header') }}
-                            <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
-                        </summary>
-                        <div class="accordion-panel">
-<<<<<<< HEAD
-                            <div class="accordion-body">
-                                <x-vendor.storefront-settings :vendor="$vendor" />
-                            </div>
-=======
+
+                @if ($vendor?->user_id === Auth::id())
+                <details
+                    id="storefront-settings"
+                    class="accordion-item"
+                >
+                    <summary class="accordion-header">
+                        {{ __('common.storefront_settings_header') }}
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
+                        <div class="accordion-body">
                             <x-vendor.storefront-settings :vendor="$vendor" />
->>>>>>> 938dc1b (init storefront settings)
                         </div>
-                    </details>
+                    </div>
+                </details>
                 @endif
+
             </div>
         </div>
     </x-side-panel>

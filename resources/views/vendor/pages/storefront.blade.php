@@ -14,6 +14,7 @@
         'resources/css/components/rating_container.css',
         'resources/css/components/dropdown.css',
         'resources/css/components/persistent_header.css',
+        'resources/css/components/file_dropzone.css',
     ])
 @endsection
 
@@ -23,6 +24,7 @@
         'resources/js/components/dropdown.js',
         'resources/js/components/persistent_header.js',
         'resources/js/components/side_panel.js',
+        'resources/js/components/file_dropzone.js',
     ])
 @endsection
 
@@ -60,9 +62,13 @@
         <section class="card border-0 shadow-sm p-4 mb-4 rounded-9" style="background: linear-gradient(135deg, #f8f9fa 0%, #eef2f5 100%);">
             <div class="row align-items-center g-3">
                 <div class="col-auto">
-                    <div class="rounded-circle bg-primary fg-white d-flex align-items-center justify-content-center shadow" style="width: 72px; height: 72px; font-size: 2rem;">
-                        <i class="bi bi-shop"></i>
-                    </div>
+                    <x-profile.profile-container
+                        :account="$vendor"
+                        :allow-edit="$vendor->user_id === Auth::id()"
+                        edit-btn-event="$dispatch('open-settings', { section: 'storefront-settings' })"
+                        data-bs-toggle="drawer"
+                        data-bs-target="#settings-panel"
+                    />
                 </div>
                 <div class="col">
                     <div class="d-flex align-items-center gap-2 flex-wrap">

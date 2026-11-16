@@ -43,6 +43,9 @@ return [
         'sign_out' => 'Always sign out after using a shared device.',
     ],
     'store' => [
+        'update_name' => 'Update store name',
+        'update_image' => 'Update profile image',
+        'update_description' => 'Update description',
         'new' => 'New store',
         'name' => 'Store name',
         'status' => 'Store status',
@@ -66,6 +69,9 @@ return [
         'intro' => 'Create your own storefront to share your LARP products with the community.',
         'submit' => 'Submit application',
         'unavailable' => 'This store is currently :status. Contact an administrator for assistance.',
+        'banner' => 'Banner',
+        'profile_not_present' => 'Your store don\'t seem to have a profile image atm so we\'re using a default for you.',
+        'change_profile' => 'You can change your profile here',
     ],
     'address' => [
         'recipient' => 'Recipient name',
@@ -103,4 +109,8 @@ return [
         'store_resubmit' => 'Only a rejected application can be resubmitted.',
     ],
     'member_since' => 'Member since: :date',
+    'profile_container' => [
+        'alt_text' => 'Profile',
+        'edit_button_aria' => 'Edit profile image',
+    ]
 ];

@@ -15,9 +15,14 @@ WORKDIR /var/www/html
 
 RUN apt-get update && apt-get install -y \
     libzip-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libwebp-dev \
     unzip \
     libsqlite3-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install \
+        gd \
         zip \
         pdo_mysql \
         pdo_sqlite \

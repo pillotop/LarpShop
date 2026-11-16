@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Vendor\UpdateStoreDescriptionRequest;
+use App\Http\Requests\Vendor\UpdateStoreNameRequest;
+use App\Http\Requests\Vendor\UpdateStoreProfileRequest;
 use App\Http\Requests\Vendor\UpdateStoreSettingsRequest;
 use App\Models\Vendor;
 use App\Queries\Vendors\VendorQuery;
@@ -46,8 +49,33 @@ class VendorStoreController extends Controller
             $request->validated(),
         );
 
-        return redirect()->route('vendor.store.settings')
+        $redirect = $request->query('vendor_id') !== null
+            ? back()
+            : redirect()->route('vendor.store.settings');
+
+        return $redirect
             ->with('success', __('management.messages.store_settings', ['name' => $vendor->store_name]));
+    }
+
+    public function updateName(UpdateStoreNameRequest $request, Vendor $vendor): RedirectResponse
+    {
+        $this->vendorService->updateName($request->user(), $vendor->vendor_id, $request->validated('store_name'));
+
+        return back()->with('success', __('profile.success.store_updated'));
+    }
+
+    public function updateProfile(UpdateStoreProfileRequest $request, Vendor $vendor): RedirectResponse
+    {
+        $this->vendorService->updateProfileImage($request->user(), $vendor->vendor_id, $request->file('brand_image'));
+
+        return back()->with('success', __('profile.success.store_updated'));
+    }
+
+    public function updateDescription(UpdateStoreDescriptionRequest $request, Vendor $vendor): RedirectResponse
+    {
+        $this->vendorService->updateDescription($request->user(), $vendor->vendor_id, $request->validated('description'));
+
+        return back()->with('success', __('profile.success.store_updated'));
     }
 
     /**

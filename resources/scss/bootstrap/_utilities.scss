@@ -1,4 +1,14 @@
 @use './theme';
+@use 'bootstrap/scss/mixins/utilities' as bootstrap-utilities;
+
+// Border utilities read this variable, preserving side, width, and color choices.
+@layer utilities {
+    @include bootstrap-utilities.generate-utility((
+        property: --border-style,
+        class: border,
+        values: (dashed: dashed),
+    ));
+}
 
 // Project palette utilities supplement Bootstrap's semantic foreground/backgrounds.
 @layer utilities {

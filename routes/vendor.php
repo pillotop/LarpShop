@@ -13,6 +13,9 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     // UC-29: Vendor Store Configuration & Multi-Store Switcher
     Route::get('/store/settings', [VendorStoreController::class, 'edit'])->name('store.settings');
     Route::put('/store/settings', [VendorStoreController::class, 'update'])->name('store.settings.update');
+    Route::patch('/stores/{vendor}/name', [VendorStoreController::class, 'updateName'])->name('store.name.update');
+    Route::patch('/stores/{vendor}/profile', [VendorStoreController::class, 'updateProfile'])->name('store.profile.update');
+    Route::patch('/stores/{vendor}/description', [VendorStoreController::class, 'updateDescription'])->name('store.description.update');
     Route::post('/store/switch', [VendorStoreController::class, 'switchStore'])->name('store.switch');
 
     // Category Proposals (Vendor can view and propose categories; only Admin can edit/disable shared categories)
