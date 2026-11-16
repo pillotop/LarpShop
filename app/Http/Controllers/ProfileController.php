@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Queries\Address\AddressQuery;
 use App\Queries\Categories\CategoryQuery;
+use App\Queries\Orders\PurchaseHistoryQuery;
+use App\Queries\Reviews\ProductReviewQuery;
 use App\Queries\Vendors\VendorQuery;
 use App\Queries\Wishlist\WishlistQuery;
 use Illuminate\Http\JsonResponse;
@@ -20,13 +22,29 @@ class ProfileController extends Controller
         CategoryQuery $categories,
         AddressQuery $addresses,
         WishlistQuery $wishlist,
+        PurchaseHistoryQuery $purchaseHistory,
+        ProductReviewQuery $reviews,
     ): View {
+        $user = $request->user();
+
+        $purchaseFilters = $purchaseHistory->normalizeFilters($request->query());
+        $purchases = $purchaseHistory->forUser($user, $purchaseFilters);
+
+        $purchasedProductIds = $purchases->getCollection()
+            ->flatMap(fn ($order) => $order->details->pluck('product_id'))
+            ->unique()
+            ->values()
+            ->all();
+
         return view('profile.pages.show', [
-            'user' => $request->user(),
-            'wishlistProducts' => $wishlist->forUser($request->user()),
-            'vendors' => $vendors->forUser($request->user()),
-            'addresses' => $addresses->forUser($request->user()),
+            'user' => $user,
+            'wishlistProducts' => $wishlist->forUser($user),
+            'vendors' => $vendors->forUser($user),
+            'addresses' => $addresses->forUser($user),
             'productCategories' => $categories->forNavigation(),
+            'purchases' => $purchases,
+            'purchaseFilters' => $purchaseFilters,
+            'reviewableProductIds' => $reviews->eligibleProductIds($user, $purchasedProductIds),
         ]);
     }
 

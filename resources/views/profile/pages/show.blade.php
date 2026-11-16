@@ -37,6 +37,9 @@
             } else if (trigger) {
                 if (trigger.closest('#vendorTabs')) showTab('tab-vendor-info');
                 showTab(trigger.id);
+            } else if (@json(request()->has('orders_q') || request()->has('orders_filter') || request()->has('orders_period') || request()->has('orders_page'))) {
+                // The browser dropped the #pane-purchases fragment; keep the purchase history visible.
+                showTab('tab-purchases');
             } else if (@json($errors->has('store_name') || $errors->has('description') || in_array(session('status'), ['vendor-registered', 'vendor-updated']))) {
                 showTab('tab-vendor-info');
             } else if (@json($errors->has('current_password') || $errors->has('password') || $errors->has('password_confirmation') || session('status') === 'password-updated')) {
@@ -134,6 +137,13 @@
                                 'label' => __('profile.stores'),
                             ],
                             [
+                                'id' => 'tab-purchases',
+                                'target_id' => '#pane-purchases',
+                                'aria_controls' => 'pane-purchases',
+                                'icon' => 'bi-bag-check',
+                                'label' => __('profile.purchases.tab'),
+                            ],
+                            [
                                 'id' => 'tab-security',
                                 'target_id' => '#pane-security',
                                 'aria_controls' => 'pane-security',
@@ -176,6 +186,13 @@
 
                     {{-- Tab 2: Vendor Store Profile / Register --}}
                     <x-profile.vendor-tab :vendors="$vendors" />
+
+                    {{-- Tab 2b: Purchase history --}}
+                    <x-profile.purchases-tab
+                        :orders="$purchases"
+                        :filters="$purchaseFilters"
+                        :reviewable-product-ids="$reviewableProductIds"
+                    />
 
                     {{-- Tab 3: Security & Password Update --}}
                     <x-profile.security-tab />
