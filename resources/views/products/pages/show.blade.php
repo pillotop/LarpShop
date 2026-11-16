@@ -113,7 +113,8 @@
                                         <div class="quantity-picker d-flex flex-column gap-3"
                                              data-quantity-mode="add"
                                              data-add-to-cart-url="{{ route('cart.add') }}"
-                                             data-product-id="{{ $product->product_id }}">
+                                             data-product-id="{{ $product->product_id }}"
+                                             data-variant-id="">
                                             @csrf
                                             <label for="product-purchase-quantity" class="form-label mb-0">{{ __('products.detail.quantity') }}</label>
                                             <div class="input-group" style="max-width: 10rem;">
@@ -183,6 +184,7 @@
                                         <button type="button"
                                                 class="btn text-start border border-primary bg-white shadow-xs rounded-5 p-2 px-3 d-flex align-items-center gap-2"
                                                 data-variant-option
+                                                data-variant-id=""
                                                 data-variant-name="{{ __('products.detail.base_edition') }}"
                                                 data-variant-price="${{ number_format($product->price, 2) }}"
                                                 data-variant-stock="{{ $product->stock }}"
@@ -202,6 +204,7 @@
                                             <button type="button"
                                                     class="btn text-start border rounded-5 p-2 px-3 bg-1 d-flex align-items-center gap-2"
                                                     data-variant-option
+                                                    data-variant-id="{{ $variant->variant_id }}"
                                                     data-variant-name="{{ $variant->name }}"
                                                     data-variant-price="${{ number_format($variant->price, 2) }}"
                                                     data-variant-stock="{{ $variant->stock }}"

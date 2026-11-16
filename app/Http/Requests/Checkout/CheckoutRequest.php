@@ -29,6 +29,19 @@ class CheckoutRequest extends FormRequest
                 Rule::exists('addresses', 'address_id')
                     ->where('user_id', $this->user()->getKey()),
             ],
+            'selected_cart_item_ids' => [
+                'nullable',
+                'array',
+                'min:1',
+            ],
+            'selected_cart_item_ids.*' => [
+                'integer',
+            ],
+            'shipping_method' => [
+                'nullable',
+                'string',
+                Rule::in(['home_delivery', 'pickup', 'express']),
+            ],
         ];
     }
 }

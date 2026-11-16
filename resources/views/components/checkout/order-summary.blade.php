@@ -15,7 +15,12 @@
         @forelse ($order->details as $detail)
             <li class="border-bottom py-3">
                 <div class="d-flex justify-content-between gap-3">
-                    <span class="fw-semibold">{{ $detail->product?->name ?? __('checkout.unavailable_product') }}</span>
+                    <div>
+                        <span class="fw-semibold d-block">{{ $detail->product?->name ?? __('checkout.unavailable_product') }}</span>
+                        @if ($detail->variant_name)
+                            <span class="badge bg-1 fg-body border rounded-pill mt-1">{{ __('cart.variant', ['name' => $detail->variant_name]) }}</span>
+                        @endif
+                    </div>
                     <span class="text-nowrap">{{ __('cart.each', ['price' => '$' . number_format((float) $detail->unit_price, 2)]) }}</span>
                 </div>
                 <span class="small fg-3">{{ __('checkout.quantity', ['count' => $detail->quantity]) }}</span>
@@ -24,7 +29,11 @@
             <li class="fg-3 py-3">{{ __('checkout.no_items') }}</li>
         @endforelse
     </ul>
-    <dl class="d-flex justify-content-between align-items-baseline gap-3 mt-4 mb-0">
+    <div class="d-flex justify-content-between align-items-baseline gap-3 mt-3 small fg-3">
+        <span>{{ __('checkout.delivery_price') }}</span>
+        <span>{{ (float) ($order->shipping_fee ?? 0) > 0 ? '$' . number_format((float) $order->shipping_fee, 2) : __('checkout.free') }}</span>
+    </div>
+    <dl class="d-flex justify-content-between align-items-baseline gap-3 mt-2 mb-0">
         <dt>{{ __('checkout.total') }}</dt>
         <dd class="h4 fw-bold mb-0">${{ number_format((float) $order->total_amount, 2) }}</dd>
     </dl>

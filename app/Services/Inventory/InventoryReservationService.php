@@ -4,6 +4,7 @@ namespace App\Services\Inventory;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Validation\ValidationException;
 use LogicException;
 
@@ -13,13 +14,25 @@ use LogicException;
 class InventoryReservationService
 {
     /**
-     * The caller must hold a database row lock on this product
+     * The caller must hold a database row lock on this product (and optional variant)
      * and execute this inside the order creation transaction.
      */
-    public function reserve(Product $product, int $quantity): void
+    public function reserve(Product $product, int $quantity, ?ProductVariant $variant = null): void
     {
         if ($quantity <= 0) {
             throw new LogicException('Invalid reservation quantity.');
+        }
+
+        if ($variant !== null) {
+            if ($variant->stock < $quantity) {
+                throw ValidationException::withMessages([
+                    'cart' => __('checkout.errors.insufficient_stock', ['name' => "{$product->name} ({$variant->name})"]),
+                ]);
+            }
+
+            $variant->decrement('stock', $quantity);
+
+            return;
         }
 
         if ($product->stock < $quantity) {
@@ -46,19 +59,47 @@ class InventoryReservationService
             ->get();
 
         $productIds = $details
+            ->whereNull('variant_id')
             ->pluck('product_id')
             ->unique()
             ->values();
 
         // Lock products in a deterministic order.
-        $products = Product::query()
-            ->whereIn('product_id', $productIds)
-            ->orderBy('product_id')
-            ->lockForUpdate()
-            ->get()
-            ->keyBy('product_id');
+        $products = $productIds->isNotEmpty()
+            ? Product::query()
+                ->whereIn('product_id', $productIds)
+                ->orderBy('product_id')
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('product_id')
+            : collect();
+
+        $variantIds = $details
+            ->pluck('variant_id')
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
+
+        $variants = $variantIds->isNotEmpty()
+            ? ProductVariant::query()
+                ->whereIn('variant_id', $variantIds)
+                ->orderBy('variant_id')
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('variant_id')
+            : collect();
 
         foreach ($details as $detail) {
+            if ($detail->variant_id !== null) {
+                $variant = $variants->get($detail->variant_id);
+                if ($variant !== null) {
+                    $variant->increment('stock', $detail->quantity);
+                }
+
+                continue;
+            }
+
             $product = $products->get($detail->product_id);
 
             if ($product === null) {

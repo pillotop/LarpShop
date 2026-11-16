@@ -22,6 +22,14 @@ return [
         'updated' => 'Đã cập nhật địa chỉ giao hàng.',
         'required' => 'Cần có địa chỉ giao hàng.',
         'default' => ' (Mặc định)',
+        'add_new' => 'Thêm địa chỉ mới',
+        'save' => 'Lưu địa chỉ',
+    ],
+    'shipping_methods' => [
+        'label' => 'Phương thức giao hàng',
+        'home_delivery' => 'Giao hàng tiêu chuẩn (Miễn phí)',
+        'pickup' => 'Nhận tại cửa hàng (Miễn phí)',
+        'express' => 'Giao hàng hỏa tốc ($9.99)',
     ],
     'details' => [
         'title' => 'Thông tin của bạn',

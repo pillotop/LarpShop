@@ -59,7 +59,10 @@
                                     @endif
                                 </a>
                                 <div class="flex-grow-1" style="min-width: 0;">
-                                    <a href="{{ $product['url'] }}" class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-2">{{ $product['name'] }}</a>
+                                    <a href="{{ $product['url'] }}" class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-1">{{ $product['name'] }}</a>
+                                    @if (! empty($item['variant_name']))
+                                        <span class="badge bg-1 fg-body border rounded-pill mb-1">{{ __('cart.variant', ['name' => $item['variant_name']]) }}</span>
+                                    @endif
                                     <div class="small fg-3">{{ __('cart.each', ['price' => '$' . number_format($product['price'], 2)]) }}</div>
                                     <div class="d-flex align-items-center justify-content-between gap-2 mt-2">
                                         <span class="badge bg-1 fg-body border rounded-pill">{{ __('cart.quantity', ['count' => $item['quantity']]) }}</span>
@@ -87,7 +90,7 @@
                                         @endif
                                         <div class="d-flex align-items-center justify-content-between gap-2">
                                             <a href="{{ $product['url'] }}" class="text-decoration-none">{{ __('cart.view_product') }} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-                                            <button class="btn btn-sm btn-outline theme-danger" type="button" data-cart-remove="{{ $product['product_id'] }}" aria-label="{{ __('cart.remove_product', ['name' => $product['name']]) }}">
+                                            <button class="btn btn-sm btn-outline theme-danger" type="button" data-cart-remove="{{ $product['product_id'] }}" data-cart-variant-id="{{ $item['variant_id'] ?? '' }}" aria-label="{{ __('cart.remove_product', ['name' => $product['name']]) }}">
                                                 <i class="bi bi-trash me-1" aria-hidden="true"></i>{{ __('cart.remove') }}
                                             </button>
                                         </div>

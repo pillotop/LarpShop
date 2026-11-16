@@ -33,6 +33,10 @@ class CartRetrievalService
                 return [];
             }
 
+            $variant = $cartItem->variant;
+            $unitPrice = $variant ? $variant->price : $product->price;
+            $availableStock = $variant ? $variant->stock : $product->stock;
+
             $image = $product->images->first();
             $path = $image?->path;
             $imageUrl = null;
@@ -45,19 +49,24 @@ class CartRetrievalService
             return [
                 'added_at' => $cartItem->created_at?->getTimestamp() ?? $cartItem->cart_item_id,
                 'cart_item_id' => $cartItem->cart_item_id,
+                'variant_id' => $variant?->variant_id,
+                'variant_name' => $variant?->name,
+                'variant_sku' => $variant?->sku,
                 'quantity' => $cartItem->quantity,
                 'product' => [
                     'product_id' => $product->product_id,
+                    'vendor_id' => $product->vendor?->vendor_id,
+                    'vendor_name' => $product->vendor?->store_name,
                     'name' => $product->name,
-                    'price' => $product->price,
-                    'stock' => $product->stock,
+                    'price' => $unitPrice,
+                    'stock' => $availableStock,
                     'image' => $path,
                     'image_url' => $imageUrl,
                     'image_alt' => $image?->alt_text ?: $product->name,
                     'description' => $product->description,
                     'url' => route('products.show', ['product' => $product->product_id, 'slug' => $product->slug]),
                 ],
-                'subtotal' => $cartItem->quantity * $product->price,
+                'subtotal' => $cartItem->quantity * $unitPrice,
             ];
         })->filter()->values();
 

@@ -473,10 +473,15 @@ function initProductDetailInteractions() {
                 });
 
                 const price = btn.getAttribute('data-variant-price');
+                const variantId = btn.getAttribute('data-variant-id') || '';
                 const stockCount = Number(btn.getAttribute('data-variant-stock') || 0);
                 const stockText = btn.getAttribute('data-variant-stock-label') || '';
                 const name = btn.getAttribute('data-variant-name') || '';
+                const picker = document.querySelector('.quantity-picker[data-quantity-mode="add"]');
 
+                if (picker) {
+                    picker.dataset.variantId = variantId;
+                }
                 if (priceEl && price) {
                     priceEl.textContent = price;
                 }

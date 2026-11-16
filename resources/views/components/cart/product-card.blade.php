@@ -43,7 +43,17 @@
         </style>
     @endonce
     <div class="p-3">
-        <div class="d-flex gap-3">
+        <div class="d-flex align-items-start gap-3">
+            <input
+                type="checkbox"
+                class="form-check-input mt-2 flex-shrink-0"
+                value="{{ $data['cart_item_id'] }}"
+                data-cart-select-item
+                data-item-quantity="{{ $data['quantity'] }}"
+                data-item-subtotal="{{ number_format((float) $data['subtotal'], 2, '.', '') }}"
+                aria-label="{{ __('cart.select_item', ['name' => $product['name']]) }}"
+                checked
+            >
             <a href="{{ $product['url'] }}" class="flex-shrink-0">
                 @if ($product['image_url'])
                     <img
@@ -63,10 +73,20 @@
             <div class="flex-grow-1" style="min-with: 0;">
                 <a
                     href="{{ $product['url'] }}"
-                    class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-2"
+                    class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-1"
                 >
                     {{ $product['name'] }}
                 </a>
+                @if (! empty($data['variant_name']) || ! empty($product['vendor_name']))
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1 small">
+                        @if (! empty($data['variant_name']))
+                            <span class="badge bg-1 fg-body border rounded-pill">{{ __('cart.variant', ['name' => $data['variant_name']]) }}</span>
+                        @endif
+                        @if (! empty($product['vendor_name']))
+                            <span class="fg-3"><i class="bi bi-shop me-1" aria-hidden="true"></i>{{ __('cart.sold_by', ['store' => $product['vendor_name']]) }}</span>
+                        @endif
+                    </div>
+                @endif
                 <div class="small fg-3">
                     {{ __('cart.each', ['price' => '$' . number_format($product['price'], 2)]) }}
                 </div>
@@ -76,6 +96,7 @@
                             class="quantity-picker d-inline-flex align-items-center bg-white border rounded-4"
                             data-cart-quantity
                             data-product-id="{{ $product['product_id'] }}"
+                            data-variant-id="{{ $data['variant_id'] ?? '' }}"
                             data-set-cart-url="{{ route('cart.store') }}"
                         >
                             @csrf
@@ -108,6 +129,7 @@
                             type="button"
                             class="btn btn-sm cart-item-remove border-0 rounded-4 ms-1"
                             data-cart-remove="{{ $product['product_id'] }}"
+                            data-cart-variant-id="{{ $data['variant_id'] ?? '' }}"
                             aria-label="{{ __('cart.remove_product', ['name' => $product['name']]) }}"
                         >
                             <i class="bi bi-trash me-1" aria-hidden="true"></i>
