@@ -319,6 +319,9 @@
             :product="$product"
             :reviews="$reviews"
             :can-review="$canReview"
+            :rating-breakdown="$ratingBreakdown ?? []"
+            :review-filters="$reviewFilters ?? []"
+            :can-reply-to-reviews="$canReplyToReviews ?? false"
         />
 
         <section class="container my-5">

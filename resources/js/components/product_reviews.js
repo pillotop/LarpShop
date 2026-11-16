@@ -29,3 +29,33 @@ document.addEventListener('click', async (event) => {
         button.textContent = originalLabel;
     }
 });
+
+document.addEventListener('click', async (event) => {
+    const filterLink = event.target.closest('[data-review-filter]');
+    if (!filterLink) return;
+
+    const listContainer = document.querySelector('[data-product-reviews]');
+    const filterBar = filterLink.closest('[data-review-filters]');
+    if (!listContainer || !filterBar) return;
+
+    event.preventDefault();
+
+    try {
+        const response = await fetch(filterLink.dataset.reviewFilter, {
+            headers: { Accept: 'text/html' },
+        });
+        if (!response.ok) return;
+
+        listContainer.innerHTML = await response.text();
+        filterBar.querySelectorAll('[data-review-filter]').forEach((el) => {
+            const active = el === filterLink;
+            el.classList.toggle('btn-solid', active);
+            el.classList.toggle('theme-primary', active);
+            el.classList.toggle('btn-outline', !active);
+            el.classList.toggle('theme-secondary', !active);
+            el.classList.toggle('bg-white', !active);
+        });
+    } catch (_) {
+        window.location.href = filterLink.href;
+    }
+});

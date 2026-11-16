@@ -24,4 +24,11 @@ return [
     'submit' => 'Gửi đánh giá',
     'success' => 'Cảm ơn bạn! Đánh giá đã được đăng.',
     'purchase_required' => 'Bạn có thể đánh giá mỗi sản phẩm một lần sau khi thanh toán.',
+    'filter_all' => 'Tất cả',
+    'filter_commented' => 'Có nhận xét',
+    'seller_reply' => 'Phản hồi của Người bán',
+    'reply_placeholder' => 'Nhập phản hồi dành cho đánh giá này...',
+    'reply_submit' => 'Gửi phản hồi',
+    'reply_update' => 'Cập nhật phản hồi',
+    'reply_saved' => 'Đã đăng phản hồi của gian hàng.',
 ];
