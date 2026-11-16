@@ -59,7 +59,7 @@
                 action="{{ route('profile') }}{{ $anchor }}"
                 method="GET"
                 role="search"
-                class="d-flex gap-2 flex-grow-1 flex-lg-grow-0"
+                class="d-flex gap-2 flex-grow-1 lg:flex-grow-0"
                 style="min-width: min(100%, 22rem);"
             >
                 @if ($filters['filter'] !== 'all')
@@ -155,7 +155,7 @@
                         </div>
                     </div>
 
-                    <div class="text-lg-end">
+                    <div class="lg:text-end">
                         <div id="purchase-order-{{ $order->getKey() }}" class="fw-semibold">
                             {{ __('profile.purchases.order_number', ['id' => $order->getKey()]) }}
                         </div>

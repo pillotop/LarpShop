@@ -13,6 +13,7 @@ class ProductQuantityPicker {
         this.csrfToken = element.querySelector('input[name="_token"]').value;
 
         this.addToCartButton = element.querySelector('[data-add-to-cart], #add-to-cart');
+        this.buyNowButton = element.querySelector('[data-buy-now]');
         this.counter = element.querySelector('[data-quantity-counter], #counter, counter');
         this.incrementButton = element.querySelector('[data-quantity-increment], #increment, increment');
         this.decrementButton = element.querySelector('[data-quantity-decrement], #decrement, decrement');
@@ -32,6 +33,14 @@ class ProductQuantityPicker {
 
         this.addToCartButton?.addEventListener('click', () => {
             this.#send(this.addToCartUrl, this.selectsAddQuantity ? Number(this.counter.value) : 1);
+        });
+
+        this.buyNowButton?.addEventListener('click', async () => {
+            const qty = this.selectsAddQuantity ? Math.max(1, Number(this.counter?.value || 1)) : 1;
+            const ok = await this.#send(this.addToCartUrl, qty);
+            if (ok && this.buyNowButton.dataset.buyNow) {
+                window.location.href = this.buyNowButton.dataset.buyNow;
+            }
         });
 
         this.counter?.addEventListener('change', () => {
@@ -60,18 +69,18 @@ class ProductQuantityPicker {
     }
 
     async #send(url, quantity) {
-        if (this.pending || !url) return;
+        if (this.pending || !url) return false;
         if (quantity === 0) {
             this.#message('');
-            return;
+            return false;
         }
         if (!Number.isInteger(quantity) || quantity < 0) {
             this.#message(cartMessage('invalid_quantity'), true);
-            return;
+            return false;
         }
 
         this.pending = true;
-        const controls = [this.addToCartButton, this.counter, this.incrementButton, this.decrementButton]
+        const controls = [this.addToCartButton, this.buyNowButton, this.counter, this.incrementButton, this.decrementButton]
             .filter(Boolean).map(control => [control, control.disabled]);
         controls.forEach(([control]) => { control.disabled = true; });
         this.element.setAttribute('aria-busy', 'true');
@@ -84,11 +93,13 @@ class ProductQuantityPicker {
                 : await this.store.setQuantity(this.productId, quantity);
 
             this.#message(cartMessage('updated', { count: result.quantity }));
+            return true;
         } catch (error) {
             // Add is not idempotent: do not automatically retry an uncertain request.
             this.#message(error instanceof TypeError
                 ? cartMessage('uncertain')
                 : error.message, true);
+            return false;
         } finally {
             this.pending = false;
             controls.forEach(([control, disabled]) => { control.disabled = disabled; });

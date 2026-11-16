@@ -23,6 +23,23 @@
     background-color: transparent;
     flex: 0 0 clamp(12rem, 30vw, 18rem);
     transition: transform 250ms ease;
+    cursor: pointer;
+}
+
+.broad-select .selector .selector-category-list .selector-item-pill {
+    border-radius: 12px 0 12px 0;
+    transition: background 200ms ease, color 200ms ease, box-shadow 200ms ease;
+}
+
+.broad-select .selector .selector-category-list .selector-item.is-active .selector-item-pill {
+    color: white;
+    background: conic-gradient(from 45deg at 85% 96%, #f53003 0%, #49190B 6.3%, #1F4C5A 22.1%, #182E35 35%, #362710 45.6%, rgb(255,0,55) 58%, #F5024F 62.6%, #FFC9CA 70.6%, #FF6941 75.5%, #FFA3A7 87.1%, #FFA688 93.2%, #f53003 100%);
+    box-shadow: 0 6px 18px rgb(0 0 0 / 18%);
+}
+
+.broad-select .selector .selector-category-list .selector-item:not(.is-active) .selector-item-pill {
+    color: var(--fg-body, #111111);
+    background: rgba(128, 128, 128, 0.12);
 }
 
 .broad-select .selector .selector-category-list .selector-item:hover,

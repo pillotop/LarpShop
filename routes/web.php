@@ -89,6 +89,7 @@ Route::get('/vendors/{vendor}', [VendorStorefrontController::class, 'show'])
     ->name('vendors.show');
 
 Route::post('/products/{product}/images', [ProductImageController::class, 'store'])
+    ->middleware(['auth', 'vendor'])
     ->name('products.images.store');
 
 require __DIR__.'/static.php';

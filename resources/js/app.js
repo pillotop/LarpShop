@@ -4,6 +4,7 @@ import './components/cart_view.js';
 import './components/locale_panels.js';
 import './components/confirmation_forms.js';
 import './components/auth_form.js';
+import './components/storefront_ux.js';
 
 // Existing Blade event handlers use the Bootstrap API through this global.
 window.bootstrap = bootstrap;

@@ -25,9 +25,7 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            if ($verification->isRequired() && $user->email_verified_at === null) {
+            if ($verification->isRequired() && ($user = Auth::guard(null)->user()) && $user->email_verified_at === null) {
                 Auth::logout();
 
                 try {

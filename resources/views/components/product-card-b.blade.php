@@ -32,6 +32,14 @@
                 type="checkbox"
                 class="product-card-compare-checkbox"
                 value="{{ $product->product_id }}"
+                data-compare-id="{{ $product->product_id }}"
+                data-compare-name="{{ $product->name }}"
+                data-compare-price="${{ number_format($product->price ?? 0, 2) }}"
+                data-compare-image="{{ $imagePath }}"
+                data-compare-url="{{ route('products.show', ['product' => $product->product_id, 'slug' => $product->slug]) }}"
+                data-compare-category="{{ $product->category?->name ?? '—' }}"
+                data-compare-rating="{{ number_format((float) ($product->average_rating ?? 0), 1) }} ★ ({{ (int) ($product->total_reviews ?? 0) }})"
+                data-compare-stock="{{ $inStock ? __('products.available_for_delivery') : __('products.out_of_stock') }}"
                 aria-label="{{ __('products.compare') }} {{ $product->name }}"
             >
             <span>{{ __('products.compare') }}</span>
@@ -101,7 +109,7 @@
                 >
                     @csrf
                     <button
-                        id="add-to-cart"
+                        data-add-to-cart
                         class="product-card-cart-btn"
                         type="button"
                         aria-label="{{ __('products.add_to_cart') }}: {{ $product->name }}"

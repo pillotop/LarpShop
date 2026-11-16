@@ -15,6 +15,6 @@ class ProductCapabilityComposer
     public function compose(View $view): void
     {
         $view->with('cart', $this->carts->getCartData());
-        $view->with('productCategories', Category::query()->get());
+        $view->with('productCategories', Category::query()->active()->orderBy('name')->get());
     }
 }
