@@ -68,7 +68,7 @@
                         <div class="col-12 h-75">
                             <x-category-banner
                                 :title="__('products.banners.home_living.title')"
-                                slug="home-living"
+                                slug="home-and-living"
                                 image="/images/aestheticjourney-cream-1x1.jpg"
                                 :alt="__('products.banners.home_living.alt')"
                                 ratio="ratio-1x1"

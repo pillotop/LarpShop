@@ -109,7 +109,7 @@
                 >
                     @csrf
                     <button
-                        id="add-to-cart"
+                        data-add-to-cart
                         class="product-card-cart-btn"
                         type="button"
                         aria-label="{{ __('products.add_to_cart') }}: {{ $product->name }}"

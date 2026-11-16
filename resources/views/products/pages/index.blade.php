@@ -97,8 +97,7 @@
                     data-bs-target="#side-panel"
                     data-side-panel-target="#filter-panel-template"
                 >
-                    <i class="bi bi-Sliders"></i>
-                    <i class="bi bi-funnel"></i> {{ __('products.filters.title') }}
+                    <i class="bi bi-funnel" aria-hidden="true"></i> {{ __('products.filters.title') }}
                     @if ($hasActiveFilters)
                         <span class="badge bg-primary rounded-0 ms-1">{{ __('products.filters.active') }}</span>
                     @endif

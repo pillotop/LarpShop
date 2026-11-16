@@ -30,9 +30,20 @@
                     </svg>
                     <template data-dropdown-template="categories">
                         <div class="category-dropdown-menu rounded-5 shadow">
-                            @foreach ($productCategories as $category)
-                                <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
-                            @endforeach
+                            @php
+                                $topCategories = collect($productCategories)->whereNull('parent_id');
+                                $childGroups = collect($productCategories)->whereNotNull('parent_id')->groupBy('parent_id');
+                            @endphp
+                            @forelse ($topCategories as $category)
+                                <a href="{{ route('categories.show', $category->slug) }}" class="fw-semibold">{{ $category->name }}</a>
+                                @foreach ($childGroups->get($category->category_id, collect()) as $child)
+                                    <a href="{{ route('categories.show', $child->slug) }}" class="ps-4 small fg-3">{{ $child->name }}</a>
+                                @endforeach
+                            @empty
+                                @foreach ($productCategories as $category)
+                                    <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
+                                @endforeach
+                            @endforelse
                         </div>
                     </template>
                 </button>

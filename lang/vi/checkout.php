@@ -5,6 +5,7 @@ return [
     'order' => 'Đơn hàng của bạn',
     'summary' => 'Tóm tắt đơn hàng',
     'delivery_price' => 'Phí giao hàng',
+    'free' => 'Miễn phí',
     'total' => 'Tổng cộng',
     'privacy' => 'Chính sách quyền riêng tư',
     'checkout' => 'Thanh toán',

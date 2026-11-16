@@ -61,7 +61,7 @@
             />
 
         <button
-            id="add-to-cart"
+            data-add-to-cart
             aria-label="{{ __('products.add_to_cart') }}"
             class="overlay-btn rounded-circle py-2 px-2"
             type="button"

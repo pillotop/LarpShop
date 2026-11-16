@@ -5,6 +5,7 @@ return [
     'order' => 'Your order',
     'summary' => 'Order summary',
     'delivery_price' => 'Delivery price',
+    'free' => 'Free',
     'total' => 'Total',
     'privacy' => 'Privacy Policy',
     'checkout' => 'Check out',

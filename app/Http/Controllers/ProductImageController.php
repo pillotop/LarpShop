@@ -10,6 +10,11 @@ class ProductImageController extends Controller
 {
     public function store(Request $request, Product $product)
     {
+        abort_unless(
+            $request->user()?->vendors()->where('vendor_id', $product->vendor_id)->exists(),
+            403,
+        );
+
         $validated = $request->validate([
             'image' => ['required', 'image', 'max:5120'],
             'alt_text' => ['nullable', 'string', 'max:255'],

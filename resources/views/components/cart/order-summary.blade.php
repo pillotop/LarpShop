@@ -1,15 +1,16 @@
 @php
     $quantity = $cartData['products']->sum('quantity');
-    $subtotal = $cartData['products']->sum('subtotal');
+    $subtotal = (float) $cartData['products']->sum('subtotal');
+    $formattedSubtotal = '$' . number_format($subtotal, 2);
 
     $priceBreakdownRows = [
         [
             'left'  => trans_choice('checkout.summary_products', $quantity, ['count' => $quantity]),
-            'right' => '$' . $subtotal,
+            'right' => $formattedSubtotal,
         ],
         [
             'left' => __('checkout.delivery_price'),
-            'right' => '',
+            'right' => __('checkout.free'),
         ],
     ];
 
@@ -17,12 +18,12 @@
         [
             'class' => 'price-breakdown-subtotal',
             'label' => __('cart.sort.subtotal'),
-            'value' => $subtotal,
+            'value' => $formattedSubtotal,
         ],
         [
             'class' => 'price-breakdown-total',
             'label' => __('checkout.total'),
-            'value' => ''
+            'value' => $formattedSubtotal,
         ]
     ]
 @endphp
@@ -53,7 +54,7 @@
     </dl>
     <span class="small">
         {{ __('checkout.privacy_intro') }}
-        <a href="#">{{ __('checkout.privacy') }}</a>
+        <a href="{{ route('privacy') }}">{{ __('checkout.privacy') }}</a>
     </span>
     <form action="{{ route('checkout.store') }}" method="POST" class="my-3">
         @csrf
