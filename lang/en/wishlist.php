@@ -13,4 +13,5 @@ return [
     'out_of_stock' => 'Out of stock',
     'saved' => 'Product saved to your wishlist.',
     'removed' => 'Product removed from your wishlist.',
+    'error' => 'Could not update your wishlist. Please try again.',
 ];

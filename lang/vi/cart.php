@@ -54,6 +54,8 @@ return [
         'updating' => 'Đang cập nhật giỏ hàng…',
         'unavailable' => 'Giỏ hàng chưa khả dụng. Vui lòng tải lại trang.',
         'updated' => 'Đã cập nhật giỏ hàng. Bạn có :count sản phẩm này trong giỏ.',
+        'added_toast' => 'Đã thêm vào giỏ hàng.',
+        'view_cart' => 'Xem giỏ hàng',
         'unconfirmed' => 'Chưa thể xác nhận cập nhật giỏ hàng. Tải lại trang trước khi thử lại.',
         'unreadable' => 'Không thể đọc phản hồi giỏ hàng. Tải lại trang trước khi thử lại.',
         'interrupted' => 'Kết nối bị gián đoạn. Tải lại trang để kiểm tra giỏ hàng trước khi thử lại.',

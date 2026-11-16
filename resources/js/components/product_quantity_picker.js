@@ -37,7 +37,9 @@ class ProductQuantityPicker {
 
         this.buyNowButton?.addEventListener('click', async () => {
             const qty = this.selectsAddQuantity ? Math.max(1, Number(this.counter?.value || 1)) : 1;
+            this.buyNowButton.dataset.pendingRedirect = '1';
             const ok = await this.#send(this.addToCartUrl, qty);
+            delete this.buyNowButton.dataset.pendingRedirect;
             if (ok && this.buyNowButton.dataset.buyNow) {
                 window.location.href = this.buyNowButton.dataset.buyNow;
             }
@@ -93,6 +95,13 @@ class ProductQuantityPicker {
                 : await this.store.setQuantity(this.productId, quantity);
 
             this.#message(cartMessage('updated', { count: result.quantity }));
+            if (url === this.addToCartUrl && !this.buyNowButton?.dataset.pendingRedirect) {
+                window.larpToast?.(cartMessage('added_toast') || cartMessage('updated', { count: result.quantity }), {
+                    type: 'success',
+                    actionLabel: cartMessage('view_cart') || '',
+                    actionUrl: cartMessage('cart_url') || '/cart/detail',
+                });
+            }
             return true;
         } catch (error) {
             // Add is not idempotent: do not automatically retry an uncertain request.

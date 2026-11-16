@@ -54,6 +54,8 @@ return [
         'updating' => 'Updating cart…',
         'unavailable' => 'Cart is unavailable. Please refresh the page.',
         'updated' => 'Cart updated. This product has :count item(s) in your cart.',
+        'added_toast' => 'Added to your cart.',
+        'view_cart' => 'View cart',
         'unconfirmed' => 'Could not confirm the cart update. Refresh before trying again.',
         'unreadable' => 'Could not read the cart response. Refresh before trying again.',
         'interrupted' => 'Connection interrupted. Refresh to check your cart before trying again.',

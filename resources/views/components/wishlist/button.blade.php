@@ -13,6 +13,16 @@
         action="{{ route($saved ? 'wishlist.destroy' : 'wishlist.store', $product) }}"
         method="POST"
         class="d-inline-flex"
+        data-wishlist-form
+        data-product-id="{{ $product->getKey() }}"
+        data-store-url="{{ route('wishlist.store', $product) }}"
+        data-destroy-url="{{ route('wishlist.destroy', $product) }}"
+        data-saved="{{ $saved ? '1' : '0' }}"
+        data-save-aria="{{ __('wishlist.save') }}: {{ $product->name }}"
+        data-remove-aria="{{ __('wishlist.remove') }}: {{ $product->name }}"
+        data-save-text="{{ __('wishlist.save') }}"
+        data-remove-text="{{ __('wishlist.remove') }}"
+        data-compact="{{ $compact ? '1' : '0' }}"
     >
         @csrf
         @if ($saved)
@@ -30,7 +40,7 @@
                 class="bi {{ $saved ? 'bi-heart-fill fg-danger' : 'bi-heart' }}"
                 aria-hidden="true"
             ></i>
-            <span @class(['visually-hidden' => $compact])>{{ $label }}</span>
+            <span @class(['visually-hidden' => $compact]) data-wishlist-label>{{ $label }}</span>
         </button>
     </form>
 @else

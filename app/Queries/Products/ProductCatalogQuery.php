@@ -4,6 +4,7 @@ namespace App\Queries\Products;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductCatalogQuery
@@ -91,7 +92,24 @@ class ProductCatalogQuery
         return $query->limit($limit)->get();
     }
 
-    public function searchProducts(?string $keyword = null, array $filters = []): Collection
+    public function suggestProducts(string $keyword, int $limit = 6): Collection
+    {
+        return Product::query()
+            ->approved()
+            ->active()
+            ->with(['category', 'images'])
+            ->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%'.$keyword.'%')
+                    ->orWhere('description', 'like', '%'.$keyword.'%');
+            })
+            ->orderByRaw('CASE WHEN name LIKE ? THEN 0 ELSE 1 END', [$keyword.'%'])
+            ->orderByDesc('stock')
+            ->orderByDesc('product_id')
+            ->limit(max(1, min($limit, 10)))
+            ->get();
+    }
+
+    public function searchProducts(?string $keyword = null, array $filters = [], int $perPage = 12): LengthAwarePaginator
     {
         $query = Product::query()
             ->approved()
@@ -145,6 +163,6 @@ class ProductCatalogQuery
             default => $query->orderByDesc('created_at')->orderByDesc('product_id'),
         };
 
-        return $query->limit(100)->get();
+        return $query->paginate(max(1, $perPage))->withQueryString();
     }
 }

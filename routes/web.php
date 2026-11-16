@@ -43,6 +43,9 @@ Route::get('/', [HomeController::class, 'index'])
 Route::get('/products', [ProductSearchController::class, 'index'])
     ->name('products.index');
 
+Route::get('/products/suggestions', [ProductSearchController::class, 'suggestions'])
+    ->name('products.suggestions');
+
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])
     ->name('categories.show');
 Breadcrumbs::for('category', function (BreadcrumbTrail $trail, Category $category) {

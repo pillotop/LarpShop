@@ -1,5 +1,74 @@
 const COMPARE_STORAGE_KEY = 'larpshop_compare_v1';
+const RECENTLY_VIEWED_KEY = 'larpshop_recently_viewed_v1';
 const MAX_COMPARE_ITEMS = 4;
+const MAX_RECENTLY_VIEWED = 8;
+
+function loadStorefrontUxMessages() {
+    const el = document.getElementById('storefront-ux-messages');
+    if (!el) return {};
+    try {
+        return JSON.parse(el.textContent || '{}');
+    } catch {
+        return {};
+    }
+}
+
+function showStorefrontToast(message, { type = 'success', actionLabel = '', actionUrl = '', duration = 3500 } = {}) {
+    if (!message) return;
+
+    let container = document.getElementById('larp-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'larp-toast-container';
+        container.className = 'larp-toast-container';
+        container.setAttribute('aria-live', 'polite');
+        container.setAttribute('aria-atomic', 'true');
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `larp-toast d-flex align-items-center justify-content-between gap-2 ${type === 'danger' ? 'is-danger' : ''}`;
+    toast.setAttribute('role', 'status');
+
+    const left = document.createElement('div');
+    left.className = 'd-flex align-items-center gap-2 small fw-semibold';
+    const icon = document.createElement('i');
+    icon.className = type === 'danger' ? 'bi bi-exclamation-circle-fill text-danger' : 'bi bi-check-circle-fill text-success';
+    icon.setAttribute('aria-hidden', 'true');
+    const text = document.createElement('span');
+    text.textContent = message;
+    left.append(icon, text);
+
+    const right = document.createElement('div');
+    right.className = 'd-flex align-items-center gap-2 flex-shrink-0';
+    if (actionLabel && actionUrl) {
+        const link = document.createElement('a');
+        link.href = actionUrl;
+        link.className = 'btn btn-sm btn-outline theme-primary rounded-pill px-2 py-1 text-nowrap';
+        link.textContent = actionLabel;
+        right.appendChild(link);
+    }
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'btn-close';
+    closeBtn.style.fontSize = '0.65rem';
+    closeBtn.addEventListener('click', () => toast.remove());
+    right.appendChild(closeBtn);
+
+    toast.append(left, right);
+    container.appendChild(toast);
+
+    while (container.children.length > 3) {
+        container.firstElementChild?.remove();
+    }
+
+    window.setTimeout(() => {
+        toast.remove();
+    }, duration);
+}
+
+window.larpToast = showStorefrontToast;
 
 function loadCompareMessages() {
     const el = document.getElementById('compare-messages');
@@ -453,9 +522,304 @@ function initProductDetailInteractions() {
     }
 }
 
+function initAjaxWishlist() {
+    const uxMessages = loadStorefrontUxMessages();
+
+    document.addEventListener('submit', async (event) => {
+        const form = event.target.closest('form[data-wishlist-form]');
+        if (!form) return;
+
+        event.preventDefault();
+        if (form.dataset.pending === '1') return;
+        form.dataset.pending = '1';
+
+        const button = form.querySelector('button[type="submit"]');
+        const icon = form.querySelector('i.bi');
+        const labelSpan = form.querySelector('[data-wishlist-label]');
+        if (button) button.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: new FormData(form),
+            });
+
+            if (response.status === 401) {
+                const authTrigger = document.getElementById('auth-drawer-trigger');
+                if (authTrigger) authTrigger.click();
+                return;
+            }
+
+            const data = await response.json().catch(() => null);
+            if (!response.ok || !data?.success) {
+                throw new Error(uxMessages.wishlist_error || 'Failed to update wishlist.');
+            }
+
+            const saved = Boolean(data.saved);
+            form.dataset.saved = saved ? '1' : '0';
+            form.action = data.action_url || (saved ? form.dataset.destroyUrl : form.dataset.storeUrl);
+
+            let methodInput = form.querySelector('input[name="_method"]');
+            if (saved) {
+                if (!methodInput) {
+                    methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+                    form.appendChild(methodInput);
+                }
+            } else if (methodInput) {
+                methodInput.remove();
+            }
+
+            if (icon) {
+                icon.className = saved ? 'bi bi-heart-fill fg-danger' : 'bi bi-heart';
+            }
+
+            if (button) {
+                const nextAria = saved ? form.dataset.removeAria : form.dataset.saveAria;
+                const nextTitle = saved ? form.dataset.removeText : form.dataset.saveText;
+                button.setAttribute('aria-pressed', saved ? 'true' : 'false');
+                if (nextAria) button.setAttribute('aria-label', nextAria);
+                if (nextTitle) button.setAttribute('title', nextTitle);
+            }
+
+            if (labelSpan) {
+                labelSpan.textContent = saved ? (form.dataset.removeText || '') : (form.dataset.saveText || '');
+            }
+
+            showStorefrontToast(data.message || '', { type: 'success' });
+        } catch (error) {
+            showStorefrontToast(error.message || uxMessages.wishlist_error || 'Failed to update wishlist.', { type: 'danger' });
+        } finally {
+            delete form.dataset.pending;
+            if (button) button.disabled = false;
+        }
+    });
+}
+
+function initSearchAutocomplete() {
+    const uxMessages = loadStorefrontUxMessages();
+    const suggestionsUrl = uxMessages.suggestions_url;
+    const searchUrl = uxMessages.search_url || '/products';
+    if (!suggestionsUrl) return;
+
+    const searchWrap = document.querySelector('#search-bar .search-input-wrap');
+    const input = searchWrap?.querySelector('input[name="q"]');
+    if (!searchWrap || !input) return;
+
+    const menu = document.createElement('div');
+    menu.className = 'search-suggestions-menu';
+    menu.hidden = true;
+    searchWrap.appendChild(menu);
+
+    let timer = null;
+    let activeController = null;
+
+    function hideMenu() {
+        menu.hidden = true;
+        menu.replaceChildren();
+    }
+
+    function renderSuggestions(keyword, items) {
+        menu.replaceChildren();
+        if (!Array.isArray(items) || items.length === 0) {
+            hideMenu();
+            return;
+        }
+
+        items.forEach((item) => {
+            const link = document.createElement('a');
+            link.href = item.url;
+            link.className = 'search-suggestion-item';
+
+            const img = document.createElement('img');
+            img.src = item.image_url;
+            img.alt = '';
+            img.className = 'rounded-2 border object-fit-cover flex-shrink-0';
+            img.style.width = '40px';
+            img.style.height = '40px';
+
+            const info = document.createElement('div');
+            info.className = 'flex-grow-1 min-w-0';
+            const title = document.createElement('div');
+            title.className = 'small fw-semibold text-truncate';
+            title.textContent = item.name;
+            const meta = document.createElement('div');
+            meta.className = 'small text-muted text-truncate';
+            meta.textContent = item.category || '';
+            info.append(title, meta);
+
+            const price = document.createElement('span');
+            price.className = 'small fw-bold text-primary flex-shrink-0';
+            price.textContent = item.price;
+
+            link.append(img, info, price);
+            menu.appendChild(link);
+        });
+
+        const footerLink = document.createElement('a');
+        const fullUrl = new URL(searchUrl, window.location.origin);
+        fullUrl.searchParams.set('q', keyword);
+        footerLink.href = fullUrl.toString();
+        footerLink.className = 'search-suggestion-item justify-content-center small fw-semibold text-primary border-bottom-0 bg-light';
+        footerLink.textContent = (uxMessages.suggestions_for || 'Search all results for ":query"').replace(':query', keyword);
+        menu.appendChild(footerLink);
+
+        menu.hidden = false;
+    }
+
+    input.addEventListener('input', () => {
+        const keyword = input.value.trim();
+        window.clearTimeout(timer);
+
+        if (keyword.length < 2) {
+            activeController?.abort();
+            hideMenu();
+            return;
+        }
+
+        timer = window.setTimeout(async () => {
+            activeController?.abort();
+            activeController = new AbortController();
+            try {
+                const url = new URL(suggestionsUrl, window.location.origin);
+                url.searchParams.set('q', keyword);
+                const res = await fetch(url.toString(), {
+                    signal: activeController.signal,
+                    headers: { 'Accept': 'application/json' },
+                });
+                const payload = await res.json().catch(() => null);
+                if (res.ok && payload?.items) {
+                    renderSuggestions(keyword, payload.items);
+                }
+            } catch (_) {
+                // Ignore aborted or transient autocomplete errors
+            }
+        }, 220);
+    });
+
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            hideMenu();
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!searchWrap.contains(event.target)) {
+            hideMenu();
+        }
+    });
+}
+
+function initRecentlyViewed() {
+    const uxMessages = loadStorefrontUxMessages();
+
+    function readRecent() {
+        try {
+            const raw = localStorage.getItem(RECENTLY_VIEWED_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    }
+
+    function writeRecent(items) {
+        try {
+            localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(items.slice(0, MAX_RECENTLY_VIEWED)));
+        } catch {
+            // Ignore quota errors
+        }
+    }
+
+    const currentScript = document.getElementById('recently-viewed-product');
+    if (currentScript) {
+        try {
+            const current = JSON.parse(currentScript.textContent || 'null');
+            if (current && current.id) {
+                const filtered = readRecent().filter((item) => String(item.id) !== String(current.id));
+                filtered.unshift(current);
+                writeRecent(filtered);
+            }
+        } catch {
+            // Ignore invalid JSON payload
+        }
+    }
+
+    const section = document.getElementById('recently-viewed-section');
+    if (!section) return;
+
+    const currentProductId = section.getAttribute('data-current-product-id');
+    const items = readRecent().filter((item) => !currentProductId || String(item.id) !== String(currentProductId));
+    if (items.length === 0) {
+        section.hidden = true;
+        return;
+    }
+
+    section.replaceChildren();
+
+    const header = document.createElement('div');
+    header.className = 'd-flex align-items-center justify-content-between gap-2 mb-3';
+    const heading = document.createElement('h2');
+    heading.className = 'h4 fw-bold mb-0';
+    heading.textContent = uxMessages.recently_viewed_title || 'Recently Viewed';
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'btn btn-sm btn-outline theme-secondary rounded-pill px-3';
+    clearBtn.textContent = uxMessages.recently_viewed_clear || 'Clear history';
+    clearBtn.addEventListener('click', () => {
+        writeRecent([]);
+        section.hidden = true;
+        section.replaceChildren();
+    });
+    header.append(heading, clearBtn);
+
+    const track = document.createElement('div');
+    track.className = 'd-flex flex-nowrap gap-3 overflow-x-auto pb-2';
+
+    items.forEach((item) => {
+        const card = document.createElement('a');
+        card.href = item.url;
+        card.className = 'card recently-viewed-card border rounded-4 overflow-hidden text-decoration-none fg-body bg-white shadow-xs';
+
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.name;
+        img.loading = 'lazy';
+        img.className = 'object-fit-cover w-100';
+        img.style.height = '150px';
+
+        const body = document.createElement('div');
+        body.className = 'p-3';
+        const title = document.createElement('div');
+        title.className = 'fw-semibold small text-truncate mb-1';
+        title.textContent = item.name;
+        const price = document.createElement('div');
+        price.className = 'fw-bold fg-primary small';
+        price.textContent = item.price;
+        body.append(title, price);
+
+        card.append(img, body);
+        track.appendChild(card);
+    });
+
+    section.append(header, track);
+    section.hidden = false;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initAdvancedSearchButton();
     initHomepageBroadSelect();
     initProductCompare();
     initProductDetailInteractions();
+    initAjaxWishlist();
+    initSearchAutocomplete();
+    initRecentlyViewed();
 });

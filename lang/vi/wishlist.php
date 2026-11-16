@@ -13,4 +13,5 @@ return [
     'out_of_stock' => 'Hết hàng',
     'saved' => 'Đã thêm sản phẩm vào danh sách yêu thích.',
     'removed' => 'Đã xóa sản phẩm khỏi danh sách yêu thích.',
+    'error' => 'Không thể cập nhật danh sách yêu thích. Vui lòng thử lại.',
 ];
