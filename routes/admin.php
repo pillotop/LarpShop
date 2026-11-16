@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminReviewModerationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVendorController;
+use App\Http\Controllers\Admin\AdminVoucherController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -49,4 +50,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // UC-45: Platform Overview Analytics Reports
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+
+    // Platform & Store Vouchers Management
+    Route::get('/vouchers', [AdminVoucherController::class, 'index'])->name('vouchers.index');
+    Route::post('/vouchers', [AdminVoucherController::class, 'store'])->name('vouchers.store');
+    Route::patch('/vouchers/{voucher}/toggle', [AdminVoucherController::class, 'toggle'])->whereNumber('voucher')->name('vouchers.toggle');
+    Route::delete('/vouchers/{voucher}', [AdminVoucherController::class, 'destroy'])->whereNumber('voucher')->name('vouchers.destroy');
 });

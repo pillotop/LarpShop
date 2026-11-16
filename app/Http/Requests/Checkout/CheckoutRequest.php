@@ -42,6 +42,11 @@ class CheckoutRequest extends FormRequest
                 'string',
                 Rule::in(['home_delivery', 'pickup', 'express']),
             ],
+            'voucher_code' => [
+                'nullable',
+                'string',
+                'max:40',
+            ],
         ];
     }
 }

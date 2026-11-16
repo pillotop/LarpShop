@@ -22,6 +22,7 @@ return [
     'store_orders' => 'Đơn hàng của gian hàng',
     'my_categories' => 'Danh mục của tôi',
     'store_reports' => 'Báo cáo gian hàng',
+    'store_vouchers' => 'Mã giảm giá của gian hàng',
     'admin_title' => 'Quản trị hệ thống',
     'pending_applications' => 'Đơn chờ duyệt',
     'close' => 'Đóng',

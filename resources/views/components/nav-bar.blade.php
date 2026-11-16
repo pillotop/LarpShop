@@ -192,6 +192,12 @@
                                     <span>{{ __('common.store_reports') }}</span>
                                 </a>
 
+
+                                <a class="menu-item rounded-4 py-2 d-flex align-items-center gap-2" href="{{ route('vendor.vouchers.index') }}">
+                                    <i class="bi bi-ticket-perforated"></i>
+                                    <span>{{ __('common.store_vouchers') }}</span>
+                                </a>
+
                         @endif
                         <hr class="menu-divider my-1">
 

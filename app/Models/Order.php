@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'user_id',
     'total_amount',
+    'subtotal_amount',
+    'discount_amount',
+    'voucher_id',
+    'voucher_code',
     'status',
     'shipping_method',
     'shipping_fee',
@@ -41,10 +45,17 @@ class Order extends Model
         return $this->hasMany(OrderAddress::class, 'order_id', 'order_id');
     }
 
+    public function voucher(): BelongsTo
+    {
+        return $this->belongsTo(Voucher::class, 'voucher_id', 'voucher_id');
+    }
+
     public function casts(): array
     {
         return [
             'total_amount' => 'decimal:2',
+            'subtotal_amount' => 'decimal:2',
+            'discount_amount' => 'decimal:2',
             'shipping_fee' => 'decimal:2',
             'status' => OrderStatus::class,
             'expires_at' => 'datetime',

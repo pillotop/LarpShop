@@ -81,11 +81,16 @@ class CheckoutController extends Controller
             ? array_values(array_unique(array_map('intval', (array) $request->input('selected_cart_item_ids', []))))
             : null;
 
+        $voucherCode = $request->filled('voucher_code')
+            ? trim((string) $request->input('voucher_code'))
+            : null;
+
         $order = $orders->create(
             $request->user(),
             $request->integer('address_id'),
             $selectedIds,
             $request->string('shipping_method', 'home_delivery')->toString(),
+            $voucherCode,
         );
 
         if ($request->expectsJson()) {

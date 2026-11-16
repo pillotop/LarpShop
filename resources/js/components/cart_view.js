@@ -23,6 +23,75 @@ import { cartMessage } from './cart_messages.js';
     const sortFields = new Set(['added', 'name', 'price', 'quantity', 'subtotal', 'stock']);
     let selectedIds = null;
     let selectedShippingMethod = 'home_delivery';
+    let appliedVoucher = null;
+
+    async function previewVoucherCode(code) {
+        if (!page) return;
+        const applyBtn = page.querySelector('[data-voucher-apply-btn]');
+        const input = page.querySelector('[data-voucher-input]');
+        const removeBtn = page.querySelector('[data-voucher-remove-btn]');
+        const feedback = page.querySelector('[data-voucher-feedback]');
+        const previewUrl = applyBtn?.dataset.previewUrl;
+        const trimmed = (code ?? input?.value ?? '').trim().toUpperCase();
+
+        if (!previewUrl || !trimmed) return;
+
+        if (applyBtn) applyBtn.disabled = true;
+        if (feedback) {
+            feedback.classList.add('d-none');
+            feedback.classList.remove('fg-danger', 'fg-success');
+            feedback.textContent = '';
+        }
+
+        try {
+            const selectedArr = selectedIds ? [...selectedIds].map(Number) : [];
+            const response = await fetch(previewUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+                body: JSON.stringify({
+                    voucher_code: trimmed,
+                    selected_cart_item_ids: selectedArr.length > 0 ? selectedArr : undefined,
+                    shipping_method: selectedShippingMethod,
+                }),
+            });
+
+            const data = await response.json().catch(() => null);
+            if (!response.ok || !data?.success) {
+                const msg = Object.values(data?.errors || {}).flat()[0] || data?.message || 'Invalid voucher code.';
+                throw new Error(msg);
+            }
+
+            appliedVoucher = {
+                code: data.voucher.code,
+                discount: Number(data.voucher.discount_amount || 0),
+                title: data.voucher.title || '',
+            };
+            if (input) input.value = appliedVoucher.code;
+            if (removeBtn) removeBtn.classList.remove('d-none');
+            if (feedback) {
+                feedback.textContent = data.message || `${appliedVoucher.code} applied.`;
+                feedback.classList.remove('d-none', 'fg-danger');
+                feedback.classList.add('fg-success');
+            }
+            window.larpToast?.(data.message || `${appliedVoucher.code} applied.`, { type: 'success' });
+        } catch (error) {
+            appliedVoucher = null;
+            if (removeBtn) removeBtn.classList.add('d-none');
+            if (feedback) {
+                feedback.textContent = error.message;
+                feedback.classList.remove('d-none', 'fg-success');
+                feedback.classList.add('fg-danger');
+            }
+        } finally {
+            if (applyBtn) applyBtn.disabled = false;
+            syncCartSelection(page);
+        }
+    }
 
     function syncCartSelection(root) {
         if (!root) return;
@@ -59,17 +128,23 @@ import { cartMessage } from './cart_messages.js';
         }
         const selectedOption = shippingSelect?.selectedOptions?.[0];
         const shippingFee = activeIds.length > 0 ? Number(selectedOption?.dataset.fee || 0) : 0;
-        const grandTotal = checkedSubtotal + shippingFee;
+        const discountAmount = activeIds.length > 0 && appliedVoucher ? Number(appliedVoucher.discount || 0) : 0;
+        const grandTotal = Math.max(0, checkedSubtotal + shippingFee - discountAmount);
 
         const summary = root.querySelector('.order-summary');
         if (summary) {
             const freeLabel = summary.dataset.freeLabel || 'Free';
             const prodAmount = summary.querySelector('[data-summary-products-amount]');
             const shipEl = summary.querySelector('[data-summary-shipping]');
+            const discountRow = summary.querySelector('[data-summary-discount-row]');
+            const discountCodeEl = summary.querySelector('[data-summary-voucher-code]');
+            const discountEl = summary.querySelector('[data-summary-discount]');
             const subEl = summary.querySelector('[data-summary-subtotal]');
             const totalEl = summary.querySelector('[data-summary-total]');
             const inputsContainer = summary.querySelector('[data-checkout-selected-inputs]');
             const submitBtn = summary.querySelector('[data-checkout-submit]');
+            const voucherInput = summary.querySelector('[data-voucher-input]');
+            const voucherRemoveBtn = summary.querySelector('[data-voucher-remove-btn]');
             const addrSelect = summary.querySelector('#cart-shipping-address');
             const hasAddress = addrSelect && !addrSelect.closest('[hidden]') && addrSelect.options.length > 0;
 
@@ -77,6 +152,22 @@ import { cartMessage } from './cart_messages.js';
             if (shipEl) shipEl.textContent = shippingFee > 0 ? `$${amount.format(shippingFee)}` : freeLabel;
             if (subEl) subEl.textContent = `$${amount.format(checkedSubtotal)}`;
             if (totalEl) totalEl.textContent = `$${amount.format(grandTotal)}`;
+
+            if (discountRow) {
+                if (appliedVoucher && discountAmount > 0) {
+                    discountRow.classList.remove('d-none');
+                    if (discountCodeEl) discountCodeEl.textContent = appliedVoucher.code;
+                    if (discountEl) discountEl.textContent = `-$${amount.format(discountAmount)}`;
+                } else {
+                    discountRow.classList.add('d-none');
+                }
+            }
+            if (voucherInput && appliedVoucher) {
+                voucherInput.value = appliedVoucher.code;
+            }
+            if (voucherRemoveBtn) {
+                voucherRemoveBtn.classList.toggle('d-none', !appliedVoucher);
+            }
 
             if (inputsContainer) {
                 inputsContainer.replaceChildren();
@@ -181,6 +272,7 @@ import { cartMessage } from './cart_messages.js';
             const itemBoxes = Array.from(page?.querySelectorAll('[data-cart-select-item]') || []);
             selectedIds = checked ? new Set(itemBoxes.map(cb => String(cb.value))) : new Set();
             syncCartSelection(page);
+            if (appliedVoucher) previewVoucherCode(appliedVoucher.code);
             return;
         }
         if (event.target.matches('[data-cart-select-item]')) {
@@ -188,11 +280,13 @@ import { cartMessage } from './cart_messages.js';
             if (event.target.checked) selectedIds.add(String(event.target.value));
             else selectedIds.delete(String(event.target.value));
             syncCartSelection(page);
+            if (appliedVoucher) previewVoucherCode(appliedVoucher.code);
             return;
         }
         if (event.target.matches('[data-shipping-method-select]')) {
             selectedShippingMethod = event.target.value || 'home_delivery';
             syncCartSelection(page);
+            if (appliedVoucher) previewVoucherCode(appliedVoucher.code);
             return;
         }
         if (!event.target.matches('[data-cart-sort]') || !sortFields.has(event.target.value)) return;
@@ -200,6 +294,29 @@ import { cartMessage } from './cart_messages.js';
         applySort();
     });
     document.addEventListener('click', async event => {
+        const applyVoucher = event.target.closest('[data-voucher-apply-btn]');
+        if (applyVoucher) {
+            previewVoucherCode();
+            return;
+        }
+        const chipVoucher = event.target.closest('[data-voucher-chip]');
+        if (chipVoucher) {
+            previewVoucherCode(chipVoucher.dataset.voucherChip);
+            return;
+        }
+        const removeVoucher = event.target.closest('[data-voucher-remove-btn]');
+        if (removeVoucher) {
+            appliedVoucher = null;
+            const input = page?.querySelector('[data-voucher-input]');
+            const feedback = page?.querySelector('[data-voucher-feedback]');
+            if (input) input.value = '';
+            if (feedback) {
+                feedback.textContent = '';
+                feedback.classList.add('d-none');
+            }
+            syncCartSelection(page);
+            return;
+        }
         const openAddr = event.target.closest('[data-open-inline-address]');
         if (openAddr) {
             const dlg = document.getElementById('inline-address-dialog');

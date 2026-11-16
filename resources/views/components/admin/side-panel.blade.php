@@ -73,6 +73,12 @@
                 <span>{{ __('management.platform_reports') }}</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.vouchers.index') }}" class="nav-link {{ request()->routeIs('admin.vouchers.*') ? 'active' : '' }}">
+                <i class="bi bi-ticket-perforated fs-lg"></i>
+                <span>{{ __('management.vouchers.nav') }}</span>
+            </a>
+        </li>
         <li class="nav-item mt-3">
             <small class="text-uppercase fg-secondary fw-bold px-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('management.marketplace_shortcuts') }}</small>
         </li>

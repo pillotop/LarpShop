@@ -22,6 +22,7 @@ return [
     'store_orders' => 'Store orders',
     'my_categories' => 'My categories',
     'store_reports' => 'Store reports',
+    'store_vouchers' => 'Store vouchers',
     'admin_title' => 'System administration',
     'pending_applications' => 'Pending applications',
     'close' => 'Close',
