@@ -1,4 +1,11 @@
-@props(['product', 'reviews', 'canReview'])
+@props([
+    'product',
+    'reviews',
+    'canReview',
+    'ratingBreakdown' => [],
+    'reviewFilters' => [],
+    'canReplyToReviews' => false,
+])
 
 <section
     id="product-reviews"
@@ -34,15 +41,74 @@
 
         <div class="col-12 lg:col-8">
             <h2 id="product-reviews-heading" class="h4">{{ __('reviews.title') }}</h2>
-            <p class="fg-3">
+            <p class="fg-3 mb-3">
                 {{ __('reviews.rating_summary', ['rating' => number_format($product->average_rating ?? 0, 1)]) }}
                 · {{ trans_choice('reviews.count', $product->total_reviews, ['count' => $product->total_reviews]) }}
             </p>
 
+            @if (! empty($ratingBreakdown))
+                <div class="card border-0 bg-1 rounded-4 p-3 mb-4" data-review-histogram>
+                    <div class="d-flex flex-column gap-2">
+                        @foreach ($ratingBreakdown as $star => $row)
+                            <div class="d-flex align-items-center gap-2 small">
+                                <span class="text-nowrap fw-semibold" style="width: 3.5rem;">{{ $star }} ★</span>
+                                <div class="progress flex-grow-1" style="height: 8px;" role="progressbar" aria-valuenow="{{ $row['percent'] }}" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-warning" style="width: {{ $row['percent'] }}%;"></div>
+                                </div>
+                                <span class="fg-3 text-end" style="width: 2.5rem;">{{ $row['count'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @php
+                        $activeRating = $reviewFilters['rating'] ?? null;
+                        $commentedOnly = ! empty($reviewFilters['commented']);
+                    @endphp
+                    <div class="d-flex flex-wrap gap-2 mt-3 pt-3 border-top" data-review-filters>
+                        <a
+                            href="{{ route('products.show', [$product, $product->slug]) }}#product-reviews"
+                            data-review-filter="{{ route('reviews.index', $product) }}"
+                            @class([
+                                'btn btn-sm rounded-pill px-3',
+                                'btn-solid theme-primary' => $activeRating === null && ! $commentedOnly,
+                                'btn-outline theme-secondary bg-white' => $activeRating !== null || $commentedOnly,
+                            ])
+                        >{{ __('reviews.filter_all') }}</a>
+
+                        @for ($star = 5; $star >= 1; $star--)
+                            <a
+                                href="{{ route('products.show', [$product, $product->slug, 'reviews_rating' => $star]) }}#product-reviews"
+                                data-review-filter="{{ route('reviews.index', [$product, 'reviews_rating' => $star]) }}"
+                                @class([
+                                    'btn btn-sm rounded-pill px-3',
+                                    'btn-solid theme-primary' => $activeRating === $star,
+                                    'btn-outline theme-secondary bg-white' => $activeRating !== $star,
+                                ])
+                            >{{ $star }} ★ ({{ $ratingBreakdown[$star]['count'] ?? 0 }})</a>
+                        @endfor
+
+                        <a
+                            href="{{ route('products.show', [$product, $product->slug, 'reviews_commented' => 1]) }}#product-reviews"
+                            data-review-filter="{{ route('reviews.index', [$product, 'reviews_commented' => 1]) }}"
+                            @class([
+                                'btn btn-sm rounded-pill px-3',
+                                'btn-solid theme-primary' => $commentedOnly && $activeRating === null,
+                                'btn-outline theme-secondary bg-white' => ! $commentedOnly || $activeRating !== null,
+                            ])
+                        >{{ __('reviews.filter_commented') }}</a>
+                    </div>
+                </div>
+            @endif
+
             <x-review-feedback />
 
             <div data-product-reviews aria-live="polite">
-                @include('products.partials.review-list', ['product' => $product, 'reviews' => $reviews])
+                @include('products.partials.review-list', [
+                    'product' => $product,
+                    'reviews' => $reviews,
+                    'reviewFilters' => $reviewFilters,
+                    'canReplyToReviews' => $canReplyToReviews,
+                ])
             </div>
 
             @if ($canReview)

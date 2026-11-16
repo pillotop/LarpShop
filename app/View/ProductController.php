@@ -22,7 +22,11 @@ class ProductController extends Controller
             ]);
         }
 
-        $request->validate(['reviews_page' => ['nullable', 'integer', 'min:1']]);
+        $validated = $request->validate([
+            'reviews_page' => ['nullable', 'integer', 'min:1'],
+            'reviews_rating' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'reviews_commented' => ['nullable', 'boolean'],
+        ]);
 
         $service = $this->productRetrievalService;
         $productDetails = $service->getProductDetails($product->product_id);
@@ -31,9 +35,22 @@ class ProductController extends Controller
             abort(404);
         }
 
+        $ratingFilter = isset($validated['reviews_rating']) ? (int) $validated['reviews_rating'] : null;
+        $commentedOnly = $request->boolean('reviews_commented');
+        $canReplyToReviews = $request->user()?->vendors()
+            ->active()
+            ->where('vendor_id', $productDetails->vendor_id)
+            ->exists() ?? false;
+
         return view('products.pages.show', [
             'product' => $productDetails,
-            'reviews' => $reviews->forProduct($productDetails),
+            'reviews' => $reviews->forProduct($productDetails, $ratingFilter, $commentedOnly),
+            'ratingBreakdown' => $reviews->ratingBreakdown($productDetails),
+            'reviewFilters' => [
+                'rating' => $ratingFilter,
+                'commented' => $commentedOnly,
+            ],
+            'canReplyToReviews' => $canReplyToReviews,
             'canReview' => $reviews->eligibleProductIds($request->user(), [$product->getKey()]) !== [],
             'similarProducts' => $service->getSimilarProducts(
                 productId: $product->product_id,

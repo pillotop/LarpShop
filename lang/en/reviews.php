@@ -24,4 +24,11 @@ return [
     'submit' => 'Submit review',
     'success' => 'Thank you! Your review has been published.',
     'purchase_required' => 'You can review a product once, after a paid purchase.',
+    'filter_all' => 'All',
+    'filter_commented' => 'With comments',
+    'seller_reply' => 'Seller response',
+    'reply_placeholder' => 'Write a response to this customer review...',
+    'reply_submit' => 'Post reply',
+    'reply_update' => 'Update reply',
+    'reply_saved' => 'Your response has been published.',
 ];

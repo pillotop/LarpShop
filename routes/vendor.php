@@ -6,6 +6,7 @@ use App\Http\Controllers\Vendor\VendorProductController;
 use App\Http\Controllers\Vendor\VendorProductImageController;
 use App\Http\Controllers\Vendor\VendorProductVariantController;
 use App\Http\Controllers\Vendor\VendorReportController;
+use App\Http\Controllers\Vendor\VendorReviewReplyController;
 use App\Http\Controllers\Vendor\VendorStoreController;
 use App\Http\Controllers\Vendor\VendorVoucherController;
 use Illuminate\Support\Facades\Route;
@@ -58,4 +59,7 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
     Route::post('/products/{product}/variants', [VendorProductVariantController::class, 'store'])->whereNumber('product')->name('products.variants.store');
     Route::put('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'update'])->whereNumber(['product', 'variant'])->name('products.variants.update');
     Route::delete('/products/{product}/variants/{variant}', [VendorProductVariantController::class, 'destroy'])->whereNumber(['product', 'variant'])->name('products.variants.destroy');
+
+    // Reply to Customer Product Reviews
+    Route::post('/reviews/{review}/reply', [VendorReviewReplyController::class, 'store'])->whereNumber('review')->name('reviews.reply');
 });
