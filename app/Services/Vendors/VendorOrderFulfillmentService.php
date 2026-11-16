@@ -7,6 +7,7 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Vendor;
+use App\Notifications\OrderFulfillmentNotification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -26,8 +27,9 @@ class VendorOrderFulfillmentService
         ?int $orderDetailId = null,
     ): Collection {
         $vendorId = (int) $vendor->vendor_id;
+        $storeName = $vendor->store_name;
 
-        return DB::transaction(function () use ($vendorId, $order, $target, $orderDetailId) {
+        return DB::transaction(function () use ($vendorId, $storeName, $order, $target, $orderDetailId) {
             $lockedOrder = Order::query()
                 ->whereKey($order->getKey())
                 ->lockForUpdate()
@@ -74,6 +76,7 @@ class VendorOrderFulfillmentService
             }
 
             $now = now();
+            $changed = false;
 
             foreach ($details as $detail) {
                 $current = $detail->fulfillment_status instanceof FulfillmentStatus
@@ -101,6 +104,17 @@ class VendorOrderFulfillmentService
                 }
 
                 $detail->save();
+                $changed = true;
+            }
+
+            if ($changed && in_array($target, [FulfillmentStatus::Processing, FulfillmentStatus::Shipped, FulfillmentStatus::Delivered], true)) {
+                $lockedOrder->loadMissing('user');
+                $buyer = $lockedOrder->user;
+                if ($buyer !== null) {
+                    DB::afterCommit(function () use ($buyer, $lockedOrder, $target, $storeName) {
+                        $buyer->notify(new OrderFulfillmentNotification($lockedOrder, $target, $storeName));
+                    });
+                }
             }
 
             return $details;
