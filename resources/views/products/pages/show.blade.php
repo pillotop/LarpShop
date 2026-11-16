@@ -83,7 +83,7 @@
                             </div>
                             @if ($product->images->count() > 1)
                                 <div class="carousel-scrollable mt-3">
-                                    <ul class="d-flex flex-nowrap gap-3 overflow-scroll list-unstyled carousel-scroller p-0">
+                                    <ul class="d-flex flex-nowrap gap-3 overflow-x-auto list-unstyled carousel-scroller p-0 mb-0">
                                         @foreach ($product->images as $image)
                                             @php
                                                 $imgSrc = \Illuminate\Support\Str::startsWith($image->path, ['http://', 'https://'])
@@ -91,7 +91,14 @@
                                                     : asset('storage/' . ltrim($image->path, '/'));
                                             @endphp
                                             <li>
-                                                <img src="{{ $imgSrc }}" alt="{{ $image->alt_text ?? $product->name }}" class="rounded border" style="max-height: 80px; width: 80px; object-fit: cover;">
+                                                <button type="button"
+                                                        class="btn p-0 rounded border {{ $loop->first ? 'border-primary border-2' : '' }} overflow-hidden"
+                                                        data-bs-target="#previewCarousel"
+                                                        data-bs-slide-to="{{ $loop->index }}"
+                                                        data-carousel-thumb-index="{{ $loop->index }}"
+                                                        aria-label="{{ $image->alt_text ?? $product->name }}">
+                                                    <img src="{{ $imgSrc }}" alt="{{ $image->alt_text ?? $product->name }}" class="d-block" style="height: 80px; width: 80px; object-fit: cover;">
+                                                </button>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -111,12 +118,10 @@
                                             <label for="product-purchase-quantity" class="form-label mb-0">{{ __('products.detail.quantity') }}</label>
                                             <div class="input-group" style="max-width: 10rem;">
                                                 <button type="button" data-quantity-decrement class="btn btn-solid theme-secondary fw-semibold" aria-label="{{ __('products.detail.decrease') }}">−</button>
-                                                <input id="product-purchase-quantity" data-quantity-counter type="number" min="0" step="1" value="1" class="form-control text-center">
+                                                <input id="product-purchase-quantity" data-quantity-counter type="number" min="1" max="{{ $product->stock }}" step="1" value="1" class="form-control text-center">
                                                 <button type="button" data-quantity-increment class="btn btn-solid theme-secondary fw-semibold" aria-label="{{ __('products.detail.increase') }}">+</button>
                                             </div>
-                                            <a href="#" class="w-100">
-                                                <button type="button" class="w-100 button-primary">{{ __('products.detail.buy_now') }}</button>
-                                            </a>
+                                            <button type="button" data-buy-now="{{ route('cart.index') }}" class="w-100 button-primary">{{ __('products.detail.buy_now') }}</button>
                                             <button type="button" data-add-to-cart class="w-100 button-primary">{{ __('products.detail.add_to_cart') }}</button>
                                             <span class="cart-feedback visually-hidden" role="status" aria-live="polite"></span>
                                         </div>
@@ -124,7 +129,7 @@
                                 </article>
                             </div>
                         </div>
-                        <div class="col-12 lg:col-6" data-bs-spy="scroll" data-bs-target="#product" daba-bs-smooth-scroll="true">
+                        <div class="col-12 lg:col-6" data-bs-spy="scroll" data-bs-target="#product" data-bs-smooth-scroll="true">
                             <div id="product-header" class="mb-4 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <span class="badge bg-secondary">
@@ -141,11 +146,11 @@
                                 <p class="fg-secondary mb-4">{{ $product->description }}</p>
 
                                 <div class="d-flex align-items-baseline gap-2">
-                                    <span class="fs-3xl fw-bold fg-primary">${{ number_format($product->price, 2) }}</span>
+                                    <span id="product-detail-price" class="fs-3xl fw-bold fg-primary">${{ number_format($product->price, 2) }}</span>
                                     @if ($product->stock > 0)
-                                        <span class="fg-success small">{{ __('products.detail.in_stock', ['count' => $product->stock]) }}</span>
+                                        <span id="product-detail-stock" class="fg-success small">{{ __('products.detail.in_stock', ['count' => $product->stock]) }}</span>
                                     @else
-                                        <span class="fg-danger small">{{ __('products.detail.out_of_stock') }}</span>
+                                        <span id="product-detail-stock" class="fg-danger small">{{ __('products.detail.out_of_stock') }}</span>
                                     @endif
                                 </div>
                                 <x-rating-container average-rating="{{ $product->average_rating }}" total-reviews="{{ $product->total_reviews }}" />
@@ -159,11 +164,49 @@
                                 @endif
                             </div>
                             <div id="product-variants" class="mb-4 border-bottom pb-3">
-                                <h2 class="h6 fw-bold mb-2">{{ __('products.detail.variants') }}</h2>
-                                @if ($product->relationLoaded('variants') ? $product->variants->where('is_active', true)->isNotEmpty() : $product->variants()->active()->exists())
+                                @php
+                                    $activeVariants = $product->relationLoaded('variants')
+                                        ? $product->variants->where('is_active', true)->values()
+                                        : $product->variants()->active()->get();
+                                @endphp
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h2 class="h6 fw-bold mb-0">{{ __('products.detail.variants') }}</h2>
+                                    @if ($activeVariants->isNotEmpty())
+                                        <span class="small fg-3">
+                                            {{ __('products.detail.selected_option') }}
+                                            <strong id="product-selected-variant-name" class="fg-body">{{ __('products.detail.base_edition') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                @if ($activeVariants->isNotEmpty())
                                     <div class="d-flex flex-wrap gap-2">
-                                        @foreach (($product->relationLoaded('variants') ? $product->variants->where('is_active', true) : $product->variants()->active()->get()) as $variant)
-                                            <div class="border rounded-5 p-2 px-3 bg-1 d-flex align-items-center gap-2">
+                                        <button type="button"
+                                                class="btn text-start border border-primary bg-white shadow-xs rounded-5 p-2 px-3 d-flex align-items-center gap-2"
+                                                data-variant-option
+                                                data-variant-name="{{ __('products.detail.base_edition') }}"
+                                                data-variant-price="${{ number_format($product->price, 2) }}"
+                                                data-variant-stock="{{ $product->stock }}"
+                                                data-variant-stock-label="{{ $product->stock > 0 ? __('products.detail.in_stock', ['count' => $product->stock]) : __('products.detail.out_of_stock') }}"
+                                                aria-pressed="true">
+                                            <div>
+                                                <div class="fw-semibold small">{{ __('products.detail.base_edition') }}</div>
+                                                <div class="fg-success small fw-bold">${{ number_format($product->price, 2) }}</div>
+                                            </div>
+                                            @if ($product->stock <= 0)
+                                                <span class="badge bg-danger small ms-1">{{ __('products.out_of_stock') }}</span>
+                                            @else
+                                                <span class="badge bg-subtle-secondary fg-body small ms-1">{{ __('products.detail.remaining', ['count' => $product->stock]) }}</span>
+                                            @endif
+                                        </button>
+                                        @foreach ($activeVariants as $variant)
+                                            <button type="button"
+                                                    class="btn text-start border rounded-5 p-2 px-3 bg-1 d-flex align-items-center gap-2"
+                                                    data-variant-option
+                                                    data-variant-name="{{ $variant->name }}"
+                                                    data-variant-price="${{ number_format($variant->price, 2) }}"
+                                                    data-variant-stock="{{ $variant->stock }}"
+                                                    data-variant-stock-label="{{ $variant->stock > 0 ? __('products.detail.in_stock', ['count' => $variant->stock]) : __('products.detail.out_of_stock') }}"
+                                                    aria-pressed="false">
                                                 <div>
                                                     <div class="fw-semibold small">{{ $variant->name }}</div>
                                                     <div class="fg-success small fw-bold">${{ number_format($variant->price, 2) }}</div>
@@ -173,33 +216,48 @@
                                                 @else
                                                     <span class="badge bg-subtle-secondary fg-body small ms-1">{{ __('products.detail.remaining', ['count' => $variant->stock]) }}</span>
                                                 @endif
-                                            </div>
+                                            </button>
                                         @endforeach
                                     </div>
                                 @else
                                     <p class="fg-3 small mb-0">{{ __('products.detail.standard') }}</p>
                                 @endif
                             </div>
-                            <div id="shipping-options" class="mb-4 border-bottom">
+                            <div id="shipping-options" class="mb-4 border-bottom pb-3">
                                 <form>
-                                    <h1 class="h5 mb-3">{{ __('products.detail.delivery') }}</h1>
+                                    <h2 class="h5 mb-3">{{ __('products.detail.delivery') }}</h2>
 
-                                    <label class="d-flex align-items-center justify-content-start gap-2 mb-2" style="cursor: pointer;">
-                                        <i class="bi bi-shop fs-lg"></i>
-                                        <input name="means" type="radio" class="radio mt-0">
-                                        <span class="fw-bold small">{{ __('products.detail.pickup') }}</span>
-                                        <span class="fg-3 small">{{ __('products.detail.or') }}</span>
+                                    <label class="d-flex align-items-start gap-2 p-2 rounded-3 border bg-1 mb-2" style="cursor: pointer;">
+                                        <input name="means" value="pickup" type="radio" class="radio mt-1">
+                                        <i class="bi bi-shop fs-lg mt-1"></i>
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="fw-bold small">{{ __('products.detail.pickup') }}</span>
+                                                <span class="fg-3 small">{{ __('products.detail.or') }}</span>
+                                            </div>
+                                            <div class="small fg-3">{{ __('products.detail.pickup_desc') }}</div>
+                                        </div>
                                     </label>
 
-                                    <label class="d-flex align-items-center justify-content-start gap-2" style="cursor: pointer;">
-                                        <i class="bi bi-truck fs-lg"></i>
-                                        <input name="means" type="radio" class="radio mt-0">
-                                        <span class="fw-bold small">{{ __('products.detail.home_delivery') }}</span>
+                                    <label class="d-flex align-items-start gap-2 p-2 rounded-3 border bg-1" style="cursor: pointer;">
+                                        <input name="means" value="home_delivery" type="radio" class="radio mt-1" checked>
+                                        <i class="bi bi-truck fs-lg mt-1"></i>
+                                        <div>
+                                            <div class="fw-bold small">{{ __('products.detail.home_delivery') }}</div>
+                                            <div class="small fg-3">{{ __('products.detail.home_delivery_desc') }}</div>
+                                        </div>
                                     </label>
                                 </form>
                             </div>
-                            <div id="warranty" class="mb-4 border-bottom">
-                                {{ __('products.detail.unavailable') }}
+                            <div id="warranty" class="mb-4 border-bottom pb-3">
+                                <div class="d-flex align-items-start gap-3 p-3 rounded-4 bg-1 border">
+                                    <i class="bi bi-shield-check fs-2xl fg-success mt-1" aria-hidden="true"></i>
+                                    <div>
+                                        <h2 class="h6 fw-bold mb-1">{{ __('products.detail.warranty') }}</h2>
+                                        <p class="small fw-semibold mb-1">{{ __('products.detail.warranty_summary') }}</p>
+                                        <p class="small fg-3 mb-0">{{ __('products.detail.warranty_details') }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -222,7 +280,15 @@
                                 <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
                             </summary>
                             <div class="accordion-panel">
-                                <div class="accordion-body">...</div>
+                                <div class="accordion-body small">
+                                    <p class="fw-semibold mb-1">{{ __('products.detail.faq_ship_q') }}</p>
+                                    <p class="fg-3 mb-2">{{ __('products.detail.faq_ship_a') }}</p>
+                                    <p class="fw-semibold mb-1">{{ __('products.detail.faq_return_q') }}</p>
+                                    <p class="fg-3 mb-2">{{ __('products.detail.faq_return_a') }}</p>
+                                    <a href="{{ route('help') }}" class="fg-primary text-decoration-none fw-semibold">
+                                        {{ __('products.detail.help_link') }} <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
                             </div>
                         </details>
                         <details id="seller-options" class="accordion-item" name="aside">
@@ -233,7 +299,12 @@
                             <div class="accordion-panel">
                                 <div class="accordion-body">
                                     <p class="mb-1 fw-bold">{{ $product->vendor?->store_name ?? __('products.detail.partner') }}</p>
-                                    <p class="small fg-3 mb-0">{{ __('products.detail.status', ['status' => __('products.vendor_status.' . ($product->vendor?->status ?? 'active'))]) }}</p>
+                                    <p class="small fg-3 mb-2">{{ __('products.detail.status', ['status' => __('products.vendor_status.' . ($product->vendor?->status ?? 'active'))]) }}</p>
+                                    @if ($product->vendor)
+                                        <a href="{{ route('vendors.show', ['vendor' => $product->vendor->vendor_id]) }}" class="small fg-primary text-decoration-none fw-semibold">
+                                            {{ __('products.detail.visit_store') }} <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </details>

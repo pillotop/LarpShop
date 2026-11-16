@@ -1,8 +1,8 @@
 @unless ($breadcrumbs->isEmpty())
     <nav aria-label="{{ __('common.breadcrumb') }}">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb flex-wrap align-items-center mb-0">
             @foreach ($breadcrumbs as $breadcrumb)
-                <li class="breadcrumb-item">
+                <li class="breadcrumb-item align-items-center">
                     @unless ($loop->first)
                         <span class="breadcrumb-divider" aria-hidden="true"></span>
                     @endunless
