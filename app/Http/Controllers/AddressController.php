@@ -6,6 +6,7 @@ use App\Http\Requests\Address\SaveAddressRequest;
 use App\Models\Address;
 use App\Queries\Address\AddressQuery;
 use App\Services\Addresses\AddressService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -23,11 +24,25 @@ class AddressController extends Controller
 
     public function store(
         SaveAddressRequest $request,
-    ): RedirectResponse {
-        $this->service->create(
+    ): RedirectResponse|JsonResponse {
+        $address = $this->service->create(
             $request->user(),
             $request->validated(),
         );
+
+        if ($request->expectsJson()) {
+            $suffix = $address->is_default ? __('checkout.address.default') : '';
+
+            return response()->json([
+                'success' => true,
+                'message' => __('profile.success.address_saved'),
+                'address' => [
+                    'address_id' => $address->getKey(),
+                    'is_default' => (bool) $address->is_default,
+                    'label' => "{$address->recipient_name} — {$address->address_line_1}, {$address->city}{$suffix}",
+                ],
+            ], 201);
+        }
 
         return redirect()->to(route('profile').'#pane-billing')->with('success', __('profile.success.address_saved'));
     }

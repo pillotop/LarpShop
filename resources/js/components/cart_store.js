@@ -57,17 +57,21 @@ class CartStore {
         return this.enqueue(() => this.request(this.urls.show));
     }
 
-    add(productId, quantity = 1) {
-        return this.mutate(this.urls.add, productId, quantity);
+    add(productId, quantity = 1, variantId = null) {
+        return this.mutate(this.urls.add, productId, quantity, variantId);
     }
 
-    setQuantity(productId, quantity) {
-        return this.mutate(this.urls.set, productId, quantity);
+    setQuantity(productId, quantity, variantId = null) {
+        return this.mutate(this.urls.set, productId, quantity, variantId);
     }
 
-    mutate(url, productId, quantity) {
+    mutate(url, productId, quantity, variantId = null) {
         return this.enqueue(async () => {
-            const result = await this.request(url, { product_id: productId, quantity });
+            const payload = { product_id: productId, quantity };
+            if (variantId !== null && variantId !== '') {
+                payload.variant_id = Number(variantId);
+            }
+            const result = await this.request(url, payload);
             try { this.channel?.postMessage({ type: 'cart-changed' }); } catch (_) {}
             return result;
         });

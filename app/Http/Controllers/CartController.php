@@ -54,6 +54,7 @@ class CartController extends Controller
     ): JsonResponse {
         $validated = $request->validate([
             'product_id' => ['required', 'integer', Rule::exists('products', 'product_id')],
+            'variant_id' => ['nullable', 'integer', Rule::exists('product_variants', 'variant_id')],
             'quantity' => ['required', 'integer', $add ? 'min:1' : 'min:0', 'max:2147483647'],
         ]);
 
@@ -61,7 +62,8 @@ class CartController extends Controller
             $result = $this->cartMutationService->updateQuantity(
                 (int) $validated['product_id'],
                 (int) $validated['quantity'],
-                $add
+                $add,
+                isset($validated['variant_id']) ? (int) $validated['variant_id'] : null,
             );
         } catch (LockTimeoutException) {
             return response()->json([

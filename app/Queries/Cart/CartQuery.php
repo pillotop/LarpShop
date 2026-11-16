@@ -45,14 +45,14 @@ class CartQuery
 
         return $this->cartLock->forOwner($owner, function () use ($owner) {
             return $this->getOrCreateForOwner($owner)
-                        ->load('items.itemable.images');
+                ->load(['items.itemable.images', 'items.itemable.vendor', 'items.variant']);
         });
     }
 
     public function forUser(User $user): ?Cart
     {
         return $this->findForOwner([
-            'user_id' => $user->user_id
+            'user_id' => $user->user_id,
         ]);
     }
 

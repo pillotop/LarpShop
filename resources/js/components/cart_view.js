@@ -21,6 +21,79 @@ import { cartMessage } from './cart_messages.js';
     const presentation = { field: 'added', direction: 'asc', expanded: new Set() };
     const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
     const sortFields = new Set(['added', 'name', 'price', 'quantity', 'subtotal', 'stock']);
+    let selectedIds = null;
+    let selectedShippingMethod = 'home_delivery';
+
+    function syncCartSelection(root) {
+        if (!root) return;
+        const itemBoxes = Array.from(root.querySelectorAll('[data-cart-select-item]'));
+        if (itemBoxes.length === 0) return;
+
+        if (selectedIds === null) {
+            selectedIds = new Set(itemBoxes.map(cb => String(cb.value)));
+        }
+
+        let checkedQty = 0;
+        let checkedSubtotal = 0;
+        const activeIds = [];
+
+        itemBoxes.forEach(cb => {
+            const id = String(cb.value);
+            cb.checked = selectedIds.has(id);
+            if (cb.checked) {
+                activeIds.push(id);
+                checkedQty += Number(cb.dataset.itemQuantity || 0);
+                checkedSubtotal += Number(cb.dataset.itemSubtotal || 0);
+            }
+        });
+
+        const selectAll = root.querySelector('[data-cart-select-all]');
+        if (selectAll) {
+            selectAll.checked = activeIds.length === itemBoxes.length && itemBoxes.length > 0;
+            selectAll.indeterminate = activeIds.length > 0 && activeIds.length < itemBoxes.length;
+        }
+
+        const shippingSelect = root.querySelector('[data-shipping-method-select]');
+        if (shippingSelect) {
+            shippingSelect.value = selectedShippingMethod;
+        }
+        const selectedOption = shippingSelect?.selectedOptions?.[0];
+        const shippingFee = activeIds.length > 0 ? Number(selectedOption?.dataset.fee || 0) : 0;
+        const grandTotal = checkedSubtotal + shippingFee;
+
+        const summary = root.querySelector('.order-summary');
+        if (summary) {
+            const freeLabel = summary.dataset.freeLabel || 'Free';
+            const prodAmount = summary.querySelector('[data-summary-products-amount]');
+            const shipEl = summary.querySelector('[data-summary-shipping]');
+            const subEl = summary.querySelector('[data-summary-subtotal]');
+            const totalEl = summary.querySelector('[data-summary-total]');
+            const inputsContainer = summary.querySelector('[data-checkout-selected-inputs]');
+            const submitBtn = summary.querySelector('[data-checkout-submit]');
+            const addrSelect = summary.querySelector('#cart-shipping-address');
+            const hasAddress = addrSelect && !addrSelect.closest('[hidden]') && addrSelect.options.length > 0;
+
+            if (prodAmount) prodAmount.textContent = `$${amount.format(checkedSubtotal)}`;
+            if (shipEl) shipEl.textContent = shippingFee > 0 ? `$${amount.format(shippingFee)}` : freeLabel;
+            if (subEl) subEl.textContent = `$${amount.format(checkedSubtotal)}`;
+            if (totalEl) totalEl.textContent = `$${amount.format(grandTotal)}`;
+
+            if (inputsContainer) {
+                inputsContainer.replaceChildren();
+                activeIds.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'selected_cart_item_ids[]';
+                    input.value = id;
+                    inputsContainer.appendChild(input);
+                });
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = checkedQty < 1 || !hasAddress;
+            }
+        }
+    }
 
     function applyPresentation(root) {
         const list = root.querySelector('[data-cart-items]');
@@ -75,6 +148,11 @@ import { cartMessage } from './cart_messages.js';
             const focusedId = page.contains(document.activeElement) ? document.activeElement.id : null;
             page.innerHTML = pageHtml;
             applyPresentation(page);
+            if (selectedIds !== null) {
+                const existingIds = new Set(Array.from(page.querySelectorAll('[data-cart-select-item]')).map(cb => String(cb.value)));
+                selectedIds = new Set([...selectedIds].filter(id => existingIds.has(id)));
+            }
+            syncCartSelection(page);
             if (collapsed) page.querySelector('#cart')?.removeAttribute('open');
             if (focusedId) page.querySelector(`[id="${focusedId}"]`)?.focus({ preventScroll: true });
         }
@@ -98,11 +176,42 @@ import { cartMessage } from './cart_messages.js';
 
     document.addEventListener('change', event => {
         if (!event.target.closest('[data-cart-view], [data-cart-page]')) return;
+        if (event.target.matches('[data-cart-select-all]')) {
+            const checked = event.target.checked;
+            const itemBoxes = Array.from(page?.querySelectorAll('[data-cart-select-item]') || []);
+            selectedIds = checked ? new Set(itemBoxes.map(cb => String(cb.value))) : new Set();
+            syncCartSelection(page);
+            return;
+        }
+        if (event.target.matches('[data-cart-select-item]')) {
+            if (!selectedIds) selectedIds = new Set();
+            if (event.target.checked) selectedIds.add(String(event.target.value));
+            else selectedIds.delete(String(event.target.value));
+            syncCartSelection(page);
+            return;
+        }
+        if (event.target.matches('[data-shipping-method-select]')) {
+            selectedShippingMethod = event.target.value || 'home_delivery';
+            syncCartSelection(page);
+            return;
+        }
         if (!event.target.matches('[data-cart-sort]') || !sortFields.has(event.target.value)) return;
         presentation.field = event.target.value;
         applySort();
     });
     document.addEventListener('click', async event => {
+        const openAddr = event.target.closest('[data-open-inline-address]');
+        if (openAddr) {
+            const dlg = document.getElementById('inline-address-dialog');
+            if (dlg && !dlg.open) dlg.showModal();
+            return;
+        }
+        const closeAddr = event.target.closest('[data-close-inline-address]');
+        if (closeAddr) {
+            const dlg = document.getElementById('inline-address-dialog');
+            if (dlg && dlg.open) dlg.close();
+            return;
+        }
         if (!event.target.closest('[data-cart-view], [data-cart-page]')) return;
         const direction = event.target.closest('[data-cart-direction]');
         if (direction && ['asc', 'desc'].includes(direction.dataset.cartDirection)) {
@@ -113,11 +222,72 @@ import { cartMessage } from './cart_messages.js';
         if (!remove || remove.disabled) return;
         remove.disabled = true;
         try {
-            await store.setQuantity(remove.dataset.cartRemove, 0);
+            const variantId = remove.dataset.cartVariantId || null;
+            await store.setQuantity(remove.dataset.cartRemove, 0, variantId);
         } catch (_) {
             // The shared error listener displays the server or connection error.
         } finally {
             remove.disabled = false;
+        }
+    });
+
+    document.addEventListener('submit', async event => {
+        const form = event.target.closest('form[data-inline-address-form]');
+        if (!form) return;
+
+        event.preventDefault();
+        const errorBox = form.querySelector('[data-inline-address-error]');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (errorBox) {
+            errorBox.textContent = '';
+            errorBox.classList.add('d-none');
+        }
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: new FormData(form),
+            });
+
+            const data = await response.json().catch(() => null);
+            if (!response.ok || !data?.success) {
+                const firstErr = Object.values(data?.errors || {}).flat()[0] || data?.message || 'Could not save address.';
+                throw new Error(firstErr);
+            }
+
+            const select = document.getElementById('cart-shipping-address');
+            const selectWrap = document.querySelector('[data-address-select-wrap]');
+            const noHint = document.querySelector('[data-no-address-hint]');
+
+            if (select && data.address) {
+                const option = document.createElement('option');
+                option.value = String(data.address.address_id);
+                option.textContent = data.address.label;
+                option.selected = true;
+                select.appendChild(option);
+                select.required = true;
+            }
+            if (selectWrap) selectWrap.hidden = false;
+            if (noHint) noHint.hidden = true;
+
+            form.reset();
+            const dlg = document.getElementById('inline-address-dialog');
+            if (dlg && dlg.open) dlg.close();
+            syncCartSelection(page);
+            window.larpToast?.(data.message || 'Address saved.', { type: 'success' });
+        } catch (err) {
+            if (errorBox) {
+                errorBox.textContent = err.message;
+                errorBox.classList.remove('d-none');
+            }
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
         }
     });
     // Native details toggle events do not bubble, so observe them in capture phase.

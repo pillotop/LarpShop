@@ -26,7 +26,7 @@ class CheckoutController extends Controller
             404,
         );
 
-        $order->load(['addresses', 'details.product']);
+        $order->load(['addresses', 'details.product', 'details.variant']);
 
         $payable =
             $order->status === OrderStatus::Pending &&
@@ -77,9 +77,15 @@ class CheckoutController extends Controller
         OrderCreationService $orders,
     ): JsonResponse|RedirectResponse {
 
+        $selectedIds = $request->has('selected_cart_item_ids')
+            ? array_values(array_unique(array_map('intval', (array) $request->input('selected_cart_item_ids', []))))
+            : null;
+
         $order = $orders->create(
             $request->user(),
             $request->integer('address_id'),
+            $selectedIds,
+            $request->string('shipping_method', 'home_delivery')->toString(),
         );
 
         if ($request->expectsJson()) {

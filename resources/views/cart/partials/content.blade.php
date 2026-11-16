@@ -28,9 +28,13 @@
                                     <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
                                 </summary>
                                 <div class="accordion-panel">
-                                    <div class="bg-white p-3">
+                                    <div class="bg-white p-3 d-flex flex-wrap justify-content-between align-items-center gap-3 border-bottom">
+                                        <label class="d-inline-flex align-items-center gap-2 small fw-semibold mb-0" style="cursor: pointer;">
+                                            <input type="checkbox" class="form-check-input mt-0" data-cart-select-all checked>
+                                            <span>{{ __('cart.select_all') }}</span>
+                                        </label>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <label for="cart-page-sort-field" class="small fw-semibold">{{ __('cart.sort_by') }} </label>
+                                            <label for="cart-page-sort-field" class="small fw-semibold mb-0">{{ __('cart.sort_by') }} </label>
                                             <div class="d-flex gap-2">
                                                 <select
                                                     id="cart-page-sort-field"

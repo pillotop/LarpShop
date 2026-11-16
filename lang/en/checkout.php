@@ -22,6 +22,14 @@ return [
         'updated' => 'Shipping address updated.',
         'required' => 'A shipping address is required.',
         'default' => ' (Default)',
+        'add_new' => 'Add new address',
+        'save' => 'Save address',
+    ],
+    'shipping_methods' => [
+        'label' => 'Delivery method',
+        'home_delivery' => 'Standard home delivery (Free)',
+        'pickup' => 'Store pickup (Free)',
+        'express' => 'Express delivery ($9.99)',
     ],
     'details' => [
         'title' => 'Your details',

@@ -27,7 +27,11 @@ class ProductQuantityPicker {
 
     #setupSignals() {
         this.unsubscribe = this.store?.subscribe(({ cart }) => {
-            const item = cart.products.find(item => String(item.product.product_id) === String(this.productId));
+            const currentVariantId = String(this.element.dataset.variantId ?? '');
+            const item = cart.products.find(item =>
+                String(item.product.product_id) === String(this.productId)
+                && String(item.variant_id ?? '') === currentVariantId
+            );
             if (this.counter && !this.selectsAddQuantity) this.counter.value = item?.quantity ?? 0;
         });
 
@@ -90,9 +94,10 @@ class ProductQuantityPicker {
 
         try {
             if (!this.store) throw new Error(cartMessage('unavailable'));
+            const variantId = this.element.dataset.variantId || null;
             const result = url === this.addToCartUrl
-                ? await this.store.add(this.productId, quantity)
-                : await this.store.setQuantity(this.productId, quantity);
+                ? await this.store.add(this.productId, quantity, variantId)
+                : await this.store.setQuantity(this.productId, quantity, variantId);
 
             this.#message(cartMessage('updated', { count: result.quantity }));
             if (url === this.addToCartUrl && !this.buyNowButton?.dataset.pendingRedirect) {

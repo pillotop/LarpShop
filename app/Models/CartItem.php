@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class CartItem extends Model
 {
     protected $primaryKey = 'cart_item_id';
-    protected $fillable = ['cart_id', 'itemable_type', 'itemable_id', 'quantity'];
+
+    protected $fillable = ['cart_id', 'itemable_type', 'itemable_id', 'variant_id', 'quantity'];
 
     public function cart(): BelongsTo
     {
@@ -19,5 +20,10 @@ class CartItem extends Model
     public function itemable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function variant(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class, 'variant_id', 'variant_id');
     }
 }

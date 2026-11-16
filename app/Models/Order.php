@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'user_id',
     'total_amount',
     'status',
+    'shipping_method',
+    'shipping_fee',
     'expires_at',
     'stock_released_at',
 ])]
@@ -43,6 +45,7 @@ class Order extends Model
     {
         return [
             'total_amount' => 'decimal:2',
+            'shipping_fee' => 'decimal:2',
             'status' => OrderStatus::class,
             'expires_at' => 'datetime',
             'stock_released_at' => 'datetime',
