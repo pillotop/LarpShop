@@ -21,7 +21,7 @@
 
         <button
             type="submit"
-            class="btn btn-sm btn-outline theme-secondary"
+            {{ $attributes->merge(['class' => 'btn btn-sm btn-outline theme-secondary']) }}
             aria-label="{{ $label }}: {{ $product->name }}"
             title="{{ $label }}"
             aria-pressed="{{ $saved ? 'true' : 'false' }}"
@@ -36,7 +36,9 @@
 @else
     <a
         href="{{ route('login') }}"
-        class="btn btn-sm btn-outline theme-secondary"
+        data-bs-toggle="drawer"
+        data-bs-target="#auth-panel"
+        {{ $attributes->merge(['class' => 'btn btn-sm btn-outline theme-secondary']) }}
         aria-label="{{ __('wishlist.sign_in', ['name' => $product->name]) }}"
     >
         <i class="bi bi-heart" aria-hidden="true"></i>

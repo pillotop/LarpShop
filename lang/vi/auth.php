@@ -16,7 +16,31 @@ return [
         'enterprise' => 'Doanh nghiệp',
         'events' => 'Sự kiện',
     ],
+    'verification' => [
+        'sent' => 'Chúng tôi đã gửi mã 6 số đến :email. Nhập mã bên dưới để kích hoạt tài khoản.',
+        'required' => 'Vui lòng xác thực email trước. Chúng tôi đã gửi mã 6 số đến :email.',
+        'resent' => 'Nếu tài khoản đang chờ xác thực, một mã mới đã được gửi.',
+        'invalid_code' => 'Mã không hợp lệ hoặc đã hết hạn.',
+        'send_failed' => 'Không thể gửi email xác thực. Vui lòng thử lại sau.',
+    ],
+    'mail' => [
+        'subject' => 'Mã xác thực LarpShop của bạn: :code',
+        'greeting' => 'Xin chào :name,',
+        'intro' => 'Dùng mã bên dưới để xác thực email và hoàn tất việc tạo tài khoản LarpShop.',
+        'expires' => 'Mã này hết hạn sau :minutes phút.',
+        'ignore' => 'Nếu bạn không tạo tài khoản, hãy bỏ qua email này.',
+    ],
+    'google' => [
+        'not_configured' => 'Đăng nhập Google chưa được cấu hình. Vui lòng thêm GOOGLE_CLIENT_ID và GOOGLE_CLIENT_SECRET.',
+        'invalid_state' => 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.',
+        'cancelled' => 'Đã hủy đăng nhập bằng Google.',
+        'failed' => 'Không thể xác minh tài khoản Google của bạn. Vui lòng thử lại.',
+    ],
     'form' => [
+        'or' => 'hoặc',
+        'continue_with_google' => 'Tiếp tục với Google',
+        'verification_code' => 'Mã xác thực',
+        'resend_code' => 'Gửi lại mã',
         'heading' => 'Đăng nhập hoặc tạo tài khoản',
         'email' => 'Địa chỉ email',
         'password' => 'Mật khẩu',
@@ -31,6 +55,10 @@ return [
         'request_error' => 'Không thể hoàn tất yêu cầu.',
         'reset_link_sent' => 'Nếu tài khoản tồn tại, liên kết đặt lại mật khẩu sẽ được gửi.',
         'states' => [
+            'verify' => [
+                'header' => 'Xác thực email',
+                'loading' => 'Đang xác thực mã…',
+            ],
             'email' => [
                 'header' => 'Đăng nhập hoặc tạo tài khoản',
                 'loading' => 'Đang kiểm tra email…',
