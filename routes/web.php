@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountVendorController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorStorefrontController;
@@ -25,6 +26,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/vendors', [AccountVendorController::class, 'store'])->name('profile.vendor.register');
     Route::post('/account/vendors/{vendor}/resubmit', [AccountVendorController::class, 'resubmit'])->whereNumber('vendor')->name('profile.vendor.resubmit');
     Route::post('/vouchers/preview', [VoucherController::class, 'preview'])->name('vouchers.preview');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {

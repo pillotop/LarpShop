@@ -105,6 +105,66 @@
                 </template>
             </button>
             <span data-cart-error class="small fg-danger" role="status" aria-live="polite"></span>
+            @auth
+                @php
+                    $bellUnread = (int) ($unreadNotificationCount ?? 0);
+                    $bellItems = $recentNotifications ?? collect();
+                @endphp
+                <div class="position-relative" data-notification-bell>
+                    <button
+                        class="border-0 bg-1 rounded-pill p-2 position-relative d-flex align-items-center justify-content-center shadow-sm"
+                        type="button"
+                        data-bs-toggle="menu"
+                        data-bs-placement="bottom-end"
+                        aria-expanded="false"
+                        aria-label="{{ __('notifications.bell.label') }}"
+                    >
+                        <i class="bi bi-bell fs-5" aria-hidden="true"></i>
+                        @if ($bellUnread > 0)
+                            <span
+                                data-notification-badge
+                                class="position-absolute badge rounded-pill bg-danger end-0 top-0"
+                                aria-label="{{ __('notifications.bell.unread_count', ['count' => $bellUnread]) }}"
+                            >{{ $bellUnread > 9 ? '9+' : $bellUnread }}</span>
+                        @endif
+                    </button>
+                    <div class="menu shadow border-0 rounded-5 p-2 mt-1" style="min-width: 310px; max-width: 340px;">
+                        <div class="d-flex align-items-center justify-content-between px-2 py-1 border-bottom mb-1">
+                            <span class="fw-bold small">{{ __('notifications.bell.label') }}</span>
+                            @if ($bellUnread > 0)
+                                <form action="{{ route('notifications.read-all') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link btn-sm p-0 text-decoration-none small">
+                                        {{ __('notifications.bell.mark_all_read') }}
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                        <div class="overflow-auto" style="max-height: 320px;">
+                            @forelse ($bellItems as $notif)
+                                <form action="{{ route('notifications.read', $notif->id) }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="menu-item rounded-4 py-2 px-2 w-100 text-start d-flex align-items-start gap-2 {{ $notif->read_at === null ? 'bg-1 fw-semibold' : 'fg-3' }}"
+                                    >
+                                        <i class="bi {{ data_get($notif->data, 'icon', 'bi-bell') }} mt-1 flex-shrink-0 fg-primary" aria-hidden="true"></i>
+                                        <div class="min-w-0 flex-grow-1">
+                                            <div class="small text-truncate">{{ data_get($notif->data, 'title', '') }}</div>
+                                            <div class="small fg-3 text-wrap" style="font-size: 0.78rem;">{{ data_get($notif->data, 'message', '') }}</div>
+                                        </div>
+                                        @if ($notif->read_at === null)
+                                            <span class="rounded-circle bg-primary flex-shrink-0 mt-2" style="width: 7px; height: 7px;"></span>
+                                        @endif
+                                    </button>
+                                </form>
+                            @empty
+                                <p class="small fg-3 text-center py-3 mb-0">{{ __('notifications.bell.empty') }}</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            @endauth
             @guest
                 <button
                     type="button"

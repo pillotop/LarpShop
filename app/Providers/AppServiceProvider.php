@@ -35,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
             'vendor.*',
             'static.*',
             'cart.pages.index',
+            'orders.pages.index',
+            'orders.pages.show',
         ], ProductCapabilityComposer::class);
     }
 }

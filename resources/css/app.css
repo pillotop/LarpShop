@@ -310,3 +310,34 @@ body {
 .recently-viewed-card:hover {
     transform: translateY(-2px);
 }
+
+/* Order Tracking Stepper */
+.order-timeline {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+@media (max-width: 767.98px) {
+    .order-timeline {
+        grid-template-columns: 1fr;
+    }
+}
+
+.order-timeline-step {
+    position: relative;
+    padding: 0.75rem;
+    border-radius: 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: #f8f9fa;
+}
+
+.order-timeline-step.is-done {
+    background-color: rgba(25, 135, 84, 0.08);
+    border-color: rgba(25, 135, 84, 0.35);
+}
+
+.order-timeline-step.is-current {
+    background-color: rgba(13, 110, 253, 0.08);
+    border-color: rgba(13, 110, 253, 0.4);
+}

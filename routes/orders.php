@@ -12,6 +12,9 @@ Route::middleware('auth')
         Route::post('/{order}/cancel', [OrderController::class, 'cancel'])
             ->name('cancel');
 
+        Route::post('/{order}/confirm-delivery', [OrderController::class, 'confirmDelivery'])
+            ->name('confirm-delivery');
+
         Route::get('/index', [OrderHistoryController::class, 'index'])
             ->name('index');
 

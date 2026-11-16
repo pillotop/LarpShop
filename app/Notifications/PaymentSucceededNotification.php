@@ -30,7 +30,7 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -63,7 +63,13 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'icon' => 'bi-credit-card-check',
+            'title' => __('notifications.payment.greeting'),
+            'message' => __('notifications.payment.database_body', [
+                'id' => $this->payment->order_id,
+                'amount' => '$'.number_format((float) $this->payment->amount, 2),
+            ]),
+            'url' => route('orders.show', $this->payment->order_id),
         ];
     }
 }
