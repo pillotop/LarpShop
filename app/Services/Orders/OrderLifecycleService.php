@@ -5,6 +5,7 @@ namespace App\Services\Orders;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Services\Inventory\InventoryReservationService;
+use App\Services\Promotions\VoucherService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -12,6 +13,7 @@ class OrderLifecycleService
 {
     public function __construct(
         private InventoryReservationService $inventory,
+        private VoucherService $vouchers,
     ) {}
 
     public function cancel(Order $order): Order
@@ -58,6 +60,7 @@ class OrderLifecycleService
             }
 
             $this->inventory->release($order);
+            $this->vouchers->releaseForOrder($order);
 
             $order->status = $target;
             $order->save();

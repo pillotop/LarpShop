@@ -15,6 +15,10 @@
             <span>{{ __('checkout.delivery_price') }}</span>
             <span data-summary-shipping>{{ __('checkout.free') }}</span>
         </div>
+        <div class="d-flex flex-nowrap justify-content-between my-1 fg-success d-none" data-summary-discount-row>
+            <span>{{ __('checkout.discount') }} <span class="badge bg-subtle-success fg-success border border-success" data-summary-voucher-code></span></span>
+            <span data-summary-discount>-$0.00</span>
+        </div>
     </div>
     <hr class="my-3 price-breakdown-divider">
     <dl class="price-breakdown-calc">
@@ -54,6 +58,59 @@
                 <option value="express" data-fee="9.99">{{ __('checkout.shipping_methods.express') }}</option>
             </select>
         </div>
+        @auth
+            <div class="mb-3">
+                <label for="cart-voucher-code" class="form-label">{{ __('checkout.vouchers.label') }}</label>
+                <div class="input-group">
+                    <input
+                        id="cart-voucher-code"
+                        name="voucher_code"
+                        type="text"
+                        maxlength="40"
+                        value="{{ old('voucher_code') }}"
+                        placeholder="{{ __('checkout.vouchers.placeholder') }}"
+                        class="form-control text-uppercase"
+                        data-voucher-input
+                    >
+                    <button
+                        type="button"
+                        class="btn btn-outline theme-primary"
+                        data-voucher-apply-btn
+                        data-preview-url="{{ route('vouchers.preview') }}"
+                    >{{ __('checkout.vouchers.apply') }}</button>
+                    <button
+                        type="button"
+                        class="btn btn-outline theme-danger d-none"
+                        data-voucher-remove-btn
+                    >{{ __('checkout.vouchers.remove') }}</button>
+                </div>
+                <p class="small mb-0 mt-1 d-none" data-voucher-feedback role="status"></p>
+                @if ($availableVouchers->isNotEmpty())
+                    <div class="mt-2">
+                        <div class="small fg-3 mb-1">{{ __('checkout.vouchers.available') }}</div>
+                        <div class="d-flex flex-wrap gap-1">
+                            @foreach ($availableVouchers as $voucher)
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline theme-secondary rounded-pill px-2 py-1"
+                                    data-voucher-chip="{{ $voucher->code }}"
+                                    title="{{ $voucher->title }}"
+                                >
+                                    <i class="bi bi-ticket-perforated me-1" aria-hidden="true"></i>
+                                    <span class="fw-semibold">{{ $voucher->code }}</span>
+                                    <span class="fg-3 small">
+                                        · {{ $voucher->vendor?->store_name ?? __('checkout.vouchers.platform') }}
+                                        @if ((float) $voucher->min_order_amount > 0)
+                                            ({{ __('checkout.vouchers.min_short', ['amount' => '$' . number_format((float) $voucher->min_order_amount, 0)]) }})
+                                        @endif
+                                    </span>
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+        @endauth
         @auth
             <div data-address-select-wrap @if ($addresses->isEmpty()) hidden @endif>
                 <label for="cart-shipping-address" class="form-label">{{ __('checkout.address.title') }}</label>

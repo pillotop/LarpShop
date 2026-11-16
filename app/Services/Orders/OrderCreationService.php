@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Queries\Address\AddressQuery;
 use App\Queries\Cart\CartQuery;
 use App\Services\Inventory\InventoryReservationService;
+use App\Services\Promotions\VoucherService;
 use App\Support\Carts\CartLock;
 use App\Support\Money\MoneyCalculator;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class OrderCreationService
         private CartQuery $carts,
         private CartLock $cartLock,
         private MoneyCalculator $money,
+        private VoucherService $vouchers,
     ) {}
 
     public function create(
@@ -36,13 +38,14 @@ class OrderCreationService
         int $addressId,
         ?array $selectedCartItemIds = null,
         string $shippingMethod = 'home_delivery',
+        ?string $voucherCode = null,
     ): Order {
         $owner = ['user_id' => $user->user_id];
 
         return $this->cartLock->forOwner(
             $owner,
             fn () => DB::transaction(
-                fn () => $this->createLocked($user, $addressId, $selectedCartItemIds, $shippingMethod),
+                fn () => $this->createLocked($user, $addressId, $selectedCartItemIds, $shippingMethod, $voucherCode),
                 attempts: 3,
             )
         );
@@ -53,6 +56,7 @@ class OrderCreationService
         int $addressId,
         ?array $selectedCartItemIds = null,
         string $shippingMethod = 'home_delivery',
+        ?string $voucherCode = null,
     ): Order {
         // Lock the cart belonging to this user.
         $cart = $this->carts->getForCheckout($user);
@@ -136,6 +140,7 @@ class OrderCreationService
             : collect();
 
         $total = $this->money->zero();
+        $lineSubtotals = [];
 
         // Validate everything before making changes.
         foreach ($items as $item) {
@@ -157,20 +162,36 @@ class OrderCreationService
                 ]);
             }
 
-            $total = $this->money->add(
-                $total,
-                $this->money->subtotal(
-                    (string) $unitPrice,
-                    (int) $item->quantity,
-                ),
+            $lineSubtotal = $this->money->subtotal(
+                (string) $unitPrice,
+                (int) $item->quantity,
             );
+            $lineSubtotals[] = [
+                'vendor_id' => $product->vendor_id,
+                'subtotal' => $lineSubtotal,
+            ];
+
+            $total = $this->money->add($total, $lineSubtotal);
         }
 
         $normalizedShippingMethod = array_key_exists($shippingMethod, self::SHIPPING_FEES)
             ? $shippingMethod
             : 'home_delivery';
         $shippingFee = self::SHIPPING_FEES[$normalizedShippingMethod];
-        $grandTotal = $this->money->add($total, $this->money->subtotal($shippingFee, 1));
+        $shippingFeeDecimal = $this->money->of($shippingFee);
+
+        $appliedVoucher = null;
+        $discountDecimal = $this->money->zero();
+        if ($voucherCode !== null && trim($voucherCode) !== '') {
+            $voucherResult = $this->vouchers->consumeLocked($user, $voucherCode, $lineSubtotals, $shippingFeeDecimal);
+            $appliedVoucher = $voucherResult['voucher'];
+            $discountDecimal = $voucherResult['discount'];
+        }
+
+        $grandTotal = $this->money->subtract(
+            $this->money->add($total, $shippingFeeDecimal),
+            $discountDecimal,
+        );
 
         // All checks passed: create an order snapshot.
 
@@ -181,11 +202,19 @@ class OrderCreationService
         $order = Order::create([
             'user_id' => $user->user_id,
             'total_amount' => $this->money->format($grandTotal),
+            'subtotal_amount' => $this->money->format($total),
+            'discount_amount' => $this->money->format($discountDecimal),
+            'voucher_id' => $appliedVoucher?->getKey(),
+            'voucher_code' => $appliedVoucher?->code,
             'status' => OrderStatus::Pending,
             'shipping_method' => $normalizedShippingMethod,
             'shipping_fee' => $shippingFee,
             'expires_at' => now()->addMinutes(30),
         ]);
+
+        if ($appliedVoucher !== null) {
+            $this->vouchers->recordUsage($appliedVoucher, $user, $order, $discountDecimal);
+        }
 
         $order->addresses()->create([
             'type' => 'shipping',

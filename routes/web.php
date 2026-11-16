@@ -5,6 +5,7 @@ use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorStorefrontController;
+use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 use App\Models\Vendor;
 use App\View\CategoryController;
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/account/vendors/{vendor}', [AccountVendorController::class, 'update'])->whereNumber('vendor')->name('profile.vendor.update');
     Route::post('/account/vendors', [AccountVendorController::class, 'store'])->name('profile.vendor.register');
     Route::post('/account/vendors/{vendor}/resubmit', [AccountVendorController::class, 'resubmit'])->whereNumber('vendor')->name('profile.vendor.resubmit');
+    Route::post('/vouchers/preview', [VoucherController::class, 'preview'])->name('vouchers.preview');
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Vendor\VendorProductImageController;
 use App\Http\Controllers\Vendor\VendorProductVariantController;
 use App\Http\Controllers\Vendor\VendorReportController;
 use App\Http\Controllers\Vendor\VendorStoreController;
+use App\Http\Controllers\Vendor\VendorVoucherController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(function () {
@@ -45,6 +46,12 @@ Route::middleware(['auth', 'vendor'])->prefix('vendor')->name('vendor.')->group(
 
     // UC-36: Vendor Sales & Inventory Reports
     Route::get('/reports', [VendorReportController::class, 'index'])->name('reports.index');
+
+    // Store Vouchers Management
+    Route::get('/vouchers', [VendorVoucherController::class, 'index'])->name('vouchers.index');
+    Route::post('/vouchers', [VendorVoucherController::class, 'store'])->name('vouchers.store');
+    Route::patch('/vouchers/{voucher}/toggle', [VendorVoucherController::class, 'toggle'])->whereNumber('voucher')->name('vouchers.toggle');
+    Route::delete('/vouchers/{voucher}', [VendorVoucherController::class, 'destroy'])->whereNumber('voucher')->name('vouchers.destroy');
 
     // UC-37: Vendor Product Variants Management
     Route::get('/products/{product}/variants', [VendorProductVariantController::class, 'index'])->whereNumber('product')->name('products.variants.index');

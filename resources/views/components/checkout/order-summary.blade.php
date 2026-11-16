@@ -33,6 +33,17 @@
         <span>{{ __('checkout.delivery_price') }}</span>
         <span>{{ (float) ($order->shipping_fee ?? 0) > 0 ? '$' . number_format((float) $order->shipping_fee, 2) : __('checkout.free') }}</span>
     </div>
+    @if ((float) ($order->discount_amount ?? 0) > 0)
+        <div class="d-flex justify-content-between align-items-baseline gap-3 mt-1 small fg-success">
+            <span>
+                {{ __('checkout.discount') }}
+                @if ($order->voucher_code)
+                    <span class="badge bg-subtle-success fg-success border border-success ms-1">{{ $order->voucher_code }}</span>
+                @endif
+            </span>
+            <span>-${{ number_format((float) $order->discount_amount, 2) }}</span>
+        </div>
+    @endif
     <dl class="d-flex justify-content-between align-items-baseline gap-3 mt-2 mb-0">
         <dt>{{ __('checkout.total') }}</dt>
         <dd class="h4 fw-bold mb-0">${{ number_format((float) $order->total_amount, 2) }}</dd>
