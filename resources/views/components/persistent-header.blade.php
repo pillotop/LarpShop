@@ -1,5 +1,5 @@
-<div {{ $attributes->class(['persistent-header position-relative mt-2 px-4 py-2 z-0']) }}>
-    <ul class="persistent-header-content d-flex align-items-center gap-3 p-0 overflow-scroll list-unstyled">
+<div {{ $attributes->class(['persistent-header position-relative mt-2 px-3 sm:px-4 py-2 z-0']) }}>
+    <ul class="persistent-header-content d-flex flex-nowrap align-items-center gap-2 sm:gap-3 p-0 m-0 overflow-x-auto list-unstyled">
         <li>
             <button
                 type="button"
