@@ -145,7 +145,7 @@
                         </div>
                         <div>
                             <div class="fg-3 text-uppercase">{{ __('profile.purchases.total') }}</div>
-                            <div class="fw-semibold">${{ number_format((float) $order->total_amount, 2) }}</div>
+                            <div class="fw-semibold">{{ $money->format($order->total_amount) }}</div>
                         </div>
                         <div>
                             <div class="fg-3 text-uppercase">{{ __('profile.purchases.status') }}</div>
@@ -201,7 +201,7 @@
                                 <div class="small mt-1">
                                     {{ __('profile.purchases.quantity_price', [
                                         'count' => $detail->quantity,
-                                        'price' => '$' . number_format((float) $detail->unit_price, 2),
+                                        'price' => $money->format($detail->unit_price),
                                     ]) }}
                                 </div>
 

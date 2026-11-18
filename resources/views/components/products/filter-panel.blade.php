@@ -55,7 +55,7 @@
         </div>
 
         <fieldset class="mb-4">
-            <legend class="h6 fw-semibold">{{ __('products.filters.price') }}</legend>
+            <legend class="h6 fw-semibold">{{ __('products.filters.price') }} · USD</legend>
             <div class="row g-2">
                 <div class="col-6">
                     <label for="filter-min-price" class="visually-hidden">{{ __('products.filters.min_price') }}</label>

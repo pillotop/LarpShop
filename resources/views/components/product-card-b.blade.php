@@ -17,10 +17,6 @@
     $imagePath = $resolveImageUrl($firstImage?->path) ?? asset('images/product-placeholder.jpg');
     $imageAlt = $firstImage?->alt_text ?? $product->name;
 
-    $priceParts = explode('.', number_format($product->price ?? 0, 2));
-    $dollars = $priceParts[0];
-    $cents = $priceParts[1] ?? '00';
-
     $isTopSeller = ($product->total_reviews ?? 0) >= 2 || (float) ($product->average_rating ?? 0) >= 4.8;
     $inStock = ($product->stock ?? 0) > 0;
 @endphp
@@ -34,7 +30,7 @@
                 value="{{ $product->product_id }}"
                 data-compare-id="{{ $product->product_id }}"
                 data-compare-name="{{ $product->name }}"
-                data-compare-price="${{ number_format($product->price ?? 0, 2) }}"
+                data-compare-price="{{ $money->format($product->price ?? 0) }}"
                 data-compare-image="{{ $imagePath }}"
                 data-compare-url="{{ route('products.show', ['product' => $product->product_id, 'slug' => $product->slug]) }}"
                 data-compare-category="{{ $product->category?->name ?? '—' }}"
@@ -96,7 +92,7 @@
                 </a>
 
                 <div class="product-card-price fg-body">
-                    <span class="product-card-price-currency">$</span><span class="product-card-price-whole">{{ $dollars }}</span><span class="product-card-price-cents">.{{ $cents }}</span>
+                    <span class="product-card-price-whole">{{ $money->format($product->price ?? 0) }}</span>
                 </div>
             </div>
 

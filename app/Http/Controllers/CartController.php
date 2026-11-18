@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Cart\CartMutationService;
 use App\Services\Cart\CartRetrievalService;
+use App\Support\Money\MoneyDisplay;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class CartController extends Controller
     public function __construct(
         private CartRetrievalService $cartRetrievalService,
         private CartMutationService $cartMutationService,
+        private MoneyDisplay $money,
     ) {}
 
     public function index(): View
@@ -24,9 +26,7 @@ class CartController extends Controller
 
     public function show(): JsonResponse
     {
-        $products = $this
-            ->cartRetrievalService
-            ->getCartData();
+        $products = $this->presentCart($this->cartRetrievalService->getCartData());
 
         return response()->json([
             'success' => true,
@@ -70,7 +70,7 @@ class CartController extends Controller
             ], 409);
         }
 
-        $cart = $this->cartRetrievalService->getCartData();
+        $cart = $this->presentCart($this->cartRetrievalService->getCartData());
 
         return response()->json([
             'success' => true,
@@ -82,6 +82,15 @@ class CartController extends Controller
             'quantity' => $result['total_count'],
             ...$result,
         ]);
+    }
+
+    private function presentCart(array $cart): array
+    {
+        return [
+            ...$cart,
+            'formatted_total' => $this->money->format($cart['total_amount']),
+            'display_currency' => $this->money->currency(),
+        ];
     }
 
     public function sort(?string $sortBy, ?string $direction): JsonResponse

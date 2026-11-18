@@ -68,7 +68,7 @@
                     {{ $product['name'] }}
                 </a>
                 <div class="small fg-3">
-                    {{ __('cart.each', ['price' => '$' . number_format($product['price'], 2)]) }}
+                    {{ __('cart.each', ['price' => $money->format($product['price'])]) }}
                 </div>
                 <div class="d-flex align-items-center justify-content-between gap-2 mt-2">
                     <div>
@@ -113,7 +113,7 @@
                             <i class="bi bi-trash me-1" aria-hidden="true"></i>
                         </button>
                     </div>
-                    <strong>${{ number_format($data['subtotal'], 2) }}</strong>
+                    <strong>{{ $money->format($data['subtotal']) }}</strong>
                 </div>
                 <div class="cart-feedback small mt-2 visually-hidden" role="status" aria-live="polite"></div>
             </div>

@@ -25,6 +25,20 @@
 
         @include('shared.cart-messages')
 
+        @if ($money->selected() !== 'USD')
+            <p class="small text-center border-bottom p-2 mb-0" role="status">
+                {{ $money->unavailable() ? __('currency.unavailable') : __('currency.notice') }}
+                @unless ($money->unavailable())
+                    <a
+                        href="https://www.exchangerate-api.com"
+                        class="fg-3"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >{{ __('currency.attribution') }}</a>
+                @endunless
+            </p>
+        @endif
+
         @yield('content')
 
         {{-- Snap.svg CDN --}}

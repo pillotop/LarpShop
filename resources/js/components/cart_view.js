@@ -4,19 +4,19 @@ import { cartMessage } from './cart_messages.js';
     const initial = document.getElementById('cart-initial-state');
     const template = document.getElementById('cart-section');
     if (!trigger || !initial || !template) return;
+    const initialCart = JSON.parse(initial.textContent);
 
     const store = new window.CartStore({
         showUrl: trigger.dataset.cartShowUrl,
         addUrl: trigger.dataset.cartAddUrl,
         setUrl: trigger.dataset.cartSetUrl,
         csrfToken: document.querySelector('meta[name="csrf-token"]').content,
-        initial: { cart: JSON.parse(initial.textContent), html: template.innerHTML },
+        initial: { cart: initialCart, html: template.innerHTML },
     });
     window.larpCart = store;
     const panel = document.getElementById('side-panel');
     const page = document.querySelector('[data-cart-page]');
     const errorLabel = document.querySelector('[data-cart-error]');
-    const amount = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     const presentation = { field: 'added', direction: 'asc', expanded: new Set() };
     const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
@@ -63,8 +63,12 @@ import { cartMessage } from './cart_messages.js';
     }
 
     store.subscribe(({ cart, html, pageHtml }) => {
-        const total = cart.total_amount ?? cart.products.reduce((sum, item) => sum + Number(item.subtotal), 0);
-        trigger.querySelector('[data-cart-total]').textContent = `$${amount.format(total)}`;
+        // Refresh all prices when another tab changes currency or rates recover.
+        if (cart.display_currency !== initialCart.display_currency) {
+            window.location.reload();
+            return;
+        }
+        trigger.querySelector('[data-cart-total]').textContent = cart.formatted_total;
         trigger.querySelector('[data-cart-count]').textContent = cart.total_count;
         if (errorLabel) errorLabel.textContent = '';
         template.innerHTML = html;

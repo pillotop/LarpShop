@@ -24,7 +24,7 @@
         <a href="{{ route('products.show', [$product, $product->slug]) }}">
             {{ $product->name }}
         </a>
-        <p class="mb-1 fw-semibold">${{ number_format($product->price, 2) }}</p>
+        <p class="mb-1 fw-semibold">{{ $money->format($product->price) }}</p>
         <span class="small fg-3">
             {{ $product->stock > 0 ? __('wishlist.in_stock') : __('wishlist.out_of_stock') }}
         </span>

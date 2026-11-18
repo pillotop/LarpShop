@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('/locale', [LocaleController::class, 'update'])
     ->name('locale.update');
 
+Route::post('/currency', [\App\Http\Controllers\CurrencyController::class, 'update'])
+    ->name('currency.update');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

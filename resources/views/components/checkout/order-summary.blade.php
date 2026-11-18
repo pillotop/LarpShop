@@ -16,7 +16,7 @@
             <li class="border-bottom py-3">
                 <div class="d-flex justify-content-between gap-3">
                     <span class="fw-semibold">{{ $detail->product?->name ?? __('checkout.unavailable_product') }}</span>
-                    <span class="text-nowrap">{{ __('cart.each', ['price' => '$' . number_format((float) $detail->unit_price, 2)]) }}</span>
+                    <span class="text-nowrap">{{ __('cart.each', ['price' => $money->format($detail->unit_price)]) }}</span>
                 </div>
                 <span class="small fg-3">{{ __('checkout.quantity', ['count' => $detail->quantity]) }}</span>
             </li>
@@ -26,6 +26,9 @@
     </ul>
     <dl class="d-flex justify-content-between align-items-baseline gap-3 mt-4 mb-0">
         <dt>{{ __('checkout.total') }}</dt>
-        <dd class="h4 fw-bold mb-0">${{ number_format((float) $order->total_amount, 2) }}</dd>
+        <dd class="h4 fw-bold mb-0">{{ $money->format($order->total_amount) }}</dd>
     </dl>
+    <p class="small fg-3 mt-2 mb-0">
+        {{ __('currency.payment_total', ['amount' => $order->total_amount]) }}
+    </p>
 </section>

@@ -11,10 +11,6 @@
             : asset('storage/' . ltrim($storedPath, '/')))
         : asset('images/product-placeholder.jpg');
     $imageAlt = $firstImage?->alt_text ?? $product->name;
-
-    $priceParts = explode('.', number_format($product->price ?? 0, 2));
-    $dollars = $priceParts[0];
-    $cents = $priceParts[1] ?? '00';
 @endphp
 
 <div class="card product-card-a border-0 h-100">
@@ -36,9 +32,7 @@
             </div>
             <div class="d-flex flex-wrap justify-content-start align-items-baseline">
                 <div class="me-1 xl:me-2 fw-bold fg-body">
-                    <span class="small" style="vertical-align: 0.65ex; margin-right: 2px;">$</span>
-                    <span class="h2">{{ $dollars }}</span>
-                    <span class="small" style="vertical-align: 0.75ex;">{{ $cents }}</span>
+                    <span class="h2">{{ $money->format($product->price ?? 0) }}</span>
                 </div>
                 <div class="d-flex align-items-center my-1">
                     <x-rating-container average-rating="{{ $product->average_rating }}" total-reviews="{{ $product->total_reviews }}"/>

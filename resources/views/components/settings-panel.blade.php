@@ -59,6 +59,18 @@
                     </div>
                 </details>
 
+                <details id="currency" class="accordion-item">
+                    <summary class="accordion-header">
+                        {{ __('currency.title') }}
+                        <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
+                    </summary>
+                    <div class="accordion-panel">
+                        <div class="accordion-body">
+                            <x-currency-switcher />
+                        </div>
+                    </div>
+                </details>
+
                 @if ($canManageStorefront)
                 <details
                     id="storefront-settings"

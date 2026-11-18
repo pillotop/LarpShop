@@ -146,7 +146,7 @@
                                 <p class="fg-secondary mb-4">{{ $product->description }}</p>
 
                                 <div class="d-flex align-items-baseline gap-2">
-                                    <span id="product-detail-price" class="fs-3xl fw-bold fg-primary">${{ number_format($product->price, 2) }}</span>
+                                    <span id="product-detail-price" class="fs-3xl fw-bold fg-primary">{{ $money->format($product->price) }}</span>
                                     @if ($product->stock > 0)
                                         <span id="product-detail-stock" class="fg-success small">{{ __('products.detail.in_stock', ['count' => $product->stock]) }}</span>
                                     @else
@@ -184,13 +184,13 @@
                                                 class="btn text-start border border-primary bg-white shadow-xs rounded-5 p-2 px-3 d-flex align-items-center gap-2"
                                                 data-variant-option
                                                 data-variant-name="{{ __('products.detail.base_edition') }}"
-                                                data-variant-price="${{ number_format($product->price, 2) }}"
+                                                data-variant-price="{{ $money->format($product->price) }}"
                                                 data-variant-stock="{{ $product->stock }}"
                                                 data-variant-stock-label="{{ $product->stock > 0 ? __('products.detail.in_stock', ['count' => $product->stock]) : __('products.detail.out_of_stock') }}"
                                                 aria-pressed="true">
                                             <div>
                                                 <div class="fw-semibold small">{{ __('products.detail.base_edition') }}</div>
-                                                <div class="fg-success small fw-bold">${{ number_format($product->price, 2) }}</div>
+                                                <div class="fg-success small fw-bold">{{ $money->format($product->price) }}</div>
                                             </div>
                                             @if ($product->stock <= 0)
                                                 <span class="badge bg-danger small ms-1">{{ __('products.out_of_stock') }}</span>
@@ -203,13 +203,13 @@
                                                     class="btn text-start border rounded-5 p-2 px-3 bg-1 d-flex align-items-center gap-2"
                                                     data-variant-option
                                                     data-variant-name="{{ $variant->name }}"
-                                                    data-variant-price="${{ number_format($variant->price, 2) }}"
+                                                    data-variant-price="{{ $money->format($variant->price) }}"
                                                     data-variant-stock="{{ $variant->stock }}"
                                                     data-variant-stock-label="{{ $variant->stock > 0 ? __('products.detail.in_stock', ['count' => $variant->stock]) : __('products.detail.out_of_stock') }}"
                                                     aria-pressed="false">
                                                 <div>
                                                     <div class="fw-semibold small">{{ $variant->name }}</div>
-                                                    <div class="fg-success small fw-bold">${{ number_format($variant->price, 2) }}</div>
+                                                    <div class="fg-success small fw-bold">{{ $money->format($variant->price) }}</div>
                                                 </div>
                                                 @if ($variant->stock <= 0)
                                                     <span class="badge bg-danger small ms-1">{{ __('products.out_of_stock') }}</span>

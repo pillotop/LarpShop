@@ -60,10 +60,10 @@
                                 </a>
                                 <div class="flex-grow-1" style="min-width: 0;">
                                     <a href="{{ $product['url'] }}" class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-2">{{ $product['name'] }}</a>
-                                    <div class="small fg-3">{{ __('cart.each', ['price' => '$' . number_format($product['price'], 2)]) }}</div>
+                                    <div class="small fg-3">{{ __('cart.each', ['price' => $money->format($product['price'])]) }}</div>
                                     <div class="d-flex align-items-center justify-content-between gap-2 mt-2">
                                         <span class="badge bg-1 fg-body border rounded-pill">{{ __('cart.quantity', ['count' => $item['quantity']]) }}</span>
-                                        <strong>${{ number_format($item['subtotal'], 2) }}</strong>
+                                        <strong>{{ $money->format($item['subtotal']) }}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                         <dl class="row g-2 mb-3">
                                             <dt class="col-6 fg-3 fw-normal">{{ __('cart.reference') }}</dt><dd class="col-6 text-end mb-0">#{{ $product['product_id'] }}</dd>
                                             <dt class="col-6 fg-3 fw-normal">{{ __('cart.sort.stock') }}</dt><dd class="col-6 text-end mb-0">{{ $product['stock'] }}</dd>
-                                            <dt class="col-6 fg-3 fw-normal">{{ __('cart.sort.price') }}</dt><dd class="col-6 text-end mb-0">${{ number_format($product['price'], 2) }}</dd>
+                                            <dt class="col-6 fg-3 fw-normal">{{ __('cart.sort.price') }}</dt><dd class="col-6 text-end mb-0">{{ $money->format($product['price']) }}</dd>
                                         </dl>
                                         @if ($item['quantity'] > $product['stock'])
                                             <p class="fg-danger mb-3">{{ __('cart.exceeds_stock') }}</p>
@@ -104,7 +104,7 @@
             <p data-cart-feedback class="small fg-danger mb-2" role="status" aria-live="polite"></p>
             <div class="d-flex justify-content-between align-items-center">
                 <div><span class="fw-semibold">{{ __('cart.sort.subtotal') }}</span><div class="small fg-3">{{ trans_choice('cart.items_in_cart', $cartCount, ['count' => $cartCount]) }}</div></div>
-                <strong class="fs-lg">${{ number_format($cartSubtotal, 2) }}</strong>
+                <strong class="fs-lg">{{ $money->format($cartSubtotal) }}</strong>
             </div>
             <a href="{{ route('cart.index') }}" class="btn btn-outline theme-primary w-100 rounded-pill mt-3">{{ __('cart.to_checkout') }}</a>
         </footer>

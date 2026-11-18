@@ -1,7 +1,7 @@
 @php
     $quantity = $cartData['products']->sum('quantity');
     $subtotal = (float) $cartData['products']->sum('subtotal');
-    $formattedSubtotal = '$' . number_format($subtotal, 2);
+    $formattedSubtotal = $money->format($subtotal);
 
     $priceBreakdownRows = [
         [

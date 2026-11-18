@@ -98,7 +98,7 @@
                         aria-label="{{ __('common.items_in_cart') }}">{{ $cart['total_count'] }}
                     </span>
                 </div>
-                <span data-cart-total>${{ $cart['total_amount'] }}</span>
+                <span data-cart-total>{{ $money->format($cart['total_amount']) }}</span>
 
                 <template id="cart-section">
                     <x-cart :data="$cart"/>
@@ -210,4 +210,4 @@
     </div>
 </nav>
 
-<script type="application/json" id="cart-initial-state">@json($cart)</script>
+<script type="application/json" id="cart-initial-state">@json([...$cart, 'formatted_total' => $money->format($cart['total_amount']), 'display_currency' => $money->currency()])</script>
