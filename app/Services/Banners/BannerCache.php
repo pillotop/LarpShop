@@ -12,7 +12,8 @@ class BannerCache
         $versionKey = $this->versionKey($vendorId);
         Cache::add($versionKey, (string) Str::uuid(), now()->addDays(7));
 
-        return 'banners:vendor:'.$vendorId.':'.Cache::get($versionKey).':'.$zone.':'.$limit;
+        // v2 stores raw attribute arrays instead of serialized Eloquent objects.
+        return 'banners:v2:vendor:'.$vendorId.':'.Cache::get($versionKey).':'.$zone.':'.$limit;
     }
 
     public function invalidate(int $vendorId): void

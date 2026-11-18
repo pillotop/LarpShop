@@ -88,6 +88,7 @@ The current vendor header outputs 1600 × 400. `BannerImageProcessor::store()` a
 ## Stage 5: Caching and responsive images (implemented)
 
 - `BannerCache` maintains a versioned namespace per vendor. Keys include vendor, zone and configured display limit. Invalidating a vendor rotates its namespace for all zones; a concurrent older read cannot repopulate the new namespace. Old entries expire naturally (at most `banners.cache_seconds`, default one hour).
+- Cache payload v2 stores only scalar raw model attributes and arrays, preserving JSON/date strings. Reads hydrate Eloquent models without another banner query; class unserialization stays disabled. The v2 key prefix bypasses legacy object entries automatically; malformed payloads are rebuilt.
 - Live queries cache their result, including empty collections, only until the earlier of the configured TTL or the next enabled banner start/expiry boundary. Full timestamp comparisons preserve inclusive starts and exclusive ends. Explicit-time reads bypass the live cache.
 - `BannerObserver` invalidates after commit on model saves/deletes, capturing both previous and new vendor IDs. Zone moves invalidate all zones for the affected vendor. `VendorBannerObserver` does the same when status changes. Bulk query-builder updates/deletes do not fire model observers; future bulk operations must explicitly invalidate affected vendors. Public reads are outside write transactions; do not use cached reads to preview uncommitted edits.
 - The image processor creates the master WebP and smaller variants configured by the zone (480px/960px for the 1600px vendor header). It never upscales variants. Partial processing/storage failures remove all newly written files.
@@ -120,3 +121,7 @@ The banner and storefront-settings changes were consolidated onto `real` at `b39
 The shared settings drawer now lives in `components/settings-panel.blade.php`, called through `locale-panels`, so both public storefront and admin layouts have exactly one settings drawer. Its language section opens by default; owner-specific storefront settings remain guarded by authentication/ownership checks.
 
 The localization drawer regression assertion now recognizes the language section ID. The existing persistent-header keyboard test fixture calls the window focus listener, matching the unchanged implementation.
+
+## Cache serialization regression coverage
+
+`VendorBannerDatabaseCacheTest` runs the cache behavior suite with the database store and `cache.serializable_classes=false`, including cold/warm public storefront requests. It verifies model/date/JSON restoration, plain-data payloads, legacy entry isolation and malformed entry recovery. The ordinary array cache tests remain in place for query reuse. Do not cache Eloquent objects or cast date objects directly in this payload; change the key schema version when the payload contract changes.

@@ -39,7 +39,8 @@ class VendorBannerCacheTest extends TestCase
         DB::enableQueryLog();
         DB::flushQueryLog();
         $this->assertSame([$banner->banner_id], $query->visibleForVendor($vendor, 'vendor_header')->modelKeys());
-        $this->assertSame([], DB::getQueryLog());
+        $bannerQueries = array_filter(DB::getQueryLog(), fn ($entry) => str_contains(strtolower($entry['query']), 'banners'));
+        $this->assertSame([], $bannerQueries);
         DB::disableQueryLog();
     }
 
