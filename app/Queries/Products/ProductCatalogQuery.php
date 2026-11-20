@@ -4,7 +4,11 @@ namespace App\Queries\Products;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductCollection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProductCatalogQuery
 {
@@ -16,6 +20,70 @@ class ProductCatalogQuery
         'name_desc' => 'Name: Z to A',
         'rating_desc' => 'Highest Rated',
     ];
+
+    /** Shared eligibility for collection pages and promo section existence checks. */
+    public function constrainCollectionVisibility(Builder $query, bool $inStockOnly = false): Builder
+    {
+        return $query->approved()->active()
+            ->whereHas('vendor', fn (Builder $vendor) => $vendor->active())
+            ->when($inStockOnly, fn (Builder $products) => $products->where('products.stock', '>', 0));
+    }
+
+    public function collectionProducts(ProductCollection $collection, int $limit = 12): Collection
+    {
+        $max = max(array_column(config('promotions.layouts'), 'product_limit'));
+
+        return $this->collectionProductsQuery($collection, inStockOnly: true)
+            ->limit(max(1, min($limit, $max)))->get();
+    }
+
+    /** Load a bounded product list per collection in one batch for homepage sections. */
+    public function loadPromoProducts(Collection $collections): void
+    {
+        $limit = max(array_column(config('promotions.layouts'), 'product_limit'));
+        $collections->load(['products' => function (BelongsToMany $products) use ($limit) {
+            $this->constrainCollectionVisibility($products->getQuery(), inStockOnly: true)
+                ->with(['category', 'images', 'vendor'])
+                ->withAvg('reviews as average_rating', 'rating')
+                ->withCount('reviews as total_reviews');
+            $products->orderByPivot('sort_order')->orderBy('products.product_id')->limit($limit);
+        }]);
+    }
+
+    public function paginateCollectionProducts(ProductCollection $collection): LengthAwarePaginator
+    {
+        return $this->collectionProductsQuery($collection)
+            ->paginate(config('promotions.collection_page_size'));
+    }
+
+    public function collectionCandidates(ProductCollection $collection, string $search = ''): LengthAwarePaginator
+    {
+        return $this->constrainCollectionVisibility(Product::query())
+            ->whereNotIn('products.product_id', $collection->products()->select('products.product_id'))
+            ->when($search !== '', fn (Builder $query) => $query->where(fn (Builder $query) => $query
+                ->where('products.name', 'like', '%'.$search.'%')->orWhereHas('vendor',
+                    fn (Builder $vendor) => $vendor->where('store_name', 'like', '%'.$search.'%'))))
+            ->with('vendor')->orderBy('products.name')->orderBy('products.product_id')
+            ->paginate(12)->withQueryString();
+    }
+
+    public function collectionCandidate(int $productId): ?Product
+    {
+        return $this->constrainCollectionVisibility(Product::query())->find($productId);
+    }
+
+    private function collectionProductsQuery(ProductCollection $collection, bool $inStockOnly = false): Builder
+    {
+        // Publication/access is checked by the collection reader or authorized preview flow.
+        return $this->constrainCollectionVisibility(Product::query(), $inStockOnly)
+            ->join('product_collection_items as membership', 'membership.product_id', '=', 'products.product_id')
+            ->where('membership.product_collection_id', $collection->getKey())
+            ->select('products.*')
+            ->with(['category', 'images', 'vendor'])
+            ->withAvg('reviews as average_rating', 'rating')
+            ->withCount('reviews as total_reviews')
+            ->orderBy('membership.sort_order')->orderBy('products.product_id');
+    }
 
     private function getAllCategoryIds(int $categoryId): array
     {

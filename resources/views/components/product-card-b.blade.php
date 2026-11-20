@@ -14,7 +14,7 @@
     };
 
     $firstImage = $product->images->first();
-    $imagePath = $resolveImageUrl($firstImage?->path) ?? asset('images/product-placeholder.jpg');
+    $imagePath = $resolveImageUrl($firstImage?->path) ?? asset('images/product-placeholder.svg');
     $imageAlt = $firstImage?->alt_text ?? $product->name;
 
     $isTopSeller = ($product->total_reviews ?? 0) >= 2 || (float) ($product->average_rating ?? 0) >= 4.8;

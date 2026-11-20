@@ -3,14 +3,46 @@
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminProductCollectionController;
 use App\Http\Controllers\Admin\AdminProductModerationController;
+use App\Http\Controllers\Admin\AdminPromoSectionController;
 use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminReviewModerationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVendorController;
+use App\Http\Controllers\Admin\CollectionProductController;
+use App\Http\Controllers\Admin\PromoSectionPreviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('collections')->name('collections.')->group(function () {
+        Route::get('/', [AdminProductCollectionController::class, 'index'])->name('index');
+        Route::get('/create', [AdminProductCollectionController::class, 'create'])->name('create');
+        Route::post('/', [AdminProductCollectionController::class, 'store'])->name('store');
+        Route::get('/{collection}/edit', [AdminProductCollectionController::class, 'edit'])->whereNumber('collection')->name('edit');
+        Route::put('/{collection}', [AdminProductCollectionController::class, 'update'])->whereNumber('collection')->name('update');
+        Route::delete('/{collection}', [AdminProductCollectionController::class, 'destroy'])->whereNumber('collection')->name('destroy');
+        Route::post('/{collection}/products', [CollectionProductController::class, 'store'])->whereNumber('collection')->name('products.store');
+        Route::patch('/{collection}/products/{product}/move', [CollectionProductController::class, 'move'])
+            ->whereNumber(['collection', 'product'])->name('products.move');
+        Route::delete('/{collection}/products/{product}', [CollectionProductController::class, 'destroy'])
+            ->whereNumber(['collection', 'product'])->name('products.destroy');
+    });
+
+    Route::prefix('promo-sections')->name('sections.')->group(function () {
+        Route::get('/', [AdminPromoSectionController::class, 'index'])->name('index');
+        Route::get('/create', [AdminPromoSectionController::class, 'create'])->name('create');
+        Route::post('/', [AdminPromoSectionController::class, 'store'])->name('store');
+        Route::get('/{section}/edit', [AdminPromoSectionController::class, 'edit'])->whereNumber('section')->name('edit');
+        Route::put('/{section}', [AdminPromoSectionController::class, 'update'])->whereNumber('section')->name('update');
+        Route::patch('/{section}/active', [AdminPromoSectionController::class, 'toggle'])->whereNumber('section')->name('toggle');
+        Route::patch('/{section}/move', [AdminPromoSectionController::class, 'move'])->whereNumber('section')->name('move');
+        Route::delete('/{section}', [AdminPromoSectionController::class, 'destroy'])->whereNumber('section')->name('destroy');
+    });
+
+    Route::get('/promotions/preview', PromoSectionPreviewController::class)
+        ->name('promotions.preview');
+
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index']);
 

@@ -73,6 +73,24 @@
                 <span>{{ __('management.platform_reports') }}</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a
+                href="{{ route('admin.collections.index') }}"
+                class="nav-link {{ request()->routeIs('admin.collections.*', 'admin.promotions.*') ? 'active' : '' }}"
+            >
+                <i class="bi bi-collection fs-lg" aria-hidden="true"></i>
+                <span>{{ __('promotions.collections') }}</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a
+                href="{{ route('admin.sections.index') }}"
+                class="nav-link {{ request()->routeIs('admin.sections.*') ? 'active' : '' }}"
+            >
+                <i class="bi bi-layout-text-window-reverse fs-lg" aria-hidden="true"></i>
+                <span>{{ __('promotions.manage_sections') }}</span>
+            </a>
+        </li>
         <li class="nav-item mt-3">
             <small class="text-uppercase fg-secondary fw-bold px-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('management.marketplace_shortcuts') }}</small>
         </li>

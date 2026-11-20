@@ -109,6 +109,11 @@
                 </div>
             </div>
         </section>
+        @foreach ($promoSections as $promo)
+            <div class="container my-4">
+                <x-promo-section :data="$promo" />
+            </div>
+        @endforeach
         <section>
             @vite('resources/css/broad_select.css')
             <header class="container">
@@ -177,7 +182,7 @@
 
                     <div class="rounded-pill py-2 my-2 overflow-hidden shadow" style="background-color: white;">
                         <x-two-arrow-scroller scroll-step="0.4">
-                            <ul id="two-arrow-scrollable" class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0">
+                            <ul data-scroll-content class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0">
                                 @foreach ($productCategories as $category)
                                     <li>
                                         <a href="{{ route('categories.show', ['slug' => $category->slug ?? $category['slug'] ?? '']) }}" class="btn btn-sm btn-outline theme-secondary rounded-pill px-3 text-nowrap text-decoration-none">

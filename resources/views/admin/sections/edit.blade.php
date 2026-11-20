@@ -1,0 +1,31 @@
+@extends('layouts.admin')
+@section('admin_theme', 'light')
+@section('title', __('promotions.manage_sections'))
+@section('page_title', __('promotions.manage_sections'))
+
+@section('content')
+    <header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <h1 class="h3 fw-semibold">{{ __($section->exists ? 'promotions.edit_section' : 'promotions.create_section') }}</h1>
+        <div class="d-flex flex-wrap gap-2">
+            <a
+                href="{{ route('admin.sections.index') }}"
+                class="btn btn-outline theme-secondary rounded-2"
+            >{{ __('promotions.back_sections') }}</a>
+            @if ($section->exists)
+                <a
+                    href="{{ route('admin.promotions.preview', ['section' => $section->getKey()]) }}"
+                    class="btn btn-outline theme-secondary rounded-2"
+                >{{ __('promotions.preview') }}</a>
+            @endif
+        </div>
+    </header>
+    @if ($collections->isEmpty())
+        <p>{{ __('promotions.no_collections') }}</p>
+        <a
+            href="{{ route('admin.collections.create') }}"
+            class="btn btn-solid theme-primary rounded-2"
+        >{{ __('promotions.create_collection') }}</a>
+    @else
+        @include('admin.sections.partials.form')
+    @endif
+@endsection

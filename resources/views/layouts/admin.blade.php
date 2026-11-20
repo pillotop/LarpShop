@@ -1,5 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@hasSection('admin_theme')
+    <html
+        lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+        data-bs-theme="@yield('admin_theme')"
+    >
+@else
+    <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@endif
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

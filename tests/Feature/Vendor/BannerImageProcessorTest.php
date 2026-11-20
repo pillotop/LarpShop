@@ -86,7 +86,7 @@ class BannerImageProcessorTest extends TestCase
             app(BannerImageProcessor::class)->store($this->image(), 'vendor_header');
             $this->fail('Expected storage failure.');
         } catch (\RuntimeException $exception) {
-            $this->assertSame('Unable to store banner image.', $exception->getMessage());
+            $this->assertSame('Unable to store image.', $exception->getMessage());
         }
         $this->assertSame([], $realDisk->allFiles());
     }

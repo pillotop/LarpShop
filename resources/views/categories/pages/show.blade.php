@@ -98,7 +98,7 @@
                     <h2 class="fw-bold p-3 m-0" style="color: white; background-color: var(--color-tertiary-500);">{{ __('products.category.products') }}</h2>
                 </div>
                 <x-two-arrow-scroller>
-                    <ul id="two-arrow-scrollable" class="d-flex gap-4 overflow-x-auto list-unstyled">
+                    <ul data-scroll-content class="d-flex gap-4 overflow-x-auto list-unstyled">
                         @foreach ($products as $product)
                             <li>
                                 <x-product-card-b :product="$product"/>

@@ -1,33 +1,21 @@
-import '../app.js';
-
-class TwoArrowScroller {
+export class TwoArrowScroller {
     constructor(element) {
-        this.element = element;
-        this.scroller = this.element.querySelector("#two-arrow-scrollable");
+        const content = element.querySelector('[data-scroll-content]');
+        const previous = element.querySelector('[data-scroll-previous]');
+        const next = element.querySelector('[data-scroll-next]');
+        if (!content || !previous || !next) return;
 
-        this.arrowLeft = this.element.querySelector("#arrow-left");
-        this.arrowRight = this.element.querySelector("#arrow-right");
-
-        this.scrollStep = Number(this.element.dataset.scrollStep || "0.67");
-
-        if (!this.arrowLeft || !this.arrowRight || !this.scroller) {
-            throw Error("Two arrow scroller cannot be instantiated because one of the required element is missing");
-        }
-
-        this.#setupSignals();
-    }
-
-    #setupSignals() {
-        this.arrowLeft.addEventListener("click", () => {
-            const scrollWidth = this.scroller.scrollWidth;
-            this.scroller.scrollLeft -= scrollWidth * this.scrollStep;
+        const step = Number(element.dataset.scrollStep || '0.67');
+        const distance = () => content.clientWidth * (Number.isFinite(step) && step > 0 ? step : 0.67);
+        const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const scroll = direction => content.scrollBy({
+            left: direction * distance(),
+            behavior: reducedMotion() ? 'auto' : 'smooth',
         });
 
-        this.arrowRight.addEventListener("click", () => {
-            const scrollWidth = this.scroller.scrollWidth;
-            this.scroller.scrollLeft += scrollWidth * this.scrollStep;
-        });
+        previous.addEventListener('click', () => scroll(-1));
+        next.addEventListener('click', () => scroll(1));
     }
 }
 
-document.querySelectorAll(".two-arrow-scroller").forEach(element => new TwoArrowScroller(element));
+document.querySelectorAll('.two-arrow-scroller').forEach(element => new TwoArrowScroller(element));

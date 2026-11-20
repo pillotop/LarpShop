@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
             'homepage',
             'products.pages.index',
             'products.pages.show',
+            'collections.pages.show',
             'categories.pages.show',
             'vendor.pages.storefront',
             'profile.pages.show',

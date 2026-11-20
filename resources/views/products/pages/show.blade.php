@@ -322,7 +322,7 @@
             <h2 class="h4 fw-bold mb-3">{{ __('products.detail.similar') }}</h2>
             @if ($similarProducts->isNotEmpty())
                 <x-two-arrow-scroller>
-                    <ul id="two-arrow-scrollable" class="d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0 py-2">
+                    <ul data-scroll-content class="d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0 py-2">
                         @foreach ($similarProducts as $similarProduct)
                             <li>
                                 <x-product-card-b :product="$similarProduct"/>

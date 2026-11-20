@@ -1,14 +1,17 @@
 <?php
 
 use App\Http\Controllers\AccountVendorController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VendorStorefrontController;
 use App\Models\Category;
+use App\Models\ProductCollection;
 use App\Models\Vendor;
 use App\View\CategoryController;
 use App\View\HomeController;
+use App\View\ProductCollectionController;
 use App\View\ProductSearchController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
@@ -17,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/locale', [LocaleController::class, 'update'])
     ->name('locale.update');
 
-Route::post('/currency', [\App\Http\Controllers\CurrencyController::class, 'update'])
+Route::post('/currency', [CurrencyController::class, 'update'])
     ->name('currency.update');
 
 Route::middleware('auth')->group(function () {
@@ -45,6 +48,14 @@ Route::get('/', [HomeController::class, 'index'])
 
 Route::get('/products', [ProductSearchController::class, 'index'])
     ->name('products.index');
+
+Route::get('/collections/{slug}', [ProductCollectionController::class, 'show'])
+    ->name('collections.show');
+
+Breadcrumbs::for('collection', function (BreadcrumbTrail $trail, ProductCollection $collection) {
+    $trail->parent('home');
+    $trail->push($collection->name, route('collections.show', ['slug' => $collection->slug]));
+});
 
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])
     ->name('categories.show');

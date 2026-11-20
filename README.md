@@ -23,6 +23,30 @@ Customers can save products to a wishlist in their profile. Customers with a pai
 
 Vendor and admin areas provide store, product, category, and moderation tools. Delivery tracking and customer return/refund requests are still future work; payment status and order lifecycle status are separate concepts.
 
+## Homepage promotions
+
+Admins curate products at `/admin/collections`, then publish their homepage placement
+at `/admin/promo-sections`. Collections and section presentation are independent:
+
+1. Create a collection, add eligible products, set their order, and publish it.
+2. Create a promo section using that collection. Choose a grid, horizontal row, or
+   image beside products. The image layout requires a confirmed portrait crop and
+   alternative text. Preview is available before publication.
+3. Enable the section, optionally set a start/expiry, and use the arrows in section
+   management to set display order. Dates use the application timezone shown in
+   the form. Start is inclusive and expiry is exclusive.
+
+The homepage shows up to eight eligible sections after its category mosaic, while
+keeping existing discovery content. A section is hidden if disabled, outside its
+schedule, linked to a draft collection, or left without eligible products in stock.
+Published collections also have a public `/collections/{slug}` page. These sections
+curate products; they do not apply discounts or change checkout prices.
+
+Run the project's normal migrations and public storage link setup before using
+promotion management. Limits and image profiles live in `config/promotions.php`.
+The completed design, verification results, and changed file inventory are in
+[the promo sections plan](docs/PROMO_SECTIONS_PLAN.md).
+
 ## Architecture and source layout
 
 ```text

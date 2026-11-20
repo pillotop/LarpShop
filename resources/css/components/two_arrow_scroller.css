@@ -1,28 +1,26 @@
 .two-arrow-scroller .arrow-btn {
     border: none;
+    padding: 0;
+    width: 2rem;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    background: transparent;
 }
 
-.two-arrow-scroller #two-arrow-scrollable {
+.two-arrow-scroller .arrow-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.two-arrow-scroller [data-scroll-content] {
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
-.two-arrow-scroller #two-arrow-scrollable::-webkit-scrollbar {
+.two-arrow-scroller [data-scroll-content]::-webkit-scrollbar {
     display: none;
-}
-
-.two-arrow-scroller #arrow-left {
-    background: linear-gradient(
-        to left,
-        transparent,
-        var(--arrow-left-bg-gradient, white)
-    );
-}
-
-.two-arrow-scroller #arrow-right {
-    background: linear-gradient(
-        to right,
-        transparent,
-        var(--arrow-left-bg-gradient, white)
-    );
 }

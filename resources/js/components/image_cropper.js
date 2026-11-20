@@ -32,6 +32,7 @@ class ImageCropper extends HTMLElement {
         const form = this.closest('form');
         if (form) {
             on(form, 'submit', event => {
+                if (this.output.matches(':disabled')) return;
                 if (this.source.files.length && !this.output.files.length) {
                     event.preventDefault();
                     this.message('apply_first');
