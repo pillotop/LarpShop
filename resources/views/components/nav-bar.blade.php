@@ -6,7 +6,7 @@
 ])
 
 <nav class="navigation-bar position-relative z-1 py-2">
-    <div class="navigation-bar-inner d-flex flex-wrap lg:flex-nowrap align-items-center justify-content-between gap-2 lg:gap-3 px-2 lg:px-3">
+    <div class="navigation-bar-inner container d-flex flex-wrap lg:flex-nowrap align-items-center justify-content-between gap-2 lg:gap-3">
         <div class="order-1 flex-shrink-0 d-flex align-items-center">
             <a
                 href="{{ route('home') }}"
@@ -23,30 +23,7 @@
                 class="search-form d-flex align-items-stretch rounded-9 h-100 w-100"
                 role="search"
             >
-                <button type="button" class="search-category-btn d-flex gap-1 sm:gap-2 justify-content-between align-items-center rounded-start-pill border-0 px-2 sm:px-3 flex-shrink-0" aria-label="{{ __('common.select_category') }}" data-dropdown-trigger="categories">
-                    <span class="text-nowrap">{{ __('common.categories') }}</span>
-                    <svg class="dropdown-arrow icon-16 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                        <path class="dropdown-arrow-path" d="M5.75 8.75 L10 13 L14.25 8.75"></path>
-                    </svg>
-                    <template data-dropdown-template="categories">
-                        <div class="category-dropdown-menu rounded-5 shadow">
-                            @php
-                                $topCategories = collect($productCategories)->whereNull('parent_id');
-                                $childGroups = collect($productCategories)->whereNotNull('parent_id')->groupBy('parent_id');
-                            @endphp
-                            @forelse ($topCategories as $category)
-                                <a href="{{ route('categories.show', $category->slug) }}" class="fw-semibold">{{ $category->name }}</a>
-                                @foreach ($childGroups->get($category->category_id, collect()) as $child)
-                                    <a href="{{ route('categories.show', $child->slug) }}" class="ps-4 small fg-3">{{ $child->name }}</a>
-                                @endforeach
-                            @empty
-                                @foreach ($productCategories as $category)
-                                    <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
-                                @endforeach
-                            @endforelse
-                        </div>
-                    </template>
-                </button>
+                <x-category-dropdown :categories="$productCategories" />
                 <div class="search-input-wrap d-flex align-items-center position-relative flex-grow-1">
                     <input
                         type="search"

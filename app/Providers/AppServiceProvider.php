@@ -7,6 +7,7 @@ use App\Models\Vendor;
 use App\Observers\BannerObserver;
 use App\Observers\VendorBannerObserver;
 use App\Support\Money\MoneyDisplay;
+use App\View\Composers\CategoryDropdownComposer;
 use App\View\Composers\ProductCapabilityComposer;
 use App\View\Composers\WishlistButtonComposer;
 use Illuminate\Pagination\Paginator;
@@ -36,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
         Vendor::observe(VendorBannerObserver::class);
 
         Paginator::defaultView('shared.pagination');
+
+        Facades\View::composer('components.category-dropdown', CategoryDropdownComposer::class);
 
         Facades\View::composer('components.wishlist.button', WishlistButtonComposer::class);
 

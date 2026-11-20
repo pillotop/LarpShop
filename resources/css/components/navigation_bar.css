@@ -1,3 +1,10 @@
+/* Keep existing sticky header wrappers full width; constrain their inner content. */
+header.container:has(> .navigation-bar) {
+    width: 100%;
+    max-width: none;
+    padding-inline: 0;
+}
+
 .navigation-bar {
     background-color: lightgray;
 }
