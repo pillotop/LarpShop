@@ -269,7 +269,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 lg:col-2 lg:sticky-top">
+                <div class="col-12 lg:col-2 lg:sticky-top z-0">
                     <nav id="product" class="d-none lg:d-flex flex-column align-items-stretch">
                         <nav class="nav nav flex-column">
                             <a class="nav-link text-truncate" href="#product-header">{{ $product->name }}</a>
