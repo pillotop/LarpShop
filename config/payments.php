@@ -6,11 +6,28 @@ use App\Services\Payments\Gateways\MomoGateway;
 use App\Services\Payments\Gateways\VnpayGateway;
 use App\Services\Payments\Gateways\ZalopayGateway;
 use App\Services\Payments\PayPalPaymentGateway;
+use App\Services\Payments\SimulatedWalletGateway;
 use App\Services\Payments\StripePaymentGateway;
+
+$walletSimulation = env('WALLET_SIMULATION_ENABLED', false);
+$simulatedWallets = [];
+foreach (['momo' => 'MoMo', 'zalopay' => 'ZaloPay', 'vnpay' => 'VNPAY'] as $provider => $label) {
+    $simulatedWallets[$provider.'_demo'] = [
+        'label' => $label,
+        'gateway' => SimulatedWalletGateway::class,
+        'enabled' => $walletSimulation,
+        'simulated' => true,
+        'redirect' => true,
+        'methods' => [PaymentMethod::EWallet->value],
+    ];
+}
 
 return [
     'currency' => env('PAYMENT_CURRENCY', 'USD'),
     'options' => [
+        'momo_demo' => ['provider' => 'momo_demo', 'method' => 'ewallet'],
+        'zalopay_demo' => ['provider' => 'zalopay_demo', 'method' => 'ewallet'],
+        'vnpay_demo' => ['provider' => 'vnpay_demo', 'method' => 'ewallet'],
         'vnpay' => ['provider' => 'vnpay', 'method' => 'ewallet'],
         'zalopay' => ['provider' => 'zalopay', 'method' => 'ewallet'],
         'momo' => ['provider' => 'momo', 'method' => 'ewallet'],
@@ -20,6 +37,7 @@ return [
         'stripe_card' => ['provider' => 'stripe', 'method' => 'card'],
     ],
     'providers' => [
+        ...$simulatedWallets,
         'vnpay' => [
             'label' => 'VNPAY',
             'gateway' => VnpayGateway::class,

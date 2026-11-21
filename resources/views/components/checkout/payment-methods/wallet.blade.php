@@ -7,6 +7,12 @@
         'zalopay' => 'bi-wallet2',
         'vnpay' => 'bi-bank',
     ];
+    foreach (['momo', 'zalopay', 'vnpay'] as $provider) {
+        if (config("payments.providers.{$provider}_demo.enabled", false)) {
+            $providers[$provider.'_demo'] = $providers[$provider];
+            unset($providers[$provider]);
+        }
+    }
     $available = array_values(array_filter(
         array_keys($providers),
         fn ($provider) => config("payments.providers.{$provider}.enabled", true),
@@ -45,6 +51,11 @@
                         aria-hidden="true"
                     ></i>
                     <span class="wallet-provider-brand">{{ $label }}</span>
+                    @if (config("payments.providers.{$provider}.simulated", false))
+                        <span class="small text-body-secondary">
+                            {{ __('checkout.wallet.simulated') }}
+                        </span>
+                    @endif
                     @unless ($enabled)
                         <span class="small text-body-secondary">
                             {{ __('checkout.wallet.unavailable') }}
@@ -57,6 +68,9 @@
 
     <p class="small text-body-secondary mb-0">{{ __('checkout.wallet.selection_notice') }}</p>
     <p class="small text-body-secondary mb-0">{{ __('checkout.wallet.sandbox') }}</p>
+    @if (collect(array_keys($providers))->contains(fn ($provider) => config("payments.providers.{$provider}.simulated", false)))
+        <p class="small text-body-secondary mb-0">{{ __('checkout.wallet.simulation_notice') }}</p>
+    @endif
     <button
         type="submit"
         class="btn btn-solid theme-primary rounded-2 w-100 py-3"

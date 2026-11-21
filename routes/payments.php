@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Payments\CheckoutPaymentController;
 use App\Http\Controllers\Payments\FakePaymentController;
+use App\Http\Controllers\Payments\SimulatedWalletController;
 use App\Http\Controllers\Payments\StripeWebhookController;
 use App\Http\Controllers\Payments\WalletWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,8 @@ if (app()->environment(['local', 'testing'])) {
 }
 
 Route::middleware('auth')->group(function () {
+    Route::get('/payments/{payment}/wallet-demo', [SimulatedWalletController::class, 'show'])->name('payments.wallet-demo.show');
+    Route::post('/payments/{payment}/wallet-demo', [SimulatedWalletController::class, 'store'])->name('payments.wallet-demo.store');
     Route::post('/checkout/{order}/payments', [CheckoutPaymentController::class, 'store'])->name('payments.store');
     Route::get('/payments/{payment}/return', [CheckoutPaymentController::class, 'returned'])->name('payments.return');
     Route::get('/payments/{payment}/cancel', [CheckoutPaymentController::class, 'cancelled'])->name('payments.cancel');

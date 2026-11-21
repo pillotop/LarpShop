@@ -74,6 +74,9 @@
     </header>
     <main>
         <div class="container">
+            @if (session('status'))
+                <div class="alert theme-info" role="status">{{ session('status') }}</div>
+            @endif
             @if (session('success'))
                 <div class="alert theme-success" role="status">{{ session('success') }}</div>
             @endif

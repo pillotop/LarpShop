@@ -92,7 +92,10 @@ return [
         'status_message' => 'Trạng thái thanh toán mô phỏng: :status',
     ],
     'wallet' => [
-        'selection_notice' => 'Chọn nhà cung cấp để xác nhận trên trang thanh toán của họ. Các cổng Việt Nam thanh toán bằng VND; số tiền và tỷ giá được cố định khi bắt đầu thanh toán.',
+        'simulated' => 'Mô phỏng nội bộ',
+        'simulation_title' => 'Mô phỏng thanh toán :provider',
+        'simulation_notice' => 'Chỉ dùng để demo: trang này do LarpShop vận hành, không phải nhà cung cấp ví. Không gọi API nhà cung cấp, không trừ tiền và giữ nguyên tiền tệ của đơn hàng. Chọn kết quả để minh họa luồng xử lý đơn hàng.',
+        'selection_notice' => 'Chọn phương thức thanh toán. Sandbox mở trang nhà cung cấp; các lựa chọn có nhãn Mô phỏng nội bộ mở trang demo của LarpShop.',
         'title' => 'Ví điện tử & thanh toán ngân hàng',
         'sandbox' => 'Chỉ thanh toán thử nghiệm. Không trừ tiền thật.',
         'vnd_notice' => 'Bạn sẽ xác nhận thanh toán bằng VND tại nhà cung cấp. Số tiền quy đổi và tỷ giá được cố định khi bắt đầu thanh toán.',

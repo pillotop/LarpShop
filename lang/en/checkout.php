@@ -92,7 +92,10 @@ return [
         'status_message' => 'Simulated payment status: :status',
     ],
     'wallet' => [
-        'selection_notice' => 'Choose a provider to approve your payment on its checkout page. Vietnamese providers charge in VND, with the amount and exchange rate fixed when your payment starts.',
+        'simulated' => 'Local simulation',
+        'simulation_title' => ':provider payment simulation',
+        'simulation_notice' => 'Local demo only: this page is operated by LarpShop, not the wallet provider. No provider API is called, no money is charged, and the order currency is kept unchanged. Choose a result to demonstrate the order flow.',
+        'selection_notice' => 'Choose a payment option. Provider sandbox payments open the provider checkout; options labeled Local simulation open a LarpShop demonstration.',
         'title' => 'Wallets & bank payments',
         'sandbox' => 'Sandbox payments only. No real money is charged.',
         'vnd_notice' => 'You will approve payment with the provider in VND. The converted amount and exchange rate are fixed when your payment starts.',
