@@ -1,4 +1,6 @@
 import Alpine from 'alpinejs';
+import './components/theme_switcher.js';
+import './components/search_autocomplete.js';
 import { promoSourceForm } from './components/promo_source_form.js';
 import { vendorOnboarding } from './components/vendor_onboarding.js';
 import * as bootstrap from 'bootstrap';

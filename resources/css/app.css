@@ -1,5 +1,6 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 @import './components/loading_state.css';
+@import './components/theme_switcher.css';
 
 :root {
     --breakpoint-sm: 576px;

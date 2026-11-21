@@ -31,26 +31,7 @@
                 role="search"
             >
                 <x-category-dropdown :categories="$productCategories" />
-                <div class="search-input-wrap d-flex align-items-center position-relative flex-grow-1">
-                    <input
-                        type="search"
-                        name="q"
-                        value="{{ request()->query('q', '') }}"
-                        placeholder="{{ __('common.search_placeholder') }}"
-                        aria-label="{{ __('common.search_products') }}"
-                        maxlength="100"
-                        class="search-input position-relative border ps-2 sm:ps-3 pe-5 z-0 w-100 h-100"
-                    >
-                    <button
-                        type="submit"
-                        class="search-submit-btn border-0 rounded-circle position-absolute z-1 end-0 me-1 sm:me-2 py-1 px-2"
-                        aria-label="{{ __('common.search_products') }}"
-                    >
-                        <svg class="icon-16">
-                            <use href="/images/icons.svg#search-magnifier"></use>
-                        </svg>
-                    </button>
-                </div>
+                <x-search-autocomplete />
                 <button
                     class="search-advanced-btn rounded-end-pill border-0 py-2 px-2 sm:px-3 flex-shrink-0"
                     type="button"

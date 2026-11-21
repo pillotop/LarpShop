@@ -60,6 +60,7 @@ export class CategoryMenu {
 
         scope.value = entry?.dataset.categoryScope ?? '';
         scope.disabled = !entry;
+        scope.dispatchEvent(new Event('change', { bubbles: true }));
         label.textContent = entry?.dataset.categoryName ?? this.trigger.dataset.allCategoriesLabel;
         this.trigger.title = label.textContent;
         this.close();

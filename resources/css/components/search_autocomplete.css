@@ -1,0 +1,39 @@
+.search-suggestions {
+    position: fixed;
+    z-index: var(--z-fixed);
+    background: var(--bg-body);
+    color: var(--fg-body);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.search-suggestions [hidden],
+.search-suggestions[hidden] {
+    display: none !important;
+}
+
+.search-suggestions-heading {
+    padding: 0.75rem 1rem 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--fg-2);
+}
+
+.search-suggestion {
+    padding: 0.75rem 1rem;
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.search-suggestion:hover,
+.search-suggestion[aria-selected="true"] {
+    color: var(--fg-body);
+    background: var(--bg-2);
+}
+
+.search-suggestion img {
+    flex-shrink: 0;
+    object-fit: contain;
+    background: var(--bg-2);
+}

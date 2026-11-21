@@ -51,6 +51,10 @@ function initAdvancedSearchButton() {
         if (queryInput && queryInput.value.trim() !== '') {
             url.searchParams.set('q', queryInput.value.trim());
         }
+        const categoryScope = form?.querySelector('[data-category-scope]');
+        if (categoryScope && !categoryScope.disabled && categoryScope.value) {
+            url.searchParams.set('category', categoryScope.value);
+        }
         url.searchParams.set('advanced', '1');
         window.location.href = url.toString();
     });

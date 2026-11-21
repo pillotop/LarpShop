@@ -1,0 +1,8 @@
+@media (prefers-reduced-motion: no-preference) {
+    html.theme-changing,
+    html.theme-changing *,
+    html.theme-changing *::before,
+    html.theme-changing *::after {
+        transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
+    }
+}

@@ -47,6 +47,7 @@ class DropdownPortal {
     }
 
     setupSignals() {
+        document.addEventListener('search-suggestions-open', () => this.close());
         document.addEventListener("pointerover", this.discover);
 
         document.addEventListener("click", (event) => {
@@ -137,6 +138,8 @@ class DropdownPortal {
 
         this.activeTrigger = trigger;
         this.activeMenu = menu;
+
+        trigger.dispatchEvent(new CustomEvent('category-menu-open', { bubbles: true }));
 
         trigger.setAttribute("aria-expanded", "true");
 

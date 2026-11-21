@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\ProductSearchSuggestionController;
 use App\Models\Product;
 use App\View\ProductController;
 use App\View\SimilarProductsController;
@@ -19,6 +20,10 @@ Route::get('cart', [CartController::class, 'show'])
 
 Route::get('cart/detail', [CartController::class, 'index'])
     ->name('cart.index');
+
+Route::get('/products/search-suggestions', ProductSearchSuggestionController::class)
+    ->middleware('throttle:120,1')
+    ->name('products.search-suggestions');
 
 Route::get('/products/{product}/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
 Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])

@@ -220,19 +220,9 @@ class ProductCatalogQuery
             });
         }
 
-        $categoryFilter = isset($filters['category']) ? trim((string) $filters['category']) : '';
-        if ($categoryFilter !== '') {
-            $category = Category::query()
-                ->where('slug', $categoryFilter)
-                ->when(ctype_digit($categoryFilter), fn ($q) => $q->orWhere('category_id', (int) $categoryFilter))
-                ->first();
-
-            if ($category) {
-                $categoryIds = $this->getAllCategoryIds($category->category_id);
-                $query->whereIn('category_id', $categoryIds);
-            } else {
-                $query->whereRaw('1 = 0');
-            }
+        $categoryIds = $this->searchCategoryIds(trim((string) ($filters['category'] ?? '')));
+        if ($categoryIds !== null) {
+            $query->whereIn('category_id', $categoryIds);
         }
 
         if (isset($filters['min_price']) && $filters['min_price'] !== '' && is_numeric($filters['min_price'])) {
@@ -259,5 +249,40 @@ class ProductCatalogQuery
         };
 
         return $query->limit(100)->get();
+    }
+
+    /** Bounded navigation hints, not personalized recommendations. */
+    public function searchSuggestions(string $keyword, string $category = ''): array
+    {
+        $categoryIds = $this->searchCategoryIds($category);
+        $products = $this->constrainCollectionVisibility(Product::query())
+            ->whereHas('category', fn (Builder $query) => $query->active())
+            ->where(fn (Builder $query) => $query
+                ->where('name', 'like', '%'.$keyword.'%')
+                ->orWhere('description', 'like', '%'.$keyword.'%'))
+            ->when($categoryIds !== null, fn (Builder $query) => $query->whereIn('category_id', $categoryIds))
+            ->with(['images' => fn ($query) => $query->orderBy('sort_order')->orderBy('product_image_id')->limit(1)])
+            ->orderBy('name')->orderBy('product_id')->limit(5)->get();
+
+        $categories = Category::query()->active()
+            ->where('name', 'like', '%'.$keyword.'%')
+            ->when($categoryIds !== null, fn (Builder $query) => $query->whereIn('category_id', $categoryIds))
+            ->orderBy('name')->orderBy('category_id')->limit(3)->get();
+
+        return compact('products', 'categories');
+    }
+
+    /** null means all categories; an empty list means an unknown scope. */
+    private function searchCategoryIds(string $filter): ?array
+    {
+        if ($filter === '') {
+            return null;
+        }
+
+        $category = Category::query()->where('slug', $filter)
+            ->when(ctype_digit($filter), fn (Builder $query) => $query->orWhere('category_id', (int) $filter))
+            ->first();
+
+        return $category ? $this->getAllCategoryIds($category->getKey()) : [];
     }
 }

@@ -8,6 +8,7 @@
     <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @endif
 <head>
+    @include('shared.theme-init')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', __('common.admin_title')) | LarpShop Admin</title>

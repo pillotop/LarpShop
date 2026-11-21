@@ -30,6 +30,8 @@
             ></button>
         </header>
         <div class="drawer-body">
+            <x-theme-switcher />
+
             <div
                 class="accordion"
                 x-data
