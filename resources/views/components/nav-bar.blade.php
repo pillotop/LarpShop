@@ -42,6 +42,8 @@
             </form>
         </div>
         <div class="order-2 lg:order-3 ms-auto lg:ms-0 flex-shrink-0 d-flex align-items-center justify-content-end gap-2 lg:gap-3">
+            <x-language-trigger />
+
             <button
                 id="product-cart"
                 class="side-panel-trigger border-0 rounded-pill p-2"
