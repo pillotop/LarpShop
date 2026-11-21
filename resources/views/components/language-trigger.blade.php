@@ -1,3 +1,7 @@
+@pushOnce('styles', 'language-trigger')
+    @vite('resources/css/components/language_trigger.css')
+@endPushOnce
+
 @php
     $locale = app()->getLocale();
     $countryCode = $locale === 'vi' ? 'VN' : 'GB';

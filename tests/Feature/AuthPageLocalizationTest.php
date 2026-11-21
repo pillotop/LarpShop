@@ -21,24 +21,21 @@ class AuthPageLocalizationTest extends TestCase
 
     public function test_login_page_defaults_to_english(): void
     {
-        $this->get(route('login'))->assertRedirect(route('home'));
-
-        $this->get(route('home'))->assertOk()
+        $this->get(route('login'))->assertOk()
             ->assertSee('<html lang="en">', false)
-            ->assertSee('id="auth-panel"', false)
+            ->assertSee('id="auth-form"', false)
+            ->assertDontSee('id="auth-panel"', false)
+            ->assertSee('id="auth-offers-carousel"', false)
             ->assertSee('Sign in or create account')
             ->assertSee('Use another email');
     }
 
     public function test_vietnamese_login_page_provides_copy_for_every_dynamic_state(): void
     {
-        $this->withSession(['locale' => 'vi'])->get(route('login'))
-            ->assertRedirect(route('home'));
-
-        $response = $this->withSession(['locale' => 'vi'])->get(route('home'))
+        $response = $this->withSession(['locale' => 'vi'])->get(route('login'))
             ->assertOk()
             ->assertSee('<html lang="vi">', false)
-            ->assertSee('id="auth-panel"', false)
+            ->assertSee('id="auth-form"', false)
             ->assertSee('Đăng nhập hoặc tạo tài khoản')
             ->assertSee('Địa chỉ email')
             ->assertSee('Xác nhận mật khẩu')

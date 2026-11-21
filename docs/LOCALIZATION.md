@@ -409,7 +409,7 @@ The shared script also runs on password recovery/reset pages. Their components
 receive the same message dictionary to keep those states working, but their
 static page/form copy is deferred. No backend authentication, registration,
 validation or routing code changed in this checkpoint.
-The unused legacy `login_form.js` was not changed.
+The unused legacy `login_form.js` was later removed when the standalone login page was restored. Both the page and the wishlist drawer use the localized `auth_form.js` implementation.
 
 Static informational pages remain excluded from this work at the user's request.
 

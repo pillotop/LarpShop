@@ -73,6 +73,6 @@ Current Bootstrap 6 migration checks are recorded in [Bootstrap 6 migration](BOO
 ## Review locations
 
 - `vite.config.js`, `package.json`, and `package-lock.json`.
-- `resources/css/app.css`, `resources/css/login_contents.css`, and the styles moved from `public/css` into `resources/css` (including `components/`).
+- `resources/css/app.css` and the styles moved from `public/css` into `resources/css` (including `components/`). The restored login page uses `resources/css/auth_page.css`.
 - `resources/js/app.js` and `resources/js/components/`.
 - Blade asset declarations in `resources/views/layouts/`, `auth/pages/`, `cart/pages/`, `categories/pages/`, `checkout/pages/`, `products/pages/`, `profile/pages/`, `static/`, `vendor/`, `misc/pages/supports.blade.php`, and `homepage.blade.php`.

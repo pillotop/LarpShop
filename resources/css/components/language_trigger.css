@@ -1,0 +1,24 @@
+.language-trigger {
+    color: inherit;
+    white-space: nowrap;
+}
+
+.language-trigger:hover,
+.language-trigger:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.language-trigger-flag {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+
+.language-trigger-flag svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+

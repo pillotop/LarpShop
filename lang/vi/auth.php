@@ -11,6 +11,7 @@ return [
         'tagline' => 'Nền tảng thương mại điện tử thế hệ mới',
         'everything' => 'Mọi thứ đều có tại LarpShop',
         'title' => 'Đăng nhập và đăng ký',
+        'offers' => 'Ưu đãi mới nhất',
         'products' => 'Sản phẩm',
         'pricing' => 'Giá cả',
         'enterprise' => 'Doanh nghiệp',

@@ -66,11 +66,14 @@ class LoginForm {
             }
         }
 
+        fieldError(key, input) {
+            const errorId = input.getAttribute('aria-describedby') ?? `${key.replaceAll('_', '-')}-error`;
+            return this.element.querySelector(`#${errorId}`);
+        }
+
         clearErrors() {
             for (const [key, input] of Object.entries(this.fields)) {
-                const errorText = this.element.querySelector(
-                    `#${key.replaceAll('_', '-')}-error`
-                );
+                const errorText = this.fieldError(key, input);
 
                 if (errorText) errorText.textContent = '';
 
@@ -93,9 +96,7 @@ class LoginForm {
 
                     if (!messages?.length) continue;
 
-                    const errorText = this.element.querySelector(
-                        `#${key.replaceAll('_', '-')}-error`
-                    );
+                    const errorText = this.fieldError(key, input);
 
                     if (!errorText) continue;
 
@@ -208,6 +209,14 @@ class LoginForm {
         this.#pushState(initialState, { focus: !isInsideDrawer });
     }
 
+    #finishSignIn(result) {
+        if (this.container.closest('#auth-panel')) {
+            window.location.reload();
+            return;
+        }
+        window.location.assign(result.redirect);
+    }
+
     #initAuthenticationStates() {
         const emailState = this.form.querySelector('#email-state');
         const emailInput = emailState.querySelector('#email-input');
@@ -230,15 +239,7 @@ class LoginForm {
             this.emailText.textContent = message ?? '';
         };
 
-        const finishSignIn = (result) => {
-            if (this.container.closest('#auth-panel')) {
-                window.location.reload();
-                return;
-            }
-            window.location.assign(result.redirect);
-        };
-
-        // this is glue code (glue*)
+        // Later steps keep the email chosen in the first step.
         this.emailInput = emailInput;
 
         this.#defineState('email', {
@@ -256,8 +257,8 @@ class LoginForm {
             element         : loginState,
             submitUrl       : this.loginUrl,
             buttons         : [ this.primaryButton, this.secondaryButton ],
-            fields          : { password: passwordInput }, // this missing `this.emailInput` is the result of (glue*)
-            use             : (result) => finishSignIn(result),
+            fields          : { password: passwordInput },
+            use             : (result) => this.#finishSignIn(result),
             // 403 means the password was right but the email is not verified yet
             onError         : (error) => {
                 if (error.status !== 403) return false;
@@ -274,13 +275,13 @@ class LoginForm {
             element         : registerState,
             submitUrl       : this.registerUrl,
             buttons         : [ this.primaryButton, this.secondaryButton ],
-            fields          : { username: usernameInput, password: newPasswordInput, password_confirmation: confirmPasswordInput }, // this missing `this.emailInput` is the result of (glue*)
+            fields          : { username: usernameInput, password: newPasswordInput, password_confirmation: confirmPasswordInput },
             use             : (result) => {
                 if (result.verify) {
                     showVerification(result.message);
                     return;
                 }
-                finishSignIn(result);
+                this.#finishSignIn(result);
             },
             formatPayload   : () => ({
                 email: emailInput.value.trim(),
@@ -295,7 +296,7 @@ class LoginForm {
             submitUrl       : this.verifyUrl,
             buttons         : [ this.primaryButton, this.secondaryButton ],
             fields          : { code: codeInput },
-            use             : (result) => finishSignIn(result),
+            use             : (result) => this.#finishSignIn(result),
             formatPayload   : () => ({
                 email: emailInput.value.trim(),
                 code: codeInput.value.trim(),
@@ -482,7 +483,7 @@ class LoginForm {
                     if (result.verify) {
                         this.emailText.textContent = result.message ?? '';
                     } else if (result.redirect) {
-                        window.location.reload();
+                        this.#finishSignIn(result);
                     }
                 }
             } catch (error) {

@@ -37,12 +37,14 @@
                     id="email-input"
                     type="email"
                     name="email"
+                    value="{{ old('email') }}"
+                    aria-describedby="email-error"
                     placeholder="{{ __('auth.form.email') }}"
                     autocomplete="email"
                     maxlength="100"
                     required
                 >
-                <div id="email-input-error" class="display-block invalid-feedback"></div>
+                <div id="email-error" class="d-block invalid-feedback"></div>
             </div>
         </fieldset>
 
@@ -55,12 +57,13 @@
                 <input
                     class="form-control"
                     id="password-input"
+                    aria-describedby="login-password-error"
                     type="password"
                     name="password"
                     autocomplete="current-password"
                     required
                 >
-                <div id="password-error" class="d-block invalid-feedback"></div>
+                <div id="login-password-error" class="d-block invalid-feedback"></div>
                 <div class="mt-2 text-end">
                     <a href="{{ route('password.request') }}">
                         {{ __('auth.form.forgot') }}
@@ -94,13 +97,14 @@
                 <input
                     class="form-control"
                     id="new-password-input"
+                    aria-describedby="register-password-error"
                     type="password"
                     name="password"
                     minlength="8"
                     autocomplete="new-password"
                     required
                 >
-                <div id="password-error" class="d-block invalid-feedback"></div>
+                <div id="register-password-error" class="d-block invalid-feedback"></div>
             </div>
 
             <div class="my-2">
@@ -149,8 +153,8 @@
 
         {{-- Shared controls: deliberately outside all fieldsets --}}
         <div id="login-spinner" class="d-none text-center my-3">
-            <div class="spinner-border text-danger spinner-border-sm" role="status">
-                <span class="visually-hidden">Loading...</span>
+            <div class="spinner-border fg-primary spinner-border-sm" role="status">
+                <span class="visually-hidden">{{ __('common.loading') }}</span>
             </div>
             <span class="small ms-2 fg-3" id="spinner-text"></span>
         </div>
@@ -158,7 +162,7 @@
         <button
             type="submit"
             id="login-form-primary-button"
-            class="btn btn-solid theme-primary w-100 rounded-pill py-2 fw-semibold my-2"
+            class="btn btn-solid theme-primary w-100 rounded-2 py-2 fw-semibold my-2"
             hidden
         >
             {{ __('auth.form.continue') }}
@@ -183,7 +187,7 @@
     <a
         href="{{ route('auth.google.redirect') }}"
         id="google-login-button"
-        class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-decoration-none"
+        class="btn btn-outline theme-inverse w-100 rounded-2 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-decoration-none"
     >
         <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>

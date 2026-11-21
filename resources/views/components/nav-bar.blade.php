@@ -73,14 +73,9 @@
             </button>
             <span data-cart-error class="small fg-danger" role="status" aria-live="polite"></span>
             @guest
-                <button
-                    type="button"
-                    id="auth-drawer-trigger"
-                    class="border-0 bg-transparent rounded-pill p-2 d-flex align-items-center gap-2"
-                    data-bs-toggle="drawer"
-                    data-bs-target="#auth-panel"
-                    aria-haspopup="dialog"
-                    aria-controls="auth-panel"
+                <a
+                    href="{{ route('login') }}"
+                    class="text-decoration-none p-2 d-flex align-items-center gap-2"
                 >
                     <i class="bi bi-person fs-5" aria-hidden="true"></i>
                     <span class="text-decoration-underline text-nowrap">
@@ -90,7 +85,8 @@
                             <b>{{ __('common.register') }}</b>
                         </span>
                     </span>
-                </button>
+                </a>
+                {{-- Wishlist actions retain their inline sign-in flow. --}}
                 <x-auth.drawer />
             @endguest
             @auth

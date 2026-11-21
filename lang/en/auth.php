@@ -11,6 +11,7 @@ return [
         'tagline' => 'The next generation e-commerce platform',
         'everything' => 'Everything larp-able',
         'title' => 'Login & Register',
+        'offers' => 'Latest offers & deals',
         'products' => 'Products',
         'pricing' => 'Pricing',
         'enterprise' => 'Enterprise',

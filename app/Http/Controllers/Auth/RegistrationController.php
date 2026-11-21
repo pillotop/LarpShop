@@ -36,7 +36,7 @@ class RegistrationController extends Controller
             $request->session()->regenerate();
 
             if ($request->expectsJson()) {
-                return response()->json(['redirect' => route('home')], 201);
+                return response()->json(['redirect' => redirect()->intended(route('home'))->getTargetUrl()], 201);
             }
 
             return redirect()->intended(route('home'));

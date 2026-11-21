@@ -10,11 +10,9 @@ use Throwable;
 
 class LoginController extends Controller
 {
-    public function create(Request $request)
+    public function create()
     {
-        $request->session()->reflash();
-
-        return redirect()->route('home');
+        return view('auth.pages.login');
     }
 
     public function store(Request $request, EmailVerificationService $verification)
@@ -51,7 +49,7 @@ class LoginController extends Controller
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'redirect' => route('home'),
+                    'redirect' => redirect()->intended(route('home'))->getTargetUrl(),
                 ]);
             }
 

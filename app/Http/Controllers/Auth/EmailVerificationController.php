@@ -31,7 +31,7 @@ class EmailVerificationController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return response()->json(['redirect' => route('home')]);
+        return response()->json(['redirect' => redirect()->intended(route('home'))->getTargetUrl()]);
     }
 
     public function resend(Request $request, EmailVerificationService $verification): JsonResponse

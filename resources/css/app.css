@@ -150,16 +150,6 @@ body {
     width: 296;
 }
 
-.larp-shop-vertical {
-    height: 100%;
-    max-width: 90%;
-}
-
-.larp-shop-horizontal {
-    max-width: 45%;
-    max-height: 30%;
-}
-
 .profileImageFrame {
     border-radius: 50%;
     overflow: hidden;
