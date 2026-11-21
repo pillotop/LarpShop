@@ -1,8 +1,14 @@
 <?php
 
 return [
-    'placements' => ['homepage_main'],
+    'placements' => ['homepage_main', 'homepage_broad_select'],
     'max_sections' => 8,
+    'broad_select' => [
+        'placement' => 'homepage_broad_select',
+        'product_limit' => 12,
+        'max_groups' => 6,
+        'minimum_reviews' => 3,
+    ],
     'max_managed_sections_per_placement' => 100,
     'collection_page_size' => 24,
     'max_collection_products' => 100,

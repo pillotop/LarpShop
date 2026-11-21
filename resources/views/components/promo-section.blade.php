@@ -4,9 +4,7 @@
     $definition = config('promotions.layouts')[$data->section->layout] ?? null;
     $component = $definition['component'] ?? null;
     $headingId = 'promo-heading-'.Illuminate\Support\Str::uuid();
-    $viewAllUrl = $viewAllUrl ?? (! $preview && $data->section->collection->is_published
-        ? route('collections.show', ['slug' => $data->section->collection->slug])
-        : null);
+    $viewAllUrl = $viewAllUrl ?? (! $preview ? $data->viewAllUrl() : null);
 @endphp
 
 @if ($component && $data->products->isNotEmpty())

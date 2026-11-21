@@ -50,14 +50,15 @@
         <span class="cart-feedback visually-hidden" role="status" aria-live="polite"></span>
 
         <x-wishlist.button
-                :product="$product"
-                :compact="true"
-            />
+            :product="$product"
+            :compact="true"
+            class="overlay-btn"
+        />
 
         <button
             data-add-to-cart
             aria-label="{{ __('products.add_to_cart') }}"
-            class="overlay-btn rounded-circle py-2 px-2"
+            class="overlay-btn"
             type="button"
         >
             <svg class="icon-24"> <use href="/images/icons.svg#cart"></use> </svg>

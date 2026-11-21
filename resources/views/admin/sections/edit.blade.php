@@ -19,13 +19,5 @@
             @endif
         </div>
     </header>
-    @if ($collections->isEmpty())
-        <p>{{ __('promotions.no_collections') }}</p>
-        <a
-            href="{{ route('admin.collections.create') }}"
-            class="btn btn-solid theme-primary rounded-2"
-        >{{ __('promotions.create_collection') }}</a>
-    @else
-        @include('admin.sections.partials.form')
-    @endif
+    @include('admin.sections.partials.form')
 @endsection

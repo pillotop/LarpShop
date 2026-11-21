@@ -5,4 +5,8 @@
 .carousel-scrollable .carousel-scroller {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    /* The controller owns autoplay timing and compensates recycled items itself. */
+    scroll-behavior: auto !important;
+    overflow-anchor: none;
+    scroll-snap-type: none;
 }

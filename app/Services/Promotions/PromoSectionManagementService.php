@@ -2,6 +2,7 @@
 
 namespace App\Services\Promotions;
 
+use App\Enums\PromoSource;
 use App\Models\ProductCollection;
 use App\Models\PromoSection;
 use Carbon\CarbonImmutable;
@@ -22,12 +23,19 @@ class PromoSectionManagementService
         $stored = null;
         try {
             return DB::transaction(function () use ($data, $image, $section, &$stored) {
-                $collection = ProductCollection::query()->lockForUpdate()->findOrFail($data['product_collection_id']);
+                $source = PromoSource::tryFrom($data['source'] ?? PromoSource::Collection->value);
+                if (! $source) {
+                    throw ValidationException::withMessages(['source' => __('promotions.source_not_supported')]);
+                }
+                $collection = $source === PromoSource::Collection
+                    ? ProductCollection::query()->lockForUpdate()->findOrFail($data['product_collection_id'])
+                    : null;
                 $records = $this->lockedSections([$data['placement'], $section?->placement ?? $data['placement']]);
                 $record = $section ? $records->find($section->getKey()) : new PromoSection;
                 abort_if($record === null, 404);
                 $siblings = $records->where('placement', $data['placement']);
-                if (! $record->exists && $siblings->count() >= config('promotions.max_managed_sections_per_placement')) {
+                $changesPlacement = ! $record->exists || $record->placement !== $data['placement'];
+                if ($changesPlacement && $siblings->count() >= config('promotions.max_managed_sections_per_placement')) {
                     throw ValidationException::withMessages(['placement' => __('promotions.section_limit')]);
                 }
 
@@ -37,6 +45,9 @@ class PromoSectionManagementService
                     $stored = $this->images->store($image, $profile);
                 }
                 $record->fill(Arr::only($data, ['heading', 'introduction', 'placement', 'layout', 'is_active', 'alt_text']));
+                $record->source = $source->value;
+                $record->collection()->associate($collection);
+                $this->assertSource($record);
                 foreach (['starts_at', 'expires_at'] as $field) {
                     $record->{$field} = empty($data[$field]) ? null : CarbonImmutable::parse($data[$field], config('app.timezone'));
                 }
@@ -50,7 +61,7 @@ class PromoSectionManagementService
                     $record->fill($stored);
                 }
                 $this->assertRenderableImage($record);
-                $collection->sections()->save($record);
+                $record->save();
 
                 if ($previous && ($stored || ($data['remove_image'] ?? false))) {
                     DB::afterCommit(fn () => $this->removeImage($previous));
@@ -72,6 +83,7 @@ class PromoSectionManagementService
             $record = $this->lockedSections([$section->placement])->find($section->getKey());
             abort_if($record === null, 404);
             if ($active) {
+                $this->assertSource($record);
                 $this->assertRenderableImage($record);
             }
             $record->update(['is_active' => $active]);
@@ -113,6 +125,21 @@ class PromoSectionManagementService
     {
         return PromoSection::query()->whereIn('placement', array_unique($placements))
             ->orderBy('placement')->orderBy('sort_order')->orderBy('promo_section_id')->lockForUpdate()->get();
+    }
+
+    private function assertSource(PromoSection $record): void
+    {
+        $source = PromoSource::tryFrom($record->source);
+        $broad = $record->placement === config('promotions.broad_select.placement');
+        if (! $source || ($source !== PromoSource::Collection && (! $broad || $record->product_collection_id !== null))) {
+            throw ValidationException::withMessages(['source' => __('promotions.source_not_supported')]);
+        }
+        if ($source === PromoSource::Collection && $record->product_collection_id === null) {
+            throw ValidationException::withMessages(['product_collection_id' => __('promotions.choose_collection')]);
+        }
+        if ($broad && $record->layout !== 'row') {
+            throw ValidationException::withMessages(['layout' => __('promotions.broad_select_layout')]);
+        }
     }
 
     private function assertRenderableImage(PromoSection $record): void

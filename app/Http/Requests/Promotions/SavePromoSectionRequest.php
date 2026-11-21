@@ -2,14 +2,18 @@
 
 namespace App\Http\Requests\Promotions;
 
+use App\Enums\PromoSource;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class SavePromoSectionRequest extends AdminPromotionRequest
 {
+    use ValidatesPromoSource;
+
     protected function prepareForValidation(): void
     {
         $this->merge([
+            'source' => $this->input('source', PromoSource::Collection->value),
             'is_active' => $this->input('is_active', false),
             'remove_image' => $this->input('remove_image', false),
         ]);
@@ -18,7 +22,8 @@ class SavePromoSectionRequest extends AdminPromotionRequest
     public function rules(): array
     {
         return [
-            'product_collection_id' => ['required', 'integer', Rule::exists('product_collections', 'product_collection_id')],
+            'source' => $this->promoSourceRules(),
+            'product_collection_id' => $this->promoCollectionRules(required: true),
             'heading' => ['nullable', 'string', 'max:150'],
             'introduction' => ['nullable', 'string', 'max:5000'],
             'placement' => ['required', 'string', Rule::in(config('promotions.placements'))],
@@ -36,6 +41,7 @@ class SavePromoSectionRequest extends AdminPromotionRequest
     public function after(): array
     {
         return [function (Validator $validator) {
+            $this->validateSourcePlacement($validator);
             if ($validator->errors()->isNotEmpty()) {
                 return;
             }
@@ -60,6 +66,7 @@ class SavePromoSectionRequest extends AdminPromotionRequest
     public function attributes(): array
     {
         return [
+            'source' => __('promotions.source'),
             'product_collection_id' => __('promotions.collection'), 'layout' => __('promotions.layout'),
             'placement' => __('promotions.placement'), 'heading' => __('promotions.heading'),
             'starts_at' => __('promotions.starts_at'), 'expires_at' => __('promotions.expires_at'),

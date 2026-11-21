@@ -2,6 +2,7 @@
 
 namespace App\Queries\Products;
 
+use App\Enums\PromoSource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductCollection;
@@ -38,9 +39,9 @@ class ProductCatalogQuery
     }
 
     /** Load a bounded product list per collection in one batch for homepage sections. */
-    public function loadPromoProducts(Collection $collections): void
+    public function loadPromoProducts(Collection $collections, ?int $limit = null): void
     {
-        $limit = max(array_column(config('promotions.layouts'), 'product_limit'));
+        $limit ??= max(array_column(config('promotions.layouts'), 'product_limit'));
         $collections->load(['products' => function (BelongsToMany $products) use ($limit) {
             $this->constrainCollectionVisibility($products->getQuery(), inStockOnly: true)
                 ->with(['category', 'images', 'vendor'])
@@ -48,6 +49,36 @@ class ProductCatalogQuery
                 ->withCount('reviews as total_reviews');
             $products->orderByPivot('sort_order')->orderBy('products.product_id')->limit($limit);
         }]);
+    }
+
+    /** Shared eligibility query for both source existence checks and product loading. */
+    public function automaticPromoCandidates(PromoSource $source): Builder
+    {
+        if ($source === PromoSource::Collection) {
+            throw new \InvalidArgumentException('Collection products require a collection.');
+        }
+        $query = $this->constrainCollectionVisibility(Product::query(), inStockOnly: true);
+        if ($source === PromoSource::TopRated) {
+            $query->has('reviews', '>=', max(1, (int) config('promotions.broad_select.minimum_reviews')));
+        }
+
+        return $query;
+    }
+
+    public function automaticPromoProducts(PromoSource $source, int $limit = 12): Collection
+    {
+        $query = $this->automaticPromoCandidates($source)
+            ->with(['category', 'images', 'vendor'])
+            ->withAvg('reviews as average_rating', 'rating')
+            ->withCount('reviews as total_reviews');
+        if ($source === PromoSource::TopRated) {
+            $query->orderByDesc('average_rating')->orderByDesc('total_reviews');
+        } else {
+            $query->orderByDesc('products.created_at');
+        }
+        $max = max(1, (int) config('promotions.broad_select.product_limit'));
+
+        return $query->orderByDesc('products.product_id')->limit(max(1, min($limit, $max)))->get();
     }
 
     public function paginateCollectionProducts(ProductCollection $collection): LengthAwarePaginator

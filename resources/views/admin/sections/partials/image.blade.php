@@ -1,4 +1,7 @@
-<section class="border-top mt-4 pt-3">
+<section
+    class="border-top mt-4 pt-3"
+    x-show="!!profiles[layout] || @js((bool) $section->image_path)"
+>
     <h2 class="h5">{{ __('promotions.promotional_image') }}</h2>
     @if ($section->image_path)
         <div class="mb-3" style="max-width: 12rem;">

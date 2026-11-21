@@ -33,8 +33,12 @@
                 @forelse ($sections as $section)
                     <tr>
                         <td>
-                            <a href="{{ route('admin.sections.edit', $section) }}" class="fw-semibold">{{ $section->heading ?: $section->collection->name }}</a>
-                            <small class="d-block fg-3">{{ $section->collection->name }} · {{ __($section->collection->is_published ? 'promotions.published' : 'promotions.draft') }}</small>
+                            <a href="{{ route('admin.sections.edit', $section) }}" class="fw-semibold">{{ $section->displayHeading() }}</a>
+                            @if ($section->collection)
+                                <small class="d-block fg-3">{{ $section->collection->name }} · {{ __($section->collection->is_published ? 'promotions.published' : 'promotions.draft') }}</small>
+                            @else
+                                <small class="d-block fg-3">{{ __('promotions.sources.'.$section->source) }}</small>
+                            @endif
                             <small class="d-block fg-3">{{ __('promotions.placements.'.$section->placement) }}</small>
                         </td>
                         <td>{{ __('promotions.layouts.'.$section->layout) }}</td>
@@ -53,7 +57,7 @@
                                         <button
                                             type="submit"
                                             class="btn btn-sm btn-outline theme-secondary rounded-2"
-                                            aria-label="{{ __('promotions.move_'.$direction, ['name' => $section->heading ?: $section->collection->name]) }}"
+                                            aria-label="{{ __('promotions.move_'.$direction, ['name' => $section->displayHeading()]) }}"
                                         ><i class="bi bi-{{ $icon }}" aria-hidden="true"></i></button>
                                     </form>
                                 @endforeach

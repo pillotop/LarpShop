@@ -3,9 +3,9 @@
 <header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
         <h2 id="{{ $headingId }}" class="h3 fw-semibold mb-2">{{ $data->heading() }}</h2>
-        @if ($data->section->introduction ?? $data->section->collection->description)
+        @if ($data->introduction())
             <p class="fg-3 mb-0 promo-introduction">
-                {{ $data->section->introduction ?? $data->section->collection->description }}
+                {{ $data->introduction() }}
             </p>
         @endif
     </div>

@@ -3,7 +3,13 @@
     method="POST"
     enctype="multipart/form-data"
     class="border rounded-2 p-3 lg:p-4"
-    x-data="{ layout: @js(old('layout', $section->layout)), profiles: @js(array_map(fn ($definition) => $definition['image_profile'], config('promotions.layouts'))) }"
+    x-data="promoSourceForm(@js([
+        'layout' => old('layout', $section->layout),
+        'source' => old('source', $section->source),
+        'placement' => old('placement', $section->placement),
+        'broadPlacement' => config('promotions.broad_select.placement'),
+        'profiles' => array_map(fn ($definition) => $definition['image_profile'], config('promotions.layouts')),
+    ]))"
 >
     @csrf
     @if ($section->exists)

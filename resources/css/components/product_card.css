@@ -26,15 +26,6 @@
     bottom: 0px;
 }
 
-.product-card-a .card-body-overlay button {
-    background-color: var(--color-tertiary-600);
-    color: white;
-}
-
-.product-card-a .card-body-overlay button:hover {
-    background-color: var(--color-tertiary-400);
-}
-
 .product-card-a:has(.card-body:hover, .card-body-overlay:hover) .card-body-overlay {
     opacity: 1;
     visibility: visible;
@@ -54,8 +45,39 @@
 }
 
 .product-card-a .card-body-overlay .overlay-btn {
-    border-collapse: collapse;
-    border-width: 0px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--fg-body);
+    transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.product-card-a .card-body-overlay .overlay-btn:hover {
+    background: color-mix(in srgb, var(--fg-body) 8%, transparent);
+    border-color: var(--fg-2);
+}
+
+.product-card-a .card-body-overlay .overlay-btn:focus-visible {
+    outline: 2px solid var(--fg-body);
+    outline-offset: 3px;
+}
+
+.product-card-a .card-body-overlay .overlay-btn:disabled {
+    opacity: .5;
+    cursor: wait;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .product-card-a .card-body-overlay .overlay-btn {
+        transition: none;
+    }
 }
 
 /* Rebuilt Catalog Product Card (product-card-b) */

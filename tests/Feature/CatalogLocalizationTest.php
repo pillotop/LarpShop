@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ProductReview;
+use App\Models\PromoSection;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
@@ -53,6 +54,12 @@ class CatalogLocalizationTest extends TestCase
     public function test_home_category_and_empty_search_are_translated(): void
     {
         $product = $this->product();
+        PromoSection::forceCreate([
+            'source' => 'new_arrivals',
+            'placement' => 'homepage_broad_select',
+            'layout' => 'row',
+            'is_active' => true,
+        ]);
 
         $this->withSession(['locale' => 'vi'])->get(route('home'))
             ->assertOk()

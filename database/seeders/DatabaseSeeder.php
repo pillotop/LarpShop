@@ -462,7 +462,7 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        $this->call(PromoSectionSeeder::class);
+        $this->call([PromoSectionSeeder::class, BroadSelectSeeder::class]);
 
         // Seeded demo accounts do not go through the emailed verification step.
         User::whereNull('email_verified_at')->update(['email_verified_at' => now()]);

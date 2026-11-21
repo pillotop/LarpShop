@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PromoSource;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,11 @@ class PromoSection extends Model
 
     protected $primaryKey = 'promo_section_id';
 
+    protected $attributes = ['source' => 'collection'];
+
     // Collection membership is assigned through the relationship by the management flow.
     protected $fillable = [
-        'heading', 'introduction', 'placement', 'layout', 'is_active',
+        'heading', 'introduction', 'placement', 'layout', 'is_active', 'source',
         'starts_at', 'expires_at', 'sort_order', 'image_disk', 'image_path',
         'alt_text', 'image_width', 'image_height', 'image_variants',
     ];
@@ -32,6 +35,12 @@ class PromoSection extends Model
             'image_height' => 'integer',
             'image_variants' => 'array',
         ];
+    }
+
+    public function displayHeading(): string
+    {
+        return $this->heading ?: ($this->collection?->name
+            ?? PromoSource::tryFrom($this->source)?->label() ?? __('promotions.heading'));
     }
 
     public function collection(): BelongsTo

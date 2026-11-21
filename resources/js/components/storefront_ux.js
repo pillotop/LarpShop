@@ -1,3 +1,5 @@
+import { initBroadSelect } from './broad_select.js';
+
 const COMPARE_STORAGE_KEY = 'larpshop_compare_v1';
 const MAX_COMPARE_ITEMS = 4;
 
@@ -62,46 +64,6 @@ function initAdvancedSearchButton() {
             });
         }
     }
-}
-
-function initHomepageBroadSelect() {
-    const buttons = Array.from(document.querySelectorAll('[data-broad-select-mode]'));
-    const list = document.querySelector('.selector-product-list');
-    if (buttons.length === 0 || !list) return;
-
-    buttons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const mode = btn.getAttribute('data-broad-select-mode');
-
-            buttons.forEach((other) => {
-                const active = other === btn;
-                other.classList.toggle('is-active', active);
-                other.setAttribute('aria-pressed', active ? 'true' : 'false');
-            });
-
-            const items = Array.from(list.querySelectorAll(':scope > li'));
-            items.sort((a, b) => {
-                const orderA = Number(a.getAttribute('data-product-order') || 0);
-                const orderB = Number(b.getAttribute('data-product-order') || 0);
-                const ratingA = Number(a.getAttribute('data-product-rating') || 0);
-                const ratingB = Number(b.getAttribute('data-product-rating') || 0);
-                const reviewsA = Number(a.getAttribute('data-product-reviews') || 0);
-                const reviewsB = Number(b.getAttribute('data-product-reviews') || 0);
-
-                if (mode === 'top_rated') {
-                    if (ratingB !== ratingA) return ratingB - ratingA;
-                    if (reviewsB !== reviewsA) return reviewsB - reviewsA;
-                    return orderA - orderB;
-                }
-
-                if (reviewsB !== reviewsA) return reviewsB - reviewsA;
-                return orderA - orderB;
-            });
-
-            items.forEach((item) => list.appendChild(item));
-            list.scrollTo({ left: 0, behavior: 'smooth' });
-        });
-    });
 }
 
 function initProductCompare() {
@@ -455,7 +417,7 @@ function initProductDetailInteractions() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initAdvancedSearchButton();
-    initHomepageBroadSelect();
+    initBroadSelect();
     initProductCompare();
     initProductDetailInteractions();
 });

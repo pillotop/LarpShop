@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PromoSource;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Promotions\PreviewPromoSectionRequest;
 use App\Queries\Promotions\ProductCollectionQuery;
@@ -16,15 +17,13 @@ class PromoSectionPreviewController extends Controller
         PromoSectionQuery $sections,
     ): View {
         $input = $request->validated();
-        $source = isset($input['section']) ? $sections->findForPreview((int) $input['section']) : null;
+        $source = $request->previewSection();
+        $productSource = PromoSource::from($input['source']);
         $choices = $collections->recentChoices();
-        $collection = isset($input['collection'])
-            ? $collections->findForPreview((int) $input['collection'])
-            : ($source?->collection ?? $choices->first());
-        $layout = $input['layout'] ?? $source?->layout ?? 'grid';
-        if (! array_key_exists($layout, config('promotions.layouts'))) {
-            $layout = 'grid';
-        }
+        $collection = $productSource === PromoSource::Collection
+            ? (isset($input['collection']) ? $collections->findForPreview((int) $input['collection']) : $choices->first())
+            : null;
+        $layout = $input['layout'];
 
         if ($collection && ! $choices->contains($collection->getKey())) {
             $choices->push($collection);
@@ -34,8 +33,12 @@ class PromoSectionPreviewController extends Controller
             'collections' => $choices,
             'selectedCollection' => $collection,
             'layout' => $layout,
+            'productSource' => $productSource->value,
+            'placement' => $input['placement'],
             'source' => $source,
-            'preview' => $collection ? $sections->preview($collection, $layout, $source) : null,
+            'preview' => $productSource !== PromoSource::Collection
+                ? $sections->previewAutomatic($productSource, $source)
+                : ($collection ? $sections->preview($collection, $layout, $source) : null),
         ]);
     }
 }

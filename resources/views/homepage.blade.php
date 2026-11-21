@@ -8,7 +8,6 @@
         'resources/css/icons.css',
         'resources/css/category_banner.css',
         'resources/css/company_footer.css',
-        'resources/css/broad_select.css',
         'resources/css/components/two_arrow_scroller.css',
         'resources/css/components/dropdown.css',
         'resources/css/components/persistent_header.css',
@@ -114,54 +113,11 @@
                 <x-promo-section :data="$promo" />
             </div>
         @endforeach
-        <section>
-            @vite('resources/css/broad_select.css')
-            <header class="container">
-                <div class="text-center m-3">
-                    <h1> {{ __('products.home.heading') }} </h1>
-                    {{ __('products.home.intro') }}
-                </div>
-            </header>
-            <div class="broad-select">
-                <div class="d-flex flex-column md:flex-row selector">
-                    <div id="vertical" class="carousel-scrollable position-relative overflow-hidden" data-carousel-direction="down" data-carousel-autoplay-speed="0">
-                        <ul class="selector-category-list carousel-scroller ps-0 lg:p-4 overflow-y-auto d-flex flex-row md:flex-column gap-2 justify-content-center">
-                            <li>
-                                <button type="button" class="selector-item is-active" data-broad-select-mode="trending" aria-pressed="true">
-                                    <div class="d-inline-flex flex-nowrap">
-                                        <h3 class="selector-item-pill fw-bold text-uppercase p-3 mb-0">
-                                            {{ __('products.home.trending') }}
-                                        </h3>
-                                    </div>
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button" class="selector-item" data-broad-select-mode="top_rated" aria-pressed="false">
-                                    <div class="d-inline-flex flex-wrap">
-                                        <h3 class="selector-item-pill fw-bold text-uppercase p-3 mb-0">
-                                            {{ __('products.home.placeholder') }}
-                                        </h3>
-                                    </div>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="horizontal" class="carousel-scrollable w-100 overflow-hidden" data-carousel-direction="right" data-carousel-autoplay-speed="1">
-                        <ul class="d-flex gap-3 w-100 h-100 ps-0 selector-product-list carousel-scroller overflow-x-auto" style="list-style: none;">
-                            @foreach ($products as $product)
-                                <li
-                                    data-product-order="{{ $loop->index }}"
-                                    data-product-rating="{{ (float) ($product->average_rating ?? 0) }}"
-                                    data-product-reviews="{{ (int) ($product->total_reviews ?? 0) }}"
-                                >
-                                    <x-product-card-a :product="$product"/>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <x-broad-select
+            :groups="$broadSelectGroups"
+            :heading="__('products.home.heading')"
+            :introduction="__('products.home.intro')"
+        />
         <section>
             <x-rounded-section-radius>
                 <div class="container">

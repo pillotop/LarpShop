@@ -75,6 +75,7 @@ class HomepageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
+        $response->assertDontSee('data-broad-select', false);
     }
 
     public function test_homepage_renders_categories_and_in_stock_products(): void
@@ -111,6 +112,6 @@ class HomepageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Imageless Magic Ring');
-        $response->assertSee('product-placeholder.jpg');
+        $response->assertSee('product-placeholder.svg');
     }
 }
