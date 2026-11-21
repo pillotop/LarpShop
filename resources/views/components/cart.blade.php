@@ -110,7 +110,12 @@
         </footer>
     @else
         <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center p-4">
-            <span class="rounded-circle bg-white shadow-sm p-4 mb-3"><i class="bi bi-bag fs-3xl fg-primary" aria-hidden="true"></i></span>
+            <span
+                class="d-inline-flex align-items-center justify-content-center flex-shrink-0 rounded-circle bg-white shadow-sm mb-3"
+                style="width: 6rem; height: 6rem;"
+            >
+                <i class="bi bi-bag fs-3xl fg-primary" aria-hidden="true"></i>
+            </span>
             <h3 class="h5 fw-bold">{{ __('cart.empty') }}</h3>
             <p class="fg-3 small">{{ __('cart.empty_help') }}</p>
             <a href="{{ route('products.index') }}" class="btn btn-solid theme-primary rounded-pill px-4">{{ __('cart.explore') }}</a>
