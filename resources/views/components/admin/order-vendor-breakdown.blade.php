@@ -4,7 +4,7 @@
 
 @forelse ($byVendor as $vendorId => $details)
     @php $vendor = $details->first()->product?->vendor; @endphp
-    <div class="card border-0 shadow-sm rounded-9 p-4 mb-3">
+    <div class="card border-0 shadow-sm p-4 mb-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h6 fw-bold mb-0"><i class="bi bi-shop me-2"></i>{{ $vendor?->store_name ?? __('management.unknown_store') }}</h2>
             @if ($vendor?->user)
@@ -35,7 +35,7 @@
         </div>
     </div>
 @empty
-    <div class="card border-0 shadow-sm rounded-9 p-4 text-center fg-3">
+    <div class="card border-0 shadow-sm p-4 text-center fg-3">
         {{ __('management.this_order_has_no_line_items') }}
     </div>
 @endforelse

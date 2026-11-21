@@ -16,6 +16,6 @@
     </div>
     <div class="col-6 md:col-3 d-flex gap-2">
         <button type="submit" class="btn btn-solid theme-inverse flex-grow-1">{{ __('management.filter') }}</button>
-        <a href="{{ route('admin.categories.index') }}" class="btn btn-outline theme-secondary">{{ __('management.reset') }}</a>
+        <a href="{{ route('admin.categories.index') }}" class="btn btn-outline theme-inverse">{{ __('management.reset') }}</a>
     </div>
 </form>

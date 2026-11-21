@@ -50,7 +50,7 @@ class AdminCollectionManagementTest extends TestCase
     public function test_admin_creates_updates_and_unpublishes_metadata_without_overwriting_membership(): void
     {
         $this->actingAs($this->admin())->get(route('admin.collections.create'))->assertOk()
-            ->assertSee('data-bs-theme="light"', false);
+            ->assertDontSee('data-bs-theme="light"', false);
         $this->post(route('admin.collections.store'), [
             'name' => 'Holiday Picks', 'description' => 'Seasonal favorites', 'is_published' => 1,
             'product_id' => 99999, 'image_path' => 'untrusted.webp',

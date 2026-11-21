@@ -12,12 +12,12 @@
         <textarea
             id="rejection-reason"
             name="rejection_reason"
-            class="form-control rounded-2 mb-3"
+            class="form-control mb-3"
             rows="3"
             maxlength="2000"
             required
         >{{ old('rejection_reason') }}</textarea>
-        <button type="submit" class="btn btn-outline theme-danger rounded-2">
+        <button type="submit" class="btn btn-outline theme-inverse ">
             {{ __('management.reject') }}
         </button>
     </form>
@@ -26,7 +26,7 @@
         method="POST"
     >
         @csrf
-        <button type="submit" class="btn btn-solid theme-success rounded-2">
+        <button type="submit" class="btn btn-solid theme-inverse ">
             {{ __('management.approve') }}
         </button>
     </form>

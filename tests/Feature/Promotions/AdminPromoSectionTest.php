@@ -56,7 +56,7 @@ class AdminPromoSectionTest extends TestCase
             ->assertSee('&lt;script&gt;unsafe&lt;/script&gt;', false)
             ->assertDontSee('<script>unsafe</script>', false);
         $section = $older->sections()->create(['layout' => 'grid', 'placement' => 'homepage_main']);
-        $this->get(route('admin.sections.edit', $section))->assertOk()->assertSee('data-bs-theme="light"', false);
+        $this->get(route('admin.sections.edit', $section))->assertOk()->assertDontSee('data-bs-theme="light"', false);
         $this->get(route('admin.sections.index'))->assertOk()->assertSee(route('admin.sections.edit', $section), false);
     }
 

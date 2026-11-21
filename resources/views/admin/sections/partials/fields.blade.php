@@ -8,7 +8,7 @@
             type="text"
             maxlength="150"
             value="{{ old('heading', $section->heading) }}"
-            class="form-control rounded-2"
+            class="form-control "
             aria-describedby="section-heading-hint"
         >
         <p id="section-heading-hint" class="small fg-3 mt-2">{{ __('promotions.heading_hint') }}</p>
@@ -20,7 +20,7 @@
             name="introduction"
             rows="3"
             maxlength="5000"
-            class="form-control rounded-2"
+            class="form-control "
         >{{ old('introduction', $section->introduction) }}</textarea>
     </div>
 </div>

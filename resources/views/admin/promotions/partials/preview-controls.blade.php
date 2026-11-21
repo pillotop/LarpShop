@@ -1,7 +1,7 @@
 <form
     action="{{ route('admin.promotions.preview') }}"
     method="GET"
-    class="row g-3 align-items-end border rounded-2 p-3 mb-4"
+    class="row g-3 align-items-end border p-3 mb-4"
     x-data="promoSourceForm(@js([
         'source' => $productSource,
         'placement' => $placement,
@@ -17,7 +17,7 @@
         <select
             id="preview-placement"
             name="placement"
-            class="form-control rounded-2"
+            class="form-control "
             x-model="placement"
         >
             @foreach (config('promotions.placements') as $value)
@@ -30,7 +30,7 @@
         <select
             id="preview-source"
             name="source"
-            class="form-control rounded-2"
+            class="form-control "
             x-model="source"
         >
             @foreach (App\Enums\PromoSource::cases() as $value)
@@ -49,7 +49,7 @@
         <select
             id="preview-layout"
             name="layout"
-            class="form-control rounded-2"
+            class="form-control "
             x-model="layout"
         >
             @foreach (array_keys(config('promotions.layouts')) as $value)
@@ -68,7 +68,7 @@
         <select
             id="preview-collection"
             name="collection"
-            class="form-control rounded-2"
+            class="form-control "
             x-bind:disabled="!needsCollection"
         >
             @foreach ($collections as $collection)
@@ -80,7 +80,7 @@
         </select>
     </div>
     <div class="col-12 md:col-3">
-        <button type="submit" class="btn btn-solid theme-primary rounded-2 w-100">
+        <button type="submit" class="btn btn-solid theme-primary w-100">
             {{ __('promotions.apply_preview') }}
         </button>
     </div>

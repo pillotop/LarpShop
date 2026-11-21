@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('admin_theme', 'light')
 
 @section('title', __('promotions.create_collection'))
 @section('page_title', __('promotions.create_collection'))

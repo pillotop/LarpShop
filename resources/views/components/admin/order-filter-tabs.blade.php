@@ -9,8 +9,8 @@
     @foreach (array_merge(['all'], $statuses) as $key)
         <li class="nav-item">
             <a href="{{ route('admin.orders.index', array_filter(['status' => $key, 'q' => $keyword])) }}"
-                class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === $key ? 'active' : 'bg-1 fg-body' }}">
-                {{ $key === 'all' ? __('management.all') : __('checkout.order_status.'.$key) }} <span class="badge bg-secondary rounded-pill ms-1">{{ $counts[$key] ?? 0 }}</span>
+                class="nav-link px-3 py-2 fw-semibold {{ $status === $key ? 'active' : 'bg-1 fg-body' }}">
+                {{ $key === 'all' ? __('management.all') : __('checkout.order_status.'.$key) }} <span class="badge bg-1 ms-1">{{ $counts[$key] ?? 0 }}</span>
             </a>
         </li>
     @endforeach
@@ -23,6 +23,6 @@
     </div>
     <div class="col-12 md:col-3 d-flex gap-2">
         <button type="submit" class="btn btn-solid theme-inverse flex-grow-1">{{ __('management.search') }}</button>
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-outline theme-secondary">{{ __('management.reset') }}</a>
+        <a href="{{ route('admin.orders.index') }}" class="btn btn-outline theme-inverse">{{ __('management.reset') }}</a>
     </div>
 </form>

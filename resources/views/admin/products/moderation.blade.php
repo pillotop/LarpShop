@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', __('management.product_moderation').' (UC-42)')
+@section('title', __('management.product_moderation'))
 @section('page_title', __('management.product_moderation'))
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
+    <div class="card border-0 shadow-sm p-4 bg-body mb-4">
         <div class="pb-3 border-bottom mb-4">
             <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-box-seam fg-primary me-2"></i>{{ __('management.product_moderation') }}</h1>
             <p class="fg-3 small mb-0">{{ __('management.moderation.intro') }}</p>
@@ -15,8 +15,8 @@
             @foreach (array_merge(['all'], $statuses) as $key)
                 <li class="nav-item">
                     <a href="{{ route('admin.products.moderation.index', array_filter(['status' => $key, 'q' => $keyword, 'vendor_id' => $vendorId])) }}"
-                        class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === $key ? 'active' : 'bg-1 fg-body' }}">
-                        {{ $key === 'all' ? __('management.all') : __('products.vendor_status.'.$key) }} <span class="badge bg-secondary rounded-pill ms-1">{{ $counts[$key] ?? 0 }}</span>
+                        class="nav-link px-3 py-2 fw-semibold {{ $status === $key ? 'active' : 'bg-1 fg-body' }}">
+                        {{ $key === 'all' ? __('management.all') : __('products.vendor_status.'.$key) }} <span class="badge bg-1 ms-1">{{ $counts[$key] ?? 0 }}</span>
                     </a>
                 </li>
             @endforeach
@@ -37,7 +37,7 @@
             </div>
             <div class="col-12 md:col-3 d-flex gap-2">
                 <button type="submit" class="btn btn-solid theme-inverse flex-grow-1">{{ __('management.filter') }}</button>
-                <a href="{{ route('admin.products.moderation.index') }}" class="btn btn-outline theme-secondary">{{ __('management.reset') }}</a>
+                <a href="{{ route('admin.products.moderation.index') }}" class="btn btn-outline theme-inverse">{{ __('management.reset') }}</a>
             </div>
         </form>
 
@@ -72,7 +72,7 @@
                                 <td class="text-end">{{ number_format((float) $product->price, 2) }}</td>
                                 <td class="text-center">{{ $product->stock }}</td>
                                 <td>
-                                    <span class="badge rounded-pill {{ $product->status === 'approved' ? 'bg-success' : ($product->status === 'rejected' ? 'bg-danger' : 'bg-warning fg-body') }}">{{ __('products.vendor_status.'.$product->status) }}</span>
+                                    <span class="badge">{{ __('products.vendor_status.'.$product->status) }}</span>
                                 </td>
                                 <td class="text-end">
                                     <div class="d-inline-flex gap-1">
@@ -80,14 +80,14 @@
                                             <form method="POST" action="{{ route('admin.products.moderation.approve', $product->product_id) }}" class="m-0">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-solid theme-success rounded-pill px-3">{{ __('management.approve') }}</button>
+                                                <button type="submit" class="btn btn-sm btn-solid theme-inverse px-3">{{ __('management.approve') }}</button>
                                             </form>
                                         @endif
                                         @if ($product->status !== 'rejected')
                                             <form method="POST" action="{{ route('admin.products.moderation.reject', $product->product_id) }}" class="m-0" data-confirm="{{ __('management.reject_this_product_it_will_be_hidden_from_customers') }}">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3">{{ __('management.reject') }}</button>
+                                                <button type="submit" class="btn btn-sm btn-outline theme-inverse px-3">{{ __('management.reject') }}</button>
                                             </form>
                                         @endif
                                     </div>

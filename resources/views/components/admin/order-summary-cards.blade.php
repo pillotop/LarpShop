@@ -7,7 +7,7 @@
 
 <div class="row g-4 mb-4">
     <div class="col-12 lg:col-4">
-        <div class="card border-0 shadow-sm rounded-9 p-4 h-100">
+        <div class="card border-0 shadow-sm p-4 h-100">
             <h2 class="h6 fw-bold mb-3">{{ __('management.customer') }}</h2>
             <div class="fw-semibold">{{ $order->user?->username ?? __('management.n_a') }}</div>
             <div class="fg-3 small">{{ $order->user?->email }}</div>
@@ -16,19 +16,19 @@
         </div>
     </div>
     <div class="col-12 lg:col-4">
-        <div class="card border-0 shadow-sm rounded-9 p-4 h-100">
+        <div class="card border-0 shadow-sm p-4 h-100">
             <h2 class="h6 fw-bold mb-3">{{ __('management.totals') }}</h2>
             <div class="d-flex justify-content-between"><span>{{ __('management.recorded_total') }}</span><strong>{{ number_format((float) $order->total_amount, 2) }}</strong></div>
             <div class="d-flex justify-content-between"><span>{{ __('management.sum_of_items') }}</span><strong>{{ number_format((float) $computedTotal, 2) }}</strong></div>
             @if ($totalMatches)
-                <div class="alert theme-success py-2 mt-3 mb-0 small"><i class="bi bi-check-circle me-1"></i>{{ __('management.totals_match') }}</div>
+                <div class="alert theme-inverse py-2 mt-3 mb-0 small"><i class="bi bi-check-circle me-1"></i>{{ __('management.totals_match') }}</div>
             @else
-                <div class="alert theme-danger py-2 mt-3 mb-0 small"><i class="bi bi-exclamation-triangle me-1"></i>{{ __('management.total_mismatch_detected_investigate_this_order') }}</div>
+                <div class="alert theme-inverse py-2 mt-3 mb-0 small"><i class="bi bi-exclamation-triangle me-1"></i>{{ __('management.total_mismatch_detected_investigate_this_order') }}</div>
             @endif
         </div>
     </div>
     <div class="col-12 lg:col-4">
-        <div class="card border-0 shadow-sm rounded-9 p-4 h-100">
+        <div class="card border-0 shadow-sm p-4 h-100">
             <h2 class="h6 fw-bold mb-3">{{ __('management.status') }}</h2>
             <p>{{ __('management.display.order') }} {{ __('checkout.order_status.'.$order->status->value) }}</p>
             @forelse ($order->payments as $payment)
@@ -53,7 +53,7 @@
                     >
                     <button
                         type="submit"
-                        class="btn btn-outline theme-danger"
+                        class="btn btn-outline theme-inverse"
                     >
                         {{ __('management.cancel_order') }}
                     </button>

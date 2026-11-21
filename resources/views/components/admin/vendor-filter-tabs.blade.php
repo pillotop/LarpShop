@@ -1,36 +1,29 @@
-@props([
-    'counts' => [],
-    'status' => 'all',
-])
+@props(['counts' => [], 'status' => 'all'])
 
-<ul class="nav nav gap-2 mb-4">
-    <li class="nav-item">
-        <a href="{{ route('admin.vendors.index', ['status' => 'all']) }}" class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === 'all' ? 'active' : 'bg-1 fg-body' }}">
-            {{ __('management.all') }} <span class="badge bg-secondary rounded-pill ms-1">{{ $counts['all'] ?? 0 }}</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="{{ route('admin.vendors.index', ['status' => 'pending']) }}" class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === 'pending' ? 'active bg-warning fg-body' : 'bg-1 fg-body' }}">
-            <i class="bi bi-hourglass-split me-1"></i> {{ __('management.pending') }}
-            <span class="badge {{ $status === 'pending' ? 'bg-inverse fg-white' : 'bg-warning fg-body' }} rounded-pill ms-1">{{ $counts['pending'] ?? 0 }}</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="{{ route('admin.vendors.index', ['status' => 'approved']) }}" class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === 'approved' ? 'active bg-success fg-white' : 'bg-1 fg-body' }}">
-            <i class="bi bi-check-circle-fill me-1"></i> {{ __('management.approved_active') }}
-            <span class="badge {{ $status === 'approved' ? 'bg-white fg-success' : 'bg-success fg-white' }} rounded-pill ms-1">{{ $counts['approved'] ?? 0 }}</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="{{ route('admin.vendors.index', ['status' => 'rejected']) }}" class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === 'rejected' ? 'active bg-danger fg-white' : 'bg-1 fg-body' }}">
-            <i class="bi bi-x-circle-fill me-1"></i> {{ __('management.rejected') }}
-            <span class="badge {{ $status === 'rejected' ? 'bg-white fg-danger' : 'bg-danger fg-white' }} rounded-pill ms-1">{{ $counts['rejected'] ?? 0 }}</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="{{ route('admin.vendors.index', ['status' => 'suspended']) }}" class="nav-link rounded-pill px-3 py-2 fw-semibold {{ $status === 'suspended' ? 'active bg-secondary fg-white' : 'bg-1 fg-body' }}">
-            <i class="bi bi-slash-circle me-1"></i> {{ __('management.suspended') }}
-            <span class="badge {{ $status === 'suspended' ? 'bg-white fg-body' : 'bg-secondary fg-white' }} rounded-pill ms-1">{{ $counts['suspended'] ?? 0 }}</span>
-        </a>
-    </li>
+@php
+    $filters = [
+        'all' => ['label' => 'management.all', 'icon' => null],
+        'pending' => ['label' => 'management.pending', 'icon' => 'hourglass-split'],
+        'approved' => ['label' => 'management.approved_active', 'icon' => 'check-circle'],
+        'rejected' => ['label' => 'management.rejected', 'icon' => 'x-circle'],
+        'suspended' => ['label' => 'management.suspended', 'icon' => 'slash-circle'],
+    ];
+@endphp
+
+<ul class="nav gap-2 mb-4">
+    @foreach ($filters as $key => $filter)
+        <li class="nav-item">
+            <a
+                href="{{ route('admin.vendors.index', ['status' => $key]) }}"
+                class="nav-link px-3 py-2 fw-semibold fg-body {{ $status === $key ? 'active' : '' }}"
+                @if ($status === $key) aria-current="page" @endif
+            >
+                @if ($filter['icon'])
+                    <i class="bi bi-{{ $filter['icon'] }} me-1" aria-hidden="true"></i>
+                @endif
+                {{ __($filter['label']) }}
+                <span class="badge ms-1">{{ $counts[$key] ?? 0 }}</span>
+            </a>
+        </li>
+    @endforeach
 </ul>

@@ -33,14 +33,14 @@
                         <td class="text-end">{{ number_format((float) $order->total_amount, 2) }}</td>
                         <td>
                             <span
-                                class="badge rounded-pill {{ $order->status === \App\Enums\OrderStatus::Cancelled ? 'bg-danger' : ($order->status === \App\Enums\OrderStatus::Paid ? 'bg-success' : 'bg-secondary') }}"
+                                class="badge"
                             >
                                 {{ __('checkout.order_status.'.$order->status->value) }}
                             </span>
                         </td>
                         <td class="small fg-3">{{ $order->created_at?->format('d/m/Y H:i') }}</td>
                         <td class="text-end">
-                            <a href="{{ route('admin.orders.show', $order->order_id) }}" class="btn btn-sm btn-outline theme-primary rounded-pill px-3">{{ __('management.investigate') }}</a>
+                            <a href="{{ route('admin.orders.show', $order->order_id) }}" class="btn btn-sm btn-outline theme-primary px-3">{{ __('management.investigate') }}</a>
                         </td>
                     </tr>
                 @endforeach

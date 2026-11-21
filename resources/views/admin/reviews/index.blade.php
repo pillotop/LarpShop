@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', __('management.review_moderation').' (UC-43)')
+@section('title', __('management.review_moderation'))
 @section('page_title', __('management.review_moderation'))
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
+    <div class="card border-0 shadow-sm p-4 bg-body mb-4">
         <div class="pb-3 border-bottom mb-4">
             <h1 class="h5 fw-bold fg-body mb-1"><i class="bi bi-chat-square-quote fg-primary me-2"></i>{{ __('management.review_moderation') }}</h1>
             <p class="fg-3 small mb-0">{{ __('management.find_and_remove_inappropriate_or_fraudulent_product_reviews') }}</p>
@@ -25,7 +25,7 @@
             </div>
             <div class="col-12 md:col-3 d-flex gap-2">
                 <button type="submit" class="btn btn-solid theme-inverse flex-grow-1">{{ __('management.filter') }}</button>
-                <a href="{{ route('admin.reviews.index') }}" class="btn btn-outline theme-secondary">{{ __('management.reset') }}</a>
+                <a href="{{ route('admin.reviews.index') }}" class="btn btn-outline theme-inverse">{{ __('management.reset') }}</a>
             </div>
         </form>
 
@@ -69,7 +69,7 @@
                                     <form method="POST" action="{{ route('admin.reviews.destroy', $review->review_id) }}" class="m-0" data-confirm="{{ __('management.permanently_delete_this_review') }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3">{{ __('management.delete') }}</button>
+                                        <button type="submit" class="btn btn-sm btn-outline theme-inverse px-3">{{ __('management.delete') }}</button>
                                     </form>
                                 </td>
                             </tr>

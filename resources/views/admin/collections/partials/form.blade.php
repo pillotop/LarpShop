@@ -1,7 +1,7 @@
 <form
     action="{{ $collection->exists ? route('admin.collections.update', $collection) : route('admin.collections.store') }}"
     method="POST"
-    class="border rounded-2 p-4 mb-5"
+    class="border p-4 mb-5"
 >
     @csrf
     @if ($collection->exists)
@@ -15,7 +15,7 @@
                 name="name"
                 value="{{ old('name', $collection->name) }}"
                 maxlength="150"
-                class="form-control rounded-2"
+                class="form-control "
                 required
             >
         </div>
@@ -26,7 +26,7 @@
                 name="slug"
                 value="{{ old('slug', $collection->slug) }}"
                 maxlength="180"
-                class="form-control rounded-2"
+                class="form-control "
                 aria-describedby="collection-slug-hint"
             >
             <p id="collection-slug-hint" class="small fg-3 mt-2 mb-0">{{ __('promotions.slug_hint') }}</p>
@@ -38,7 +38,7 @@
                 name="description"
                 rows="3"
                 maxlength="5000"
-                class="form-control rounded-2"
+                class="form-control "
             >{{ old('description', $collection->description) }}</textarea>
         </div>
         <div class="col-12">
@@ -55,7 +55,7 @@
         </div>
     </div>
     <div class="d-flex flex-wrap gap-2 mt-4">
-        <button type="submit" class="btn btn-solid theme-primary rounded-2">{{ __('promotions.save_collection') }}</button>
-        <a href="{{ route('admin.collections.index') }}" class="btn btn-outline theme-secondary rounded-2">{{ __('promotions.back') }}</a>
+        <button type="submit" class="btn btn-solid theme-primary ">{{ __('promotions.save_collection') }}</button>
+        <a href="{{ route('admin.collections.index') }}" class="btn btn-outline theme-inverse ">{{ __('promotions.back') }}</a>
     </div>
 </form>

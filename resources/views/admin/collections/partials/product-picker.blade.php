@@ -12,12 +12,12 @@
             name="q"
             value="{{ $search }}"
             maxlength="100"
-            class="form-control rounded-2"
+            class="form-control "
             placeholder="{{ __('promotions.search_products') }}"
         >
-        <button type="submit" class="btn btn-outline theme-secondary rounded-2">{{ __('promotions.search') }}</button>
+        <button type="submit" class="btn btn-outline theme-inverse ">{{ __('promotions.search') }}</button>
     </form>
-    <div class="table-responsive border rounded-2 mb-3">
+    <div class="table-responsive border mb-3">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
@@ -40,7 +40,7 @@
                             <form action="{{ route('admin.collections.products.store', $collection) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->getKey() }}">
-                                <button type="submit" class="btn btn-sm btn-outline theme-primary rounded-2">
+                                <button type="submit" class="btn btn-sm btn-outline theme-primary ">
                                     {{ __('promotions.add') }}
                                 </button>
                             </form>

@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', __('management.display.order').''.$order->order_id.' (UC-44)')
-@section('page_title', __('management.display.order').''.$order->order_id)
+@section('title', __('management.display.order').$order->order_id)
+@section('page_title', __('management.display.order').$order->order_id)
 
 @section('content')
 <div class="container-fluid p-0">
-    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-solid theme-secondary rounded-pill mb-3">
+    <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-solid theme-inverse mb-3">
         <i class="bi bi-arrow-left"></i> {{ __('management.back_to_orders') }}
     </a>
 

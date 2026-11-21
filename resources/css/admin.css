@@ -1,60 +1,130 @@
-body {
+body.admin-page {
     font-family: 'Instrument Sans', sans-serif;
-    background-color: #F8F9FA;
-    color: #212529;
+    background: var(--bg-body);
+    color: var(--fg-body);
     min-height: 100vh;
 }
+
+.admin-report-chart {
+    width: min(100%, 320px);
+    height: 320px;
+}
+
+.admin-report-timeseries {
+    height: 280px;
+    min-width: 0;
+}
+
+.admin-report-chart-total {
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.admin-report-swatch {
+    width: 0.65rem;
+    height: 0.65rem;
+    margin-inline-end: 0.35rem;
+}
+
+[data-chart-toggle][aria-pressed="false"] {
+    opacity: 0.55;
+    text-decoration: line-through;
+}
+
 .admin-sidebar {
     width: 260px;
-    background: #111424;
-    color: #E2E8F0;
+    background: var(--bg-1);
+    color: var(--fg-body);
+    border-inline-end: 1px solid var(--border-color);
     min-height: 100vh;
-    transition: all 0.3s;
 }
+
 .admin-sidebar .nav-link {
-    color: #94A3B8;
-    border-radius: 0.5rem;
+    color: var(--fg-2);
+    border-inline-start: 2px solid transparent;
     padding: 0.75rem 1rem;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    transition: all 0.2s;
     margin-bottom: 0.25rem;
 }
-.admin-sidebar .nav-link:hover {
-    color: #FFFFFF;
-    background: rgba(255, 255, 255, 0.08);
-}
+
+.admin-sidebar .nav-link:hover,
 .admin-sidebar .nav-link.active {
-    color: #FFFFFF;
-    background: #17B0D8;
-    box-shadow: 0 4px 12px rgba(23, 176, 216, 0.35);
+    color: var(--fg-body);
+    background: var(--bg-body);
 }
+
+.admin-sidebar .nav-link.active {
+    border-inline-start-color: var(--primary-fg);
+    font-weight: 600;
+}
+
 .admin-sidebar .brand-title {
     letter-spacing: 0.05em;
 }
+
 .admin-topbar {
-    background: #FFFFFF;
-    border-bottom: 1px solid #E2E8F0;
+    background: var(--bg-body);
+    border-bottom: 1px solid var(--border-color);
     padding: 0.85rem 1.5rem;
 }
-.metric-card {
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    transition: transform 0.2s, box-shadow 0.2s;
+
+.admin-page :is(.card, .btn, .form-control, .form-select, .input-group-text,
+.badge, .alert, .nav-link, .dialog, .drawer, .table-responsive, .progress,
+.page-link, .list-group, .list-group-item, .dialog-content,
+.accordion-item, .accordion-button) {
+    /* Shared components may still carry Bootstrap radius utilities. */
+    border-radius: 0 !important;
 }
-.metric-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+
+.admin-page .card {
+    background: var(--bg-body);
+    color: var(--fg-body);
+    border: 1px solid var(--border-color) !important;
+    box-shadow: none !important;
 }
+
+.admin-page .badge {
+    background: var(--bg-1) !important;
+    color: var(--fg-body) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.admin-page main .nav-link.active {
+    color: var(--fg-body);
+    background: var(--bg-1);
+    box-shadow: inset 0 -2px 0 var(--primary-fg);
+}
+
+.admin-page .alert {
+    background: var(--bg-1);
+    color: var(--fg-body);
+    border: 1px solid var(--border-color) !important;
+    box-shadow: none !important;
+}
+
 .table-custom {
     border-collapse: separate;
     border-spacing: 0 0.5rem;
 }
+
 .table-custom tr {
-    background: #FFFFFF;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    border-radius: 0.75rem;
+    background: var(--bg-body);
+    box-shadow: none;
+}
+
+.admin-page :is(.valid-feedback, .invalid-feedback) {
+    color: var(--fg-body);
+}
+
+.admin-page .form-control:is(.is-valid, .is-invalid) {
+    --control-border-color: var(--fg-body);
+}
+
+.admin-page .form-control:is(.is-valid, .is-invalid):focus-visible {
+    --control-border-color: var(--fg-body);
+    outline-color: var(--primary-fg);
 }

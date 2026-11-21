@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('admin_theme', 'light')
 @section('title', __('promotions.manage_sections'))
 @section('page_title', __('promotions.manage_sections'))
 
@@ -9,16 +8,16 @@
         <div class="d-flex flex-wrap gap-2">
             <a
                 href="{{ route('admin.collections.index') }}"
-                class="btn btn-outline theme-secondary rounded-2"
+                class="btn btn-outline theme-inverse "
             >{{ __('promotions.collections') }}</a>
             <a
                 href="{{ route('admin.sections.create') }}"
-                class="btn btn-solid theme-primary rounded-2"
+                class="btn btn-solid theme-primary "
             >{{ __('promotions.create_section') }}</a>
         </div>
     </header>
     <p class="fg-3">{{ __('promotions.visibility_hint', ['count' => config('promotions.max_sections')]) }}</p>
-    <div class="table-responsive border rounded-2">
+    <div class="table-responsive border ">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
@@ -43,7 +42,7 @@
                         </td>
                         <td>{{ __('promotions.layouts.'.$section->layout) }}</td>
                         <td>
-                            <span class="badge {{ $section->is_active ? 'bg-success' : 'bg-secondary' }}">{{ __($section->is_active ? 'promotions.enabled' : 'promotions.disabled') }}</span>
+                            <span class="badge">{{ __($section->is_active ? 'promotions.enabled' : 'promotions.disabled') }}</span>
                             <small class="d-block fg-3 mt-1">{{ $section->starts_at?->timezone(config('app.timezone'))->format('Y-m-d H:i') ?? '—' }} → {{ $section->expires_at?->timezone(config('app.timezone'))->format('Y-m-d H:i') ?? '—' }}</small>
                             <small class="fg-3">{{ config('app.timezone') }}</small>
                         </td>
@@ -56,7 +55,7 @@
                                         <input type="hidden" name="direction" value="{{ $direction }}">
                                         <button
                                             type="submit"
-                                            class="btn btn-sm btn-outline theme-secondary rounded-2"
+                                            class="btn btn-sm btn-outline theme-inverse "
                                             aria-label="{{ __('promotions.move_'.$direction, ['name' => $section->displayHeading()]) }}"
                                         ><i class="bi bi-{{ $icon }}" aria-hidden="true"></i></button>
                                     </form>

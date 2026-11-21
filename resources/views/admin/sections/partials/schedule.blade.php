@@ -10,7 +10,7 @@
                     name="{{ $field }}"
                     type="datetime-local"
                     value="{{ old($field, $section->{$field}?->timezone(config('app.timezone'))->format('Y-m-d\TH:i')) }}"
-                    class="form-control rounded-2"
+                    class="form-control "
                 >
             </div>
         @endforeach

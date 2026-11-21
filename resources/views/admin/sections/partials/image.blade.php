@@ -44,7 +44,7 @@
             type="text"
             maxlength="255"
             value="{{ old('alt_text', $section->alt_text) }}"
-            class="form-control rounded-2"
+            class="form-control "
             x-bind:disabled="!profiles[layout]"
             x-bind:required="!!profiles[layout]"
         >

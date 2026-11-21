@@ -3,7 +3,7 @@
     <select
         id="section-placement"
         name="placement"
-        class="form-control rounded-2"
+        class="form-control "
         x-model="placement"
         required
     >
@@ -17,7 +17,7 @@
     <select
         id="section-source"
         name="source"
-        class="form-control rounded-2"
+        class="form-control "
         x-model="source"
         required
     >
@@ -38,7 +38,7 @@
     <select
         id="section-layout"
         name="layout"
-        class="form-control rounded-2"
+        class="form-control "
         x-model="layout"
         required
     >
@@ -61,7 +61,7 @@
     <select
         id="section-collection"
         name="product_collection_id"
-        class="form-control rounded-2"
+        class="form-control "
         aria-describedby="section-collection-hint"
         x-bind:disabled="!needsCollection"
         x-bind:required="needsCollection"

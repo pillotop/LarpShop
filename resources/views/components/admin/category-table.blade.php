@@ -29,7 +29,7 @@
                         <td>
                             <div class="fw-semibold fg-body">{{ $category->name }}</div>
                             @if ($category->description)
-                                <small class="fg-secondary d-block text-truncate" style="max-width: 320px;">{{ $category->description }}</small>
+                                <small class="fg-2 d-block text-truncate" style="max-width: 320px;">{{ $category->description }}</small>
                             @endif
                         </td>
                         <td><code>{{ $category->slug }}</code></td>
@@ -38,7 +38,7 @@
                         <td class="text-center">{{ $category->products_count }}</td>
                         <td class="text-end">
                             <div class="d-inline-flex gap-2">
-                                <button type="button" class="btn btn-sm btn-outline theme-primary rounded-pill px-3"
+                                <button type="button" class="btn btn-sm btn-outline theme-primary px-3"
                                     data-bs-toggle="dialog" data-bs-target="#categoryEditModal{{ $category->category_id }}">
                                     <i class="bi bi-pencil"></i> {{ __('management.edit') }}
                                 </button>
@@ -46,7 +46,7 @@
                                     data-confirm="{{ __('management.delete_this_category') }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3">
+                                    <button type="submit" class="btn btn-sm btn-outline theme-inverse px-3">
                                         <i class="bi bi-trash"></i> {{ __('management.delete') }}
                                     </button>
                                 </form>
@@ -68,7 +68,7 @@
     {{-- Edit modals --}}
     @foreach ($categories as $category)
         <dialog class="dialog" id="categoryEditModal{{ $category->category_id }}" tabindex="-1">
-                <form method="POST" action="{{ route('admin.categories.update', $category->category_id) }}" class="d-flex flex-column rounded-9">
+                <form method="POST" action="{{ route('admin.categories.update', $category->category_id) }}" class="d-flex flex-column ">
                     @csrf
                     @method('PUT')
                     <div class="dialog-header">
@@ -79,7 +79,7 @@
                         <x-admin.category-form-fields :category="$category" :parent-options="$parentOptions" />
                     </div>
                     <div class="dialog-footer">
-                        <button type="button" class="btn btn-solid theme-secondary" data-bs-dismiss="dialog">{{ __('management.cancel') }}</button>
+                        <button type="button" class="btn btn-solid theme-inverse" data-bs-dismiss="dialog">{{ __('management.cancel') }}</button>
                         <button type="submit" class="btn btn-solid theme-primary">{{ __('management.save_changes') }}</button>
                     </div>
                 </form>

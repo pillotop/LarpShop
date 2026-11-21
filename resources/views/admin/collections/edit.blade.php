@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('admin_theme', 'light')
 
 @section('title', $collection->name)
 @section('page_title', __('promotions.edit_collection'))
@@ -10,16 +9,16 @@
         <div class="d-flex flex-wrap gap-2">
             <a
                 href="{{ route('admin.sections.create', ['collection' => $collection->getKey()]) }}"
-                class="btn btn-solid theme-primary rounded-2"
+                class="btn btn-solid theme-primary "
             >{{ __('promotions.create_section') }}</a>
             <a
                 href="{{ route('admin.promotions.preview', ['collection' => $collection->getKey()]) }}"
-                class="btn btn-outline theme-secondary rounded-2"
+                class="btn btn-outline theme-inverse "
             >{{ __('promotions.preview') }}</a>
             @if ($collection->is_published)
                 <a
                     href="{{ route('collections.show', ['slug' => $collection->slug]) }}"
-                    class="btn btn-outline theme-secondary rounded-2"
+                    class="btn btn-outline theme-inverse "
                 >{{ __('promotions.view_collection') }}</a>
             @endif
         </div>
@@ -38,7 +37,7 @@
         >
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-outline theme-danger rounded-2">{{ __('promotions.delete_collection') }}</button>
+            <button type="submit" class="btn btn-outline theme-inverse ">{{ __('promotions.delete_collection') }}</button>
         </form>
     </section>
 @endsection

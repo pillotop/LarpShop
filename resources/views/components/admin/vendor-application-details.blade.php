@@ -29,7 +29,7 @@
 </div>
 
 @foreach ($groups as $group => $fields)
-    <section class="border rounded-2 p-3 mb-3">
+    <section class="border p-3 mb-3">
         <h2 class="h5 fw-semibold mb-3">{{ __('onboarding.steps.'.$group) }}</h2>
         @if ($group === 'store')
             <img
@@ -37,7 +37,7 @@
                 alt="{{ __('onboarding.logo_preview') }}"
                 width="80"
                 height="80"
-                class="object-fit-cover rounded-2 mb-3"
+                class="object-fit-cover mb-3"
             >
         @endif
         <dl class="row g-2 mb-0">

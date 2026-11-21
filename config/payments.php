@@ -76,6 +76,7 @@ return [
         ],
         'fake' => [
             'gateway' => FakePaymentGateway::class,
+            'simulated' => true,
             'methods' => [
                 PaymentMethod::Card->value,
                 PaymentMethod::EWallet->value,

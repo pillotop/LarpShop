@@ -8,13 +8,13 @@
 @endphp
 
 <aside class="admin-sidebar d-flex flex-column flex-shrink-0 p-3">
-    <div class="d-flex align-items-center gap-2 px-2 py-3 mb-3 border-bottom border-secondary border-25">
-        <div class="bg-primary bg-gradient rounded-circle p-2 d-flex align-items-center justify-content-center fg-white" style="width: 38px; height: 38px;">
+    <div class="d-flex align-items-center gap-2 px-2 py-3 mb-3 border-bottom border-25">
+        <div class="bg-primary bg-gradient p-2 d-flex align-items-center justify-content-center fg-body" style="width: 38px; height: 38px;">
             <i class="bi bi-shield-lock-fill"></i>
         </div>
         <div>
-            <h5 class="mb-0 fw-bold brand-title fg-white">{{ __('management.larpshop') }}</h5>
-            <small class="fg-secondary" style="font-size: 0.75rem;">{{ __('management.admin_console') }}</small>
+            <h5 class="mb-0 fw-bold brand-title fg-body">{{ __('management.larpshop') }}</h5>
+            <small class="fg-2" style="font-size: 0.75rem;">{{ __('management.admin_console') }}</small>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
                 <i class="bi bi-shop fs-lg"></i>
                 <span>{{ __('management.vendor_management') }}</span>
                 @if ($pendingBadgeCount > 0)
-                    <span class="badge bg-warning fg-body rounded-pill ms-auto fw-bold">{{ $pendingBadgeCount }}</span>
+                    <span class="badge bg-warning fg-body ms-auto fw-bold">{{ $pendingBadgeCount }}</span>
                 @endif
             </a>
         </li>
@@ -57,7 +57,7 @@
                 <i class="bi bi-box-seam fs-lg"></i>
                 <span>{{ __('management.product_moderation') }}</span>
                 @if ($pendingProductCount > 0)
-                    <span class="badge bg-warning fg-body rounded-pill ms-auto fw-bold">{{ $pendingProductCount }}</span>
+                    <span class="badge bg-warning fg-body ms-auto fw-bold">{{ $pendingProductCount }}</span>
                 @endif
             </a>
         </li>
@@ -92,7 +92,7 @@
             </a>
         </li>
         <li class="nav-item mt-3">
-            <small class="text-uppercase fg-secondary fw-bold px-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('management.marketplace_shortcuts') }}</small>
+            <small class="text-uppercase fg-2 fw-bold px-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('management.marketplace_shortcuts') }}</small>
         </li>
         <li class="nav-item mt-1">
             <a href="{{ route('home') }}" class="nav-link" target="_blank">
@@ -108,18 +108,18 @@
         </li>
     </ul>
 
-    <div class="pt-3 border-top border-secondary border-25 mt-auto">
+    <div class="pt-3 border-top border-25 mt-auto">
         <div class="d-flex align-items-center justify-content-between px-2">
             <div class="d-flex align-items-center gap-2 text-truncate me-2">
                 <i class="bi bi-person-fill-gear fg-info fs-lg"></i>
                 <div class="text-truncate">
-                    <div class="small fw-bold fg-white text-truncate">{{ Auth::user()->username ?? __('management.admin') }}</div>
+                    <div class="small fw-bold fg-body text-truncate">{{ Auth::user()->username ?? __('management.admin') }}</div>
                     <small class="fg-3 d-block" style="font-size: 0.75rem;">{{ __('management.administrator') }}</small>
                 </div>
             </div>
             <form action="{{ route('logout') }}" method="POST" class="m-0">
                 @csrf
-                <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-circle p-2" title="{{ __('management.sign_out') }}">
+                <button type="submit" class="btn btn-sm btn-outline theme-inverse p-2" title="{{ __('management.sign_out') }}">
                     <i class="bi bi-box-arrow-right"></i>
                 </button>
             </form>

@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('admin_theme', 'light')
 
 @section('title', __('promotions.preview'))
 @section('page_title', __('promotions.preview'))
@@ -17,7 +16,7 @@
         <p class="fg-3">{{ __('promotions.preview_hint') }}</p>
         <a
             href="{{ route('admin.collections.index') }}"
-            class="btn btn-sm btn-outline theme-secondary rounded-2"
+            class="btn btn-sm btn-outline theme-inverse "
         >{{ __('promotions.collections') }}</a>
     </header>
 
@@ -30,7 +29,7 @@
                 @foreach (['full' => 'desktop', 'narrow' => 'mobile'] as $value => $label)
                     <button
                         type="button"
-                        class="btn btn-sm btn-outline theme-secondary rounded-2"
+                        class="btn btn-sm btn-outline theme-inverse "
                         x-on:click="viewport = '{{ $value }}'"
                         x-bind:aria-pressed="viewport === '{{ $value }}'"
                     >{{ __('promotions.'.$label) }}</button>
@@ -41,7 +40,7 @@
             @if ($preview && $preview->products->isNotEmpty())
                 <x-promo-section :data="$preview" :preview="true" />
             @else
-                <p class="border rounded-2 p-4">{{ __($selectedCollection || $productSource !== 'collection' ? 'promotions.no_products' : 'promotions.no_collections') }}</p>
+                <p class="border p-4">{{ __($selectedCollection || $productSource !== 'collection' ? 'promotions.no_products' : 'promotions.no_collections') }}</p>
             @endif
         </div>
     </div>

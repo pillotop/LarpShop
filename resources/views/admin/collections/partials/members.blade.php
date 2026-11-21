@@ -1,7 +1,7 @@
 <section class="mb-5" aria-labelledby="collection-members-heading">
     <h2 id="collection-members-heading" class="h4">{{ __('promotions.selected_products') }}</h2>
     <p class="small fg-3">{{ __('promotions.members_hint', ['count' => config('promotions.max_collection_products')]) }}</p>
-    <div class="table-responsive border rounded-2">
+    <div class="table-responsive border ">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>
@@ -32,7 +32,7 @@
                                     <input type="hidden" name="direction" value="{{ $direction }}">
                                     <button
                                         type="submit"
-                                        class="btn btn-sm btn-outline theme-secondary rounded-2"
+                                        class="btn btn-sm btn-outline theme-inverse "
                                         aria-label="{{ __('promotions.move_'.$direction, ['name' => $product->name]) }}"
                                         @disabled(($direction === 'up' && $loop->parent->first) || ($direction === 'down' && $loop->parent->last))
                                     ><i class="bi bi-arrow-{{ $direction }}" aria-hidden="true"></i></button>
@@ -47,7 +47,7 @@
                                 @method('DELETE')
                                 <button
                                     type="submit"
-                                    class="btn btn-sm btn-outline theme-secondary rounded-2"
+                                    class="btn btn-sm btn-outline theme-inverse "
                                     aria-label="{{ __('promotions.remove_product', ['name' => $product->name]) }}"
                                 >{{ __('promotions.remove') }}</button>
                             </form>

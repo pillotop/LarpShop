@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('admin_theme', 'light')
 
 @section('title', __('promotions.collections'))
 @section('page_title', __('promotions.collections'))
@@ -10,7 +9,7 @@
             <h1 class="h3 fw-semibold">{{ __('promotions.collections') }}</h1>
             <p class="fg-3 mb-0">{{ __('promotions.collections_hint') }}</p>
         </div>
-        <a href="{{ route('admin.collections.create') }}" class="btn btn-solid theme-primary rounded-2">
+        <a href="{{ route('admin.collections.create') }}" class="btn btn-solid theme-primary ">
             {{ __('promotions.create_collection') }}
         </a>
     </header>
@@ -23,13 +22,13 @@
             name="q"
             value="{{ $search }}"
             maxlength="100"
-            class="form-control rounded-2"
+            class="form-control "
             placeholder="{{ __('promotions.search_collections') }}"
         >
-        <button type="submit" class="btn btn-outline theme-secondary rounded-2">{{ __('promotions.search') }}</button>
+        <button type="submit" class="btn btn-outline theme-inverse ">{{ __('promotions.search') }}</button>
     </form>
 
-    <div class="table-responsive border rounded-2 mb-4">
+    <div class="table-responsive border mb-4">
         <table class="table align-middle mb-0">
             <thead>
                 <tr>

@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('admin_theme', 'light')
 @section('title', __('promotions.manage_sections'))
 @section('page_title', __('promotions.manage_sections'))
 
@@ -9,12 +8,12 @@
         <div class="d-flex flex-wrap gap-2">
             <a
                 href="{{ route('admin.sections.index') }}"
-                class="btn btn-outline theme-secondary rounded-2"
+                class="btn btn-outline theme-inverse "
             >{{ __('promotions.back_sections') }}</a>
             @if ($section->exists)
                 <a
                     href="{{ route('admin.promotions.preview', ['section' => $section->getKey()]) }}"
-                    class="btn btn-outline theme-secondary rounded-2"
+                    class="btn btn-outline theme-inverse "
                 >{{ __('promotions.preview') }}</a>
             @endif
         </div>
