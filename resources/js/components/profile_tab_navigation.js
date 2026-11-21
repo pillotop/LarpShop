@@ -1,5 +1,6 @@
 // Open a nested tab's parent first, including links using the existing pane IDs.
 export function showProfileTab(root, show, { id = '', hash = '' } = {}) {
+    if (!id && hash === '#pane-vendor-new') hash = '#pane-vendor';
     const triggers = Array.from(root.querySelectorAll('[data-bs-toggle="tab"]'));
     const trigger = triggers.find(button => id ? button.id === id : button.dataset.bsTarget === hash);
     if (!trigger) return false;

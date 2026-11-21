@@ -49,10 +49,10 @@
                         </td>
                         <td>
                             <div class="small fw-semibold fg-body">
-                                {{ $vendor->created_at ? $vendor->created_at->format('d/m/Y') : __('management.n_a') }}
+                                {{ ($vendor->application?->submitted_at ?? $vendor->created_at)?->format('d/m/Y') ?? __('management.n_a') }}
                             </div>
                             <small class="fg-3">
-                                {{ $vendor->created_at ? $vendor->created_at->format('H:i') : '' }}
+                                {{ ($vendor->application?->submitted_at ?? $vendor->created_at)?->format('H:i') }}
                             </small>
                         </td>
                         <td>
@@ -80,30 +80,17 @@
                         </td>
                         <td class="text-end">
                             <div class="d-inline-flex gap-2 align-items-center">
-                                {{-- UC-29: Administrator Configure Vendor Store --}}
-                                <a href="{{ route('admin.vendors.edit', $vendor->vendor_id) }}" class="btn btn-sm btn-outline theme-inverse rounded-pill px-2" title="{{ __('management.store_configuration_uc_29') }}">
-                                    <i class="bi bi-gear"></i>
-                                </a>
-
-                                @if ($vendor->status === 'pending')
-                                    {{-- UC-40: Approve Pending Vendor --}}
-                                    <form action="{{ route('admin.vendors.approve', $vendor->vendor_id) }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-solid theme-success rounded-pill px-3 fw-semibold shadow-sm d-inline-flex align-items-center gap-1">
-                                            <i class="bi bi-check-lg"></i>
-                                            <span>{{ __('management.approve') }}</span>
-                                        </button>
-                                    </form>
-
-                                    {{-- UC-40: Reject Pending Vendor --}}
-                                    <form action="{{ route('admin.vendors.reject', $vendor->vendor_id) }}" method="POST" class="m-0" data-confirm="{{ __('management.reject_this_store_application') }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3 d-inline-flex align-items-center gap-1">
-                                            <i class="bi bi-x-lg"></i>
-                                            <span>{{ __('management.reject') }}</span>
-                                        </button>
-                                    </form>
-                                @elseif (in_array($vendor->status, ['active', 'approved']))
+                                <a
+                                    href="{{ route('admin.vendors.show', $vendor) }}"
+                                    class="btn btn-sm btn-outline theme-primary rounded-2"
+                                >{{ __('onboarding.review.details') }}</a>
+                                @if (in_array($vendor->status, ['active', 'approved', 'suspended'], true))
+                                    <a
+                                        href="{{ route('admin.vendors.edit', $vendor) }}"
+                                        class="btn btn-sm btn-outline theme-secondary rounded-2"
+                                    >{{ __('management.store_configuration') }}</a>
+                                @endif
+                                @if (in_array($vendor->status, ['active', 'approved']))
                                     {{-- View Storefront Link --}}
                                     <a href="{{ route('vendors.show', $vendor->vendor_id) }}" target="_blank" class="btn btn-sm btn-outline theme-primary rounded-pill px-2" title="{{ __('management.view_store') }}">
                                         <i class="bi bi-box-arrow-up-right"></i>
@@ -117,7 +104,7 @@
                                             <span>{{ __('management.suspended') }}</span>
                                         </button>
                                     </form>
-                                @elseif ($vendor->status === 'suspended' || $vendor->status === 'rejected')
+                                @elseif ($vendor->status === 'suspended')
                                     {{-- UC-40: Reinstate/Re-approve Vendor --}}
                                     <form action="{{ route('admin.vendors.reinstate', $vendor->vendor_id) }}" method="POST" class="m-0">
                                         @csrf

@@ -53,21 +53,10 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-inline-flex gap-2">
-                                    {{-- Approve Button --}}
-                                    <form action="{{ route('admin.vendors.approve', $request->vendor_id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-solid theme-success rounded-pill px-3 fw-semibold shadow-sm" title="{{ __('management.approve_application') }}">
-                                            <i class="bi bi-check-lg me-1"></i> {{ __('management.approve') }}
-                                        </button>
-                                    </form>
-
-                                    {{-- Reject Button --}}
-                                    <form action="{{ route('admin.vendors.reject', $request->vendor_id) }}" method="POST" class="d-inline" data-confirm="{{ __('management.reject_this_store_application') }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-outline theme-danger rounded-pill px-3" title="{{ __('management.reject_application') }}">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </form>
+                                    <a
+                                        href="{{ route('admin.vendors.show', $request) }}"
+                                        class="btn btn-sm btn-outline theme-primary rounded-2"
+                                    >{{ __('onboarding.review.details') }}</a>
                                 </div>
                             </td>
                         </tr>

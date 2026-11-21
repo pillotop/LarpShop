@@ -13,7 +13,7 @@ class TranslationCatalogTest extends TestCase
 {
     public function test_application_catalogs_have_matching_keys_and_placeholders(): void
     {
-        foreach (['common', 'products', 'cart', 'checkout', 'profile', 'orders', 'reviews', 'wishlist', 'footer', 'pagination', 'auth', 'passwords', 'management', 'notifications'] as $domain) {
+        foreach (['onboarding', 'common', 'products', 'cart', 'checkout', 'profile', 'orders', 'reviews', 'wishlist', 'footer', 'pagination', 'auth', 'passwords', 'management', 'notifications'] as $domain) {
             $english = Arr::dot(require lang_path("en/{$domain}.php"));
             $vietnamese = Arr::dot(require lang_path("vi/{$domain}.php"));
             $this->assertEqualsCanonicalizing(array_keys($english), array_keys($vietnamese), $domain);

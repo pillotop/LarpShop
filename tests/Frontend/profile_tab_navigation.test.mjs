@@ -44,6 +44,12 @@ test('vendor deep links continue to open the Stores parent', () => {
     assert.deepEqual(f.shown, ['tab-vendor-info', 'tab-vendor-12']);
 });
 
+test('the old new-store fragment opens Stores after the inline registration tab is removed', () => {
+    const f = fixture();
+    f.open({ hash: '#pane-vendor-new' });
+    assert.deepEqual(f.shown, ['tab-vendor-info']);
+});
+
 test('top-level tabs stay independent of Account and unknown fragments are ignored', () => {
     const f = fixture();
     f.open({ hash: '#pane-purchases' });

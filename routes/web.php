@@ -127,6 +127,7 @@ require __DIR__.'/addresses.php';
 require __DIR__.'/orders.php';
 require __DIR__.'/wishlist.php';
 require __DIR__.'/vendor.php';
+require __DIR__.'/vendor-onboarding.php';
 require __DIR__.'/admin.php';
 
 // Customer Service Static Pages

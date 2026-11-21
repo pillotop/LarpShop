@@ -10,12 +10,12 @@ class VendorQuery
 {
     public function forUser(User $user): Collection
     {
-        return $user->vendors()->withCount('products')->orderBy('vendor_id')->get();
+        return $user->vendors()->with('application')->withCount('products')->orderBy('vendor_id')->get();
     }
 
     public function activeForUser(User $user): Collection
     {
-        return $user->vendors()->active()->withCount('products')->orderBy('vendor_id')->get();
+        return $user->vendors()->active()->with('application')->withCount('products')->orderBy('vendor_id')->get();
     }
 
     public function resolveActiveVendor(User $user, ?int $requestedVendorId = null): ?Vendor

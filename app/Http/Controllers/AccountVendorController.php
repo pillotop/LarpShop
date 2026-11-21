@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateVendorRequest;
-use App\Http\Requests\VendorRegistrationRequest;
 use App\Models\Vendor;
+use App\Services\Vendors\Onboarding\VendorOnboardingService;
 use App\Services\Vendors\VendorManagementService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -14,11 +14,16 @@ class AccountVendorController extends Controller
 {
     public function __construct(private VendorManagementService $vendors) {}
 
-    public function store(VendorRegistrationRequest $request): RedirectResponse|JsonResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
-        $vendor = $this->vendors->register($request->user(), $request->validated());
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => __('onboarding.review.use_onboarding'),
+                'redirect_url' => route('vendor-applications.create'),
+            ], 422);
+        }
 
-        return $this->respond($request, $vendor, 'vendor-registered', __('profile.success.store_submitted'), 201);
+        return redirect()->route('vendor-applications.create', status: 303);
     }
 
     public function update(UpdateVendorRequest $request): RedirectResponse|JsonResponse
@@ -28,11 +33,15 @@ class AccountVendorController extends Controller
         return $this->respond($request, $vendor, 'vendor-updated', __('profile.success.store_updated'));
     }
 
-    public function resubmit(UpdateVendorRequest $request): RedirectResponse|JsonResponse
+    public function resubmit(Request $request, int $vendor, VendorOnboardingService $onboarding): RedirectResponse|JsonResponse
     {
-        $vendor = $this->vendors->resubmit($request->user(), $request->vendor()->vendor_id, $request->validated());
+        $application = $onboarding->resumeRejectedStore($request->user(), $vendor);
+        $url = route('vendor-applications.show', $application);
+        if ($request->expectsJson()) {
+            return response()->json(['application' => $application, 'redirect_url' => $url]);
+        }
 
-        return $this->respond($request, $vendor, 'vendor-registered', __('profile.success.store_resubmitted'));
+        return redirect()->to($url, 303);
     }
 
     private function respond(Request $request, Vendor $vendor, string $status, string $message, int $code = 200): RedirectResponse|JsonResponse

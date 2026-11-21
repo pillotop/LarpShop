@@ -1,0 +1,45 @@
+.vendor-onboarding { padding-bottom: 5rem; }
+.onboarding-language-footer { z-index: 10; }
+.onboarding-language { background: var(--bg-body, #fff); max-width: calc(100vw - 2rem); }
+.vendor-onboarding [x-cloak] { display: none !important; }
+.onboarding-shell { max-width: 60rem; margin-inline: auto; }
+.onboarding-form-fields { min-width: 0; }
+.onboarding-progress { overflow-x: auto; }
+.onboarding-progress ol { display: grid; grid-template-columns: repeat(4, minmax(8rem, 1fr)); }
+.onboarding-step-button {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem 0.5rem;
+    border: 0;
+    border-bottom: 3px solid var(--border-color);
+    background: transparent;
+    color: var(--fg-2);
+    text-align: start;
+    font: inherit;
+    font-size: 0.875rem;
+}
+.onboarding-step-button.is-current { border-bottom-color: var(--color-primary-600); color: var(--fg-body); font-weight: 600; }
+.onboarding-step-button:disabled { opacity: 0.55; }
+.onboarding-step-button:focus-visible { outline: 2px solid var(--color-primary-600); outline-offset: -2px; }
+.onboarding-step-number { border: 1px solid var(--border-color); padding: 0.2rem 0.5rem; border-radius: var(--radius-2); }
+.onboarding-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.onboarding-full { grid-column: 1 / -1; }
+.onboarding-field .form-label { text-transform: none; }
+.onboarding-logo { display: block; width: 5.5rem; height: 5.5rem; object-fit: cover; }
+.onboarding-countries { max-height: 15rem; overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; }
+.onboarding-summary-row { display: grid; grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1.3fr); gap: 1rem; padding-block: 0.5rem; }
+.onboarding-summary-row dd { overflow-wrap: anywhere; white-space: pre-wrap; }
+.onboarding-enter { transition: opacity 180ms ease, transform 180ms ease; }
+.onboarding-enter-start { opacity: 0; transform: translateX(0.5rem); }
+.onboarding-enter-end { opacity: 1; transform: translateX(0); }
+@media (max-width: 39.999rem) {
+    .onboarding-fields, .onboarding-countries, .onboarding-summary-row { grid-template-columns: minmax(0, 1fr); }
+    .onboarding-summary-row { gap: 0.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .onboarding-enter { transition: none; }
+    .onboarding-enter-start, .onboarding-enter-end { transform: none; }
+}

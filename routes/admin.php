@@ -52,6 +52,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // UC-40 & UC-29: Vendor Management and Store Configuration
     Route::get('/vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
+    Route::get('/vendors/{vendor}', [AdminVendorController::class, 'show'])->whereNumber('vendor')->name('vendors.show');
     Route::get('/vendors/{vendor}/edit', [AdminVendorController::class, 'edit'])->name('vendors.edit');
     Route::put('/vendors/{vendor}', [AdminVendorController::class, 'update'])->name('vendors.update');
     Route::post('/vendors/{vendor}/approve', [AdminVendorController::class, 'approve'])->name('vendors.approve');

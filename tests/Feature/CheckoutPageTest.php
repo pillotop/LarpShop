@@ -85,7 +85,9 @@ class CheckoutPageTest extends TestCase
         [, $order] = $this->checkout();
         $this->get(route('checkout.show', $order))->assertOk()
             ->assertSee('id="checkout-terms"', false)
-            ->assertDontSee('Continue payment');
+            ->assertViewHas('canCreatePayment', true)
+            ->assertViewHas('canResumePayment', false)
+            ->assertSee('action="'.route('payments.store', $order).'"', false);
 
         $payment = $order->payments()->create([
             'provider' => 'paypal', 'method' => 'ewallet',
@@ -99,7 +101,9 @@ class CheckoutPageTest extends TestCase
         $payment->update(['status' => 'processing']);
         $this->get(route('checkout.show', $order))->assertOk()
             ->assertSee('Your payment is being processed.')
-            ->assertDontSee('Continue payment');
+            ->assertViewHas('canCreatePayment', false)
+            ->assertViewHas('canResumePayment', false)
+            ->assertDontSee('href="https://example.test/approve"', false);
 
         $payment->update(['status' => 'pending', 'checkout_url' => null]);
         $this->get(route('checkout.show', $order))->assertOk()

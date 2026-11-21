@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import { promoSourceForm } from './components/promo_source_form.js';
+import { vendorOnboarding } from './components/vendor_onboarding.js';
 import * as bootstrap from 'bootstrap';
 import './components/cart_store.js';
 import './components/cart_view.js';
@@ -12,4 +13,5 @@ import './components/storefront_ux.js';
 window.bootstrap = bootstrap;
 
 Alpine.data('promoSourceForm', promoSourceForm);
+Alpine.data('vendorOnboarding', vendorOnboarding);
 Alpine.start();

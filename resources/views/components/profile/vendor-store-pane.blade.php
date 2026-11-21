@@ -36,6 +36,13 @@
         @endif
     </div>
 
+    @if ($vendor->application && $vendor->status !== 'rejected')
+        <a
+            href="{{ route('vendor-applications.show', $vendor->application) }}"
+            class="d-inline-block mb-3 fg-body"
+        >{{ __('onboarding.review.details') }}</a>
+    @endif
+
     @if ($vendor->status === 'pending')
         <div class="card border-0 shadow-sm rounded-9 p-4">
             <h2 class="h5 fw-bold">{{ __('profile.store.pending_title') }}</h2>
@@ -49,7 +56,23 @@
         </div>
     @elseif ($vendor->status === 'rejected')
         <div class="alert theme-danger rounded-9">{{ __('profile.store.rejected') }}</div>
-        <x-profile.vendor-registration-form :vendor="$vendor" />
+        @if ($vendor->application)
+            <a
+                href="{{ route('vendor-applications.show', $vendor->application) }}"
+                class="btn btn-outline theme-primary rounded-2"
+            >{{ __('onboarding.resume') }}</a>
+        @else
+            <form
+                method="POST"
+                action="{{ route('profile.vendor.resubmit', $vendor) }}"
+            >
+                @csrf
+                <p class="fg-3">{{ __('onboarding.review.legacy_resume') }}</p>
+                <button type="submit" class="btn btn-outline theme-primary rounded-2">
+                    {{ __('onboarding.resume') }}
+                </button>
+            </form>
+        @endif
     @elseif ($approved)
         <div class="card border-0 shadow-sm rounded-9 p-4">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">

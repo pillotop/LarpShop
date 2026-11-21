@@ -7,6 +7,7 @@ use App\Queries\Address\AddressQuery;
 use App\Queries\Categories\CategoryQuery;
 use App\Queries\Orders\PurchaseHistoryQuery;
 use App\Queries\Reviews\ProductReviewQuery;
+use App\Queries\Vendors\VendorApplicationQuery;
 use App\Queries\Vendors\VendorQuery;
 use App\Queries\Wishlist\WishlistQuery;
 use App\Services\Profile\ProfileManagementService;
@@ -25,6 +26,7 @@ class ProfileController extends Controller
         WishlistQuery $wishlist,
         PurchaseHistoryQuery $purchaseHistory,
         ProductReviewQuery $reviews,
+        VendorApplicationQuery $applications,
     ): View {
         $user = $request->user();
 
@@ -41,6 +43,7 @@ class ProfileController extends Controller
             'user' => $user,
             'wishlistProducts' => $wishlist->forUser($user),
             'vendors' => $vendors->forUser($user),
+            'vendorApplications' => $applications->editableForUser($user),
             'addresses' => $addresses->forUser($user),
             'productCategories' => $categories->forNavigation(),
             'purchases' => $purchases,

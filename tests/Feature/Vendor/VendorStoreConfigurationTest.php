@@ -267,7 +267,7 @@ class VendorStoreConfigurationTest extends TestCase
             'user_id' => $owner->user_id,
             'store_name' => 'Vendor Under Review',
             'description' => 'Store waiting for admin adjustments',
-            'status' => 'pending',
+            'status' => 'approved',
         ]);
 
         $editResponse = $this->actingAs($admin)->get(route('admin.vendors.edit', $vendor->vendor_id));
@@ -277,7 +277,6 @@ class VendorStoreConfigurationTest extends TestCase
         $updateResponse = $this->actingAs($admin)->put(route('admin.vendors.update', $vendor->vendor_id), [
             'store_name' => 'Admin Adjusted Store',
             'description' => 'Configured by administrator',
-            'status' => 'approved',
         ]);
 
         $updateResponse->assertRedirect(route('admin.vendors.index'));

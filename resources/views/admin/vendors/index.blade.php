@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="card border-0 shadow-sm rounded-9 p-4 bg-white mb-4">
+    <div class="card border-0 shadow-sm rounded-2 p-4 mb-4">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-3 border-bottom mb-4">
             <div>
                 <h1 class="h5 fw-bold fg-body mb-1">

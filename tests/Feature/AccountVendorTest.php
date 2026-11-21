@@ -60,80 +60,17 @@ class AccountVendorTest extends TestCase
         $this->assertSame('High-grade LARP battle shields and leather boots.', $vendor->description);
     }
 
-    public function test_customer_can_register_as_vendor(): void
-    {
-        $customer = User::factory()->create([
-            'role' => 'customer',
-        ]);
-
-        $response = $this->actingAs($customer)->post(route('profile.vendor.register'), [
-            'store_name' => 'Elven Woodwork Workshop',
-            'description' => 'Bow staves and custom quivers.',
-        ]);
-
-        $response
-            ->assertRedirect(route('profile'))
-            ->assertSessionHas('success');
-
-        $customer->refresh();
-
-        $this->assertSame('customer', $customer->role);
-        $vendor = $customer->vendors()->sole();
-        $this->assertSame('Elven Woodwork Workshop', $vendor->store_name);
-        $this->assertSame('Bow staves and custom quivers.', $vendor->description);
-        $this->assertSame('pending', $vendor->status);
-    }
-
-    public function test_customer_vendor_registration_validates_store_name(): void
-    {
-        $customer = User::factory()->create(['role' => 'customer']);
-
-        $response = $this->actingAs($customer)->post(route('profile.vendor.register'), [
-            'store_name' => '',
-            'description' => 'Some description',
-        ]);
-
-        $response->assertSessionHasErrors('store_name');
-    }
-
-    public function test_customer_vendor_registration_requires_unique_store_name(): void
-    {
-        $existingVendorUser = User::factory()->create();
-        Vendor::create([
-            'user_id' => $existingVendorUser->user_id,
-            'store_name' => 'Existing Unique Armory',
-            'status' => 'active',
-        ]);
-
-        $customer = User::factory()->create(['role' => 'customer']);
-
-        $response = $this->actingAs($customer)->post(route('profile.vendor.register'), [
-            'store_name' => 'Existing Unique Armory',
-            'description' => 'Trying to use the same name',
-        ]);
-
-        $response->assertSessionHasErrors('store_name');
-    }
-
-    public function test_user_can_register_multiple_stores(): void
+    public function test_old_registration_post_redirects_to_onboarding_without_creating_a_store(): void
     {
         $user = User::factory()->create();
-        Vendor::create([
-            'user_id' => $user->user_id,
-            'store_name' => 'First Store',
-            'status' => 'active',
-        ]);
-
-        $response = $this->actingAs($user)->post(route('profile.vendor.register'), [
-            'store_name' => 'Second Store Attempt',
-        ]);
-
-        $response
-            ->assertRedirect(route('profile'))
-            ->assertSessionHas('success');
-
-        $this->assertSame(2, $user->vendors()->count());
-        $this->assertSame('customer', $user->refresh()->role);
+        $this->actingAs($user)->post(route('profile.vendor.register'), [
+            'store_name' => 'Bypass Attempt', 'description' => 'Old two-field form',
+        ])->assertRedirect(route('vendor-applications.create'))->assertStatus(303);
+        $this->postJson(route('profile.vendor.register'), ['store_name' => 'API Bypass'])
+            ->assertUnprocessable()->assertJsonPath('redirect_url', route('vendor-applications.create'));
+        $this->assertDatabaseCount('vendors', 0);
+        $this->assertDatabaseCount('vendor_applications', 0);
+        $this->assertSame('customer', $user->fresh()->role);
     }
 
     public function test_update_targets_only_the_owned_store_in_the_url(): void
@@ -173,7 +110,7 @@ class AccountVendorTest extends TestCase
         $this->assertSame('rejected', $store->status);
     }
 
-    public function test_rejected_store_can_be_resubmitted_without_creating_another_store(): void
+    public function test_rejected_store_opens_onboarding_without_submitting_incomplete_information(): void
     {
         $user = User::factory()->create();
         $store = $user->vendors()->create(['store_name' => 'Retry Store', 'status' => 'rejected']);
@@ -184,8 +121,9 @@ class AccountVendorTest extends TestCase
         ])->assertOk();
 
         $this->assertSame(1, $user->vendors()->count());
-        $this->assertSame('pending', $store->refresh()->status);
-        $this->assertSame('Revised application', $store->description);
+        $this->assertSame('rejected', $store->refresh()->status);
+        $this->assertNull($store->description);
+        $this->assertSame($store->getKey(), $store->application->vendor_id);
     }
 
     public function test_store_status_limits_editing_and_resubmission(): void

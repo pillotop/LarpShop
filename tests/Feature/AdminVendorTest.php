@@ -100,7 +100,9 @@ class AdminVendorTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $response = $this->actingAs($admin)->post("/admin/vendors/{$vendor->vendor_id}/reject");
+        $response = $this->actingAs($admin)->post("/admin/vendors/{$vendor->vendor_id}/reject", [
+            'rejection_reason' => 'Clarify store information',
+        ]);
 
         $response
             ->assertRedirect()
@@ -141,7 +143,7 @@ class AdminVendorTest extends TestCase
             $owner = User::factory()->create(['role' => $role]);
             $first = $owner->vendors()->create(['store_name' => $role.' First', 'status' => 'pending']);
             $second = $owner->vendors()->create(['store_name' => $role.' Second', 'status' => 'active']);
-            foreach (['approve' => 'approved', 'reject' => 'rejected', 'reinstate' => 'approved', 'suspend' => 'suspended'] as $action => $status) {
+            foreach (['approve' => 'approved', 'suspend' => 'suspended', 'reinstate' => 'approved'] as $action => $status) {
                 $this->actingAs($admin)->post('/admin/vendors/'.$first->vendor_id.'/'.$action)->assertRedirect();
                 $this->assertSame($status, $first->refresh()->status);
                 $this->assertSame('active', $second->refresh()->status);

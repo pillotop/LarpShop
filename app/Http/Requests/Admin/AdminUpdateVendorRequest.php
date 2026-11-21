@@ -28,7 +28,7 @@ class AdminUpdateVendorRequest extends FormRequest
                 Rule::unique('vendors', 'store_name')->ignore($vendorId, 'vendor_id'),
             ],
             'description' => ['nullable', 'string', 'max:2000'],
-            'status' => ['required', 'string', Rule::in(['pending', 'approved', 'active', 'rejected', 'suspended'])],
+            'status' => ['prohibited'],
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services\Vendors;
 
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\VendorApplication;
 use App\Queries\Vendors\VendorQuery;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -14,15 +15,6 @@ use Throwable;
 class VendorManagementService
 {
     public function __construct(private VendorQuery $vendors) {}
-
-    public function register(User $user, array $data): Vendor
-    {
-        return $user->vendors()->create([
-            'store_name' => $data['store_name'],
-            'description' => $data['description'] ?? null,
-            'status' => 'pending',
-        ]);
-    }
 
     public function update(User $user, int $vendorId, array $data): Vendor
     {
@@ -95,31 +87,12 @@ class VendorManagementService
             throw $exception;
         }
 
-        if ($newPath && $previousPath) {
+        if ($newPath && $previousPath
+            && ! VendorApplication::query()->where('brand_path', $previousPath)->exists()
+            && ! Vendor::query()->where('brand_path', $previousPath)->exists()) {
             Storage::disk('public')->delete($previousPath);
         }
 
         return $vendor;
-    }
-
-    public function resubmit(User $user, int $vendorId, array $data): Vendor
-    {
-        return DB::transaction(function () use ($user, $vendorId, $data) {
-            $vendor = $this->vendors->findOwned($user, $vendorId, lockForUpdate: true);
-
-            if ($vendor->status !== 'rejected') {
-                throw ValidationException::withMessages([
-                    'store_name' => __('profile.errors.store_resubmit'),
-                ]);
-            }
-
-            $vendor->update([
-                'store_name' => $data['store_name'],
-                'description' => $data['description'] ?? null,
-                'status' => 'pending',
-            ]);
-
-            return $vendor;
-        });
     }
 }

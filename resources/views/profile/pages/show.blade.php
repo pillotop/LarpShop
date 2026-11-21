@@ -47,6 +47,7 @@
             $errors->hasAny(['current_password', 'password', 'password_confirmation']) || session('status') === 'password-updated' => 'tab-security',
             $errors->hasAny(['username', 'email', 'phone_number', 'date_of_birth', 'gender', 'profile_image', 'remove_profile_image']) || session('status') === 'profile-updated' => 'tab-profile-details',
             $errors->hasAny(['store_name', 'description']) || in_array(session('status'), ['vendor-registered', 'vendor-updated']) => 'tab-vendor-info',
+            request()->has('applications_page') => 'tab-vendor-info',
             request()->hasAny(['orders_q', 'orders_filter', 'orders_period', 'orders_page']) => 'tab-purchases',
             default => '',
         };
@@ -159,7 +160,10 @@
                     />
 
                     {{-- Tab 2: Vendor Store Profile / Register --}}
-                    <x-profile.vendor-tab :vendors="$vendors" />
+                    <x-profile.vendor-tab
+                        :vendors="$vendors"
+                        :applications="$vendorApplications"
+                    />
 
                     {{-- Tab 2b: Purchase history --}}
                     <x-profile.purchases-tab
