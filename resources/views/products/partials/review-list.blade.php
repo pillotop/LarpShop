@@ -7,7 +7,6 @@
 @if ($reviews->hasMorePages())
     <div
         data-review-pagination
-        data-loading-message="{{ __('reviews.loading') }}"
         data-error-message="{{ __('reviews.load_error') }}"
     >
         <a
@@ -17,6 +16,15 @@
         >
             {{ __('reviews.more') }}
         </a>
-        <p class="small fg-danger mt-2 mb-0" data-review-error role="status"></p>
+        <x-loading-state
+            :label="__('reviews.loading')"
+            :hidden="true"
+            class="small fg-2 mt-2"
+        />
+        <p
+            class="small fg-danger mt-2 mb-0"
+            data-review-error
+            role="status"
+        ></p>
     </div>
 @endif

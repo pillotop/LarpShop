@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'featured_sections' => 'Bộ sưu tập nổi bật',
+    'loading_sections' => 'Đang tải các bộ sưu tập nổi bật…',
+    'load_sections_error' => 'Không thể tải các bộ sưu tập nổi bật. Vui lòng thử lại.',
+
+    'loading_products' => 'Đang tải sản phẩm nổi bật…',
+    'load_error' => 'Không thể tải sản phẩm nổi bật. Vui lòng thử lại.',
+
     'product_groups' => 'Nhóm sản phẩm',
     'pause_products' => 'Dừng cuộn tự động',
     'products_in_group' => 'Sản phẩm trong :group',

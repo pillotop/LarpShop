@@ -1,0 +1,62 @@
+.loading-state[hidden] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-state .spinner-border,
+    .loading-state .placeholder {
+        animation: none;
+    }
+}
+
+.product-card-skeleton {
+    min-width: 0;
+    color: var(--fg-2);
+}
+
+.product-card-skeleton-a {
+    width: 260px;
+    max-width: 100%;
+}
+
+.product-card-skeleton-compare {
+    display: block;
+    width: 5rem;
+    margin-bottom: .75rem;
+}
+
+.product-card-skeleton-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+.product-card-skeleton-body {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding-block: 1rem;
+}
+
+.product-card-skeleton-a .product-card-skeleton-body {
+    padding-inline: 1rem;
+}
+
+.product-card-skeleton-actions {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    padding-block: .75rem;
+}
+
+.product-card-skeleton-circle {
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+}
+
+.deferred-section {
+    /* Reserve room while a failed section offers a retry. */
+    min-block-size: 42rem;
+}

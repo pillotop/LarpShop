@@ -26,8 +26,10 @@ class HomepagePromoSectionTest extends TestCase
         $collection->sections()->create(['is_active' => false, 'heading' => 'Inactive promotion']);
         $collection->sections()->create(['is_active' => true, 'heading' => 'Future promotion', 'starts_at' => now()->addDay()]);
         $collection->sections()->create(['is_active' => true, 'heading' => 'Expired promotion', 'expires_at' => now()]);
-        $this->get(route('home'))->assertOk()
-            ->assertSeeInOrder(['First promotion', 'Second promotion', __('products.home.heading')])
+        $this->get(route('home'))->assertOk()->assertDontSee('First promotion')
+            ->assertSeeInOrder(['data-deferred-promo-sections', 'data-deferred-broad-select']);
+        $this->get(route('home.promo-sections'))->assertOk()
+            ->assertSeeInOrder(['First promotion', 'Second promotion'])
             ->assertSee(route('collections.show', $collection->slug), false)
             ->assertSee('data-scroll-content', false)
             ->assertDontSee('Inactive promotion')->assertDontSee('Future promotion')->assertDontSee('Expired promotion');
@@ -39,11 +41,13 @@ class HomepagePromoSectionTest extends TestCase
         $product = $this->product();
         $collection->products()->attach($product);
         $collection->sections()->create(['is_active' => true, 'heading' => 'Conditional promotion']);
-        $this->get(route('home'))->assertOk()->assertSee('Conditional promotion');
+        $this->get(route('home.promo-sections'))->assertOk()->assertSee('Conditional promotion');
         $collection->update(['is_published' => false]);
-        $this->get(route('home'))->assertOk()->assertDontSee('Conditional promotion')->assertSee(__('products.home.heading'));
+        $this->get(route('home.promo-sections'))->assertNoContent();
+        $this->get(route('home'))->assertOk()->assertSee(__('products.home.heading'));
         $collection->update(['is_published' => true]);
         $product->update(['stock' => 0]);
-        $this->get(route('home'))->assertOk()->assertDontSee('Conditional promotion')->assertSee(__('products.home.heading'));
+        $this->get(route('home.promo-sections'))->assertNoContent();
+        $this->get(route('home'))->assertOk()->assertSee(__('products.home.heading'));
     }
 }

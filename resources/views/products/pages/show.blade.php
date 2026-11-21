@@ -22,6 +22,7 @@
 @section('tail')
     @vite([
         'resources/js/components/product_reviews.js',
+        'resources/js/components/similar_products.js',
         'resources/js/components/product_quantity_picker.js',
         'resources/js/components/dropdown.js',
         'resources/js/components/persistent_header.js',
@@ -33,10 +34,6 @@
 
 @section('content')
     <header class="container sticky-top" style="background-color: #ffffff99;">
-        @vite([
-            'resources/css/top_header.css',
-            'resources/css/components/navigation_bar.css',
-        ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
             product-cart-bs-toggle="drawer"
@@ -71,12 +68,22 @@
                                     @endforelse
                                 </div>
                                 @if ($product->images->count() > 1)
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#previewCarousel" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <button
+                                        class="btn btn-solid theme-secondary rounded-2 position-absolute top-50 start-0 translate-middle-y ms-2 z-1"
+                                        type="button"
+                                        data-bs-target="#previewCarousel"
+                                        data-bs-slide="prev"
+                                    >
+                                        <span class="carousel-icon-prev" aria-hidden="true"></span>
                                         <span class="visually-hidden">{{ __('products.scroll_previous') }}</span>
                                     </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#previewCarousel" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <button
+                                        class="btn btn-solid theme-secondary rounded-2 position-absolute top-50 end-0 translate-middle-y me-2 z-1"
+                                        type="button"
+                                        data-bs-target="#previewCarousel"
+                                        data-bs-slide="next"
+                                    >
+                                        <span class="carousel-icon-next" aria-hidden="true"></span>
                                         <span class="visually-hidden">{{ __('products.scroll_next') }}</span>
                                     </button>
                                 @endif
@@ -318,24 +325,7 @@
             :can-review="$canReview"
         />
 
-        <section class="container my-5">
-            <h2 class="h4 fw-bold mb-3">{{ __('products.detail.similar') }}</h2>
-            @if ($similarProducts->isNotEmpty())
-                <x-two-arrow-scroller>
-                    <ul data-scroll-content class="d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0 py-2">
-                        @foreach ($similarProducts as $similarProduct)
-                            <li>
-                                <x-product-card-b :product="$similarProduct"/>
-                            </li>
-                        @endforeach
-                    </ul>
-                </x-two-arrow-scroller>
-            @else
-                <div class="p-4 rounded bg-1 text-center fg-3">
-                    <p class="mb-0">{{ __('products.detail.no_similar') }}</p>
-                </div>
-            @endif
-        </section>
+        <x-products.similar-deferred :product="$product" />
     </main>
     <x-side-panel/>
     <x-company-footer />

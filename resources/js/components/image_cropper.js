@@ -1,4 +1,3 @@
-import '../../css/components/image_cropper.css';
 import { cropRectangle } from './image_crop_geometry.js';
 
 class ImageCropper extends HTMLElement {

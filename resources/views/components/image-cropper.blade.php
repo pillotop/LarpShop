@@ -18,9 +18,12 @@
     ];
 @endphp
 
-@once
+@pushOnce('styles', 'image-cropper')
+    @vite('resources/css/components/image_cropper.css')
+@endPushOnce
+@pushOnce('scripts', 'image-cropper-script')
     @vite('resources/js/components/image_cropper.js')
-@endonce
+@endPushOnce
 
 <image-cropper
     {{ $attributes->class(['image-cropper', 'd-block']) }}

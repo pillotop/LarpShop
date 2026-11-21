@@ -1,11 +1,13 @@
-@props(['data', 'preview' => false])
+@props(['data', 'preview' => false, 'loadAssets' => true])
 
-@once
-    @vite([
-        'resources/css/components/two_arrow_scroller.css',
-        'resources/js/components/two_arrow_scroller.js',
-    ])
-@endonce
+@if ($loadAssets)
+    @pushOnce('styles', 'two-arrow-scroller')
+        @vite('resources/css/components/two_arrow_scroller.css')
+    @endPushOnce
+    @pushOnce('scripts', 'two-arrow-scroller-script')
+        @vite('resources/js/components/two_arrow_scroller.js')
+    @endPushOnce
+@endif
 
 @php($contentId = 'promo-products-'.Illuminate\Support\Str::uuid())
 

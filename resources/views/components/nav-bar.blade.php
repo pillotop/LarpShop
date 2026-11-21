@@ -5,6 +5,13 @@
     'cart'
 ])
 
+@pushOnce('styles', 'navigation-shell')
+    @vite([
+        'resources/css/top_header.css',
+        'resources/css/components/navigation_bar.css',
+    ])
+@endPushOnce
+
 <nav class="navigation-bar position-relative z-1 py-2">
     <div class="navigation-bar-inner container d-flex flex-wrap lg:flex-nowrap align-items-center justify-content-between gap-2 lg:gap-3">
         <div class="order-1 flex-shrink-0 d-flex align-items-center">
@@ -13,7 +20,7 @@
                 aria-label="{{ __('common.home') }}"
                 class="d-inline-flex align-items-center"
             >
-                <img src="/images/larp_shop.jpg" alt="" class="rounded-circle logo-larpshop-logo">
+                <img src="/images/larp_shop.jpg" width="48" height="48" alt="" class="rounded-circle logo-larpshop-logo">
             </a>
         </div>
         <div id="search-bar" class="order-3 lg:order-2 w-100 lg:flex-grow-1">

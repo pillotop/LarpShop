@@ -1,4 +1,4 @@
-@props(['data', 'viewAllUrl' => null, 'preview' => false])
+@props(['data', 'viewAllUrl' => null, 'preview' => false, 'loadAssets' => true])
 
 @php
     $definition = config('promotions.layouts')[$data->section->layout] ?? null;
@@ -8,9 +8,11 @@
 @endphp
 
 @if ($component && $data->products->isNotEmpty())
-    @once
-        @vite('resources/css/components/promo_sections.css')
-    @endonce
+    @if ($loadAssets)
+        @pushOnce('styles', 'promo-sections')
+            @vite('resources/css/components/promo_sections.css')
+        @endPushOnce
+    @endif
     <section
         {{ $attributes->class(['promo-section py-4']) }}
         aria-labelledby="{{ $headingId }}"
@@ -25,6 +27,7 @@
             :component="$component"
             :data="$data"
             :preview="$preview"
+            :load-assets="$loadAssets"
         />
     </section>
 @endif

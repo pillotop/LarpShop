@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'retry' => 'Try again',
+    'loading' => 'Loading…',
     'home' => 'Home',
     'cart' => 'Cart',
     'login' => 'Sign in',

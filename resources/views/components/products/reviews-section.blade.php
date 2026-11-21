@@ -9,7 +9,11 @@
         <aside class="col-12 lg:col-4">
             <div class="bg-1 rounded-9 p-4 h-100">
                 <div class="d-flex align-items-center gap-3 mb-4">
-                    <span class="rounded-circle bg-subtle-primary p-4 fs-xl fw-bold" aria-hidden="true">
+                    <span
+                        class="d-inline-flex align-items-center justify-content-center flex-shrink-0 rounded-circle bg-subtle-primary fs-xl fw-bold"
+                        style="width: 5rem; height: 5rem;"
+                        aria-hidden="true"
+                    >
                         {{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($product->vendor?->store_name ?? 'L', 0, 1)) }}
                     </span>
                     <h3 class="h5 mb-0">{{ $product->vendor?->store_name ?? __('products.detail.partner') }}</h3>

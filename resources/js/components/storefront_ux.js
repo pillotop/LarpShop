@@ -66,6 +66,14 @@ function initAdvancedSearchButton() {
     }
 }
 
+export function syncProductComparison(root = document, items = readCompareItems()) {
+    const selectedIds = new Set(items.map((item) => String(item.id)));
+    root.querySelectorAll('.product-card-compare-checkbox').forEach((cb) => {
+        const id = String(cb.getAttribute('data-compare-id') || cb.value);
+        cb.checked = selectedIds.has(id);
+    });
+}
+
 function initProductCompare() {
     const messages = loadCompareMessages();
     const t = (key, fallback) => messages[key] || fallback;
@@ -92,14 +100,6 @@ function initProductCompare() {
             });
             document.body.appendChild(dialog);
         }
-    }
-
-    function syncCheckboxes(items) {
-        const selectedIds = new Set(items.map((item) => String(item.id)));
-        document.querySelectorAll('.product-card-compare-checkbox').forEach((cb) => {
-            const id = String(cb.getAttribute('data-compare-id') || cb.value);
-            cb.checked = selectedIds.has(id);
-        });
     }
 
     function renderDialog(items) {
@@ -217,7 +217,7 @@ function initProductCompare() {
 
     function renderBar() {
         const items = readCompareItems();
-        syncCheckboxes(items);
+        syncProductComparison(document, items);
 
         if (items.length === 0) {
             if (bar) bar.hidden = true;

@@ -1,6 +1,15 @@
 <?php
 
 return [
+    'discovery' => [
+        'results' => 'Products in this category',
+        'empty' => 'No available products in this category yet.',
+        'loading' => 'Loading products…',
+        'error' => 'Products could not be loaded. Please try again.',
+        'more' => 'Show more products',
+        'less' => 'Show fewer products',
+        'no_script' => 'Choose a category above to browse its products.',
+    ],
     'search' => [
         'title' => 'Search Products - LarpShop',
         'results' => 'Search Results',
@@ -106,6 +115,8 @@ return [
         'seller' => 'Seller information',
         'status' => 'Status: :status',
         'similar' => 'Similar products',
+        'loading_similar' => 'Loading similar products…',
+        'load_similar_error' => 'Similar products could not be loaded. Please try again.',
         'no_similar' => 'No similar products found in this category.',
     ],
     'vendor_status' => [

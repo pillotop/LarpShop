@@ -98,7 +98,7 @@ class CatalogLocalizationTest extends TestCase
             ->assertSee('Original reviewer')
             ->assertSee('Original customer comment.')
             ->assertSee('Xem thêm đánh giá')
-            ->assertSee('data-loading-message="Đang tải đánh giá…"', false)
+            ->assertSee('Đang tải đánh giá…')
             ->assertSee('data-error-message="Không thể tải đánh giá. Vui lòng thử lại."', false)
             ->assertDontSee('Show more reviews');
 

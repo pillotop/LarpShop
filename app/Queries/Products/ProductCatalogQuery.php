@@ -171,6 +171,20 @@ class ProductCatalogQuery
             ->first();
     }
 
+    public function discoveryProducts(?int $categoryId, bool $expanded): Collection
+    {
+        return $this->automaticPromoCandidates(PromoSource::NewArrivals)
+            ->when($categoryId !== null, fn (Builder $query) => $query->whereIn('category_id', $this->getAllCategoryIds($categoryId)))
+            ->with(['images', 'vendor', 'category'])
+            ->withAvg('reviews as average_rating', 'rating')
+            ->withCount('reviews as total_reviews')
+            ->orderByDesc('created_at')
+            ->orderByDesc('product_id')
+            // One extra collapsed result determines whether expansion is useful.
+            ->limit($expanded ? 24 : 13)
+            ->get();
+    }
+
     public function getSimilarProducts(int $productId, ?int $categoryId = null, int $limit = 6): Collection
     {
         $query = Product::query()

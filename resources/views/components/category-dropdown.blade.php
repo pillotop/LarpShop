@@ -1,6 +1,6 @@
-@once
+@pushOnce('styles', 'two-arrow-scroller')
     @vite('resources/css/components/two_arrow_scroller.css')
-@endonce
+@endPushOnce
 
 <input
     type="hidden"

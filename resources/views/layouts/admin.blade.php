@@ -26,6 +26,7 @@
     @vite('resources/css/admin.css')
 
     @yield('head')
+    @stack('styles')
 </head>
 <body>
     @include('shared.cart-messages')
@@ -106,5 +107,6 @@
     <x-locale-panels />
 
     @yield('tail')
+    @stack('scripts')
 </body>
 </html>

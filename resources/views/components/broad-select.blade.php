@@ -2,6 +2,7 @@
     'groups',
     'heading' => null,
     'introduction' => null,
+    'loadStyles' => true,
 ])
 
 @php
@@ -9,9 +10,11 @@
 @endphp
 
 @if ($groups->isNotEmpty())
-    @once
-        @vite('resources/css/broad_select.css')
-    @endonce
+    @if ($loadStyles)
+        @pushOnce('styles', 'broad-select')
+            @vite('resources/css/broad_select.css')
+        @endPushOnce
+    @endif
     <section
         {{ $attributes }}
         data-broad-select

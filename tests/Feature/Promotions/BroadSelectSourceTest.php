@@ -186,7 +186,10 @@ class BroadSelectSourceTest extends TestCase
         $top = $this->section(PromoSource::TopRated, ['sort_order' => 1]);
         $new = $this->section(PromoSource::NewArrivals, ['sort_order' => 2]);
         $this->section(PromoSource::NewArrivals, ['heading' => 'Future group', 'starts_at' => now()->addDay()]);
-        $response = $this->get(route('home'))->assertOk()->assertDontSee('Future group');
+        $response = $this->get(route('home.broad-select'))->assertOk()
+            ->assertDontSee('Future group')
+            ->assertDontSee('<script', false)
+            ->assertDontSee('/build/', false);
         $groups = $response->viewData('broadSelectGroups');
         $this->assertSame(['promo-'.$manual->getKey(), 'promo-'.$top->getKey(), 'promo-'.$new->getKey()], $groups->pluck('key')->all());
         $this->assertSame([$recent->getKey()], $groups[0]->products->modelKeys());
@@ -220,7 +223,7 @@ class BroadSelectSourceTest extends TestCase
         $this->section(PromoSource::NewArrivals);
         $this->section(PromoSource::NewArrivals);
         $this->actingAs($customer)->post(route('wishlist.store', $product))->assertRedirect();
-        $response = $this->get(route('home'))->assertOk();
+        $response = $this->get(route('home.broad-select'))->assertOk();
         $document = new \DOMDocument;
         $previous = libxml_use_internal_errors(true);
         try {

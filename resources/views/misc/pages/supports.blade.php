@@ -39,10 +39,6 @@
             </svg>
         </header>
         <header class="container sticky-top" style="background-color: #ffffff99;">
-            @vite([
-                'resources/css/top_header.css',
-                'resources/css/components/navigation_bar.css',
-            ])
             <nav class="navigation-bar position-relative z-1 py-2" style="background-color: lightgray">
                 <div class="row gap-1 lg:gap-3">
                     <div class="col-1 d-flex align-items-center justify-content-center">

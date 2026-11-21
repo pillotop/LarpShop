@@ -5,6 +5,9 @@ export function initBroadSelect(root = document) {
         const panels = [...section.querySelectorAll('[data-broad-select-panel]')];
         const tablist = section.querySelector('[role="tablist"]');
         const desktop = window.matchMedia('(min-width: 768px)');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let fade;
+        reducedMotion.addEventListener('change', () => fade?.cancel());
         const orientation = () => tablist?.setAttribute('aria-orientation', desktop.matches ? 'vertical' : 'horizontal');
         orientation();
         desktop.addEventListener('change', orientation);
@@ -21,6 +24,9 @@ export function initBroadSelect(root = document) {
             const selected = panels.find(panel => panel.dataset.broadSelectPanel === button.dataset.broadSelectMode);
             if (!selected) return;
 
+            // Cancel the previous entrance so rapid selection always shows the latest group.
+            fade?.cancel();
+
             buttons.forEach(other => {
                 const active = other === button;
                 other.classList.toggle('is-active', active);
@@ -34,6 +40,10 @@ export function initBroadSelect(root = document) {
                     detail: { visible: active },
                 }));
             });
+            fade = reducedMotion.matches ? null : selected.animate?.(
+                [{ opacity: 0 }, { opacity: 1 }],
+                { duration: 220, easing: 'ease-out' },
+            );
         }
 
         buttons.forEach((button, index) => {

@@ -8,6 +8,7 @@ use Illuminate\View\Component;
 class Grid extends Component
 {
     public array $columns;
+
     public string $gap;
 
     public function __construct(
@@ -28,9 +29,10 @@ class Grid extends Component
         $classes = [];
 
         foreach ($this->columns as $breakpoint => $count) {
+            $breakpoint = $breakpoint === 'xxl' ? '2xl' : $breakpoint;
             $prefix = $breakpoint === 'default'
                 ? 'row-cols'
-                : "row-cols-{$breakpoint}";
+                : "{$breakpoint}:row-cols";
 
             $classes[] = "{$prefix}-{$count}";
         }

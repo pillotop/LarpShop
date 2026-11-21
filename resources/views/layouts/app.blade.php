@@ -20,6 +20,7 @@
         ])
 
         @yield('head')
+        @stack('styles')
     </head>
     <body>
 
@@ -45,6 +46,7 @@
         <script src="https://cdn.jsdelivr.net/npm/snapsvg@0.5.1/dist/snap.svg-min.min.js"></script>
 
         @yield('tail')
+        @stack('scripts')
 
     </body>
 </html>

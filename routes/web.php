@@ -10,7 +10,10 @@ use App\Models\Category;
 use App\Models\ProductCollection;
 use App\Models\Vendor;
 use App\View\CategoryController;
+use App\View\HomeBroadSelectController;
 use App\View\HomeController;
+use App\View\HomeDiscoveryController;
+use App\View\HomePromoSectionsController;
 use App\View\ProductCollectionController;
 use App\View\ProductSearchController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -39,6 +42,15 @@ Breadcrumbs::for('profile', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push(__('common.profile'), route('profile'));
 });
+Route::get('/home/promo-sections', HomePromoSectionsController::class)
+    ->name('home.promo-sections');
+
+Route::get('/home/broad-select', HomeBroadSelectController::class)
+    ->name('home.broad-select');
+
+Route::get('/home/discovery', HomeDiscoveryController::class)
+    ->name('home.discovery');
+
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 

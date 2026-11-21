@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductReviewController;
 use App\Models\Product;
 use App\View\ProductController;
+use App\View\SimilarProductsController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrails;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,9 @@ Route::get('cart/detail', [CartController::class, 'index'])
 Route::get('/products/{product}/reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
 Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])
     ->middleware('auth')->name('reviews.store');
+
+Route::get('/products/{product}/similar-products/content', SimilarProductsController::class)
+    ->name('products.similar');
 
 Route::get('/products/{product}/{slug?}', [ProductController::class, 'show'])
     ->name('products.show');

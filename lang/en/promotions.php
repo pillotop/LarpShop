@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'featured_sections' => 'Featured collections',
+    'loading_sections' => 'Loading promotions…',
+    'load_sections_error' => 'Promotions could not be loaded. Please try again.',
+
+    'loading_products' => 'Loading featured products…',
+    'load_error' => 'Featured products could not be loaded. Please try again.',
+
     'product_groups' => 'Product groups',
     'pause_products' => 'Pause automatic scrolling',
     'products_in_group' => 'Products in :group',

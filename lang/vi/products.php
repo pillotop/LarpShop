@@ -1,6 +1,15 @@
 <?php
 
 return [
+    'discovery' => [
+        'results' => 'Sản phẩm trong danh mục',
+        'empty' => 'Danh mục này chưa có sản phẩm còn hàng.',
+        'loading' => 'Đang tải sản phẩm…',
+        'error' => 'Không thể tải sản phẩm. Vui lòng thử lại.',
+        'more' => 'Xem thêm sản phẩm',
+        'less' => 'Thu gọn',
+        'no_script' => 'Chọn một danh mục ở trên để xem sản phẩm.',
+    ],
     'search' => [
         'title' => 'Tìm kiếm sản phẩm - LarpShop',
         'results' => 'Kết quả tìm kiếm',
@@ -106,6 +115,8 @@ return [
         'seller' => 'Thông tin người bán',
         'status' => 'Trạng thái: :status',
         'similar' => 'Sản phẩm tương tự',
+        'loading_similar' => 'Đang tải sản phẩm tương tự…',
+        'load_similar_error' => 'Không thể tải sản phẩm tương tự. Vui lòng thử lại.',
         'no_similar' => 'Không tìm thấy sản phẩm tương tự trong danh mục này.',
     ],
     'vendor_status' => [

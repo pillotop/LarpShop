@@ -9,6 +9,7 @@
             <li role="presentation">
                 <button
                     id="{{ $instanceId }}-tab-{{ $loop->index }}"
+                    @if ($loop->first) data-deferred-focus @endif
                     type="button"
                     role="tab"
                     @class(['selector-item', 'is-active' => $loop->first])

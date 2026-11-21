@@ -74,12 +74,24 @@
 }
 
 .broad-select .selector-product-list {
+    --edge-fade: clamp(1rem, 3vw, 2.5rem);
     display: flex;
     gap: 1rem;
     list-style: none;
     margin: 0;
-    padding: .5rem 1rem 1rem;
+    padding: .5rem var(--edge-fade) 1rem;
     overflow-x: auto;
+    /* Fade the content itself, keeping both edges compatible with any backdrop. */
+    mask-image: linear-gradient(to right,
+        transparent,
+        #000 var(--edge-fade),
+        #000 calc(100% - var(--edge-fade)),
+        transparent);
+    -webkit-mask-image: linear-gradient(to right,
+        transparent,
+        #000 var(--edge-fade),
+        #000 calc(100% - var(--edge-fade)),
+        transparent);
 }
 
 .broad-select .selector-product-list > li {
@@ -118,5 +130,39 @@
     .broad-select .selector-item,
     .broad-select .product-card-a .card-body-overlay {
         transition: none;
+    }
+}
+
+.broad-select-placeholder-choices {
+    display: flex;
+    gap: .5rem;
+    padding: .5rem 1rem;
+    overflow: hidden;
+}
+
+.broad-select-placeholder-choices > .placeholder {
+    flex: 0 0 10rem;
+    min-height: 4.5rem;
+}
+
+.broad-select-placeholder-products {
+    display: flex;
+    gap: 1rem;
+    min-width: 0;
+    overflow: hidden;
+    padding: .5rem 1rem 1rem;
+}
+
+.broad-select-placeholder-products > .product-card-skeleton {
+    flex: 0 0 260px;
+}
+
+@media (min-width: 768px) {
+    .broad-select-placeholder-choices {
+        flex-direction: column;
+    }
+
+    .broad-select-placeholder-choices > .placeholder {
+        flex-basis: 4.5rem;
     }
 }

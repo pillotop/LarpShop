@@ -23,10 +23,6 @@
 
 @section('content')
     <header class="container sticky-top" style="background-color: #ffffff99;">
-        @vite([
-            'resources/css/top_header.css',
-            'resources/css/components/navigation_bar.css',
-        ])
         <x-nav-bar product-cart-bs-target="#side-panel" product-cart-bs-toggle="drawer" :product-categories="$productCategories" :cart="$cart" />
         <x-persistent-header />
         <div id="dropdown-portal"></div>

@@ -6,6 +6,9 @@
 
     @vite([
         'resources/css/icons.css',
+        'resources/css/components/category_discovery.css',
+        'resources/css/broad_select.css',
+        'resources/css/components/promo_sections.css',
         'resources/css/category_banner.css',
         'resources/css/company_footer.css',
         'resources/css/components/two_arrow_scroller.css',
@@ -21,6 +24,7 @@
         'resources/js/components/dropdown.js',
         'resources/js/components/persistent_header.js',
         'resources/js/components/carousel_scrollable.js',
+        'resources/js/components/homepage_promos.js',
         'resources/js/components/two_arrow_scroller.js',
         'resources/js/components/side_panel.js',
         'resources/js/components/product_quantity_picker.js',
@@ -37,10 +41,6 @@
         </div>
     </section>
     <header class="container sticky-top" style="background-color: #ffffff99;">
-        @vite([
-            'resources/css/top_header.css',
-            'resources/css/components/navigation_bar.css',
-        ])
         <x-nav-bar
             product-cart-bs-target="#side-panel"
             product-cart-bs-toggle="drawer"
@@ -108,65 +108,9 @@
                 </div>
             </div>
         </section>
-        @foreach ($promoSections as $promo)
-            <div class="container my-4">
-                <x-promo-section :data="$promo" />
-            </div>
-        @endforeach
-        <x-broad-select
-            :groups="$broadSelectGroups"
-            :heading="__('products.home.heading')"
-            :introduction="__('products.home.intro')"
-        />
-        <section>
-            <x-rounded-section-radius>
-                <div class="container">
-                    <header class="d-inline-flex flex-wrap position-relative pt-2 mb-4">
-                        <h3 class="bg-complementary fg-white fw-bold text-decoration-underline text-uppercase p-3">
-                            {{ __('products.home.everything') }}
-                        </h3>
-                        <p>
-                            {{ __('products.home.description') }}
-                        </p>
-                    </header>
-
-                    <div style="text-align: end;">
-                        <a href="{{ route('products.index') }}" class="text-decoration-none fw-semibold">
-                            {{ __('products.home.browse') }} <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-
-                    <div class="rounded-pill py-2 my-2 overflow-hidden shadow" style="background-color: white;">
-                        <x-two-arrow-scroller scroll-step="0.4">
-                            <ul data-scroll-content class="px-4 d-flex flex-nowrap gap-3 list-unstyled overflow-x-auto m-0">
-                                @foreach ($productCategories as $category)
-                                    <li>
-                                        <a href="{{ route('categories.show', ['slug' => $category->slug ?? $category['slug'] ?? '']) }}" class="btn btn-sm btn-outline theme-secondary rounded-pill px-3 text-nowrap text-decoration-none">
-                                            {{ $category->name ?? $category['name'] }}
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </x-two-arrow-scroller>
-                    </div>
-
-                    <x-grid
-                        gap="4"
-                        :columns="[
-                            'default' => 2,
-                            'md' => 3,
-                            'xl' => 4,
-                        ]"
-                    >
-                        @foreach ($products as $product)
-                            <div class="col">
-                                <x-product-card-b class="h-100" :product="$product"/>
-                            </div>
-                        @endforeach
-                    </x-grid>
-                </div>
-            </x-rounded-section-radius>
-        </section>
+        <x-promo-sections-deferred />
+        <x-broad-select.deferred />
+        <x-category-discovery :categories="$productCategories" />
     </main>
     <x-side-panel/>
     <x-modal/>

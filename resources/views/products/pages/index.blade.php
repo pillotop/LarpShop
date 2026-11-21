@@ -39,10 +39,6 @@
     <header class="container sticky-top"
             style="background-color: #ffffffee;">
 
-        @vite([
-            'resources/css/top_header.css',
-            'resources/css/components/navigation_bar.css',
-        ])
 
         <x-nav-bar
             product-cart-bs-target="#side-panel"

@@ -35,11 +35,6 @@ class ProductController extends Controller
             'product' => $productDetails,
             'reviews' => $reviews->forProduct($productDetails),
             'canReview' => $reviews->eligibleProductIds($request->user(), [$product->getKey()]) !== [],
-            'similarProducts' => $service->getSimilarProducts(
-                productId: $product->product_id,
-                categoryId: $product->category_id,
-                limit: 6,
-            ),
             'productCategories' => Category::query()->get(),
         ]);
     }

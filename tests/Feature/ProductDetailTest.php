@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Queries\Products\ProductCatalogQuery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -152,7 +153,11 @@ class ProductDetailTest extends TestCase
         $otherCatId = $this->createCategory('Daggers', 'daggers');
         $this->createProduct('Shadow Dagger', 'shadow-dagger', $otherCatId, $vendorId);
 
-        $response = $this->get("/products/{$mainProdId}/oak-staff");
+        $this->get("/products/{$mainProdId}/oak-staff")->assertOk()
+            ->assertSee('data-deferred-similar-products', false)
+            ->assertDontSee('Elderwood Staff');
+
+        $response = $this->get(route('products.similar', $mainProdId));
 
         $response->assertOk();
         $response->assertSee('Elderwood Staff');
@@ -167,10 +172,56 @@ class ProductDetailTest extends TestCase
 
         $mainProdId = $this->createProduct('Healing Herb', 'healing-herb', $catId, $vendorId);
 
-        $response = $this->get("/products/{$mainProdId}/healing-herb");
+        $response = $this->get(route('products.similar', $mainProdId));
 
         $response->assertOk();
         $response->assertSee('No similar products found in this category.');
+    }
+
+    public function test_initial_detail_page_does_not_query_similar_products(): void
+    {
+        $vendor = $this->createVendor();
+        $category = $this->createCategory('Equipment', 'equipment');
+        $product = $this->createProduct('Eager details', 'eager-details', $category, $vendor);
+        $this->partialMock(ProductCatalogQuery::class)->shouldNotReceive('getSimilarProducts');
+
+        $this->get("/products/{$product}/eager-details")->assertOk()
+            ->assertSee('Eager details')
+            ->assertSee(route('products.similar', $product), false)
+            ->assertSee('data-loading-state', false);
+    }
+
+    public function test_similar_fragment_is_bounded_localized_and_contains_no_assets(): void
+    {
+        $vendor = $this->createVendor();
+        $category = $this->createCategory('Equipment', 'equipment');
+        $product = $this->createProduct('Main item', 'main-item', $category, $vendor);
+        for ($index = 0; $index < 8; $index++) {
+            $this->createProduct("Related {$index}", "related-{$index}", $category, $vendor);
+        }
+        $response = $this->withSession(['locale' => 'vi'])
+            ->get(route('products.similar', ['product' => $product, 'limit' => 100]))
+            ->assertOk()->assertSee('Sản phẩm tương tự')
+            ->assertSee('data-deferred-fragment', false)
+            ->assertSee('data-scroll-next', false)
+            ->assertSee('data-add-to-cart', false)
+            ->assertDontSee('Main item')->assertDontSee('<script', false)
+            ->assertDontSee('/build/', false);
+
+        $this->assertSame(6, $response->viewData('similarProducts')->count());
+        $this->assertStringContainsString('private', $response->headers->get('Cache-Control'));
+        $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+    }
+
+    public function test_similar_endpoint_rejects_hidden_and_missing_source_products(): void
+    {
+        $vendor = $this->createVendor();
+        $category = $this->createCategory('Equipment', 'equipment');
+        $product = $this->createProduct('Hidden item', 'hidden-item', $category, $vendor);
+        DB::table('products')->where('product_id', $product)->update(['is_active' => false]);
+
+        $this->get(route('products.similar', $product))->assertNotFound();
+        $this->get(route('products.similar', 999999))->assertNotFound();
     }
 
     public function test_product_detail_returns_404_for_non_existent_product(): void

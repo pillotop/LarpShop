@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'retry' => 'Thử lại',
+    'loading' => 'Đang tải…',
     'home' => 'Trang chủ',
     'cart' => 'Giỏ hàng',
     'login' => 'Đăng nhập',

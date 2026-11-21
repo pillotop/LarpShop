@@ -4,7 +4,9 @@
     'editBtnEvent' => '',
 ])
 
-@vite('resources/css/components/profile_container.css')
+@pushOnce('styles', 'profile-container')
+    @vite('resources/css/components/profile_container.css')
+@endPushOnce
 
 <div
     {{

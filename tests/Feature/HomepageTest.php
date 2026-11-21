@@ -39,7 +39,7 @@ class HomepageTest extends TestCase
         $vendorId = DB::table('vendors')->insertGetId([
             'user_id' => $userId,
             'store_name' => 'Larp Store '.uniqid(),
-            'status' => 'approved',
+            'status' => 'active',
             'created_at' => now(),
             'updated_at' => now(),
         ], 'vendor_id');
@@ -75,7 +75,7 @@ class HomepageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertDontSee('data-broad-select', false);
+        $response->assertSee('data-deferred-broad-select', false);
     }
 
     public function test_homepage_renders_categories_and_in_stock_products(): void
@@ -87,7 +87,8 @@ class HomepageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Armor & Shields');
-        $response->assertSee('Knight Steel Plate');
+        $response->assertDontSee('Knight Steel Plate');
+        $this->get(route('home.discovery'))->assertOk()->assertSee('Knight Steel Plate');
     }
 
     public function test_homepage_excludes_out_of_stock_products(): void
@@ -96,7 +97,7 @@ class HomepageTest extends TestCase
         $this->createProduct('In Stock Broadsword', $catId, stock: 4);
         $this->createProduct('Out of Stock Dagger', $catId, stock: 0);
 
-        $response = $this->get('/');
+        $response = $this->get(route('home.discovery'));
 
         $response->assertOk();
         $response->assertSee('In Stock Broadsword');
@@ -108,7 +109,7 @@ class HomepageTest extends TestCase
         $catId = $this->createCategory('Accessories');
         $this->createProduct('Imageless Magic Ring', $catId, stock: 3, imagePath: null);
 
-        $response = $this->get('/');
+        $response = $this->get(route('home.discovery'));
 
         $response->assertOk();
         $response->assertSee('Imageless Magic Ring');
