@@ -1,19 +1,81 @@
 .profile-hero {
-    background: linear-gradient(135deg, #1E2130 0%, #17B0D8 100%);
-    border-radius: 1.25rem;
-    color: #ffffff;
-    position: relative;
+    --profile-avatar-size: 7.5rem;
+    --profile-hero-padding: 1.5rem;
+    background: var(--bg-body);
+    color: var(--fg-body);
     overflow: hidden;
 }
-.profile-hero::before {
-    content: "";
+.profile-hero-cover {
+    height: clamp(8rem, 14vw, 12rem);
+    background:
+        linear-gradient(125deg, transparent 50%, rgb(255 255 255 / 4%) 50%, rgb(255 255 255 / 4%) 75%, transparent 75%),
+        linear-gradient(115deg, var(--color-primary-950), var(--color-primary-800));
+}
+.profile-hero-body {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem;
+    padding: var(--profile-hero-padding);
+    padding-inline-start: calc(var(--profile-hero-padding) + var(--profile-avatar-size) + 1rem);
+}
+.profile-hero-avatar {
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.08);
+    inset-block-start: calc(var(--profile-avatar-size) / -2);
+    inset-inline-start: var(--profile-hero-padding);
+    width: var(--profile-avatar-size);
+    height: var(--profile-avatar-size);
+    border: 4px solid var(--bg-body);
     border-radius: 50%;
+    background: var(--bg-body);
+}
+.profile-hero-avatar .profile-container {
+    width: 100%;
+    height: 100%;
+}
+.profile-hero-info {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.profile-hero-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    color: var(--fg-2);
+}
+.profile-hero-details li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-width: 0;
+}
+.profile-hero-details i {
+    flex-shrink: 0;
+}
+.profile-hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    min-width: var(--profile-avatar-size);
+}
+@media (max-width: 47.999rem) {
+    .profile-hero {
+        --profile-avatar-size: 6rem;
+        --profile-hero-padding: 1rem;
+    }
+    .profile-hero-body {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.25rem;
+        padding-block-start: calc(var(--profile-avatar-size) / 2 + 1rem);
+        padding-inline-start: var(--profile-hero-padding);
+    }
+    .profile-hero-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
 }
 .avatar-circle {
     width: 80px;
@@ -29,30 +91,60 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 .profile-nav-tabs .nav-link {
-    color: #495057;
+    position: relative;
+    color: var(--fg-2);
+    background: transparent;
     font-weight: 600;
-    border-radius: 0.75rem;
+    border-radius: 0;
     padding: 0.75rem 1.25rem;
-    transition: all 0.2s ease-in-out;
 }
-.profile-nav-tabs .nav-link:hover {
-    color: #17B0D8;
-    background: #EFF9FE;
+.profile-nav-tabs .nav-link:hover,
+.profile-nav-tabs .nav-link:focus-visible {
+    color: var(--fg-body);
+    background: transparent;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+.profile-nav-tabs .nav-link:focus-visible {
+    outline: 2px solid var(--color-primary-600);
+    outline-offset: -2px;
 }
 .profile-nav-tabs .nav-link.active {
-    color: #ffffff;
-    background-color: #17B0D8;
-    box-shadow: 0 4px 12px rgba(23, 176, 216, 0.3);
+    color: var(--fg-body);
+    background: transparent;
+    box-shadow: none;
+}
+.profile-nav-tabs .nav-link.active::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block: 0.25rem;
+    width: 3px;
+    border-radius: 1px;
+    background: var(--color-primary-600);
+}
+.profile-nav-tabs[aria-orientation="horizontal"] {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border-color);
+}
+.profile-nav-tabs[aria-orientation="horizontal"] .nav-item {
+    flex-shrink: 0;
+}
+.profile-nav-tabs[aria-orientation="horizontal"] .nav-link {
+    white-space: nowrap;
+    padding: 1rem 0.75rem;
+}
+.profile-nav-tabs[aria-orientation="horizontal"] .nav-link.active::before {
+    inset-inline: 0.75rem;
+    inset-block: auto 0;
+    width: auto;
+    height: 3px;
 }
 .stat-card {
-    background: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 1rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2);
 }
 .form-floating > label {
     color: #6c757d;

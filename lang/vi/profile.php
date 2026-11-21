@@ -1,6 +1,29 @@
 <?php
 
 return [
+    'account' => 'Tài khoản',
+    'account_settings' => 'Cài đặt tài khoản',
+    'profile_details' => 'Chi tiết hồ sơ',
+    'login_security' => 'Đăng nhập và bảo mật',
+    'personal_details' => 'Thông tin cá nhân tùy chọn',
+    'date_of_birth' => 'Ngày sinh',
+    'date_of_birth_help' => 'Không bắt buộc. Bạn có thể để trống nếu không muốn cung cấp.',
+    'gender' => [
+        'label' => 'Giới tính',
+        'help' => 'Không bắt buộc. Chỉ chọn nếu bạn muốn chia sẻ thông tin này.',
+        'unspecified' => 'Chưa cung cấp',
+        'female' => 'Nữ',
+        'male' => 'Nam',
+        'non_binary' => 'Phi nhị nguyên giới',
+        'other' => 'Khác',
+        'prefer_not_to_say' => 'Không muốn tiết lộ',
+    ],
+    'photo' => [
+        'label' => 'Ảnh đại diện',
+        'help' => 'JPG, PNG hoặc WebP, tối đa 2 MB và 4096 × 4096 pixel. Áp dụng khi lưu. Để trống để giữ ảnh hiện tại.',
+        'remove' => 'Xóa ảnh hiện tại (không chọn tệp mới)',
+        'upload_failed' => 'Không thể lưu ảnh đại diện. Vui lòng thử lại.',
+    ],
     'title' => 'Hồ sơ tài khoản · LarpShop',
     'personal' => 'Hồ sơ cá nhân',
     'stores' => 'Gian hàng',
@@ -22,7 +45,7 @@ return [
         'customer' => 'Khách hàng',
     ],
     'update_title' => 'Cập nhật thông tin cá nhân',
-    'update_intro' => 'Quản lý tên người dùng, địa chỉ email và số điện thoại liên hệ.',
+    'update_intro' => 'Quản lý ảnh, thông tin liên hệ và thông tin cá nhân tùy chọn. Địa chỉ giao hàng được quản lý trong Thanh toán và địa chỉ.',
     'account_role' => 'Vai trò tài khoản',
     'role_help' => 'Vai trò tài khoản được LarpShop quản lý tự động.',
     'save' => 'Lưu thông tin cá nhân',

@@ -41,7 +41,7 @@
     $roleLabel = $user->isAdmin() ? __('profile.role.admin') : __('profile.role.customer');
 @endphp
 
-<div class="tab-pane fade show active" id="pane-customer" role="tabpanel" aria-labelledby="tab-customer-info">
+<div class="tab-pane fade show active" id="pane-customer" role="tabpanel" aria-labelledby="tab-profile-details">
     {{-- Quick Stats / Info Cards --}}
     <div class="row g-3 mb-4">
         @foreach ($credentials as $cred)
@@ -57,26 +57,32 @@
     </div>
 
     {{-- Update Profile Form --}}
-    <div class="card border-0 shadow-sm rounded-9 p-4">
+    <div class="card border rounded-2 p-4">
         <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
             <div>
                 <h2 class="h5 fw-bold mb-1 fg-body">{{ __('profile.update_title') }}</h2>
                 <p class="fg-3 small mb-0">{{ __('profile.update_intro') }}</p>
             </div>
             @if ($user->isAdmin())
-                <span class="badge bg-subtle-danger fg-danger border border-danger rounded-pill px-3 py-2">
+                <span class="badge bg-subtle-danger fg-danger border border-danger rounded-2 px-3 py-2">
                     <i class="bi bi-shield-lock-fill me-1"></i> {{ $roleLabel }}
                 </span>
             @else
-                <span class="badge bg-subtle-primary fg-primary border border-primary rounded-pill px-3 py-2">
+                <span class="badge bg-subtle-primary fg-primary border border-primary rounded-2 px-3 py-2">
                     <i class="bi bi-person me-1"></i> {{ $roleLabel }}
                 </span>
             @endif
         </div>
 
-        <form action="{{ route('profile.update') }}" method="POST">
+        <form
+            action="{{ route('profile.update') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
             @csrf
             @method('PUT')
+
+            <x-profile.photo-field :user="$user" />
 
             <div class="row g-3">
                 @foreach ($credentials as $cred)
@@ -88,12 +94,12 @@
                             @endif
                         </label>
                         <div class="input-group">
-                            <span class="input-group-text bg-1 border-end-0 rounded-start-3">
+                            <span class="input-group-text bg-1 border-end-0 rounded-start-2">
                                 <i class="bi {{ $cred['icon'] }}"></i>
                             </span>
                             <input
                                 type="{{ $cred['type'] }}"
-                                class="form-control rounded-end-3 @error($cred['prop']) is-invalid @enderror"
+                                class="form-control rounded-end-2 @error($cred['prop']) is-invalid @enderror"
                                 id="{{ $cred['prop'] }}"
                                 name="{{ $cred['prop'] }}"
                                 value="{{ old($cred['prop'], $user->{$cred['prop']}) }}"
@@ -112,13 +118,24 @@
 
                 <div class="md:col-6">
                     <label for="account_role" class="form-label fw-semibold">{{ __('profile.account_role') }}</label>
-                    <input type="text" class="form-control rounded-5 bg-1" id="account_role" value="{{ $roleLabel }}" disabled>
+                    <input
+                        type="text"
+                        class="form-control rounded-2 bg-1"
+                        id="account_role"
+                        value="{{ $roleLabel }}"
+                        disabled
+                    >
                     <div class="form-text small">{{ __('profile.role_help') }}</div>
                 </div>
             </div>
 
+            <x-profile.personal-details-fields :user="$user" />
+
             <div class="mt-4 pt-3 border-top d-flex justify-content-end">
-                <button type="submit" class="btn btn-solid theme-primary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
+                <button
+                    type="submit"
+                    class="btn btn-solid theme-primary rounded-2 px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2"
+                >
                     <i class="bi bi-check2-circle"></i>
                     <span>{{ __('profile.save') }}</span>
                 </button>

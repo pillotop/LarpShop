@@ -1,6 +1,6 @@
 #dropdown-portal {
     position: relative;
-    z-index: 1000;
+    z-index: var(--z-fixed);
 }
 
 .category-dropdown-menu {

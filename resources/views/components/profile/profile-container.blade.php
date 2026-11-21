@@ -22,10 +22,9 @@
     @endif
 >
     <img
-        class="profile-image w-100 h-100 object-fit-cover"
+        class="profile-image"
         src="{{ $account->profile_image_url }}"
         alt="{{ __('profile.profile_container.alt_text') }}"
-        style="width: 76px; height: 76px;"
     />
 
     @if ($allowEdit)

@@ -19,34 +19,8 @@
         'resources/js/components/dropdown.js',
         'resources/js/components/persistent_header.js',
         'resources/js/components/side_panel.js',
+        'resources/js/components/profile_tabs.js',
     ])
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const showTab = (id) => {
-                const button = document.getElementById(id);
-                if (button) bootstrap.Tab.getOrCreateInstance(button).show();
-            };
-            const hash = window.location.hash;
-            const trigger = Array.from(document.querySelectorAll('#profileTabs [data-bs-target], #vendorTabs [data-bs-target]'))
-                .find(button => button.dataset.bsTarget === hash);
-
-            if (@json(session('status') === 'wishlist-updated')) {
-                showTab('tab-wishlist');
-            } else if (@json($errors->billing->any())) {
-                showTab('tab-billing');
-            } else if (trigger) {
-                if (trigger.closest('#vendorTabs')) showTab('tab-vendor-info');
-                showTab(trigger.id);
-            } else if (@json(request()->has('orders_q') || request()->has('orders_filter') || request()->has('orders_period') || request()->has('orders_page'))) {
-                // The browser dropped the #pane-purchases fragment; keep the purchase history visible.
-                showTab('tab-purchases');
-            } else if (@json($errors->has('store_name') || $errors->has('description') || in_array(session('status'), ['vendor-registered', 'vendor-updated']))) {
-                showTab('tab-vendor-info');
-            } else if (@json($errors->has('current_password') || $errors->has('password') || $errors->has('password_confirmation') || session('status') === 'password-updated')) {
-                showTab('tab-security');
-            }
-        });
-    </script>
 @endsection
 
 @section('content')
@@ -66,7 +40,23 @@
         <div id="dropdown-portal"></div>
     </header>
 
-    <main class="container my-4">
+    @php
+        $initialTab = match (true) {
+            session('status') === 'wishlist-updated' => 'tab-wishlist',
+            $errors->billing->any() => 'tab-billing',
+            $errors->hasAny(['current_password', 'password', 'password_confirmation']) || session('status') === 'password-updated' => 'tab-security',
+            $errors->hasAny(['username', 'email', 'phone_number', 'date_of_birth', 'gender', 'profile_image', 'remove_profile_image']) || session('status') === 'profile-updated' => 'tab-profile-details',
+            $errors->hasAny(['store_name', 'description']) || in_array(session('status'), ['vendor-registered', 'vendor-updated']) => 'tab-vendor-info',
+            request()->hasAny(['orders_q', 'orders_filter', 'orders_period', 'orders_page']) => 'tab-purchases',
+            default => '',
+        };
+    @endphp
+
+    <main
+        class="container my-4"
+        data-profile-tabs
+        data-initial-tab="{{ $initialTab }}"
+    >
         {{-- Breadcrumbs Navigation --}}
         <nav aria-label="breadcrumb" class="mb-4">
             {{ Breadcrumbs::render('profile') }}
@@ -120,10 +110,10 @@
                         :panes="[
                             [
                                 'id' => 'tab-customer-info',
-                                'target_id' => '#pane-customer',
-                                'aria_controls' => 'pane-customer',
+                                'target_id' => '#pane-account',
+                                'aria_controls' => 'pane-account',
                                 'icon' => 'bi-person-lines-fill',
-                                'label' => __('profile.personal'),
+                                'label' => __('profile.account'),
                             ],
                             [
                                 'id' => 'tab-vendor-info',
@@ -140,25 +130,11 @@
                                 'label' => __('profile.purchases.tab'),
                             ],
                             [
-                                'id' => 'tab-security',
-                                'target_id' => '#pane-security',
-                                'aria_controls' => 'pane-security',
-                                'icon' => 'bi-shield-lock',
-                                'label' => __('profile.password'),
-                            ],
-                            [
                                 'id' => 'tab-wishlist',
                                 'target_id' => '#pane-wishlist',
                                 'aria_controls' => 'pane-wishlist',
                                 'icon' => 'bi-heart',
                                 'label' => __('wishlist.title'),
-                            ],
-                            [
-                                'id' => 'tab-billing',
-                                'target_id' => '#pane-billing',
-                                'aria_controls' => 'pane-billing',
-                                'icon' => 'bi-geo-alt',
-                                'label' => __('profile.billing'),
                             ],
                         ]"
                     />
@@ -177,8 +153,10 @@
 
             <div class="col-12 lg:col-9">
                 <div class="tab-content" id="profileTabContent">
-                    {{-- Tab 1: Customer Personal Profile --}}
-                    <x-profile.profile-tab :user="$user" />
+                    <x-profile.account-tab
+                        :user="$user"
+                        :addresses="$addresses"
+                    />
 
                     {{-- Tab 2: Vendor Store Profile / Register --}}
                     <x-profile.vendor-tab :vendors="$vendors" />
@@ -189,12 +167,6 @@
                         :filters="$purchaseFilters"
                         :reviewable-product-ids="$reviewableProductIds"
                     />
-
-                    {{-- Tab 3: Security & Password Update --}}
-                    <x-profile.security-tab />
-
-                    {{-- Tab 4: Billing section --}}
-                    <x-profile.billing-tab :addresses="$addresses" />
 
                     <x-profile.wishlist-tab :products="$wishlistProducts" />
                 </div>

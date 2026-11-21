@@ -9,6 +9,7 @@ use App\Queries\Orders\PurchaseHistoryQuery;
 use App\Queries\Reviews\ProductReviewQuery;
 use App\Queries\Vendors\VendorQuery;
 use App\Queries\Wishlist\WishlistQuery;
+use App\Services\Profile\ProfileManagementService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,15 +49,9 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(UpdateProfileRequest $request): RedirectResponse|JsonResponse
+    public function update(UpdateProfileRequest $request, ProfileManagementService $profiles): RedirectResponse|JsonResponse
     {
-        $user = $request->user();
-        $data = $request->validated();
-        $user->update([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'phone_number' => $data['phone_number'] ?? null,
-        ]);
+        $user = $profiles->update($request->user(), $request->validated(), $request->file('profile_image'));
 
         if ($request->expectsJson()) {
             return response()->json(['message' => __('profile.success.updated'), 'user' => $user]);

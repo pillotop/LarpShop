@@ -4,7 +4,12 @@
     height: 76px;
 }
 
-.profile-image {
+.profile-container > .profile-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
     transition: filter 150ms ease;
 }
 

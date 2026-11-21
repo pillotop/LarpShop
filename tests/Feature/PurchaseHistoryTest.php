@@ -75,7 +75,7 @@ class PurchaseHistoryTest extends TestCase
             ->getContent();
 
         $this->assertLessThan(strpos($html, 'id="tab-purchases"'), strpos($html, 'id="tab-vendor-info"'));
-        $this->assertLessThan(strpos($html, 'id="tab-security"'), strpos($html, 'id="tab-purchases"'));
+        $this->assertLessThan(strpos($html, 'id="tab-wishlist"'), strpos($html, 'id="tab-purchases"'));
     }
 
     public function test_guests_cannot_view_purchase_history(): void

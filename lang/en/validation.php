@@ -159,6 +159,10 @@ return [
     'custom' => [
     ],
     'attributes' => [
+        'date_of_birth' => 'date of birth',
+        'gender' => 'gender',
+        'profile_image' => 'profile picture',
+        'remove_profile_image' => 'remove profile picture',
         'locale' => 'language',
         'username' => 'username',
         'email' => 'email',

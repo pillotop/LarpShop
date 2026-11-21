@@ -11,8 +11,9 @@ class DropdownPortal {
         if (!this.portal) {
             this.portal = document.createElement("div");
             this.portal.id = "dropdown-portal";
-            document.body.appendChild(this.portal);
         }
+        // Escape header stacking contexts so sticky page content cannot cover the menu.
+        document.body.appendChild(this.portal);
         this.initializedTriggers = new WeakSet();
 
         this.activeTrigger = null;
