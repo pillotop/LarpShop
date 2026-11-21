@@ -28,7 +28,8 @@ class CreatePaymentRequest extends FormRequest
                 'required',
                 'string',
                 Rule::in(array_keys(array_filter(config('payments.options'),
-                    fn (array $option) => $option['provider'] !== 'fake' || app()->environment(['local', 'testing'])
+                    fn (array $option) => config("payments.providers.{$option['provider']}.enabled", true)
+                        && ($option['provider'] !== 'fake' || app()->environment(['local', 'testing']))
                 ))),
             ],
         ];

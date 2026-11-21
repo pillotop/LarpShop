@@ -76,7 +76,7 @@ class CartCheckoutLocalizationTest extends TestCase
             ->assertSee('Thông tin của bạn')
             ->assertSee('Địa chỉ giao hàng')
             ->assertSee('Thẻ tín dụng hoặc thẻ ghi nợ')
-            ->assertSee('Tiếp tục đến PayPal')
+            ->assertSee('Tiếp tục thanh toán')
             ->assertSee('Original recipient')
             ->assertSee('123 Original Street')
             ->assertSee('value="fake_card"', false)

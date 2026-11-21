@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Each provider authenticates its server-to-server endpoint with a signed payload.
+        $middleware->preventRequestForgery(except: ['webhooks/stripe', 'webhooks/momo', 'webhooks/zalopay']);
         $middleware->web(append: [SetLocale::class]);
         $middleware->appendToPriorityList(StartSession::class, SetLocale::class);
 

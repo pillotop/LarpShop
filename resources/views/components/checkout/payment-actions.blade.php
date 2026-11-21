@@ -1,6 +1,17 @@
 @props(['payment'])
 
 <div class="mt-3 d-grid gap-3">
+    @if ($payment->source_currency !== null)
+        <p class="small text-body-secondary mb-0">
+            {{ __('checkout.wallet.settlement', [
+                'source_amount' => $payment->source_amount,
+                'source_currency' => $payment->source_currency,
+                'amount' => $payment->amount,
+                'currency' => $payment->currency,
+                'rate' => $payment->exchange_rate,
+            ]) }}
+        </p>
+    @endif
     @if ($payment->provider_reference === null || ($payment->checkout_url === null && config("payments.providers.{$payment->provider}.redirect", false)))
         @if ($payment->status === \App\Enums\PaymentStatus::Pending)
             <form

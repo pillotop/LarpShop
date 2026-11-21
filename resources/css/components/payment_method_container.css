@@ -2,6 +2,58 @@
     border: none;
 }
 
+.wallet-provider-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.75rem;
+}
+
+.wallet-provider {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 0.75rem 1rem;
+    border: 1px solid var(--bs-border-color);
+    background: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    text-align: center;
+    cursor: pointer;
+}
+
+.wallet-provider-input {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.wallet-provider-brand {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.wallet-provider:has(input:checked) {
+    border-color: var(--bs-primary);
+    background: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+}
+
+.wallet-provider:has(input:focus-visible) {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 3px;
+}
+
+.wallet-provider:has(input:disabled) {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.wallet-provider:hover:has(input:enabled) {
+    border-color: var(--bs-primary);
+}
+
 .payment-method-container .method-headers {
     background-color: var(--color-background-50);
 }

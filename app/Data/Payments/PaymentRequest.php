@@ -14,5 +14,6 @@ final readonly class PaymentRequest
         public string $requestId,
         public string $returnUrl,
         public string $cancelUrl,
+        public ?int $createdAt = null,
     ) {}
 }

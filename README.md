@@ -17,7 +17,7 @@ Bootstrap is pinned to the explicitly selected 6.0.0-alpha.1 prerelease. Bootstr
 
 ## Application features
 
-The application includes product browsing, category navigation, keyword search, filtering, sorting, product details, and vendor storefronts. Customer flows include account profiles and addresses, a shared cart, checkout, inventory reservation, fake and PayPal payment flows, order history and details, and cancellation of eligible orders.
+The application includes product browsing, category navigation, keyword search, filtering, sorting, product details, and vendor storefronts. Customer flows include account profiles and addresses, a shared cart, checkout, inventory reservation, fake, PayPal, Stripe Checkout, MoMo, ZaloPay and VNPAY sandbox payment flows, order history and details, and cancellation of eligible orders.
 
 Customers can save products to a wishlist in their profile. Customers with a paid order can review each purchased product once, using a shared review form available on product detail pages and in order history. Product reviews support incremental loading.
 
@@ -165,6 +165,16 @@ php artisan schedule:work
 The scheduler expires unpaid orders every minute and reconciles pending payments every five minutes. Payment initiation and completion use shared cache locks; use a shared cache store such as the configured database store when multiple processes serve requests.
 
 ## Testing
+
+Stripe card checkout is sandbox-only and disabled until configured. See
+[Stripe sandbox setup](docs/STRIPE_SANDBOX.md) for test keys, local webhook
+forwarding, supported amounts and manual verification. Automated Stripe tests fake
+the API and require no Stripe account or network access.
+
+MoMo, ZaloPay and VNPAY are also sandbox-only and disabled by default. See
+[Vietnamese payment sandbox setup](docs/VIETNAMESE_PAYMENTS_SANDBOX.md) for merchant
+credentials, public HTTPS callbacks, the additive settlement migration, frozen
+USD/VND conversion, and manual acceptance checks. Refund operations are not included.
 
 Tests use **MySQL**, with `DB_CONNECTION=mysql` and `DB_DATABASE=larpshop_testing` forced by `phpunit.xml`. Host, port, username, and password come from the environment. Tests use array-backed sessions and cache, synchronous queues, and the array mailer unless a particular test overrides them.
 

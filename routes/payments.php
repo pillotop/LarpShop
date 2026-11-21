@@ -2,7 +2,15 @@
 
 use App\Http\Controllers\Payments\CheckoutPaymentController;
 use App\Http\Controllers\Payments\FakePaymentController;
+use App\Http\Controllers\Payments\StripeWebhookController;
+use App\Http\Controllers\Payments\WalletWebhookController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/webhooks/stripe', StripeWebhookController::class)->name('payments.stripe.webhook');
+Route::post('/webhooks/momo', [WalletWebhookController::class, 'momo'])->name('payments.momo.webhook');
+Route::post('/webhooks/zalopay', [WalletWebhookController::class, 'zalopay'])->name('payments.zalopay.webhook');
+// VNPAY specifies a signed server-to-server GET IPN. Browser return routes remain read-only.
+Route::get('/webhooks/vnpay', [WalletWebhookController::class, 'vnpay'])->name('payments.vnpay.webhook');
 
 if (app()->environment(['local', 'testing'])) {
     Route::middleware('auth')

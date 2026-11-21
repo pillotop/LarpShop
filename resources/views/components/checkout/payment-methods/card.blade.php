@@ -1,74 +1,26 @@
-<div>
+@props(['order', 'canCreatePayment' => false])
+
+<form
+    action="{{ route('payments.store', $order) }}"
+    method="POST"
+>
+    @csrf
     <h2 class="h4 fw-bold mb-3">{{ __('checkout.payment.card') }}</h2>
-
-    <p class="small fg-3">
-        {{ __('checkout.card.unavailable') }}
-    </p>
-
-    <fieldset
-        disabled
-        class="row g-3 mb-4"
-        aria-label="{{ __('checkout.card.preview') }}"
+    <p class="text-body-secondary">{{ __('checkout.card.stripe_notice') }}</p>
+    <p class="small text-body-secondary">{{ __('checkout.card.sandbox') }}</p>
+    <input
+        type="hidden"
+        name="payment_option"
+        value="stripe_card"
     >
-        <div
-            class="col-12"
-        >
-            <label
-                for="demo-card-name"
-                class="form-label"
-            >{{ __('checkout.card.name') }}</label>
-            <input
-                id="demo-card-name"
-                class="form-control"
-                value="Demo Customer"
-            >
-        </div>
-        <div
-            class="col-12"
-        >
-            <label
-                for="demo-card-number"
-                class="form-label"
-            >{{ __('checkout.card.number') }}</label>
-            <input
-                id="demo-card-number"
-                class="form-control"
-                value="4242 4242 4242 4242"
-            >
-        </div>
-        <div
-            class="col-6"
-        >
-            <label
-                for="demo-card-expiry"
-                class="form-label"
-            >{{ __('checkout.card.expiry') }}</label>
-            <input
-                id="demo-card-expiry"
-                class="form-control"
-                value="12/30"
-            >
-        </div>
-        <div
-            class="col-6"
-        >
-            <label
-                for="demo-card-cvc"
-                class="form-label"
-            >{{ __('checkout.card.security') }}</label>
-            <input
-                id="demo-card-cvc"
-                class="form-control"
-                value="123"
-            >
-        </div>
-    </fieldset>
-
+    @unless (config('payments.providers.stripe.enabled'))
+        <p role="status">{{ __('checkout.card.not_configured') }}</p>
+    @endunless
     <button
-        type="button"
-        class="btn btn-solid theme-secondary w-100 py-3"
-        disabled
+        type="submit"
+        class="btn btn-solid theme-primary rounded-2 w-100 py-3"
+        @disabled(! $canCreatePayment || ! config('payments.providers.stripe.enabled'))
     >
-        {{ __('checkout.card.soon') }}
+        {{ __('checkout.card.continue') }}
     </button>
-</div>
+</form>

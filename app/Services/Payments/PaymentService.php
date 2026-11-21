@@ -3,6 +3,7 @@
 namespace App\Services\Payments;
 
 use App\Contracts\Payment\CapturesPayment;
+use App\Contracts\Payment\UsesMerchantReference;
 use App\Data\Payments\PaymentRequest;
 use App\Data\Payments\PaymentResult;
 use App\Enums\OrderStatus;
@@ -21,6 +22,7 @@ class PaymentService
     public function __construct(
         private PaymentGatewayFactory $gateways,
         private OrderLifecycleService $lifecycle,
+        private SettlementQuoteService $quotes,
     ) {}
 
     public function createForOrder(
@@ -39,10 +41,13 @@ class PaymentService
         return Cache::lock($lockKey, 90)->block(
             10,
             function () use ($order, $provider, $method) {
+                // Fetch rates outside row locks. Existing attempts retain their original quote.
+                $rate = $this->quotes->rateFor($provider);
                 $payment = DB::transaction(function () use (
                     $order,
                     $provider,
                     $method,
+                    $rate,
                 ) {
                     $order = Order::query()
                         ->whereKey($order->getKey())
@@ -86,8 +91,7 @@ class PaymentService
                     return $order->payments()->create([
                         'provider' => $provider,
                         'method' => $method,
-                        'amount' => $order->total_amount,
-                        'currency' => config('payments.currency', 'USD'),
+                        ...$this->quotes->quote($order->total_amount, $provider, $rate),
                         'status' => PaymentStatus::Pending,
                     ]);
                 }, attempts: 3);
@@ -101,10 +105,12 @@ class PaymentService
                 // Phase 2: initiate the provider transaction
                 // no db transaction is held here
                 $request = $this->requestFor($payment);
-
-                $session = $this->gateways
-                    ->make($payment->provider)
-                    ->createPayment($request);
+                $gateway = $this->gateways->make($payment->provider);
+                if ($gateway instanceof UsesMerchantReference && $payment->provider_reference === null) {
+                    // Persist our deterministic reference before sending HTTP: callbacks may arrive first.
+                    $payment->update(['provider_reference' => $gateway->referenceFor($request)]);
+                }
+                $session = $gateway->createPayment($request);
 
                 // Phase 3: Persist the provider response
                 return DB::transaction(function () use (
@@ -183,10 +189,16 @@ class PaymentService
             requestId: "larpshop-payment-{$payment->getKey()}",
             returnUrl: route('payments.return', $payment),
             cancelUrl: route('payments.cancel', $payment),
+            createdAt: $payment->created_at->getTimestamp(),
         );
     }
 
-    private function applyResult(Payment $payment, PaymentResult $result): PaymentResult
+    public function recordProviderEvent(Payment $payment, PaymentResult $result, string $eventId, string $eventType): PaymentResult
+    {
+        return $this->applyResult($payment, $result, $eventId, $eventType);
+    }
+
+    private function applyResult(Payment $payment, PaymentResult $result, ?string $eventId = null, ?string $eventType = null): PaymentResult
     {
         if (($result->amount !== null && $result->amount !== $payment->amount)
             || ($result->currency !== null && $result->currency !== $payment->currency)
@@ -194,13 +206,17 @@ class PaymentService
             throw ValidationException::withMessages(['payment' => __('checkout.errors.provider_details')]);
         }
 
-        return DB::transaction(function () use ($payment, $result) {
+        return DB::transaction(function () use ($payment, $result, $eventId, $eventType) {
             // Serialize payment completion with cancellation and expiration.
             $order = Order::query()->whereKey($payment->order_id)->lockForUpdate()->firstOrFail();
             $payment = Payment::query()
                 ->whereKey($payment->getKey())
                 ->lockForUpdate()
                 ->firstOrFail();
+
+            if ($eventId !== null && $payment->events()->where('provider_event_id', $eventId)->exists()) {
+                return new PaymentResult($payment->provider_reference ?? '', $payment->status->value);
+            }
 
             if ($payment->provider_reference !== $result->reference) {
                 throw ValidationException::withMessages([
@@ -210,6 +226,15 @@ class PaymentService
 
             $newStatus = PaymentStatus::from($result->status);
             $oldStatus = $payment->status;
+
+            if ($eventId !== null) {
+                // The receipt and state transition commit together under the payment lock.
+                $payment->events()->create([
+                    'provider_event_id' => $eventId,
+                    'event_type' => $eventType,
+                    'status' => $newStatus->value,
+                ]);
+            }
 
             if ($oldStatus === PaymentStatus::RefundRequired && $newStatus === PaymentStatus::Succeeded) {
                 return new PaymentResult(reference: $result->reference, status: $oldStatus->value);

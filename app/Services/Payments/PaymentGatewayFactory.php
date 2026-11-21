@@ -41,7 +41,8 @@ class PaymentGatewayFactory
     ): bool {
         $methods = config("payments.providers.{$provider}.methods", []);
 
-        return is_array($methods)
+        return config("payments.providers.{$provider}.enabled", true)
+            && is_array($methods)
             && in_array($method->value, $methods, true)
             && is_string(
                 config("payments.providers.{$provider}.gateway")

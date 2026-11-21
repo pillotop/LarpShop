@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payments;
 
 use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\CreatePaymentRequest;
 use App\Models\Order;
@@ -43,9 +44,13 @@ class CheckoutPaymentController extends Controller
         return $this->sessionResponse($request, $payment);
     }
 
-    public function returned(Request $request, Payment $payment): View
+    public function returned(Request $request, Payment $payment): View|RedirectResponse
     {
         $this->assertOwner($request, $payment);
+
+        if (in_array($payment->status, [PaymentStatus::Succeeded, PaymentStatus::RefundRequired], true)) {
+            return redirect()->route('orders.show', $payment->order_id);
+        }
 
         // Browser query parameters are never proof that money was received.
         return view('checkout.pages.payment-return', compact('payment'));

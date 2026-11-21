@@ -20,6 +20,9 @@ class Payment extends Model
         'checkout_url',
         'amount',
         'currency',
+        'source_amount',
+        'source_currency',
+        'exchange_rate',
         'status',
         'completed_at',
     ];
@@ -28,6 +31,8 @@ class Payment extends Model
     {
         return [
             'amount' => 'decimal:2',
+            'source_amount' => 'decimal:2',
+            'exchange_rate' => 'decimal:8',
             'status' => PaymentStatus::class,
             'method' => PaymentMethod::class,
             'completed_at' => 'datetime',
