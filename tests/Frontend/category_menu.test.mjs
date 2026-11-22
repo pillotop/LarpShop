@@ -9,7 +9,11 @@ function fixture(selected = '') {
         querySelector: () => ({ href: `https://example.test/categories/${index}` }),
     }));
     const name = {}, description = {}, link = {}, actions = { hidden: true };
-    const scope = { value: selected, disabled: !selected };
+    const changes = [];
+    const scope = { value: selected, disabled: !selected, dispatchEvent: event => {
+        changes.push({ type: event.type, bubbles: event.bubbles, value: scope.value, disabled: scope.disabled });
+        return true;
+    } };
     const label = {};
     let focusCount = 0, closeCount = 0;
     const form = { querySelector: selector => selector === '[data-category-scope]' ? scope : { focus: () => focusCount++ } };
@@ -28,7 +32,7 @@ function fixture(selected = '') {
     };
     new CategoryMenu(menu, trigger, () => closeCount++);
     const target = (entry, action) => ({ closest: selector => selector === '[data-category-entry]' ? entry : selector === action ? {} : null });
-    return { entries, name, description, link, actions, scope, label, listeners, target, counts: () => [closeCount, focusCount] };
+    return { entries, name, description, link, actions, scope, label, listeners, target, changes, counts: () => [closeCount, focusCount] };
 }
 
 test('preview starts at restored scope and pointer/focus updates text safely without choosing scope', () => {
@@ -58,6 +62,11 @@ test('preview and per-entry actions set scope, close and focus search; reset dis
     assert.equal(f.scope.disabled, true);
     assert.equal(f.label.textContent, 'All categories');
     assert.deepEqual(f.counts(), [3, 3]);
+    assert.deepEqual(f.changes, [
+        { type: 'change', bubbles: true, value: 'category-0', disabled: false },
+        { type: 'change', bubbles: true, value: 'category-1', disabled: false },
+        { type: 'change', bubbles: true, value: '', disabled: true },
+    ]);
 });
 
 test('category navigation links do not select scope or close the menu programmatically', () => {

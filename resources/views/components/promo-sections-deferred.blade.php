@@ -1,9 +1,13 @@
+@props(['sectionId' => null])
+
 <x-deferred-section
     :source="route('home.promo-sections')"
     :label="__('promotions.loading_sections')"
     :error-message="__('promotions.load_sections_error')"
     data-kind="promo-sections"
     data-deferred-promo-sections
+    :data-homepage-promo-id="$sectionId"
+    :data-homepage-block="$sectionId ? 'promo:'.$sectionId : null"
 >
     <div class="container py-4">
         <span class="placeholder rounded-2 col-5 mb-4"></span>

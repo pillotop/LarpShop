@@ -29,7 +29,7 @@
     @yield('head')
     @stack('styles')
 </head>
-<body class="admin-page">
+<body class="admin-page @yield('admin_page_class')">
     @include('shared.cart-messages')
     @php
         $pendingBadgeCount = \App\Models\Vendor::where('status', 'pending')->count();

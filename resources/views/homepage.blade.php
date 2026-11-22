@@ -9,7 +9,7 @@
         'resources/css/components/category_discovery.css',
         'resources/css/broad_select.css',
         'resources/css/components/promo_sections.css',
-        'resources/css/category_banner.css',
+        'resources/css/components/banner_groups.css',
         'resources/css/company_footer.css',
         'resources/css/components/two_arrow_scroller.css',
         'resources/css/components/dropdown.css',
@@ -51,66 +51,25 @@
         <div id="dropdown-portal"></div>
     </header>
     <main>
-        <section id="main-banners" class="container lg:px-5 my-5">
-            <div class="row g-4">
-                <div class="col-6 lg:col-3 d-flex flex-column overflow-hidden">
-                    <div class="row g-4 flex-grow-1">
-                        <div class="col-12 h-25">
-                            <x-category-banner
-                                :title="__('products.banners.cameras.title')"
-                                slug="cameras"
-                                image="/images/17067741-camera-1x1.jpg"
-                                :alt="__('products.banners.cameras.alt')"
-                                ratio="ratio-21x9"
-                            />
-                        </div>
-                        <div class="col-12 h-75">
-                            <x-category-banner
-                                :title="__('products.banners.home_living.title')"
-                                slug="home-and-living"
-                                image="/images/aestheticjourney-cream-1x1.jpg"
-                                :alt="__('products.banners.home_living.alt')"
-                                ratio="ratio-1x1"
-                            />
-                        </div>
+        <div data-homepage-layout>
+            @foreach ($homepageBlocks as $block)
+                @if ($block['type'] === 'banner')
+                    <div class="container lg:px-5 my-5" data-homepage-block="banner:{{ $block['id'] }}">
+                        <x-banner-group :group="$block['group']" :priority="$loop->first" :load-assets="false" />
                     </div>
-                </div>
-                <div class="col-6 lg:col-5">
-                    <x-category-banner
-                        :title="__('products.banners.makeup.title')"
-                        slug="makeup"
-                        image="/images/8618939-makeup-150.jpg"
-                        :alt="__('products.banners.makeup.alt')"
-                        custom-ratio="150%"
-                    />
-                </div>
-                <div class="col-12 lg:col-4 lg:d-flex lg:flex-column overflow-hidden">
-                    <div class="row g-4 h-100 lg:flex-grow-1">
-                        <div class="col-5 lg:col-12">
-                            <x-category-banner
-                                :title="__('products.banners.kitchenware.title')"
-                                slug="kitchenware"
-                                image="/images/viarami-product-5222331_150.jpg"
-                                :alt="__('products.banners.kitchenware.alt')"
-                                custom-ratio="67.67%"
-                            />
-                        </div>
-                        <div class="col-7 lg:col-12 h-100">
-                            <x-category-banner
-                                :title="__('products.banners.fabric.title')"
-                                slug="fabric"
-                                image="/images/engin_akyurt-fabric-2405110_66.jpg"
-                                :alt="__('products.banners.fabric.alt')"
-                                custom-ratio="67.67%"
-                            />
-                        </div>
+                @elseif ($block['type'] === 'promo')
+                    <x-promo-sections-deferred :section-id="$block['id']" />
+                @elseif ($block['system_kind'] === 'broad_select')
+                    <div data-homepage-block="system:broad_select">
+                        <x-broad-select.deferred />
                     </div>
-                </div>
-            </div>
-        </section>
-        <x-promo-sections-deferred />
-        <x-broad-select.deferred />
-        <x-category-discovery :categories="$productCategories" />
+                @elseif ($block['system_kind'] === 'category_discovery')
+                    <div data-homepage-block="system:category_discovery">
+                        <x-category-discovery :categories="$productCategories" />
+                    </div>
+                @endif
+            @endforeach
+        </div>
     </main>
     <x-side-panel/>
     <x-modal/>

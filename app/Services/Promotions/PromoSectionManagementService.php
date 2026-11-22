@@ -3,6 +3,7 @@
 namespace App\Services\Promotions;
 
 use App\Enums\PromoSource;
+use App\Models\BannerGroup;
 use App\Models\ProductCollection;
 use App\Models\PromoSection;
 use Carbon\CarbonImmutable;
@@ -47,6 +48,11 @@ class PromoSectionManagementService
                 $record->fill(Arr::only($data, ['heading', 'introduction', 'placement', 'layout', 'is_active', 'alt_text']));
                 $record->source = $source->value;
                 $record->collection()->associate($collection);
+                // Older clients that omit the field retain the existing attachment.
+                if (array_key_exists('banner_group_id', $data)) {
+                    $record->bannerGroup()->associate(! empty($data['banner_group_id'])
+                        ? BannerGroup::query()->findOrFail($data['banner_group_id']) : null);
+                }
                 $this->assertSource($record);
                 foreach (['starts_at', 'expires_at'] as $field) {
                     $record->{$field} = empty($data[$field]) ? null : CarbonImmutable::parse($data[$field], config('app.timezone'));

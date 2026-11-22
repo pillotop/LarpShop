@@ -3,6 +3,7 @@
 namespace App\Data\Promotions;
 
 use App\Enums\PromoSource;
+use App\Models\BannerGroup;
 use App\Models\PromoSection;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -11,6 +12,7 @@ final readonly class PromoSectionData
     public function __construct(
         public PromoSection $section,
         public Collection $products,
+        public ?BannerGroup $bannerGroup = null,
     ) {}
 
     public function heading(): string

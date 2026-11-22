@@ -6,6 +6,7 @@
     <header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <h1 class="h3 fw-semibold">{{ __('promotions.manage_sections') }}</h1>
         <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.homepage-layout.index') }}" class="btn btn-outline theme-inverse">{{ __('homepage_layout.title') }}</a>
             <a
                 href="{{ route('admin.collections.index') }}"
                 class="btn btn-outline theme-inverse "
@@ -47,6 +48,9 @@
                             <small class="fg-3">{{ config('app.timezone') }}</small>
                         </td>
                         <td>
+                            @if ($section->placement === 'homepage_main')
+                                <a href="{{ route('admin.homepage-layout.index') }}">{{ __('homepage_layout.title') }}</a>
+                            @else
                             <div class="d-flex align-items-center gap-1">
                                 @foreach (['up' => 'arrow-up', 'down' => 'arrow-down'] as $direction => $icon)
                                     <form action="{{ route('admin.sections.move', $section) }}" method="POST">
@@ -61,6 +65,7 @@
                                     </form>
                                 @endforeach
                             </div>
+                            @endif
                         </td>
                         <td>@include('admin.sections.partials.actions')</td>
                     </tr>

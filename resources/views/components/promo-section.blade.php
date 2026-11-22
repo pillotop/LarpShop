@@ -23,6 +23,14 @@
             :heading-id="$headingId"
             :view-all-url="$viewAllUrl"
         />
+        @if ($data->bannerGroup)
+            <x-banner-group
+                :group="$data->bannerGroup"
+                :preview="$preview"
+                :load-assets="$loadAssets"
+                class="mb-4"
+            />
+        @endif
         <x-dynamic-component
             :component="$component"
             :data="$data"

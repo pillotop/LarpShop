@@ -28,6 +28,14 @@ function fixture(fetchPage, extra = {}) {
 }
 const success = () => ({ ok: true, status: 200, text: async () => '<section data-deferred-fragment></section>' });
 
+test('a product removed between page and fragment requests hides only its own slot', async () => {
+    const f = fixture(async () => success(), { selectContent: () => null });
+    assert.equal(await f.loader.load(), true);
+    assert.equal(f.loader.state, 'empty');
+    assert.equal(f.element.hidden, true);
+    assert.equal(f.initialized(), 0);
+});
+
 test('waits until near the viewport and loads once with same-origin session context', async () => {
     let notify, observed = false, disconnected = false, complete, requests = 0;
     class Observer {

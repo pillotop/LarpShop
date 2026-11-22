@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\PromoSource;
+use App\Models\BannerGroup;
 use App\Models\Product;
 use App\Models\ProductCollection;
 use App\Models\PromoSection;
@@ -30,7 +31,7 @@ class BroadSelectSeeder extends Seeder
                 return;
             }
 
-            PromoSection::create([
+            $section = PromoSection::create([
                 'source' => PromoSource::NewArrivals->value,
                 'heading' => 'New arrivals',
                 'placement' => $placement,
@@ -38,6 +39,7 @@ class BroadSelectSeeder extends Seeder
                 'is_active' => true,
                 'sort_order' => 0,
             ]);
+            $section->bannerGroup()->associate(BannerGroup::where('slug', 'demo-everyday-trio')->first())->save();
 
             $collections = [
                 ['handpicked-equipment', 'Handpicked equipment for your next adventure', ['sports-and-outdoors']],

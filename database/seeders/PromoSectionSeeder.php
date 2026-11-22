@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BannerGroup;
 use App\Models\Product;
 use App\Models\ProductCollection;
 use App\Queries\Products\ProductCatalogQuery;
@@ -35,10 +36,11 @@ class PromoSectionSeeder extends Seeder
             $collection->products()->sync($productIds->mapWithKeys(
                 fn ($id, $position) => [$id => ['sort_order' => $position]]
             )->all());
-            $collection->sections()->create([
+            $section = $collection->sections()->create([
                 'heading' => 'Featured finds', 'layout' => 'grid',
                 'placement' => 'homepage_main', 'is_active' => true,
             ]);
+            $section->bannerGroup()->associate(BannerGroup::where('slug', 'demo-care-duo')->first())->save();
         });
     }
 }

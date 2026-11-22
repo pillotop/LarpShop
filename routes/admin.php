@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBannerGroupController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminHomepageLayoutController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminProductCollectionController;
 use App\Http\Controllers\Admin\AdminProductModerationController;
@@ -10,11 +12,21 @@ use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminReviewModerationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVendorController;
+use App\Http\Controllers\Admin\BannerGroupPreviewController;
 use App\Http\Controllers\Admin\CollectionProductController;
 use App\Http\Controllers\Admin\PromoSectionPreviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/homepage-layout', [AdminHomepageLayoutController::class, 'index'])->name('homepage-layout.index');
+    Route::put('/homepage-layout', [AdminHomepageLayoutController::class, 'update'])->name('homepage-layout.update');
+    Route::get('/banner-groups/preview', BannerGroupPreviewController::class)->name('banner-groups.preview');
+    Route::get('/banner-groups', [AdminBannerGroupController::class, 'index'])->name('banner-groups.index');
+    Route::get('/banner-groups/create', [AdminBannerGroupController::class, 'create'])->name('banner-groups.create');
+    Route::post('/banner-groups', [AdminBannerGroupController::class, 'store'])->name('banner-groups.store');
+    Route::get('/banner-groups/{group}/edit', [AdminBannerGroupController::class, 'edit'])->whereNumber('group')->name('banner-groups.edit');
+    Route::put('/banner-groups/{group}', [AdminBannerGroupController::class, 'update'])->whereNumber('group')->name('banner-groups.update');
+    Route::delete('/banner-groups/{group}', [AdminBannerGroupController::class, 'destroy'])->whereNumber('group')->name('banner-groups.destroy');
     Route::prefix('collections')->name('collections.')->group(function () {
         Route::get('/', [AdminProductCollectionController::class, 'index'])->name('index');
         Route::get('/create', [AdminProductCollectionController::class, 'create'])->name('create');
