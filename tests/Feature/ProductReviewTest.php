@@ -80,7 +80,7 @@ class ProductReviewTest extends TestCase
         $this->purchase($user, $product, $status);
         $this->actingAs($user)->post(route('reviews.store', $product), $this->payload())
             ->assertSessionHasErrors('eligibility', null, 'review');
-        $this->get(route('orders.index'))->assertOk()->assertDontSee('Write a review');
+        $this->get(route('profile'))->assertOk()->assertDontSee('Write a review');
         $this->assertDatabaseCount('product_reviews', 0);
     }
 
@@ -102,20 +102,22 @@ class ProductReviewTest extends TestCase
         $this->assertDatabaseHas('product_reviews', ['rating' => 5]);
     }
 
-    public function test_both_pages_offer_the_shared_form_and_restore_only_the_failed_form(): void
+    public function test_purchase_history_links_to_product_review_form_and_restores_failed_draft(): void
     {
         $user = User::factory()->create();
         $product = $this->product();
         $order = $this->purchase($user, $product);
-        $formId = 'review-form-order-'.$order->getKey().'-detail-'.$order->details()->first()->getKey();
+        $formId = 'review-form-product-'.$product->getKey();
+        $productUrl = route('products.show', [$product, $product->slug]);
         $this->actingAs($user)->get(route('products.show', [$product, $product->slug]))
             ->assertOk()->assertSee('Write a review');
-        $this->get(route('orders.index'))->assertOk()->assertSee('Write a review');
-        $this->from(route('orders.index'))->post(route('reviews.store', $product), $this->payload([
+        $this->get(route('orders.index'))->assertRedirect(route('profile').'#pane-purchases');
+        $this->get(route('profile'))->assertOk()->assertSee($productUrl.'#product-reviews', false);
+        $this->from($productUrl)->post(route('reviews.store', $product), $this->payload([
             'review_form' => $formId, 'rating' => 7, 'comment' => 'Keep my draft',
         ]))->assertSessionHasErrors('rating', null, 'review')
-            ->assertRedirect(route('orders.index').'#'.$formId);
-        $this->get(route('orders.index'))->assertOk()->assertSee('Keep my draft');
+            ->assertRedirect($productUrl.'#'.$formId);
+        $this->get($productUrl)->assertOk()->assertSee('Keep my draft');
         $this->assertDatabaseCount('product_reviews', 0);
     }
 

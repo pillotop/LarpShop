@@ -110,7 +110,8 @@ class PayPalCheckoutTest extends TestCase
         $this->assertSame(1, $this->captures);
         $this->assertSame(OrderStatus::Paid, $order->fresh()->status);
         $this->get(route('orders.show', $order))->assertOk()->assertSee('Your order is confirmed.');
-        $this->get(route('orders.index'))->assertOk()->assertSee('Order #'.$order->getKey());
+        $this->get(route('orders.index'))->assertRedirect(route('profile').'#pane-purchases');
+        $this->get(route('profile'))->assertOk()->assertSee('Order #'.$order->getKey());
         $this->assertDatabaseCount('payment_events', 2);
     }
 

@@ -30,7 +30,7 @@
         </svg>
     </section>
 
-    <header class="container sticky-top" style="background-color: #ffffff99;">
+    <header class="container sticky-top bg-body">
         <x-nav-bar
             product-cart-bs-target="#side-panel"
             product-cart-bs-toggle="drawer"

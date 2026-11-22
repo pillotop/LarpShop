@@ -1,12 +1,12 @@
 <section
-    {{ $attributes->class(['card border-0 shadow-sm rounded-9 p-4']) }}
+    {{ $attributes->class(['payment-surface p-3 md:p-4']) }}
     aria-label="{{ __('checkout.summary') }}"
 >
     <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
         <h2 class="h5 fw-bold mb-0">
             {{ __('checkout.summary') }}
         </h2>
-        <span class="badge theme-secondary theme-contrast">
+        <span class="badge theme-secondary">
             {{ __('checkout.order_status.' . $order->status->value) }}
         </span>
     </div>
@@ -14,7 +14,7 @@
     <ul class="list-unstyled mb-0">
         @forelse ($order->details as $detail)
             <li class="border-bottom py-3">
-                <div class="d-flex justify-content-between gap-3">
+                <div class="d-flex flex-wrap justify-content-between gap-2">
                     <span class="fw-semibold">{{ $detail->product?->name ?? __('checkout.unavailable_product') }}</span>
                     <span class="text-nowrap">{{ __('cart.each', ['price' => $money->format($detail->unit_price)]) }}</span>
                 </div>

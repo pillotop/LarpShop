@@ -1,6 +1,6 @@
 @props(['user', 'order'])
 <section aria-labelledby="checkout-details-title">
-    <h1 id="checkout-details-title" class="h4 fw-bold mb-3">{{ __('checkout.details.title') }}</h1>
+    <h2 id="checkout-details-title" class="h4 fw-bold mb-3">{{ __('checkout.details.title') }}</h2>
     <p class="fg-3">{{ __('checkout.details.intro') }}</p>
     <dl class="row g-2 mb-3">
         <dt class="sm:col-4">{{ __('checkout.details.name') }}</dt><dd class="sm:col-8">{{ $user->username }}</dd>

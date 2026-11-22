@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'payment_attempts' => 'Payment activity',
+    'no_payments' => 'No payment attempts yet.',
     'history' => 'Order history',
     'details' => 'Order details',
     'empty' => 'You have no orders yet.',

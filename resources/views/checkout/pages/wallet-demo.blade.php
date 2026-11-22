@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.checkout')
 
 @section('title', __('checkout.wallet.simulation_title', ['provider' => config("payments.providers.{$payment->provider}.label")]))
 
-@section('content')
-    <main class="container py-5">
-        <section class="mx-auto border rounded-2 p-4" style="max-width: 36rem;">
-            <p class="small text-body-secondary mb-2">LarpShop · {{ __('checkout.wallet.simulated') }}</p>
+@section('payment-content')
+    <section class="payment-focus payment-surface p-3 md:p-4">
+        <div>
+            <p class="small fg-3 mb-2">LarpShop · {{ __('checkout.wallet.simulated') }}</p>
             <h1 class="h3 mb-3">
                 {{ __('checkout.wallet.simulation_title', ['provider' => config("payments.providers.{$payment->provider}.label")]) }}
             </h1>
@@ -14,9 +14,6 @@
                 {{ __('checkout.payment.order_amount', ['order' => $payment->order_id, 'currency' => $payment->currency, 'amount' => $payment->amount]) }}
             </p>
 
-            @if ($errors->any())
-                <div class="text-danger mb-3" role="alert">{{ $errors->first() }}</div>
-            @endif
 
             <form
                 action="{{ route('payments.wallet-demo.store', $payment) }}"
@@ -54,6 +51,6 @@
             >
                 {{ __('checkout.payment.back') }}
             </a>
-        </section>
-    </main>
+        </div>
+    </section>
 @endsection

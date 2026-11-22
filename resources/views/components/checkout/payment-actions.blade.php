@@ -2,7 +2,7 @@
 
 <div class="mt-3 d-grid gap-3">
     @if ($payment->source_currency !== null)
-        <p class="small text-body-secondary mb-0">
+        <p class="small fg-3 mb-0">
             {{ __('checkout.wallet.settlement', [
                 'source_amount' => $payment->source_amount,
                 'source_currency' => $payment->source_currency,

@@ -1,0 +1,45 @@
+.payment-header {
+    background: var(--bg-body);
+    color: var(--fg-body);
+}
+.payment-brand {
+    display: inline-flex;
+    color: inherit;
+}
+.payment-brand svg {
+    width: 9rem;
+    height: 2.5rem;
+}
+.payment-page {
+    max-width: 76rem;
+    overflow-wrap: anywhere;
+}
+.payment-columns {
+    display: grid;
+    gap: 1.5rem;
+    align-items: start;
+}
+.payment-columns > *, .payment-surface {
+    min-width: 0;
+}
+.payment-surface {
+    background: var(--bg-1);
+    color: var(--fg-body);
+    border-radius: .5rem;
+}
+.payment-focus {
+    max-width: 38rem;
+    margin-inline: auto;
+}
+.payment-record + .payment-record {
+    border-top: 1px solid var(--border-color);
+}
+@media (min-width: 1024px) {
+    .payment-columns {
+        grid-template-columns: minmax(0, 1.5fr) minmax(19rem, 1fr);
+    }
+    .payment-summary {
+        position: sticky;
+        top: 1.5rem;
+    }
+}

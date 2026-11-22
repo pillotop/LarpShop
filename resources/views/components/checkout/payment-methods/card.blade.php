@@ -6,8 +6,8 @@
 >
     @csrf
     <h2 class="h4 fw-bold mb-3">{{ __('checkout.payment.card') }}</h2>
-    <p class="text-body-secondary">{{ __('checkout.card.stripe_notice') }}</p>
-    <p class="small text-body-secondary">{{ __('checkout.card.sandbox') }}</p>
+    <p class="fg-3">{{ __('checkout.card.stripe_notice') }}</p>
+    <p class="small fg-3">{{ __('checkout.card.sandbox') }}</p>
     <input
         type="hidden"
         name="payment_option"
