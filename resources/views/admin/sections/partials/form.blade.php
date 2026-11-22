@@ -16,6 +16,7 @@
         @method('PUT')
     @endif
     @include('admin.sections.partials.fields')
+    @include('admin.sections.partials.banner-group')
     @include('admin.sections.partials.schedule')
     @include('admin.sections.partials.image')
     <button type="submit" class="btn btn-solid theme-primary mt-4">{{ __('promotions.save_section') }}</button>

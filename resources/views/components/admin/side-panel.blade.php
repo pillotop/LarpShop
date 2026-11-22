@@ -91,6 +91,21 @@
                 <span>{{ __('promotions.manage_sections') }}</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a
+                href="{{ route('admin.banner-groups.index') }}"
+                class="nav-link {{ request()->routeIs('admin.banner-groups.*') ? 'active' : '' }}"
+            >
+                <i class="bi bi-images fs-lg" aria-hidden="true"></i>
+                <span>{{ __('banner_groups.manage') }}</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.homepage-layout.index') }}" class="nav-link {{ request()->routeIs('admin.homepage-layout.*') ? 'active' : '' }}">
+                <i class="bi bi-layout-text-window" aria-hidden="true"></i>
+                <span>{{ __('homepage_layout.title') }}</span>
+            </a>
+        </li>
         <li class="nav-item mt-3">
             <small class="text-uppercase fg-2 fw-bold px-2" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('management.marketplace_shortcuts') }}</small>
         </li>

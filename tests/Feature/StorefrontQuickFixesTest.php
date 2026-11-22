@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\User;
 use App\Models\Vendor;
+use Database\Seeders\BannerGroupSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -48,13 +50,15 @@ class StorefrontQuickFixesTest extends TestCase
             ->assertSee(route('privacy'), false);
     }
 
-    public function test_homepage_uses_valid_home_and_living_category_slug(): void
+    public function test_homepage_banners_use_valid_home_and_living_category_scope(): void
     {
         $this->withoutVite();
+        Category::create(['name' => 'Home & Living', 'slug' => 'home-and-living', 'is_active' => true]);
+        $this->seed(BannerGroupSeeder::class);
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('/categories/home-and-living', false)
-            ->assertDontSee('/categories/home-living', false);
+            ->assertSee('href="/products?category=home-and-living"', false)
+            ->assertDontSee('/products?category=home-living', false);
     }
 }

@@ -31,6 +31,7 @@ class PromoSection extends Model
             'starts_at' => 'immutable_datetime',
             'expires_at' => 'immutable_datetime',
             'sort_order' => 'integer',
+            'homepage_position' => 'integer',
             'image_width' => 'integer',
             'image_height' => 'integer',
             'image_variants' => 'array',
@@ -46,6 +47,11 @@ class PromoSection extends Model
     public function collection(): BelongsTo
     {
         return $this->belongsTo(ProductCollection::class, 'product_collection_id', 'product_collection_id');
+    }
+
+    public function bannerGroup(): BelongsTo
+    {
+        return $this->belongsTo(BannerGroup::class, 'banner_group_id', 'banner_group_id');
     }
 
     public function scopeActive(Builder $query): Builder

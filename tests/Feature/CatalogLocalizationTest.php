@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ProductReview;
 use App\Models\PromoSection;
 use App\Models\User;
+use Database\Seeders\BannerGroupSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Tests\Support\CreatesCartFixtures;
@@ -54,6 +55,7 @@ class CatalogLocalizationTest extends TestCase
     public function test_home_category_and_empty_search_are_translated(): void
     {
         $product = $this->product();
+        $this->seed(BannerGroupSeeder::class);
         PromoSection::forceCreate([
             'source' => 'new_arrivals',
             'placement' => 'homepage_broad_select',
@@ -63,8 +65,9 @@ class CatalogLocalizationTest extends TestCase
 
         $this->withSession(['locale' => 'vi'])->get(route('home'))
             ->assertOk()
-            ->assertSee('Mọi thứ tại một nơi')
-            ->assertSee('Khám phá bộ sưu tập');
+            ->assertSee('Chăm chút mỗi ngày')
+            ->assertSee('Khám phá bộ sưu tập')
+            ->assertDontSee('A little care, every day');
 
         $this->get(route('categories.show', $product->category->slug))
             ->assertOk()

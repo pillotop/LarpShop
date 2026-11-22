@@ -4,12 +4,14 @@ export class DeferredSection {
         fetchPage = fetch,
         page = document,
         initialize = () => {},
+        selectContent = fragment => fragment,
         Observer = globalThis.IntersectionObserver,
     } = {}) {
         this.element = element;
         this.fetchPage = (...args) => fetchPage(...args);
         this.page = page;
         this.initialize = initialize;
+        this.selectContent = selectContent;
         this.Observer = Observer;
         this.loading = element.querySelector('[data-loading-state]');
         this.content = element.querySelector('[data-deferred-content]');
@@ -61,7 +63,13 @@ export class DeferredSection {
             if (!template.content.querySelector('[data-deferred-fragment]')) {
                 throw new Error('Invalid section response.');
             }
-            this.content.replaceChildren(template.content);
+            const selected = this.selectContent(template.content, this.element);
+            if (!selected) {
+                this.state = 'empty';
+                this.element.hidden = true;
+                return true;
+            }
+            this.content.replaceChildren(selected);
             this.loading.hidden = true;
             this.initialize(this.content);
             this.state = 'loaded';

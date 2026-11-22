@@ -30,6 +30,15 @@ return [
 
     'disks' => [
 
+        // Repository-owned images are served directly; never use this disk for uploads.
+        'public_assets' => [
+            'driver' => 'local',
+            'root' => public_path('images'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/images',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),

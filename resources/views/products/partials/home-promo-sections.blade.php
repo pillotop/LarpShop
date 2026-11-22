@@ -7,7 +7,7 @@
     tabindex="-1"
 >
     @foreach ($promoSections as $promo)
-        <div class="container my-4">
+        <div class="container my-4" data-home-promo-id="{{ $promo->section->getKey() }}" data-deferred-focus tabindex="-1">
             <x-promo-section
                 :data="$promo"
                 :load-assets="false"

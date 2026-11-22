@@ -2,6 +2,7 @@
 
 namespace App\Data\Promotions;
 
+use App\Models\BannerGroup;
 use App\Models\Product;
 use Illuminate\Support\Collection;
 
@@ -14,5 +15,6 @@ final readonly class BroadSelectGroupData
         public string $source,
         public Collection $products,
         public ?string $viewAllUrl = null,
+        public ?BannerGroup $bannerGroup = null,
     ) {}
 }

@@ -9,6 +9,7 @@ use App\Http\Requests\Promotions\SavePromoSectionRequest;
 use App\Http\Requests\Promotions\SelectPromoCollectionRequest;
 use App\Http\Requests\Promotions\TogglePromoSectionRequest;
 use App\Models\PromoSection;
+use App\Queries\Banners\BannerGroupQuery;
 use App\Queries\Promotions\ProductCollectionQuery;
 use App\Queries\Promotions\PromoSectionQuery;
 use App\Services\Promotions\PromoSectionManagementService;
@@ -47,7 +48,13 @@ class AdminPromoSectionController extends Controller
             }
         }
 
-        return view('admin.sections.edit', ['section' => $section, 'collections' => $choices]);
+        $selectedGroup = old('banner_group_id', $section->banner_group_id);
+
+        return view('admin.sections.edit', [
+            'section' => $section,
+            'collections' => $choices,
+            'bannerGroups' => app(BannerGroupQuery::class)->recentChoices(is_numeric($selectedGroup) ? (int) $selectedGroup : null),
+        ]);
     }
 
     public function store(SavePromoSectionRequest $request, PromoSectionManagementService $service): RedirectResponse

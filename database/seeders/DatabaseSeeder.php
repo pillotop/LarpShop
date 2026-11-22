@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             DemoCatalogSeeder::class,
             DemoTransactionSeeder::class,
             DemoCustomerActivitySeeder::class,
+            BannerGroupSeeder::class,
+            SuppliedBannerSeeder::class,
             PromoSectionSeeder::class,
             BroadSelectSeeder::class,
         ]);

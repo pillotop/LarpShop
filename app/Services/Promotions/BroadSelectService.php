@@ -22,6 +22,7 @@ class BroadSelectService
                 source: $data->section->source,
                 products: $data->products,
                 viewAllUrl: $data->viewAllUrl(),
+                bannerGroup: $data->bannerGroup,
             ));
     }
 }

@@ -4,7 +4,6 @@ namespace Tests\Feature\Promotions;
 
 use App\Models\ProductCollection;
 use App\Models\User;
-use App\Queries\Promotions\PromoSectionQuery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Support\CreatesCartFixtures;
 use Tests\TestCase;
@@ -13,12 +12,17 @@ class DeferredPromoSectionsTest extends TestCase
 {
     use CreatesCartFixtures, RefreshDatabase;
 
-    public function test_initial_homepage_does_not_query_promo_sections(): void
+    public function test_initial_homepage_loads_only_promo_metadata_and_defers_product_cards(): void
     {
-        $this->mock(PromoSectionQuery::class)->shouldNotReceive('visibleForPlacement');
+        $product = $this->product('Deferred product card');
+        $collection = ProductCollection::factory()->published()->create();
+        $collection->products()->attach($product);
+        $section = $collection->sections()->create(['is_active' => true, 'layout' => 'grid']);
         $this->get(route('home'))->assertOk()
             ->assertSee('data-deferred-promo-sections', false)
-            ->assertSee(route('home.promo-sections'), false);
+            ->assertSee('data-homepage-promo-id="'.$section->getKey().'"', false)
+            ->assertSee(route('home.promo-sections'), false)
+            ->assertDontSee('Deferred product card');
     }
 
     public function test_empty_placement_returns_no_content(): void

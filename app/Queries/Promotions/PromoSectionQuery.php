@@ -6,6 +6,7 @@ use App\Data\Promotions\PromoSectionData;
 use App\Enums\PromoSource;
 use App\Models\ProductCollection;
 use App\Models\PromoSection;
+use App\Queries\Banners\BannerGroupQuery;
 use App\Queries\Products\ProductCatalogQuery;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -16,7 +17,7 @@ use InvalidArgumentException;
 
 class PromoSectionQuery
 {
-    public function __construct(private ProductCatalogQuery $products) {}
+    public function __construct(private ProductCatalogQuery $products, private BannerGroupQuery $banners) {}
 
     public function forAdmin(): LengthAwarePaginator
     {
@@ -49,7 +50,7 @@ class PromoSectionQuery
 
         return new PromoSectionData($section, $this->products->automaticPromoProducts(
             $source, config('promotions.broad_select.product_limit'),
-        ));
+        ), $section->banner_group_id ? $this->banners->visibleById($section->banner_group_id) : null);
     }
 
     /** Only the admin preview flow may bypass collection publication and section scheduling. */
@@ -76,29 +77,45 @@ class PromoSectionQuery
                 $section->collection,
                 config('promotions.layouts')[$section->layout]['product_limit'],
             ),
+            $section->banner_group_id ? $this->banners->visibleById($section->banner_group_id) : null,
         );
     }
 
     /** @return Collection<int, PromoSectionData> */
     public function visibleForPlacement(string $placement, ?CarbonInterface $at = null): Collection
     {
+        $at ??= now();
+        $sections = $this->visibleRecordsForPlacement($placement, $at);
+        if ($sections->isEmpty()) {
+            return collect();
+        }
+
+        return $this->prepareVisibleSections($sections, $at);
+    }
+
+    /** Lightweight homepage placeholders use eligible metadata without loading product rows. */
+    public function visibleRecordsForPlacement(string $placement, ?CarbonInterface $at = null): EloquentCollection
+    {
+        $at ??= now();
         $broadSelect = $placement === config('promotions.broad_select.placement');
         if (! $broadSelect && ! in_array($placement, config('promotions.placements'), true)) {
             throw new InvalidArgumentException('Unsupported promo placement.');
         }
 
-        $sections = PromoSection::query()->where('placement', $placement)
+        return PromoSection::query()->where('placement', $placement)
             ->whereIn('layout', array_keys(config('promotions.layouts')))
-            ->active()->scheduledAt($at ?? now())
+            ->active()->scheduledAt($at)
             ->where(fn (Builder $query) => $this->constrainSources($query, $broadSelect))
             ->with('collection')
+            ->when($placement === 'homepage_main', fn ($query) => $query
+                ->orderByRaw('homepage_position IS NULL')->orderBy('homepage_position'))
             ->orderBy('sort_order')->orderBy('promo_section_id')
             ->limit($broadSelect ? config('promotions.broad_select.max_groups') : config('promotions.max_sections'))
             ->get();
-        if ($sections->isEmpty()) {
-            return collect();
-        }
+    }
 
+    private function prepareVisibleSections(EloquentCollection $sections, CarbonInterface $at): Collection
+    {
         $curated = $sections->where('source', PromoSource::Collection->value);
         $collections = new EloquentCollection($curated->pluck('collection')->unique('product_collection_id')->all());
         if ($collections->isNotEmpty()) {
@@ -107,13 +124,14 @@ class PromoSectionQuery
         }
         $byId = $collections->keyBy('product_collection_id');
         $automatic = $this->loadAutomaticProducts($sections);
+        $banners = $this->banners->visibleByIds($sections->pluck('banner_group_id')->filter()->all(), $at);
 
-        return $sections->map(function (PromoSection $section) use ($byId, $automatic) {
+        return $sections->map(function (PromoSection $section) use ($byId, $automatic, $banners) {
             $products = $section->source === PromoSource::Collection->value
                 ? $byId[$section->product_collection_id]->products
                 : $automatic[$section->source];
 
-            return new PromoSectionData($section, $products->take($this->productLimit($section))->values());
+            return new PromoSectionData($section, $products->take($this->productLimit($section))->values(), $banners->get($section->banner_group_id));
         })->filter(fn (PromoSectionData $data) => $data->products->isNotEmpty())->values()->toBase();
     }
 

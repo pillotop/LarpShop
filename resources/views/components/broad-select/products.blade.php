@@ -6,6 +6,13 @@
     tabindex="0"
     @if (! $active) hidden @endif
 >
+    @if ($group->bannerGroup)
+        <x-banner-group
+            :group="$group->bannerGroup"
+            :load-assets="$loadStyles"
+            class="mb-4"
+        />
+    @endif
     @if ($group->viewAllUrl)
         <div class="text-end px-3 mb-2">
             <a

@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install \
         gd \
+        exif \
         zip \
         pdo_mysql \
         pdo_sqlite \
@@ -36,6 +37,13 @@ RUN { \
         echo 'opcache.max_accelerated_files=20000'; \
         echo 'opcache.revalidate_freq=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# A banner group can upload five images of up to 8 MB in one request.
+RUN { \
+        echo 'upload_max_filesize=8M'; \
+        echo 'post_max_size=48M'; \
+        echo 'memory_limit=256M'; \
+    } > /usr/local/etc/php/conf.d/uploads.ini
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

@@ -25,6 +25,7 @@ class SavePromoSectionRequest extends AdminPromotionRequest
             'source' => $this->promoSourceRules(),
             'product_collection_id' => $this->promoCollectionRules(required: true),
             'heading' => ['nullable', 'string', 'max:150'],
+            'banner_group_id' => ['nullable', 'integer', Rule::exists('banner_groups', 'banner_group_id')],
             'introduction' => ['nullable', 'string', 'max:5000'],
             'placement' => ['required', 'string', Rule::in(config('promotions.placements'))],
             'layout' => ['required', 'string', Rule::in(array_keys(config('promotions.layouts')))],
@@ -69,6 +70,7 @@ class SavePromoSectionRequest extends AdminPromotionRequest
             'source' => __('promotions.source'),
             'product_collection_id' => __('promotions.collection'), 'layout' => __('promotions.layout'),
             'placement' => __('promotions.placement'), 'heading' => __('promotions.heading'),
+            'banner_group_id' => __('banner_groups.attachment'),
             'starts_at' => __('promotions.starts_at'), 'expires_at' => __('promotions.expires_at'),
         ];
     }
