@@ -31,14 +31,14 @@
                 margin: 0;
             }
             [data-cart-quantity] .btn:hover {
-                background-color: #f1f3f5;
+                background-color: var(--bg-2);
             }
             .cart-item-remove {
                 background-color: transparent;
             }
             .cart-item-remove:hover,
             .cart-item-remove:focus-visible {
-                background-color: #f1f3f5;
+                background-color: var(--bg-2);
             }
         </style>
     @endonce
@@ -50,8 +50,7 @@
                         src="{{ $product['image_url'] }}"
                         alt="{{ $product['image_alt'] }}"
                         loading="lazy"
-                        class="rounded-3 border-0 bg-white object-fit-cover"
-                        {{-- change this ples --}}
+                        class="rounded-3 border-0 bg-body object-fit-cover"
                         style="width: 114px; height: 114px;"
                     />
                 @else
@@ -60,7 +59,7 @@
                     </span>
                 @endif
             </a>
-            <div class="flex-grow-1" style="min-with: 0;">
+            <div class="flex-grow-1" style="min-width: 0;">
                 <a
                     href="{{ $product['url'] }}"
                     class="fw-semibold fg-body text-decoration-none d-block text-break lh-sm mb-2"
@@ -70,10 +69,10 @@
                 <div class="small fg-3">
                     {{ __('cart.each', ['price' => $money->format($product['price'])]) }}
                 </div>
-                <div class="d-flex align-items-center justify-content-between gap-2 mt-2">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-2">
                     <div>
                         <div
-                            class="quantity-picker d-inline-flex align-items-center bg-white border rounded-4"
+                            class="quantity-picker d-inline-flex align-items-center bg-body border rounded-4"
                             data-cart-quantity
                             data-product-id="{{ $product['product_id'] }}"
                             data-set-cart-url="{{ route('cart.store') }}"

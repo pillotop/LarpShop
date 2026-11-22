@@ -35,9 +35,9 @@
     };
 
     $orderBadge = fn (\App\Enums\OrderStatus $status): string => match ($status) {
-        \App\Enums\OrderStatus::Paid => 'bg-success',
-        \App\Enums\OrderStatus::Pending => 'bg-warning fg-body',
-        \App\Enums\OrderStatus::Cancelled, \App\Enums\OrderStatus::Expired => 'bg-secondary',
+        \App\Enums\OrderStatus::Paid => 'theme-primary',
+        \App\Enums\OrderStatus::Pending => 'theme-secondary',
+        \App\Enums\OrderStatus::Cancelled, \App\Enums\OrderStatus::Expired => 'theme-secondary',
     };
 @endphp
 
@@ -48,7 +48,7 @@
     aria-labelledby="tab-purchases"
     tabindex="0"
 >
-    <div class="card border-0 shadow-sm rounded-9 p-4">
+    <div class="card border-0 shadow-sm rounded-2 p-4">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
             <div>
                 <h2 class="h4 mb-1">{{ __('profile.purchases.title') }}</h2>
@@ -115,7 +115,7 @@
                 <select
                     id="orders-period"
                     name="orders_period"
-                    class="form-select form-select-sm w-auto fw-semibold"
+                    class="form-control form-control-sm w-auto fw-semibold"
                     onchange="this.form.submit()"
                 >
                     @foreach (array_keys(\App\Queries\Orders\PurchaseHistoryQuery::PERIODS) as $periodKey)
@@ -170,7 +170,7 @@
                         @php($product = $detail->product)
                         @php($productAvailable = $product && $product->status === \App\Models\Product::STATUS_APPROVED && $product->is_active)
                         <li @class(['d-flex flex-wrap gap-3 p-3', 'border-top' => ! $loop->first])>
-                            <div class="flex-shrink-0 rounded-3 overflow-hidden border bg-white" style="width: 88px; height: 88px;">
+                            <div class="flex-shrink-0 rounded-3 overflow-hidden border bg-body" style="width: 88px; height: 88px;">
                                 <img
                                     src="{{ $imageUrl($product) }}"
                                     alt="{{ $product?->name ?? '' }}"
@@ -206,7 +206,7 @@
                                 </div>
 
                                 @if ($isPaid)
-                                    <span class="badge bg-info mt-2">{{ $detail->fulfillment_status->label() }}</span>
+                                    <span class="badge theme-secondary mt-2">{{ $detail->fulfillment_status->label() }}</span>
                                 @endif
                             </div>
 
@@ -242,7 +242,7 @@
                             onsubmit="return confirm(@js(__('profile.purchases.cancel_confirm')))"
                         >
                             @csrf
-                            <button type="submit" class="btn btn-sm btn-outline theme-danger">
+                            <button type="submit" class="btn btn-sm btn-outline theme-secondary">
                                 {{ __('profile.purchases.cancel_order') }}
                             </button>
                         </form>

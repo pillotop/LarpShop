@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'payment_attempts' => 'Hoạt động thanh toán',
+    'no_payments' => 'Chưa có lần thanh toán nào.',
     'history' => 'Lịch sử đơn hàng',
     'details' => 'Chi tiết đơn hàng',
     'empty' => 'Bạn chưa có đơn hàng nào.',

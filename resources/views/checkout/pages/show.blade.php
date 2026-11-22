@@ -1,114 +1,26 @@
-@extends('layouts.app')
+@extends('layouts.checkout')
 
 @section('title', __('checkout.title'))
 
-@section('head')
-
-    @vite([
-        'resources/css/icons.css',
-        'resources/css/profile.css',
-        'resources/css/top_header.css',
-        'resources/css/components/payment_method_container.css',
-    ])
-@endsection
-
-@section('tail')
-    @vite([
-        'resources/js/components/payment_methods.js',
-        'resources/js/components/side_panel.js',
-    ])
-@endsection
-
-@section('content')
-    <header>
-        <nav class="navigation-bar navbar lg:navbar-expand">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    <img src="/images/larp_shop.jpg" alt="{{ __('common.home') }}" class="rounded-circle logo-larpshop-logo">
-                </a>
-                <div class="d-flex flex-grow-1">
-                    <div class="navbar-nav me-auto mb-2 lg:mb-0">
-                        <button
-                            type="button"
-                            class="side-panel-trigger nav-link"
-                            data-side-panel-target="#sm-cart"
-                            data-bs-toggle="drawer"
-                            data-bs-target="#side-panel"
-                        >
-                            {{ __('checkout.order') }}
-                        </button>
-                        <template id="sm-cart">
-                            <div class="p-3 text-end">
-                                <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="{{ __('common.close') }}"></button>
-                            </div>
-                            <x-checkout.order-summary :data="$order"/>
-                        </template>
-                    </div>
-                </div>
-                <button
-                    type="button"
-                    class="side-panel-trigger nav-link d-flex align-items-center gap-2"
-                    data-side-panel-target="#settings"
-                    data-bs-toggle="drawer"
-                    data-bs-target="#side-panel"
-                >
-
-                    @php
-                       $user = Auth::user();
-                    @endphp
-
-                    <div class="avatar-circle" aria-hidden="true">
-                        {{ mb_strtoupper(mb_substr($user?->username ?? __('common.guest'), 0, 1)) }}
-                    </div>
-
-                    {{ $user?->username ?? __('common.guest') }}
-
-                </button>
-
-                <template id="settings">
-                    <x-user-settings/>
-                </template>
-
+@section('payment-content')
+    <div class="mb-4">
+        <h1 class="h2 mb-2">{{ __('checkout.title') }}</h1>
+        <p class="fg-3 mb-0">{{ __('orders.number', ['id' => $order->getKey()]) }}</p>
+    </div>
+    <div class="payment-columns">
+        <div class="d-grid gap-4">
+            <div class="payment-surface p-3 md:p-4">
+                <x-checkout.details-section :user="$user" :order="$order" />
             </div>
-        </nav>
-    </header>
-    <main>
-        <div class="container">
-            @if (session('status'))
-                <div class="alert theme-info" role="status">{{ session('status') }}</div>
-            @endif
-            @if (session('success'))
-                <div class="alert theme-success" role="status">{{ session('success') }}</div>
-            @endif
-            @if ($errors->any())
-                <div class="alert theme-danger" role="alert">
-                    <ul class="mb-0">@foreach ($errors->all() as $message)<li>{{ $message }}</li>@endforeach</ul>
-                </div>
-            @endif
-            <div class="row g-3">
-                <div class="col-12 lg:col-7 d-flex flex-column">
-                    <div class="p-4">
-                        <x-checkout.details-section :user="$user" :order="$order"/>
-                    </div>
-                    <div class="p-4">
-                        <x-checkout.address-section :order="$order" :addresses="$addresses" :can-change-address="$canChangeAddress"/>
-                    </div>
-                    <div class="p-4">
-                        <x-checkout.payment-section
-                            :order="$order"
-                            :active-payment="$activePayment"
-                            :can-create-payment="$canCreatePayment"
-                            :can-resume-payment="$canResumePayment"
-                        />
-                    </div>
-                </div>
-                <div class="d-none lg:d-block col-5">
-                    <div class="sticky-top pt-4">
-                    <x-checkout.order-summary :data="$order"/>
-                    </div>
-                </div>
+            <div class="payment-surface p-3 md:p-4">
+                <x-checkout.address-section :order="$order" :addresses="$addresses" :can-change-address="$canChangeAddress" />
+            </div>
+            <div class="payment-surface p-3 md:p-4">
+                <x-checkout.payment-section :order="$order" :active-payment="$activePayment" :can-create-payment="$canCreatePayment" :can-resume-payment="$canResumePayment" />
             </div>
         </div>
-    </main>
-    <x-side-panel alignment="end" />
+        <aside class="payment-summary">
+            <x-checkout.order-summary :data="$order" />
+        </aside>
+    </div>
 @endsection

@@ -78,7 +78,7 @@ class ProfileOrderLocalizationTest extends TestCase
         $this->assertSame('Original recipient', $user->addresses()->sole()->recipient_name);
     }
 
-    public function test_order_history_translates_pagination_and_paid_purchase_review_form(): void
+    public function test_legacy_history_redirects_to_localized_profile_purchases(): void
     {
         $user = User::factory()->create();
         $product = $this->product(name: 'Purchased Sword');
@@ -93,25 +93,15 @@ class ProfileOrderLocalizationTest extends TestCase
         }
 
         $this->actingAs($user)->withSession(['locale' => 'vi'])->get(route('orders.index'))
+            ->assertRedirect(route('profile').'#pane-purchases');
+
+        $this->get(route('profile', ['orders_page' => 1]))
             ->assertOk()
-            ->assertSee('Lịch sử đơn hàng')
             ->assertSee('Đã thanh toán')
             ->assertSee('Viết đánh giá')
             ->assertSee('Purchased Sword')
-            ->assertSee('Hiển thị 1–10 trong 11 kết quả')
-            ->assertSee('Đến trang 2')
-            ->assertSee('name="review_form"', false);
-
-        $this->from(route('orders.index'))->post(route('reviews.store', $product), [
-            'review_form' => 'review-form-order-1-detail-1',
-            'rating' => 5, 'comment' => 'Original customer review.',
-        ])->assertRedirect(route('orders.index').'#review-feedback')
-            ->assertSessionHas('review_success', 'Cảm ơn bạn! Đánh giá đã được đăng.');
-
-        $this->assertDatabaseHas('product_reviews', [
-            'user_id' => $user->getKey(), 'product_id' => $product->getKey(),
-            'comment' => 'Original customer review.',
-        ]);
+            ->assertSee('Hiển thị 1–5 trong 11 kết quả')
+            ->assertSee('Đến trang 2');
     }
 
     public function test_order_details_and_cancellation_translate_only_display_values(): void

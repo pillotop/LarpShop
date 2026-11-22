@@ -28,7 +28,7 @@
     ]
 @endphp
 
-<div class="order-summary">
+<div class="order-summary bg-1 rounded-2 p-3 md:p-4">
     <header class="h4 fw-semibold">{{ __('checkout.summary') }}</header>
     <div class="price-breakdown">
         @foreach ($priceBreakdownRows as $row)
@@ -75,11 +75,11 @@
             <p class="small"><a href="{{ route('login') }}">{{ __('common.login') }}</a> {{ __('checkout.sign_in_suffix') }}</p>
         @endauth
         @if ($errors->any())
-            <ul class="small fg-danger" role="alert">
+            <ul class="small fg-body" role="alert">
                 @foreach ($errors->all() as $message)<li>{{ $message }}</li>@endforeach
             </ul>
         @endif
-        <button type="submit" class="w-100 rounded-3 border-0 p-3" @disabled($quantity < 1 || $addresses->isEmpty())>
+        <button type="submit" class="btn btn-solid theme-primary w-100 py-3" @disabled($quantity < 1 || $addresses->isEmpty())>
             {{ __('checkout.checkout') }}
         </button>
     </form>

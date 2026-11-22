@@ -52,12 +52,12 @@
                     ></i>
                     <span class="wallet-provider-brand">{{ $label }}</span>
                     @if (config("payments.providers.{$provider}.simulated", false))
-                        <span class="small text-body-secondary">
+                        <span class="small fg-3">
                             {{ __('checkout.wallet.simulated') }}
                         </span>
                     @endif
                     @unless ($enabled)
-                        <span class="small text-body-secondary">
+                        <span class="small fg-3">
                             {{ __('checkout.wallet.unavailable') }}
                         </span>
                     @endunless
@@ -66,10 +66,10 @@
         </div>
     </fieldset>
 
-    <p class="small text-body-secondary mb-0">{{ __('checkout.wallet.selection_notice') }}</p>
-    <p class="small text-body-secondary mb-0">{{ __('checkout.wallet.sandbox') }}</p>
+    <p class="small fg-3 mb-0">{{ __('checkout.wallet.selection_notice') }}</p>
+    <p class="small fg-3 mb-0">{{ __('checkout.wallet.sandbox') }}</p>
     @if (collect(array_keys($providers))->contains(fn ($provider) => config("payments.providers.{$provider}.simulated", false)))
-        <p class="small text-body-secondary mb-0">{{ __('checkout.wallet.simulation_notice') }}</p>
+        <p class="small fg-3 mb-0">{{ __('checkout.wallet.simulation_notice') }}</p>
     @endif
     <button
         type="submit"

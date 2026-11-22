@@ -1,18 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.checkout')
 
 @section('title', __('checkout.payment.confirm'))
 
-@section('content')
-    <main class="container py-5">
-        <h1>{{ __('checkout.payment.confirm') }}</h1>
+@section('payment-content')
+    <section class="payment-focus payment-surface p-3 md:p-4">
+        <h1 class="h3 mb-3">{{ __('checkout.payment.confirm') }}</h1>
         <p>{{ __('checkout.payment.order_amount', ['order' => $payment->order_id, 'currency' => $payment->currency, 'amount' => $payment->amount]) }}</p>
         <p>{{ __('checkout.payment.confirm_help') }}</p>
-        @if ($errors->any())
-            <div role="alert">
-                {{ $errors->first() }}
-            </div>
-        @endif
+
         <form
+            class="my-4"
             action="{{ route('payments.complete', $payment) }}"
             method="POST"
         >
@@ -25,5 +22,5 @@
             </button>
         </form>
         <a href="{{ route('checkout.show', $payment->order_id) }}">{{ __('checkout.payment.back') }}</a>
-    </main>
+    </section>
 @endsection

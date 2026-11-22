@@ -11,8 +11,8 @@
                     </span>
                 </h1>
             </div>
-            <p data-cart-feedback class="small fg-danger" role="status" aria-live="polite"></p>
-            <div class="row d-flex flex-row-reverse">
+            <p data-cart-feedback class="small fg-body" role="status" aria-live="polite"></p>
+            <div class="row g-4 d-flex flex-row-reverse">
                 <div class="col-12 lg:col-4">
                     <x-cart.order-summary :data="$cart" />
                 </div>
@@ -28,7 +28,7 @@
                                     <i class="bi bi-chevron-down accordion-icon" aria-hidden="true"></i>
                                 </summary>
                                 <div class="accordion-panel">
-                                    <div class="bg-white p-3">
+                                    <div class="bg-body p-3">
                                         <div class="d-flex gap-2 align-items-center">
                                             <label for="cart-page-sort-field" class="small fw-semibold">{{ __('cart.sort_by') }} </label>
                                             <div class="d-flex gap-2">

@@ -64,8 +64,8 @@ class AdminOrderTest extends TestCase
 
     public function test_admin_can_list_filter_and_search_orders(): void
     {
-        $alice = User::factory()->create(['username' => 'alice_buyer']);
-        $bob = User::factory()->create(['username' => 'bob_buyer']);
+        $alice = User::factory()->create(['username' => 'alice_buyer', 'email' => 'alice_buyer@example.test']);
+        $bob = User::factory()->create(['username' => 'bob_buyer', 'email' => 'bob_buyer@example.test']);
         $aliceOrder = $this->makeOrder($alice, 'pending');
         $bobOrder = $this->makeOrder($bob, 'paid');
         $admin = $this->admin();

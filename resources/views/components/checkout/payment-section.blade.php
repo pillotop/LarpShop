@@ -11,6 +11,11 @@
         'card' => ['label' => __('checkout.payment.card'), 'component' => 'checkout.payment-methods.card'],
         'wallet' => ['label' => __('checkout.payment.wallet'), 'component' => 'checkout.payment-methods.wallet'],
     ];
+    $selectedMethod = match (old('payment_option')) {
+        'stripe_card' => 'card',
+        'paypal', 'momo', 'zalopay', 'vnpay', 'momo_demo', 'zalopay_demo', 'vnpay_demo' => 'wallet',
+        default => Route::has('test.payments.pay') ? 'simulated' : 'card',
+    };
     if (! Route::has('test.payments.pay')) {
         unset($methods['simulated']);
     }
@@ -24,7 +29,7 @@
     @if ($canCreatePayment)
         <div
             id="method-headers"
-            class="method-headers d-flex overflow-auto rounded-top-3 mb-4"
+            class="method-headers d-flex flex-wrap gap-2 mb-4"
             role="tablist"
             aria-label="{{ __('checkout.payment.method') }}"
         >
@@ -32,11 +37,11 @@
                 <button
                     id="payment-tab-{{ $key }}"
                     type="button"
-                    class="payment-method-tab flex-shrink-0 border border-bottom-0 rounded-top-3 py-2 px-3 {{ $loop->first ? 'active' : '' }}"
+                    class="payment-method-tab py-2 px-3 {{ $key === $selectedMethod ? 'active' : '' }}"
                     role="tab"
                     aria-controls="payment-panel-{{ $key }}"
-                    aria-selected="{{ $loop->first ? 'true' : 'false' }}"
-                    tabindex="{{ $loop->first ? '0' : '-1' }}"
+                    aria-selected="{{ $key === $selectedMethod ? 'true' : 'false' }}"
+                    tabindex="{{ $key === $selectedMethod ? '0' : '-1' }}"
                 >
                     {{ $method['label'] }}
                 </button>
@@ -50,7 +55,7 @@
                 role="tabpanel"
                 aria-labelledby="payment-tab-{{ $key }}"
                 tabindex="0"
-                @if (! $loop->first) hidden @endif
+                @if ($key !== $selectedMethod) hidden @endif
             >
                 <x-dynamic-component
                     :component="$method['component']"

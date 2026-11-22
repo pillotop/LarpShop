@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
-use App\Queries\Reviews\ProductReviewQuery;
+use App\Queries\Orders\PurchaseHistoryQuery;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class OrderHistoryController extends Controller
 {
-    public function index(Request $request, ProductReviewQuery $reviews): JsonResponse|View
+    public function index(Request $request): JsonResponse|RedirectResponse
     {
+        if (! $request->expectsJson()) {
+            return redirect(route('profile').'#'.PurchaseHistoryQuery::FRAGMENT);
+        }
+
         $orders = $request
             ->user()
             ->orders()
@@ -23,13 +27,6 @@ class OrderHistoryController extends Controller
             ->latest()
             ->paginate(10);
 
-        if ($request->expectsJson()) {
-            return response()->json($orders);
-        }
-
-        $productIds = $orders->getCollection()->flatMap->details->pluck('product_id')->unique()->all();
-        $reviewableProductIds = $reviews->eligibleProductIds($request->user(), $productIds);
-
-        return view('orders.pages.index', compact('orders', 'reviewableProductIds'));
+        return response()->json($orders);
     }
 }
