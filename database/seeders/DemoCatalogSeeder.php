@@ -58,17 +58,26 @@ class DemoCatalogSeeder extends Seeder
         }
 
         $globalIndex = 0;
+        $catIndex = 0;
 
         foreach ($blueprint['categories'] as $catSlug => $group) {
             $category = $categoriesBySlug->get($catSlug);
             $vendor = $vendorsByName->get($group['vendor']);
             if (! $category || ! $vendor) {
+                $catIndex++;
+
                 continue;
             }
 
-            foreach ($group['items'] as $offset => [$name, $description, $price]) {
+            foreach ($group['items'] as $offset => $itemRow) {
+                [$name, $description, $price] = $itemRow;
+                $primaryImage = $itemRow[3] ?? ($offset % 2 === 1 && ! empty($group['secondary_image']) ? $group['secondary_image'] : $group['image']);
+
                 [$status, $isActive, $stock] = $this->stateForIndex($globalIndex);
                 $slug = Str::slug($name);
+
+                // Interleave timestamps across categories so default newest sort mixes diverse product types.
+                $createdDaysAgo = max(1, 175 - (($offset * 32) + $catIndex));
 
                 $product = $this->upsertProduct(
                     slug: $slug,
@@ -80,11 +89,13 @@ class DemoCatalogSeeder extends Seeder
                     initialStock: $stock,
                     status: $status,
                     isActive: $isActive,
-                    createdDaysAgo: 175 - ($globalIndex % 165),
+                    createdDaysAgo: $createdDaysAgo,
                 );
 
-                $images = [['file' => $group['image'], 'alt' => $name.' - Primary view']];
-                if ($offset % 2 === 0 && ! empty($group['secondary_image'])) {
+                $images = [['file' => $primaryImage, 'alt' => $name.' - Primary view']];
+                if ($primaryImage !== $group['image']) {
+                    $images[] = ['file' => $group['image'], 'alt' => $name.' - Category view'];
+                } elseif (! empty($group['secondary_image'])) {
                     $images[] = ['file' => $group['secondary_image'], 'alt' => $name.' - Detail view'];
                 }
                 $this->syncImages($product, $images);
@@ -95,6 +106,8 @@ class DemoCatalogSeeder extends Seeder
 
                 $globalIndex++;
             }
+
+            $catIndex++;
         }
     }
 
@@ -134,6 +147,7 @@ class DemoCatalogSeeder extends Seeder
         bool $isActive,
         int $createdDaysAgo,
     ): Product {
+        $timestamp = $this->context->anchor()->subDays($createdDaysAgo);
         $existing = Product::query()->where('slug', $slug)->first();
 
         if ($existing) {
@@ -145,6 +159,7 @@ class DemoCatalogSeeder extends Seeder
                 'price' => $price,
                 'status' => $status,
                 'is_active' => $isActive,
+                'created_at' => $timestamp,
             ])->save();
 
             return $existing;
@@ -161,8 +176,8 @@ class DemoCatalogSeeder extends Seeder
             'status' => $status,
             'is_active' => $isActive,
         ]);
-        $product->created_at = $this->context->anchor()->subDays($createdDaysAgo);
-        $product->updated_at = $product->created_at;
+        $product->created_at = $timestamp;
+        $product->updated_at = $timestamp;
         $product->save();
 
         return $product;
