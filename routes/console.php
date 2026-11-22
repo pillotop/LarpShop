@@ -5,14 +5,61 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Services\Orders\OrderLifecycleService;
 use App\Services\Payments\PaymentService;
+use Database\Seeders\Support\DemoAssetManager;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schedule;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('assets:prepare', function (DemoAssetManager $assets) {
+    $source = base_path('database/seeders/assets/products');
+    $root = config('filesystems.disks.public.root');
+    $link = public_path('storage');
+
+    if (! File::isDirectory($source) || File::files($source) === []) {
+        $this->error('Bundled demo product images are missing.');
+
+        return 1;
+    }
+
+    // Never replace an actual directory containing user uploads with a symlink.
+    if (file_exists($link) && ! is_link($link)) {
+        $this->error('public/storage is not a symbolic link; preserve its contents before continuing.');
+
+        return 1;
+    }
+
+    File::ensureDirectoryExists($root);
+    $assets->syncToPublicDisk();
+
+    foreach (File::files($source) as $file) {
+        $path = 'demo-products/'.$file->getFilename();
+        if (! Storage::disk('public')->exists($path)
+            || Storage::disk('public')->size($path) !== $file->getSize()) {
+            $this->error('Could not publish bundled demo product images.');
+
+            return 1;
+        }
+    }
+
+    $this->call('storage:link', ['--force' => true]);
+
+    if (! is_link($link) || realpath($link) !== realpath($root)) {
+        $this->error('The public storage link does not point to the configured storage directory.');
+
+        return 1;
+    }
+
+    $this->info('Public storage is linked and bundled product images are ready.');
+
+    return 0;
+})->purpose('Publish bundled product images and link public storage without seeding database records');
 
 Artisan::command('orders:expire', function (OrderLifecycleService $lifecycle) {
     $expired = 0;

@@ -34,7 +34,7 @@ return [
         'public_assets' => [
             'driver' => 'local',
             'root' => public_path('images'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/images',
+            'url' => '/images',
             'visibility' => 'public',
             'throw' => false,
         ],

@@ -74,4 +74,4 @@ EXPOSE 8000
 # --no-reload is required: because an (empty) .env file exists in the image,
 # `artisan serve` would otherwise strip the environment variables injected by
 # Docker Compose (APP_KEY, DB_*) from the server process, causing HTTP 500.
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--no-reload"]
+CMD ["sh", "docker/start.sh"]
