@@ -54,10 +54,6 @@ Route::get('/home/discovery', HomeDiscoveryController::class)
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
-// Route::get('/o', function () {
-//     return view('homepage_o');
-// });
-
 Route::get('/products', [ProductSearchController::class, 'index'])
     ->name('products.index');
 

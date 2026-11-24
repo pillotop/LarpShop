@@ -205,6 +205,36 @@ Database tests can recreate tables in `larpshop_testing`; keep it separate from 
 
 ## Docker Compose
 
+### Standalone submission / demo
+
+With Docker Engine and Docker Compose installed, run:
+
+```bash
+sh docker/demo.sh setup
+```
+
+This builds PHP and frontend dependencies inside Docker, creates private local
+credentials, migrates and seeds an isolated demo database, starts scheduled
+maintenance, and checks the running site's pages, assets, images, and role access.
+Open [http://localhost:8080](http://localhost:8080); captured emails appear at
+[http://localhost:8026](http://localhost:8026).
+
+No host PHP, Composer, Node.js, personal `.env`, or payment-provider credentials
+are needed. Demo payments are simulated and do not charge real money. The demo
+uses its own `larpshop-demo` Compose project and named database/storage volumes.
+
+```bash
+sh docker/demo.sh verify  # Repeat HTTP acceptance checks.
+sh docker/demo.sh test    # PHPUnit against the separate larpshop_testing database.
+sh docker/demo.sh stop    # Preserve database and uploaded images.
+sh docker/demo.sh start   # Resume without reseeding.
+```
+
+See [Docker submission guide](docs/DOCKER_SUBMISSION.md) for demo accounts,
+configuration, verification scope, and operational limitations.
+
+### Existing development stack
+
 The current Compose environment provides:
 
 | Service | Purpose | Access |
@@ -241,7 +271,7 @@ The Compose file does not publish MySQL to the host, so host-side PHP cannot con
 To run tests inside the application container, create and grant access to `larpshop_testing` in the container's MySQL service first, then run:
 
 ```bash
-docker compose -f compose.yaml exec -T app php artisan test
+docker compose -f compose.yaml exec -T -e APP_ENV=testing app php artisan test
 ```
 
 The default Compose configuration copies source files and built assets at build time. Rebuild the image after source or asset changes.

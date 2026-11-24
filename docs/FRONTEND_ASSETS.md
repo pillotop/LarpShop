@@ -59,7 +59,7 @@ The default image excludes host-generated assets, local Vite markers, local envi
 - Public image URLs remain under `/images` and uploaded files remain under `/storage`.
 - Snap.svg and Google Fonts still use their existing CDN URLs. Bootstrap and Bootstrap Icons are served from the Vite build.
 
-Legacy raw HTML prototypes under `resources/views/*.html` retain their original markup; active Blade views use Vite. Old JavaScript copies in `public/js` remain for those prototypes. Application changes belong in `resources/js`.
+Active Blade views use Vite. Retired HTML prototypes and their duplicate `public/js` scripts have been removed. Application changes belong in `resources/js`.
 
 ## Verification
 

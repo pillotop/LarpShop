@@ -29,7 +29,6 @@
         'resources/js/components/side_panel.js',
         'resources/js/components/product_quantity_picker.js',
     ])
-    {{-- @vite('resources/js/components/product_card.js') --}}
 @endsection
 
 @section('content')

@@ -28,3 +28,14 @@ bootstrap/cache/*.php
 
 # Local development-only Compose overrides.
 compose.override.yaml
+
+# Never bake local uploads, identity documents, or tool credentials into an image.
+storage/app/*
+auth.json
+.codex
+.agents
+.aws
+.idea
+.vscode
+.phpunit.cache
+.phpunit.result.cache

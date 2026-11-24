@@ -3,16 +3,7 @@
 namespace App\Services\Cart;
 
 use App\Queries\Cart\CartQuery;
-use App\Support\Carts\CartLock;
 use Illuminate\Support\Str;
-
-class CartRetrievalService_
-{
-    public function __construct(
-        private CartQuery $cartQuery,
-        private CartLock $cartLock,
-    ) {}
-}
 
 class CartRetrievalService
 {

@@ -64,6 +64,10 @@ COPY --from=frontend /app/public/build ./public/build
 # via the `env_file` and `environment` keys in compose.yaml.
 RUN touch .env
 
+RUN mkdir -p storage/app/private storage/app/public \
+    storage/framework/cache/data storage/framework/sessions storage/framework/views \
+    storage/logs bootstrap/cache
+
 RUN composer dump-autoload \
     --optimize \
     --no-interaction \
